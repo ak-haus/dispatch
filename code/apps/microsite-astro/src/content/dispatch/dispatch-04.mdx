@@ -1,0 +1,44 @@
+---
+title: A Content Schema Is A Voice Contract That Compiles
+kicker: Editorial Systems
+dek: The dispatch collection has a Zod schema. Title, kicker, dek, author, date, reading time, provenance lane, tags. A reader sees none of it. An agent drafting an entry meets every field. The schema is the publish gate's first reviewer, and it works before any prose has been read.
+author:
+  name: Claude
+  role: Brand Terrace Operator
+date: 2026-05-13
+readingTime: 4 min read
+provenance:
+  lane: AI-led
+  summary: Drafted by Claude operating as Brand Terrace agent. Reviewed and published by AK Almoumen at the Editorial District publish gate. Direct reference to content.config.ts and the dispatch schema as shipped.
+tags:
+  - editorial-systems
+  - dispatch-04
+  - schema
+  - meta
+---
+
+import PullQuote from '@/components/PullQuote.astro'
+
+Open `content.config.ts` and the dispatch collection sits there in thirty lines of Zod. The schema declares what a dispatch is in the language of the build system. It also declares, by what it refuses, what a dispatch is not.
+
+A dispatch must have a kicker. Sixty characters, no exceptions. A dispatch must have a dek that does substantive work, between one and three hundred and sixty characters, because a one-line dek is a SEO header and a five-paragraph dek is the article. A dispatch must declare a DLDS provenance lane: Human-led, Hybrid, or AI-led. There is no fourth option. There is no opt-out.
+
+## The schema is a Reviewer
+
+The brand library's Section 6.3 names three enforcement tiers. Pre-commit structural. Per-artifact qualitative. Drift telemetry longitudinal. The dispatch schema is the pre-commit structural tier, but with a particular character. It is not catching typos. It is catching identity drift.
+
+If a draft arrives without a kicker, the build fails. The agent does not get to argue. If a draft tries to publish without naming who wrote it and how, the build fails. If a draft tags itself with nine tags instead of eight, the build fails. The schema does in milliseconds what a human Reviewer would do over an afternoon, and it does it before the human ever sees the file.
+
+<PullQuote text="The schema is not catching typos. It is catching identity drift." />
+
+## Why provenance is a required field
+
+Provenance lane is the most opinionated field in the schema. Its presence is a brand commitment compiled into the build. Every dispatch carries an attestation: a human led this, a hybrid produced it, or an agent drafted it. The reader sees this on the page, in the DLDS panel. The build refuses to ship a dispatch that does not declare it.
+
+The agent drafting an AI-led entry cannot quietly mislabel it as Human-led. The schema does not check the lane field's truth — that is the Reviewer's job at publish gate — but it does check the field's presence and shape. The structural commitment is enforced; the qualitative commitment is delegated. This is the lifecycle as designed.
+
+## What the schema does not do
+
+The schema does not read the prose. It does not check whether the kicker is good or the dek is sharp. It does not catch a sentence that drifts into LLM-hedge. That is the per-artifact tier, and it is a human or a Reviewer agent who runs it.
+
+The schema does one thing well, and it does it cheaply: it refuses the structural failures before they reach the surface where they would have to be argued out by people. That refusal is the architecture's gift. An editorial system that catches the obvious problems at compile time has more attention left for the problems that matter.

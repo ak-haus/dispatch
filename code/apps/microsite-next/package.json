@@ -1,0 +1,31 @@
+{
+  "name": "microsite-next",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Prime DISpatch — Next.js 15 surface (interactive / authenticated / dashboard / admin). W2-S-A bedrock scaffold; W5 fills.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .next out"
+  },
+  "dependencies": {
+    "@prime-dispatch/tokens": "workspace:*",
+    "@prime-dispatch/ui": "workspace:*",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^5.7.2"
+  }
+}

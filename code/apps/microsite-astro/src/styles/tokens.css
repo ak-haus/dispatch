@@ -1,0 +1,238 @@
+/* ============================================================================
+ * DISpatch design tokens — canonical source of truth.
+ *
+ * Authority chain:
+ *   1. representation/visual-system/color.md (CD2 v1, ratified 2026-05-07)
+ *   2. archives/.../cd2-color-amendment-proposal.md (2026-05-10, Mayor-locked)
+ *      — AMENDS color.md §5 Decision 7 + ADDS Decision 8 (tonal-stepping nav)
+ *
+ * Where this file conflicts with color.md, the amendment is authoritative.
+ *
+ * Tier structure (containment governance per color.md §2.1):
+ *   platform.*   — Prime-platform-wide (accent-prime, copper, wordmark mapping)
+ *   dispatch.*   — DISpatch-locked (lane pigments, Vellum scale, text roles)
+ *   asset.*      — Asset-locked (cartography pulse — stub for CD3)
+ *   component.*  — Component-locked (per-component spec; not in V1)
+ *
+ * Three semantic layers (color.md §2.4):
+ *   1. Numeric (compile source-of-truth: vellum-25, etc.)
+ *   2. Semantic-intent (--platform-accent-prime, --lane-editorial-strong)
+ *   3. Spatial-perceptual (--sky-high, --sky-low, --reflect, --window-warm)
+ *
+ * Consumer code references upper layers via Tailwind utilities. Numeric is
+ * internal compile target.
+ * ========================================================================== */
+
+/* ============================================================================
+ * Theme-cycle architecture.
+ *
+ * Three cycles per color.md §1.4 cosmology metaphor adoption:
+ *   dawn   — default light cycle (Vellum substrate, Atlantic-pigment red)
+ *   dusk   — twilight intermediate (warmer substrate, lifted ink, mid accents)
+ *   night  — dark cycle (warm-dark Vellum inverse, lifted accents)
+ *
+ * Selectors: html[data-prime-cycle="dusk"|"night"]. The .dark class is kept
+ * as an alias for shadcn neutral palette (sitemap-only) — both .dark and
+ * [data-prime-cycle="night"] resolve to the dark cycle values below.
+ *
+ * Default state (Dawn) is :root. No attribute needed.
+ * ========================================================================== */
+
+:root {
+  /* ==========================================================================
+   * PLATFORM TIER — Prime-platform-wide tokens
+   * Amendment-locked hex values. Cross-Building DNA; every future Prime
+   * Building inherits these.
+   * ========================================================================== */
+
+  /* Accent-prime: Atlantic-pigment editorial red (amendment 2026-05-10).
+     Replaces #c8392b (alarm vermilion) which read as "911" emergency-light.
+     Cosmology framing preserved: Inferno-infra surfacing at the masthead. */
+  --platform-accent-prime: #8e2532;
+
+  /* Accent-prime-active: wine intermediate for nav active state.
+     Sits chromatically BETWEEN copper and wordmark-red per illuminated-
+     manuscript graduated-pigment discipline (Decision 8). */
+  --platform-accent-prime-active: #6b2520;
+
+  /* Copper: Prime-wide gilded identity. Default nav link color.
+     Decision 8 redistributes copper-as-institution from wordmark to nav. */
+  --platform-copper: #b87333;
+
+  /* Copper-deep: nav hover state. Engagement deepening within copper register. */
+  --platform-copper-deep: #8b5224;
+
+  /* Text-body-strong: primary text token. Warm-bias near-black paired with
+     the Vellum scale's warm-yellow hue family (~88°). Never pure black. */
+  --platform-text-body-strong: oklch(0.18 0.012 88);
+
+  /* Wordmark composition (color.md §5.2 Option C split-color cosmology-encoded):
+     DIS portion = accent-prime (Inferno-surfacing red).
+     Patch portion = text-body-strong (institutional weight). */
+  --platform-wordmark-dis: var(--platform-accent-prime);
+  --platform-wordmark-patch: var(--platform-text-body-strong);
+
+  /* ==========================================================================
+   * DISPATCH TIER — Building-locked tokens
+   * Lane pigments, Vellum atmospheric scale, text roles.
+   * ========================================================================== */
+
+  /* Lane pigments (color.md §4.3) */
+  --dispatch-lane-editorial-strong:      oklch(0.55 0.16 41);   /* warm-earth */
+  --dispatch-lane-institutional-strong:  oklch(0.41 0.043 257); /* cool-mineral */
+  /* Lane 3 dispatch inherits Prime accent-prime — DTCG aliasing */
+  --dispatch-lane-dispatch-strong:       var(--platform-accent-prime);
+
+  /* Text roles (DISpatch-locked) — warm-bias hue 88° matching Vellum substrate.
+     Lightness values calibrated to pass APCA Lc ≥65 against sky-low (Vellum-100)
+     per color.md §3.3 β principal-grade body-text minimum. */
+  --dispatch-text-body-strong: var(--platform-text-body-strong);
+  --dispatch-text-body-muted:  oklch(0.48 0.010 88);
+  --dispatch-text-body-faint:  oklch(0.50 0.010 88);
+
+  /* Vellum atmospheric scale (color.md §2.2 + §4.5) — numeric source-of-truth */
+  --dispatch-vellum-25:  oklch(0.99  0.012 88);
+  --dispatch-vellum-50:  oklch(0.985 0.010 88);
+  --dispatch-vellum-100: oklch(0.96  0.015 88);
+  --dispatch-vellum-200: oklch(0.92  0.025 88);
+  --dispatch-vellum-300: oklch(0.87  0.035 88);
+
+  /* Spatial-perceptual aliases (color.md §4.5.2) — resolve to Vellum numeric */
+  --sky-high:    var(--dispatch-vellum-25);
+  --sky-low:     var(--dispatch-vellum-100);
+  --reflect:     var(--dispatch-vellum-200);
+  --window-warm: var(--dispatch-vellum-300);
+
+  /* ==========================================================================
+   * ASSET TIER — Asset-locked tokens (CD3 stub)
+   * ========================================================================== */
+
+  /* Cartography pulse (color.md §4.3 5e) — asset-tier inheritor of accent-prime
+     at darker variant; dispatch lights popping up on the cartography map. */
+  --asset-cartography-pulse: oklch(0.45 0.18 22);
+}
+
+/* ============================================================================
+ * DUSK cycle — chiaroscuro engraving, lit oak-paneled study.
+ *
+ * Promoted 2026-05-14 (amend 2): the amber-paper "golden hour" register
+ * was eliminated — drifted pink/peach at high chroma and read as beige
+ * skin tone, not editorial paper. Dusk now occupies the warm-dark walnut
+ * register (hue 45–58°, chroma 0.018–0.025), with a lit-ember accent
+ * and gilded-copper, warm-cream ink. Conceptually: a study lit from
+ * within, paper-and-ink relationships preserved in negative.
+ *
+ * Spatial-perceptual ordinal (sky-high lighter than window-warm) is
+ * preserved so layout elevation hierarchy holds. Depth reads as
+ * saturation, not as lightness collapse.
+ * ============================================================================ */
+
+[data-prime-cycle="dusk"] {
+  --platform-accent-prime:        oklch(0.63 0.185 25);
+  --platform-accent-prime-active: oklch(0.52 0.165 22);
+  --platform-copper:              oklch(0.74 0.140 65);
+  --platform-copper-deep:         oklch(0.60 0.115 60);
+  --platform-text-body-strong:    oklch(0.94 0.022 75);
+
+  /* Wordmark — DIS is locked to the Atlantic editorial burgundy register
+     across all cycles (brand identity, not cycle mood). Dawn's #8e2532
+     with a hairline lift to clear the dark walnut substrate. The cycle's
+     --platform-accent-prime is brighter for UI pop (nav, lanes, pulse
+     dot) but the wordmark holds the editorial canon. */
+  --platform-wordmark-dis:   oklch(0.44 0.155 20);
+  --platform-wordmark-patch: oklch(1 0 0);
+
+  --dispatch-lane-editorial-strong:     oklch(0.66 0.165 35);
+  --dispatch-lane-institutional-strong: oklch(0.65 0.055 250);
+  --dispatch-lane-dispatch-strong:      var(--platform-accent-prime);
+
+  --dispatch-text-body-strong: var(--platform-text-body-strong);
+  --dispatch-text-body-muted:  oklch(0.72 0.015 70);
+  --dispatch-text-body-faint:  oklch(0.56 0.014 65);
+
+  --dispatch-vellum-25:  oklch(0.26 0.018 58);
+  --dispatch-vellum-50:  oklch(0.22 0.022 55);
+  --dispatch-vellum-100: oklch(0.18 0.025 50);
+  --dispatch-vellum-200: oklch(0.14 0.022 48);
+  --dispatch-vellum-300: oklch(0.10 0.018 45);
+
+  --asset-cartography-pulse: oklch(0.65 0.200 24);
+}
+
+/* ============================================================================
+ * NIGHT cycle — true black void, ember-and-gold accents.
+ *
+ * Promoted 2026-05-14 (amend 2): night moves past warm-walnut to true
+ * black. Substrate is near-pure neutral with the faintest warm bias
+ * (chroma ≤ 0.005, hue 70°) so the surface reads as VOID, not "dark
+ * room." Accent-prime is pushed to a hot ember (L=0.66 C=0.21 H=26)
+ * and copper to a vivid gilded (L=0.78 C=0.145 H=68) — both calibrated
+ * to POP against pure black where mid-saturation hues would die.
+ * Text-body-strong sits at L=0.96 (near pure white) with a hairline
+ * warm bias so it doesn't drift clinical-cool.
+ *
+ * This is the marquee surface. Editorial type on near-black with
+ * ember pulses = chiaroscuro engraving in its purest form.
+ *
+ * Both selectors apply the same values:
+ *   .dark — legacy shadcn alias, used for sitemap surface compatibility
+ *   [data-prime-cycle="night"] — canonical DISpatch theme attribute
+ * ========================================================================== */
+
+.dark,
+[data-prime-cycle="night"] {
+  --platform-accent-prime:        oklch(0.66 0.210 26);
+  --platform-accent-prime-active: oklch(0.55 0.180 22);
+  --platform-copper:              oklch(0.78 0.145 68);
+  --platform-copper-deep:         oklch(0.62 0.120 62);
+  --platform-text-body-strong:    oklch(0.96 0.004 80);
+
+  /* Wordmark — DIS locked to the Atlantic burgundy register. On pure-black
+     substrate it gets a slightly bigger lift than dusk so it still reads
+     punchy without leaving the wine family. */
+  --platform-wordmark-dis:   oklch(0.48 0.165 20);
+  --platform-wordmark-patch: oklch(1 0 0);
+
+  --dispatch-lane-editorial-strong:     oklch(0.70 0.180 38);
+  --dispatch-lane-institutional-strong: oklch(0.70 0.060 250);
+  --dispatch-lane-dispatch-strong:      var(--platform-accent-prime);
+
+  --dispatch-text-body-strong: var(--platform-text-body-strong);
+  --dispatch-text-body-muted:  oklch(0.72 0.006 80);
+  --dispatch-text-body-faint:  oklch(0.52 0.005 80);
+
+  /* True-black Vellum — neutral near-zero chroma, hairline warm bias only.
+     Spatial ordinal preserved: sky-high lifted upper plane, window-warm
+     deepest void. Lightness band 0.02 → 0.16 = a true void with just
+     enough separation for elevation to register. */
+  --dispatch-vellum-25:  oklch(0.16 0.005 70);
+  --dispatch-vellum-50:  oklch(0.12 0.004 70);
+  --dispatch-vellum-100: oklch(0.08 0.003 70);
+  --dispatch-vellum-200: oklch(0.05 0.002 70);
+  --dispatch-vellum-300: oklch(0.02 0.001 70);
+
+  --asset-cartography-pulse: oklch(0.68 0.220 25);
+}
+
+/* shadcn neutral palette under Night — only relevant for sitemap surface.
+   Other DISpatch surfaces use vellum tokens. */
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+}

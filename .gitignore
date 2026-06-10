@@ -1,0 +1,18 @@
+# Build artifacts & caches — regenerable from code/pnpm-lock.yaml
+node_modules/
+.next/
+dist/
+.astro/
+storybook-static/
+.turbo/
+.vercel/
+*.tsbuildinfo
+
+# Secrets — NEVER commit. Preserved out-of-band in Doppler.
+.env
+.env.*
+!.env.example
+*.local
+
+# OS
+.DS_Store

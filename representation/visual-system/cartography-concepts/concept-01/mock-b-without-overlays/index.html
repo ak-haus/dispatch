@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" data-surface="homepage" data-district="editorial" data-theme="dawn" data-dial="low">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DISpatch homepage Mock B — Dawn theme with cartography-as-background substrate + scroll-reveal. NO provisional overlay components (no CartographyOverlay, no DistrictsDirectory band, no HistoriesLineageRail). W3-S-C cartography concept-01 mock pair.">
+  <title>DISpatch — homepage (mock B · without overlays)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=IM+Fell+DW+Pica:ital@0;1&family=Vollkorn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../../cartography/editorial-district/first-render/tokens.css">
+
+  <style>
+    /* ============================================
+       Mock B — Dawn theme · cartography-as-background substrate
+       WITHOUT provisional overlay components
+       Per FORMULA §13.1 Q6 — Mayor wants WITH/WITHOUT mock pair
+       ============================================ */
+
+    :root {
+      --type-wordmark: 'Vollkorn', Georgia, serif;
+      --type-nav: 'Inter', system-ui, -apple-system, sans-serif;
+      --type-civic: 'IM Fell English', 'IM Fell DW Pica', Vollkorn, Georgia, serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--surface-page);
+      color: var(--text-primary);
+      font-family: var(--type-body);
+      overflow-x: hidden;
+    }
+
+    .cartography-bg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .cartography-bg__svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-5) var(--space-6);
+    }
+
+    @supports (animation-timeline: scroll(root)) {
+      @keyframes reveal-fade-slow {
+        0% { opacity: 0; transform: translateY(8px); }
+        100% { opacity: var(--reveal-target, 1); transform: translateY(0); }
+      }
+      .reveal-on-scroll {
+        opacity: 0;
+        animation: reveal-fade-slow linear forwards;
+        animation-timeline: scroll(root);
+      }
+      .reveal--early   { animation-range: 5vh 30vh;  --reveal-target: 0.72; }
+      .reveal--mid     { animation-range: 20vh 60vh; --reveal-target: 0.85; }
+      .reveal--late    { animation-range: 50vh 90vh; --reveal-target: 0.78; }
+      .reveal--deep    { animation-range: 80vh 130vh; --reveal-target: 0.65; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-on-scroll { opacity: var(--reveal-target, 1) !important; animation: none !important; transform: none !important; }
+    }
+
+    .pulse-ring { transform-origin: center; opacity: 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pulse-ring { animation: pulse-ring-anim 3.2s ease-out infinite; }
+      .pulse-ring--slow { animation-duration: 4.8s; }
+      .pulse-ring--fast { animation-duration: 2.4s; }
+      .dispatch-pulse { animation: dispatch-pulse-anim 3.8s ease-out infinite; }
+      @keyframes pulse-ring-anim {
+        0% { transform: scale(0.6); opacity: 0.55; }
+        80% { transform: scale(2.4); opacity: 0; }
+        100% { transform: scale(2.4); opacity: 0; }
+      }
+      @keyframes dispatch-pulse-anim {
+        0% { transform: scale(0.7); opacity: 0.65; }
+        70% { transform: scale(2.8); opacity: 0; }
+        100% { transform: scale(2.8); opacity: 0; }
+      }
+    }
+
+    /* Site nav (W2-S-F Pangram Sans Extrabold stand-in via Inter 800) */
+    .site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: 800;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-8);
+    }
+    .site-nav__brand {
+      font-family: var(--type-wordmark);
+      font-size: var(--type-scale-md);
+      font-weight: 700;
+      letter-spacing: var(--tracking-snug);
+      text-transform: none;
+      color: var(--text-primary);
+    }
+    .site-nav__links { display: flex; gap: var(--space-6); list-style: none; padding: 0; margin: 0; }
+    .site-nav__link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .site-nav__link:hover, .site-nav__link:focus { color: oklch(0.55 0.13 50); }
+    .site-nav__link--active { color: var(--text-primary); }
+
+    /* Masthead */
+    .masthead {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-8) 0 var(--space-4);
+      max-width: 720px;
+    }
+    .masthead__breadcrumb {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      display: flex;
+      gap: var(--space-3);
+      align-items: baseline;
+    }
+    .masthead__breadcrumb-sep { opacity: 0.4; }
+    .masthead__wordmark {
+      font-family: var(--type-wordmark);
+      font-size: clamp(3rem, 9vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      margin: 0;
+    }
+    .masthead__wordmark-dis { color: var(--accent-prime); }
+    .masthead__wordmark-patch { color: var(--vellum-900); }
+    .masthead__tagline {
+      font-family: var(--type-body);
+      font-size: var(--type-scale-lg);
+      font-style: italic;
+      line-height: var(--leading-snug);
+      color: var(--text-secondary);
+      max-width: 56ch;
+      margin: var(--space-3) 0 0;
+    }
+    .masthead__date {
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-xs);
+      color: var(--text-tertiary);
+      letter-spacing: 0.04em;
+      margin-top: var(--space-3);
+    }
+
+    /* Feature card */
+    .feature-card {
+      margin: var(--space-12) 0;
+      padding: var(--space-8) var(--space-8) var(--space-10);
+      background: oklch(0.985 0.008 88 / 0.92);
+      backdrop-filter: blur(2px) saturate(1.05);
+      -webkit-backdrop-filter: blur(2px) saturate(1.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 1px 0 var(--surface-card-edge), 0 24px 64px -32px oklch(0.20 0.02 60 / 0.18);
+      max-width: 820px;
+    }
+    .feature-card__eyebrow {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--lane-editorial-text);
+      margin-bottom: var(--space-3);
+    }
+    .feature-card__title {
+      font-family: var(--type-wordmark);
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      margin: 0 0 var(--space-4);
+    }
+    .feature-card__title a { color: inherit; text-decoration: none; box-shadow: 0 2px 0 transparent; transition: box-shadow 0.2s; }
+    .feature-card__title a:hover, .feature-card__title a:focus { box-shadow: 0 2px 0 var(--accent-prime); }
+    .feature-card__deck {
+      font-family: var(--type-body);
+      font-size: var(--type-scale-lg);
+      font-style: italic;
+      line-height: var(--leading-base);
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin: 0 0 var(--space-6);
+    }
+    .feature-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: baseline;
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-xs);
+      color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+      padding-top: var(--space-4);
+      border-top: 1px dotted var(--border-subtle);
+    }
+    .feature-card__meta-author { color: var(--text-primary); font-weight: 500; }
+
+    /* Digest section */
+    .digest-section { margin: var(--space-16) 0; max-width: 1080px; }
+    .digest-section__title {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-6);
+    }
+    .digest-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-6);
+    }
+    .digest-card {
+      background: oklch(0.985 0.008 88 / 0.92);
+      backdrop-filter: blur(2px) saturate(1.05);
+      -webkit-backdrop-filter: blur(2px) saturate(1.05);
+      padding: var(--space-5) var(--space-5) var(--space-6);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--lane-editorial-fill);
+      border-radius: var(--radius-md);
+      display: grid;
+      gap: var(--space-2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .digest-card:hover { box-shadow: 0 8px 24px -12px oklch(0.20 0.02 60 / 0.20); }
+    .digest-card--meta { border-left-color: var(--accent-prime); }
+    .digest-card--institutional { border-left-color: var(--lane-institutional-fill); }
+    .digest-card__type {
+      font-family: var(--type-nav);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--lane-editorial-text);
+    }
+    .digest-card--meta .digest-card__type { color: var(--lane-dispatch-text); }
+    .digest-card--institutional .digest-card__type { color: var(--lane-institutional-text); }
+    .digest-card__title {
+      font-family: var(--type-wordmark);
+      font-size: var(--type-scale-xl);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.005em;
+      color: var(--text-primary);
+      margin: var(--space-1) 0 var(--space-2);
+    }
+    .digest-card__title a { color: inherit; text-decoration: none; }
+    .digest-card__title a:hover { color: var(--accent-prime); }
+    .digest-card__blurb {
+      font-family: var(--type-body);
+      font-size: var(--type-scale-base);
+      line-height: var(--leading-base);
+      color: var(--text-secondary);
+    }
+    .digest-card__meta {
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-xs);
+      color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+      margin-top: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px dotted var(--border-subtle);
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    /* Live ticker */
+    .live-ticker {
+      margin: var(--space-16) 0;
+      padding: var(--space-6) var(--space-6) var(--space-8);
+      background: oklch(0.985 0.008 88 / 0.92);
+      backdrop-filter: blur(2px) saturate(1.05);
+      -webkit-backdrop-filter: blur(2px) saturate(1.05);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--accent-prime);
+      border-radius: var(--radius-lg);
+      max-width: 820px;
+    }
+    .live-ticker__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: var(--space-3);
+      border-bottom: 1px dashed var(--border-subtle);
+      margin-bottom: var(--space-4);
+    }
+    .live-ticker__title {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+    }
+    .live-ticker__pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-xs);
+      color: var(--accent-prime);
+      font-weight: 600;
+    }
+    .live-ticker__pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-prime); }
+    .live-ticker__list { list-style: none; display: grid; gap: var(--space-3); padding: 0; margin: 0; }
+    .live-ticker__row {
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      gap: var(--space-3);
+      align-items: baseline;
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-sm);
+      color: var(--text-primary);
+      line-height: var(--leading-snug);
+    }
+    .live-ticker__time {
+      color: var(--text-tertiary);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--type-scale-xs);
+      min-width: 48px;
+    }
+    .live-ticker__lane {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-sm);
+      min-width: 70px;
+      text-align: center;
+    }
+    .live-ticker__lane--editorial { background: oklch(0.92 0.04 35); color: var(--lane-editorial-text); }
+    .live-ticker__lane--institutional { background: oklch(0.90 0.025 240); color: var(--lane-institutional-text); }
+    .live-ticker__lane--dispatch { background: oklch(0.92 0.06 22); color: var(--lane-dispatch-text); }
+
+    /* Institutional fixture */
+    .institutional-fixture {
+      margin: var(--space-16) auto var(--space-12);
+      padding: var(--space-10) var(--space-8);
+      background: oklch(0.96 0.030 86 / 0.95);
+      border-top: 1px solid var(--border-card);
+      border-bottom: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      display: grid;
+      gap: var(--space-3);
+      text-align: center;
+      max-width: 64ch;
+    }
+    .institutional-fixture__heading {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-tertiary);
+    }
+    .institutional-fixture__mandate {
+      font-family: var(--type-civic);
+      font-size: var(--type-scale-xl);
+      font-style: italic;
+      line-height: var(--leading-snug);
+      letter-spacing: 0.005em;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .institutional-fixture__attribution {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      letter-spacing: 0.04em;
+      color: var(--text-tertiary);
+    }
+
+    .site-footer {
+      margin-top: var(--space-8);
+      padding: var(--space-5) 0;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-3);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      color: var(--text-tertiary);
+      letter-spacing: 0.04em;
+    }
+    .site-footer__provenance { font-family: var(--type-meta); font-size: 10px; color: var(--text-tertiary); }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--accent-prime);
+      color: var(--text-on-accent);
+      padding: var(--space-3) var(--space-4);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-sm);
+      text-decoration: none;
+      z-index: 100;
+    }
+    .skip-link:focus { left: var(--space-4); top: var(--space-4); }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#feature">Skip to feature story</a>
+
+  <!-- Fixed cartography substrate (same SVG as Mock A; sans HistoriesLineageRail per §13.1 Q6) -->
+  <div class="cartography-bg" aria-hidden="true">
+    <svg class="cartography-bg__svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="paper-grain-b" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" seed="13"/>
+          <feColorMatrix values="0 0 0 0 0.86  0 0 0 0 0.80  0 0 0 0 0.72  0 0 0 0.10 0"/>
+          <feComposite in2="SourceGraphic" operator="in"/>
+        </filter>
+        <radialGradient id="contour-warm-b" cx="0.42" cy="0.50" r="0.55">
+          <stop offset="0%" stop-color="oklch(0.945 0.040 85)" stop-opacity="0.36"/>
+          <stop offset="55%" stop-color="oklch(0.925 0.025 88)" stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="oklch(0.90 0.018 88)" stop-opacity="0"/>
+        </radialGradient>
+        <pattern id="arch-grid-b" patternUnits="userSpaceOnUse" width="48" height="48">
+          <path d="M 48 0 L 0 0 0 48" fill="none" stroke="oklch(0.80 0.022 85)" stroke-width="0.4" opacity="0.28"/>
+        </pattern>
+        <linearGradient id="civic-spine-b" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="oklch(0.50 0.07 240)" stop-opacity="0.70"/>
+          <stop offset="100%" stop-color="oklch(0.45 0.06 240)" stop-opacity="0.45"/>
+        </linearGradient>
+        <radialGradient id="magazine-corner-fill-b" cx="0.50" cy="0.50" r="0.65">
+          <stop offset="0%" stop-color="oklch(0.92 0.060 38)" stop-opacity="0.55"/>
+          <stop offset="60%" stop-color="oklch(0.93 0.040 40)" stop-opacity="0.32"/>
+          <stop offset="100%" stop-color="oklch(0.93 0.025 50)" stop-opacity="0.05"/>
+        </radialGradient>
+        <filter id="soft-shadow-b">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+          <feOffset dx="0" dy="2"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Substrate base -->
+      <rect width="1440" height="900" fill="var(--surface-cartography-substrate, oklch(0.96 0.012 88))"/>
+      <rect width="1440" height="900" fill="url(#arch-grid-b)"/>
+      <rect width="1440" height="900" filter="url(#paper-grain-b)" opacity="0.50"/>
+      <rect width="1440" height="900" fill="url(#contour-warm-b)"/>
+
+      <!-- Landmark hints (per §13.2) -->
+      <g class="reveal-on-scroll reveal--early" style="--reveal-target: 0.18" aria-hidden="true">
+        <g transform="translate(80, 60) scale(0.85)" fill="oklch(0.42 0.06 240)" opacity="0.55">
+          <rect x="0" y="40" width="120" height="60" rx="2"/>
+          <polygon points="0,40 60,12 120,40"/>
+          <ellipse cx="60" cy="40" rx="28" ry="22" opacity="0.85"/>
+          <rect x="56" y="4" width="8" height="14"/>
+          <g stroke="oklch(0.50 0.06 240)" stroke-width="0.6" opacity="0.5">
+            <line x1="12" y1="42" x2="12" y2="98"/>
+            <line x1="34" y1="42" x2="34" y2="98"/>
+            <line x1="60" y1="42" x2="60" y2="98"/>
+            <line x1="86" y1="42" x2="86" y2="98"/>
+            <line x1="108" y1="42" x2="108" y2="98"/>
+          </g>
+        </g>
+        <text x="65" y="180" font-family="IM Fell English, Vollkorn, serif" font-size="13" font-style="italic" letter-spacing="0.08em" fill="oklch(0.45 0.07 240)" opacity="0.55">civic, somewhere north</text>
+      </g>
+
+      <g class="reveal-on-scroll reveal--late" style="--reveal-target: 0.22" aria-hidden="true">
+        <g transform="translate(1180, 720)" fill="oklch(0.55 0.13 50)" opacity="0.55">
+          <rect x="0" y="40" width="100" height="60" rx="2"/>
+          <rect x="8" y="20" width="84" height="22" fill="oklch(0.78 0.10 55)" opacity="0.4"/>
+          <polygon points="120,100 128,30 136,100"/>
+          <circle cx="148" cy="80" r="14"/>
+          <rect x="142" y="92" width="12" height="8"/>
+        </g>
+        <text x="1190" y="710" font-family="IM Fell English, Vollkorn, serif" font-size="13" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.13 55)" opacity="0.55">art, somewhere south</text>
+      </g>
+
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.20" aria-hidden="true">
+        <g transform="translate(1290, 280)" fill="oklch(0.42 0.10 35)" opacity="0.40">
+          <rect x="0" y="0" width="80" height="50" rx="2"/>
+          <rect x="14" y="-12" width="52" height="14" fill="oklch(0.55 0.10 35)" opacity="0.6"/>
+          <line x1="0" y1="55" x2="80" y2="55" stroke="oklch(0.42 0.10 35)" stroke-width="2" opacity="0.5"/>
+        </g>
+        <text x="1300" y="350" font-family="Inter, system-ui, sans-serif" font-size="9" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.10 35)" opacity="0.50">a printing press, maybe</text>
+      </g>
+
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.20" aria-hidden="true">
+        <g transform="translate(680, 50)" stroke="oklch(0.42 0.10 35)" stroke-width="1.2" fill="none" opacity="0.45">
+          <line x1="0" y1="40" x2="0" y2="-10"/>
+          <line x1="-12" y1="20" x2="12" y2="20"/>
+          <line x1="-8" y1="8" x2="8" y2="8"/>
+          <line x1="-4" y1="-2" x2="4" y2="-2"/>
+        </g>
+        <text x="695" y="42" font-family="Inter, system-ui, sans-serif" font-size="9" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.10 35)" opacity="0.50">a broadcast tower, in the distance</text>
+      </g>
+
+      <!-- Editorial District whisper boundary -->
+      <g class="reveal-on-scroll reveal--early" style="--reveal-target: 0.55" aria-hidden="true">
+        <path d="M 230 180 C 320 170, 460 165, 580 168 C 700 170, 840 175, 970 175 C 1080 178, 1180 188, 1260 200 C 1280 210, 1290 250, 1290 320 C 1290 460, 1280 600, 1260 700 C 1240 760, 1180 780, 1080 785 L 900 790 C 760 795, 600 795, 460 790 C 320 785, 240 760, 220 700 L 200 540 C 198 420, 210 280, 230 180 Z"
+              fill="none" stroke="oklch(0.55 0.13 35)" stroke-width="1.1" opacity="0.45"/>
+      </g>
+
+      <!-- Lane wash -->
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.32" aria-hidden="true">
+        <path d="M 230 180 C 320 170, 460 165, 580 168 C 700 170, 840 175, 970 175 C 1080 178, 1180 188, 1260 200 C 1280 210, 1290 250, 1290 320 C 1290 460, 1280 600, 1260 700 C 1240 760, 1180 780, 1080 785 L 900 790 C 760 795, 600 795, 460 790 C 320 785, 240 760, 220 700 L 200 540 C 198 420, 210 280, 230 180 Z"
+              fill="oklch(0.92 0.040 38)" opacity="0.45"/>
+      </g>
+
+      <!-- Street network: hairline + cross-streets -->
+      <g class="reveal-on-scroll reveal--early" style="--reveal-target: 0.48" stroke="oklch(0.68 0.028 78)" stroke-width="0.45" fill="none">
+        <line x1="260" y1="230" x2="1240" y2="225"/>
+        <line x1="250" y1="280" x2="1280" y2="278"/>
+        <line x1="220" y1="370" x2="1290" y2="368"/>
+        <line x1="220" y1="430" x2="1290" y2="428"/>
+      </g>
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.42" stroke="oklch(0.68 0.028 78)" stroke-width="0.4" fill="none">
+        <line x1="220" y1="490" x2="1290" y2="488"/>
+        <line x1="220" y1="550" x2="1280" y2="548"/>
+        <line x1="220" y1="610" x2="1280" y2="608"/>
+        <line x1="220" y1="670" x2="1260" y2="668"/>
+      </g>
+
+      <!-- Local streets -->
+      <g class="reveal-on-scroll reveal--early" style="--reveal-target: 0.78" stroke="oklch(0.58 0.038 75)" stroke-width="1.0" fill="none">
+        <path d="M 240 250 C 480 250, 780 248, 1260 252"/>
+        <path d="M 240 320 C 480 318, 780 318, 1280 322"/>
+        <path d="M 240 400 C 480 398, 780 398, 1290 402"/>
+      </g>
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.78" stroke="oklch(0.58 0.038 75)" stroke-width="1.0" fill="none">
+        <path d="M 240 470 C 480 468, 780 468, 1290 472"/>
+        <path d="M 240 540 C 480 538, 780 538, 1280 542"/>
+        <path d="M 240 620 C 480 618, 780 618, 1270 622"/>
+        <path d="M 260 720 C 480 718, 780 718, 1240 722"/>
+      </g>
+
+      <!-- Major avenues -->
+      <g class="reveal-on-scroll reveal--early" style="--reveal-target: 0.85" stroke="oklch(0.52 0.040 75)" stroke-width="1.25" fill="none">
+        <path d="M 320 180 C 320 360, 320 540, 320 770"/>
+        <path d="M 540 175 C 540 360, 540 540, 540 780"/>
+        <path d="M 760 170 C 760 360, 760 540, 760 790"/>
+      </g>
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.85" stroke="oklch(0.52 0.040 75)" stroke-width="1.25" fill="none">
+        <path d="M 980 175 C 980 360, 980 540, 980 785"/>
+        <path d="M 1180 185 C 1180 360, 1180 540, 1180 770"/>
+      </g>
+
+      <!-- Civic-axis spine -->
+      <g class="reveal-on-scroll reveal--early" style="--reveal-target: 0.82">
+        <path d="M 230 760 C 380 640, 580 550, 760 450 C 920 360, 1100 270, 1280 180"
+              fill="none" stroke="url(#civic-spine-b)" stroke-width="2.6" stroke-linecap="round" opacity="0.88"/>
+        <path d="M 230 760 C 380 640, 580 550, 760 450 C 920 360, 1100 270, 1280 180"
+              fill="none" stroke="oklch(0.32 0.05 240)" stroke-width="1.0" stroke-linecap="round" opacity="0.42" stroke-dasharray="3,6"/>
+      </g>
+
+      <!-- Metro line + stations -->
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.65">
+        <path d="M 320 250 C 380 280, 460 320, 540 320 C 620 320, 720 320, 760 320 C 800 320, 760 440, 760 450 C 760 460, 900 470, 980 470 C 1060 470, 1020 580, 980 620"
+              fill="none" stroke="oklch(0.45 0.08 240)" stroke-width="3.0" stroke-linecap="round" opacity="0.32"/>
+        <path d="M 320 250 C 380 280, 460 320, 540 320 C 620 320, 720 320, 760 320 C 800 320, 760 440, 760 450 C 760 460, 900 470, 980 470 C 1060 470, 1020 580, 980 620"
+              fill="none" stroke="oklch(0.30 0.05 240)" stroke-width="1.1" stroke-linecap="round" opacity="0.62"/>
+
+        <g>
+          <g transform="translate(320, 250)">
+            <circle r="5.5" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.4"/>
+            <circle r="2.2" fill="oklch(0.30 0.05 240)"/>
+          </g>
+          <g transform="translate(540, 320)">
+            <circle r="5.5" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.4"/>
+            <circle r="2.2" fill="oklch(0.30 0.05 240)"/>
+          </g>
+          <g transform="translate(760, 320)">
+            <circle r="5.5" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.4"/>
+            <circle r="2.2" fill="oklch(0.30 0.05 240)"/>
+          </g>
+        </g>
+        <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.85">
+          <g transform="translate(980, 470)">
+            <circle r="5.5" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.4"/>
+            <circle r="2.2" fill="oklch(0.30 0.05 240)"/>
+          </g>
+          <g transform="translate(980, 620)">
+            <circle r="5.5" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.4"/>
+            <circle r="2.2" fill="oklch(0.30 0.05 240)"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- District typography in IM Fell English -->
+      <text class="reveal-on-scroll reveal--early" style="--reveal-target: 0.25"
+            x="540" y="250"
+            font-family="IM Fell English, Vollkorn, serif"
+            font-size="38" font-style="italic" letter-spacing="0.16em"
+            fill="oklch(0.32 0.11 35)">Editorial District</text>
+
+      <!-- Magazine-corner highlight -->
+      <g>
+        <path d="M 620 410 Q 620 400, 640 400 L 880 400 Q 900 400, 900 420 L 900 580 Q 900 600, 880 600 L 640 595 Q 620 595, 620 575 Z"
+              fill="url(#magazine-corner-fill-b)" stroke="oklch(0.55 0.13 35)" stroke-width="1.0" opacity="0.85"/>
+        <text x="760" y="424" font-family="IM Fell English, Vollkorn, serif" font-size="14" font-style="italic" letter-spacing="0.10em" fill="oklch(0.32 0.11 35)" text-anchor="middle">magazine corner</text>
+      </g>
+
+      <!-- Future-corner name hints -->
+      <g class="reveal-on-scroll reveal--deep" style="--reveal-target: 0.32">
+        <text x="380" y="350" font-family="IM Fell English, Vollkorn, serif" font-size="11" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.08 35)" opacity="0.65" text-anchor="middle">newspaper-corner, becoming</text>
+        <text x="380" y="650" font-family="IM Fell English, Vollkorn, serif" font-size="11" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.08 35)" opacity="0.65" text-anchor="middle">books-corner, becoming</text>
+        <text x="1100" y="690" font-family="IM Fell English, Vollkorn, serif" font-size="11" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.08 35)" opacity="0.65" text-anchor="middle">marketing-corner, becoming</text>
+        <text x="1080" y="350" font-family="IM Fell English, Vollkorn, serif" font-size="11" font-style="italic" letter-spacing="0.08em" fill="oklch(0.50 0.08 35)" opacity="0.65" text-anchor="middle">film-corner, becoming</text>
+      </g>
+
+      <!-- Inferno markers (active + idle; same as Mock A) -->
+      <g>
+        <g transform="translate(610, 460)">
+          <title>ci-cd · dispatch-pipeline · green (14:32)</title>
+          <circle class="pulse-ring pulse-ring--fast" r="10" fill="oklch(0.55 0.18 22)" opacity="0.18"/>
+          <circle r="4" fill="oklch(0.50 0.20 22)"/>
+          <circle r="1.4" fill="oklch(0.94 0.025 35)"/>
+        </g>
+        <g transform="translate(870, 510)">
+          <title>agent · virgil-chat · idle (1h)</title>
+          <circle r="3" fill="oklch(0.55 0.18 22)" opacity="0.55"/>
+        </g>
+      </g>
+      <g class="reveal-on-scroll reveal--mid" style="--reveal-target: 0.78">
+        <g transform="translate(720, 320)">
+          <title>mcp · gateway · routing (14:31)</title>
+          <circle class="pulse-ring" r="9" fill="oklch(0.55 0.18 22)" opacity="0.16"/>
+          <circle r="3.5" fill="oklch(0.50 0.20 22)"/>
+          <circle r="1.2" fill="oklch(0.94 0.025 35)"/>
+        </g>
+        <g transform="translate(540, 320)">
+          <title>phoenix · eval · running (14:28)</title>
+          <circle r="3.2" fill="oklch(0.55 0.18 22)" opacity="0.62"/>
+        </g>
+      </g>
+      <g class="reveal-on-scroll reveal--late" style="--reveal-target: 0.72">
+        <g transform="translate(1100, 480)">
+          <title>telemetry · signoz · ingesting</title>
+          <circle class="pulse-ring pulse-ring--slow" r="8" fill="oklch(0.55 0.18 22)" opacity="0.15"/>
+          <circle r="3" fill="oklch(0.50 0.20 22)"/>
+        </g>
+        <g transform="translate(480, 620)">
+          <title>vale · lint · queued (14:29)</title>
+          <circle r="3" fill="oklch(0.55 0.18 22)" opacity="0.65"/>
+        </g>
+      </g>
+      <g class="reveal-on-scroll reveal--deep" style="--reveal-target: 0.70">
+        <g transform="translate(1180, 660)">
+          <title>infra · deploy · pending</title>
+          <circle r="3.2" fill="oklch(0.55 0.18 22)" opacity="0.72"/>
+        </g>
+        <g transform="translate(840, 720)">
+          <title>linear · tracker · PCP-167 closed</title>
+          <circle r="2.8" fill="oklch(0.55 0.18 22)" opacity="0.58"/>
+        </g>
+      </g>
+
+      <!-- NO Histories lineage rail (Mock B subtractive — provisional component excluded per §13.1 Q6) -->
+
+      <!-- DISpatch building marker -->
+      <g transform="translate(760, 470)" aria-hidden="true">
+        <circle class="dispatch-pulse" r="18" fill="oklch(0.55 0.18 22)" opacity="0.20"/>
+        <rect x="-22" y="-22" width="44" height="44" rx="3"
+              fill="oklch(0.96 0.025 35)" stroke="oklch(0.45 0.18 22)" stroke-width="1.6"
+              filter="url(#soft-shadow-b)"/>
+        <g>
+          <rect x="-13" y="-14" width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.85"/>
+          <rect x="-13" y="-8"  width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.70"/>
+          <rect x="-13" y="-2"  width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.55"/>
+          <rect x="-13" y="4"   width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.40"/>
+          <circle cx="0" cy="11" r="3.2" fill="oklch(0.50 0.20 22)"/>
+          <circle cx="0" cy="11" r="1.1" fill="oklch(0.96 0.025 35)"/>
+        </g>
+        <text x="0" y="-32" font-family="Vollkorn, serif" font-size="13" font-weight="700" letter-spacing="-0.005em" fill="oklch(0.28 0.18 22)" text-anchor="middle">DISpatch</text>
+      </g>
+
+      <!-- Wayfinding signage -->
+      <g class="reveal-on-scroll reveal--late" style="--reveal-target: 0.45" font-family="Inter, system-ui, sans-serif" font-size="9" letter-spacing="0.16em" fill="oklch(0.48 0.04 70)" font-weight="700" text-transform="uppercase">
+        <text x="320" y="800" text-anchor="middle">LETTERPRESS</text>
+        <text x="540" y="800" text-anchor="middle">FOLIO</text>
+        <text x="760" y="800" text-anchor="middle">SERIF</text>
+        <text x="980" y="800" text-anchor="middle">QUIRE</text>
+        <text x="1180" y="800" text-anchor="middle">IMPRINT</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- NO CartographyOverlay (Mock B subtractive — provisional component excluded per §13.1 Q6) -->
+
+  <div class="page">
+
+    <nav class="site-nav" aria-label="Primary">
+      <span class="site-nav__brand">DISpatch</span>
+      <ul class="site-nav__links">
+        <li><a class="site-nav__link site-nav__link--active" href="#" aria-current="page">Reception</a></li>
+        <li><a class="site-nav__link" href="#">Districts</a></li>
+        <li><a class="site-nav__link" href="#">Live</a></li>
+        <li><a class="site-nav__link" href="#">Search</a></li>
+      </ul>
+    </nav>
+
+    <header class="masthead" aria-labelledby="masthead-wordmark">
+      <p class="masthead__breadcrumb">
+        <span>Prime City</span>
+        <span class="masthead__breadcrumb-sep">·</span>
+        <span>Editorial District</span>
+        <span class="masthead__breadcrumb-sep">·</span>
+        <span>Magazine corner</span>
+      </p>
+      <h1 class="masthead__wordmark" id="masthead-wordmark">
+        <span class="masthead__wordmark-dis" aria-hidden="true">DIS</span><span class="masthead__wordmark-patch" aria-hidden="true">patch</span>
+        <span style="position:absolute; left:-9999px;">DISpatch</span>
+      </h1>
+      <p class="masthead__tagline">A dev-diary published from one building, in one corner, of one district of Prime — and the cartography is the test pilot's payload.</p>
+      <p class="masthead__date">11 May 2026 · Sunday edition</p>
+    </header>
+
+    <article class="feature-card" id="feature">
+      <p class="feature-card__eyebrow">Feature story · today</p>
+      <h2 class="feature-card__title">
+        <a href="#">The cartography is the demo for Prime — what we mean when we say the dispatch is the test pilot's payload</a>
+      </h2>
+      <p class="feature-card__deck">
+        A walk through the building-and-below stack: reception, offices, missives. How the seven universal concepts climb against world-class precedents while staying open to the registers future Buildings will choose.
+      </p>
+      <p class="feature-card__meta">
+        <span class="feature-card__meta-author">By the NARRATIVE office</span>
+        <span>·</span>
+        <time datetime="2026-05-11">11 May 2026</time>
+        <span>·</span>
+        <span>14 min read</span>
+        <span>·</span>
+        <span>magazine-corner / Editorial District</span>
+      </p>
+    </article>
+
+    <section class="digest-section" aria-labelledby="digest-title">
+      <h2 class="digest-section__title" id="digest-title">Things to read today</h2>
+      <div class="digest-grid">
+        <article class="digest-card digest-card--meta">
+          <span class="digest-card__type">Meta</span>
+          <h3 class="digest-card__title"><a href="#">Refactoring the dispatch ledger — letting Linear carry the status taxonomy</a></h3>
+          <p class="digest-card__blurb">Why we ripped out the rigid status enum and what surfaced in the diff. A peek behind the curtain on operational state-layer governance.</p>
+          <p class="digest-card__meta">
+            <span>Meta office</span>
+            <time datetime="2026-05-10">10 May</time>
+            <span>6 min read</span>
+          </p>
+        </article>
+        <article class="digest-card digest-card--institutional">
+          <span class="digest-card__type">Narrative</span>
+          <h3 class="digest-card__title"><a href="#">What an institutional anchor means for a forward-looking platform</a></h3>
+          <p class="digest-card__blurb">Why we rejected a founding date for DISpatch and what we ship in its place. The Paradiso seed-mandate as quiet typographic fixture.</p>
+          <p class="digest-card__meta">
+            <span>Narrative office</span>
+            <time datetime="2026-05-09">9 May</time>
+            <span>11 min read</span>
+          </p>
+        </article>
+        <article class="digest-card">
+          <span class="digest-card__type">Narrative</span>
+          <h3 class="digest-card__title"><a href="#">Walking the unified Prime grid — districts, neighborhoods, and the dial</a></h3>
+          <p class="digest-card__blurb">The cosmology of DISpatch isn't decoration; it's the navigable architecture of how Prime is articulated across surfaces.</p>
+          <p class="digest-card__meta">
+            <span>Narrative office</span>
+            <time datetime="2026-05-08">8 May</time>
+            <span>9 min read</span>
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="live-ticker" aria-labelledby="ticker-title">
+      <header class="live-ticker__header">
+        <h2 class="live-ticker__title" id="ticker-title">What's happening in the offices</h2>
+        <span class="live-ticker__pulse" aria-label="Live">
+          <span class="live-ticker__pulse-dot" aria-hidden="true"></span>
+          <span>live</span>
+        </span>
+      </header>
+      <ul class="live-ticker__list">
+        <li class="live-ticker__row">
+          <time class="live-ticker__time" datetime="2026-05-11T14:32">14:32</time>
+          <span class="live-ticker__lane live-ticker__lane--dispatch">infra</span>
+          <span>CD6 brand-synthesis pass — thesis-statement.md ratified W1 Stream-A</span>
+        </li>
+        <li class="live-ticker__row">
+          <time class="live-ticker__time" datetime="2026-05-11T13:18">13:18</time>
+          <span class="live-ticker__lane live-ticker__lane--editorial">editorial</span>
+          <span>NARRATIVE article-pattern canonical landed — first-article authoring at W5</span>
+        </li>
+        <li class="live-ticker__row">
+          <time class="live-ticker__time" datetime="2026-05-11T11:45">11:45</time>
+          <span class="live-ticker__lane live-ticker__lane--institutional">institutional</span>
+          <span>Sonic-system v0 blueprint — composer brief activates W4 Mayor cascade</span>
+        </li>
+        <li class="live-ticker__row">
+          <time class="live-ticker__time" datetime="2026-05-11T10:02">10:02</time>
+          <span class="live-ticker__lane live-ticker__lane--dispatch">infra</span>
+          <span>CD5 motion register amended — CosmologyMarker → MetroMapMarker rename absorbed</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="digest-section" aria-labelledby="coming-soon-title">
+      <h2 class="digest-section__title" id="coming-soon-title">Coming soon</h2>
+      <div class="digest-grid">
+        <article class="digest-card">
+          <span class="digest-card__type">Narrative</span>
+          <h3 class="digest-card__title"><a href="#">Variable refresh rate motion budget — bringing ProMotion to the web</a></h3>
+          <p class="digest-card__blurb">A narrative on how dial-tuned motion meets the limits of browser frame timing.</p>
+        </article>
+        <article class="digest-card digest-card--meta">
+          <span class="digest-card__type">Meta</span>
+          <h3 class="digest-card__title"><a href="#">Why Prime web pages never infinite scroll</a></h3>
+          <p class="digest-card__blurb">Bounded scroll-reveal as a structural design rule — and how the cartography earned that constraint.</p>
+        </article>
+        <article class="digest-card digest-card--institutional">
+          <span class="digest-card__type">Narrative</span>
+          <h3 class="digest-card__title"><a href="#">From cosmology to charter — articulating Prime's nine spheres</a></h3>
+          <p class="digest-card__blurb">The Paradiso seed-mandate begins to articulate. A first sketch toward the public charter.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- NO Districts Directory band (Mock B subtractive — provisional component excluded per §13.1 Q6) -->
+
+    <aside class="institutional-fixture" aria-labelledby="fixture-heading">
+      <p class="institutional-fixture__heading" id="fixture-heading">Paradiso seed-mandate · placeholder</p>
+      <p class="institutional-fixture__mandate">A publication articulating its identity through nine spheres — this is what the publication is becoming.</p>
+      <p class="institutional-fixture__attribution">DISpatch · Editorial District · Brand-Terrace's pipeline output</p>
+    </aside>
+
+    <footer class="site-footer">
+      <span>DISpatch · concept-01 mock B (without overlays) · W3-S-C</span>
+      <span class="site-footer__provenance">/representation/visual-system/cartography-concepts/concept-01/mock-b-without-overlays/</span>
+    </footer>
+
+  </div>
+
+</body>
+</html>

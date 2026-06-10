@@ -1,0 +1,39 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "site-nav",
+  "type": "registry:component",
+  "title": "SiteNav",
+  "description": "Top-level navigation chrome. Composes MastheadWordmark + primary nav-links + affordances cluster (search trigger + theme-cycler). Cross-surface with per-mode variant: reception shows full search, article hides search per CD1 Concept 7 sanctuary, compact-mobile uses hamburger.",
+  "categories": ["custom", "chrome", "navigation"],
+  "dependencies": ["clsx"],
+  "registryDependencies": ["masthead-wordmark"],
+  "files": [
+    {
+      "path": "components/custom/SiteNav/SiteNav.tsx",
+      "type": "registry:component",
+      "target": "components/custom/SiteNav/SiteNav.tsx"
+    },
+    {
+      "path": "components/custom/SiteNav/SiteNav.css",
+      "type": "registry:component",
+      "target": "components/custom/SiteNav/SiteNav.css"
+    },
+    {
+      "path": "components/custom/SiteNav/index.ts",
+      "type": "registry:component",
+      "target": "components/custom/SiteNav/index.ts"
+    }
+  ],
+  "meta": {
+    "primeWave": "W3-S-A",
+    "primePhase": "1-chrome",
+    "primeSpec": "representation/visual-system/components/SiteNav/spec.md",
+    "primeUniversalConcepts": ["C1-typeface-containment", "C3-page-furniture-civic-wayfinding"],
+    "primeContainment": {
+      "typefaceSlot": "nav",
+      "scope": "prime-platform-wide"
+    },
+    "primeMode": "cross-surface-chrome-per-mode-variant",
+    "primeForwardPointer": "Registry manifest forward-pointer authored at W3-S-A; full file content inlining + MCP server registration land at W5+. SearchPalette + theme-cycler dependencies wire when those components ship (Phase 2 + future)."
+  }
+}

@@ -1,0 +1,115 @@
+/* MetaArticleOpener — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/MetaArticleOpener/spec.md
+ *
+ * Visual archetype: density-prioritized; tight scale + compressed leading;
+ * metadata band prominent. Per CD1 Concept 5 META register — reads as
+ * Wired/Hacker through Meta-code typography in metadata band; headline +
+ * subhead use canonical Title + Body (DISpatch-locked) but at compressed
+ * scale + leading per catalogue §5.3 META scale-pairing.
+ *
+ * Substrate-agnostic root (Rule 1: --sky-low host-owned).
+ */
+
+.prime-meta-opener {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--rail-edge);
+}
+
+.prime-meta-opener__media {
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+
+.prime-meta-opener__meta-band {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.5rem;
+}
+
+.prime-meta-opener__read-time {
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+/* Title — META-tight scale per catalogue §5.3. Title slot (Vollkorn) but
+ * compressed leading to register data-forward density. */
+.prime-meta-opener__title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.875rem, 3.5vw, 2.625rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+/* Subhead — utilitarian Body weight; compressed leading */
+.prime-meta-opener__subtitle {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.prime-meta-opener__byline {
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  margin: 0.25rem 0 0;
+}
+
+.prime-meta-opener__byline time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Variants */
+.prime-meta-opener--dataviz .prime-meta-opener__media {
+  margin-bottom: 1rem;
+  padding: 1.5rem;
+  background: var(--window-warm);
+  border-left: 3px solid var(--lane-institutional);
+}
+
+.prime-meta-opener--change-log .prime-meta-opener__title {
+  font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+}
+
+.prime-meta-opener--change-log .prime-meta-opener__meta-band {
+  padding: 0.625rem 0.875rem;
+  background: var(--window-warm);
+  border-left: 3px solid var(--lane-institutional);
+}
+
+.prime-meta-opener--post-mortem .prime-meta-opener__meta-band {
+  padding: 0.625rem 0.875rem;
+  background: var(--window-warm);
+  border-left: 3px solid var(--lane-dispatch);
+}
+
+.prime-meta-opener--compact {
+  gap: 0.625rem;
+  padding: 1rem 0 0.75rem;
+}
+
+.prime-meta-opener--compact .prime-meta-opener__title {
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+}
+
+.prime-meta-opener--compact .prime-meta-opener__meta-band {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}

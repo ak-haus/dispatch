@@ -1,0 +1,217 @@
+/* ChapterRail — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/ChapterRail/spec.md
+ * Color source: CD2 §4.5 atmospheric chrome tokens + chrome.indicator =
+ *               --window-warm (atmospheric register per ReadingProgress spec;
+ *               same atmospheric warmth applied to current-chapter indicator
+ *               per ChapterRail spec Field 7).
+ * Typography source: --font-nav (Pangram Sans / Inter; spec Field 7
+ *               tokens.type.nav.500 for chapter-link text).
+ *
+ * Visual archetype (spec Field 1): vertical RAIL — thin structural line on
+ * the left edge with chapter links stepping down. The rail IS the visual
+ * character (NOT a card; NOT a box).
+ *
+ * REBUILD 2026-05-10 — Cycle 2 motifs TOMBSTONED:
+ *   - Roman-numeral typographic markers in Cinzel
+ *   - Double-rule rail (::before shadow rail 4px outside)
+ *   - Pilcrow ¶ section-break ornament every 5 chapters
+ *   - Cinzel display "What's inside" heading
+ *   - Text-shadow halo on current marker
+ *
+ * INTENTIONAL ANTI-PATTERNS:
+ *   - No background on root (Rule 1; substrate is --sky-low host-owned).
+ *   - No accent-prime on default chapter indicators (wine = focus + critical
+ *     interaction only).
+ *   - No Cinzel; no IM Fell on chapter labels (Nav slot per spec Field 7).
+ *   - No double-rule, no pilcrow, no Roman numerals.
+ *   - No card chrome; the rail IS the chrome.
+ */
+
+.prime-chapter-rail {
+  position: relative;
+  border-left: 1px solid var(--rail-edge);
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: var(--font-nav);
+}
+
+.prime-chapter-rail__title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem 0;
+}
+
+.prime-chapter-rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.prime-chapter-rail__item {
+  position: relative;
+}
+
+.prime-chapter-rail__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.125rem 0;
+  transition: color 150ms ease-out;
+}
+
+/* Quiet structural indicator dot — sits on the rail line per spec Field 7
+ * (current-chapter indicator stroke). Default: hollow rail-edge ring; current:
+ * warm window-warm fill (atmospheric register; wayfinding-not-alarm). */
+.prime-chapter-rail__indicator {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--rail-edge);
+  flex-shrink: 0;
+  /* Position the dot on the rail line: pull left by the rail's padding-left
+   * minus half the dot width plus border accommodation. */
+  margin-left: calc(-1.5rem - 4px);
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.prime-chapter-rail__label {
+  display: inline-block;
+}
+
+.prime-chapter-rail__link:hover {
+  color: var(--text-strong);
+}
+
+.prime-chapter-rail__link:hover .prime-chapter-rail__indicator {
+  border-color: var(--text-strong);
+}
+
+.prime-chapter-rail__link:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Current chapter — gilded wayfinding (copper). Spec Field 7 chrome.indicator
+ * atmospheric register; current-chapter elevates to copper for wayfinding-
+ * not-alarm gilded register. */
+.prime-chapter-rail__link[aria-current="location"],
+.prime-chapter-rail__link.is-current {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.prime-chapter-rail__link[aria-current="location"] .prime-chapter-rail__indicator,
+.prime-chapter-rail__link.is-current .prime-chapter-rail__indicator {
+  background: var(--copper);
+  border-color: var(--copper);
+}
+
+/* Visited chapters: indicator dims to rail-edge */
+.prime-chapter-rail__item.is-visited .prime-chapter-rail__indicator {
+  background: var(--rail-edge);
+  border-color: var(--rail-edge);
+}
+
+/* Collapse toggle */
+.prime-chapter-rail__toggle {
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: color 150ms ease-out;
+}
+
+.prime-chapter-rail__toggle:hover { color: var(--text-strong); }
+
+.prime-chapter-rail__toggle:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 2px;
+}
+
+/* Collapsed variant — current chapter + expand toggle only */
+.prime-chapter-rail--collapsed .prime-chapter-rail__list {
+  display: none;
+}
+
+.prime-chapter-rail--collapsed .prime-chapter-rail__current-only {
+  display: block;
+}
+
+.prime-chapter-rail__current-only {
+  display: none;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0.25rem 0;
+}
+
+/* Reception-condensed variant — homepage feature-story preview */
+.prime-chapter-rail--reception-condensed {
+  padding-left: 1.25rem;
+  gap: 0.5rem;
+}
+
+.prime-chapter-rail--reception-condensed .prime-chapter-rail__link {
+  font-size: 0.8125rem;
+}
+
+.prime-chapter-rail--reception-condensed .prime-chapter-rail__indicator {
+  width: 4px;
+  height: 4px;
+  margin-left: calc(-1.25rem - 3px);
+}
+
+/* Mobile bottom-sheet variant — no rail edge; full-width list */
+.prime-chapter-rail--mobile-bottom-sheet {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.prime-chapter-rail--mobile-bottom-sheet .prime-chapter-rail__indicator {
+  display: none;
+}
+
+.prime-chapter-rail--mobile-bottom-sheet .prime-chapter-rail__link {
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--rail-edge);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prime-chapter-rail__link,
+  .prime-chapter-rail__indicator,
+  .prime-chapter-rail__toggle {
+    transition: none;
+  }
+}
+
+[data-prime-reduced-motion="reduce"] .prime-chapter-rail__link,
+[data-prime-reduced-motion="reduce"] .prime-chapter-rail__indicator,
+[data-prime-reduced-motion="reduce"] .prime-chapter-rail__toggle {
+  transition: none;
+}

@@ -1,0 +1,91 @@
+---
+const tools = [
+	{
+		name: 'mapbox-studio',
+		category: 'Design tool · hosted',
+		where: 'studio.mapbox.com',
+		attaches: 'CartographyCanvas / DistrictMap (style URL)',
+	},
+	{
+		name: 'imgix',
+		category: 'Image CDN · hosted',
+		where: 'imgix.com + @imgix/js-core (URL builder)',
+		attaches: 'image components — srcset + transforms',
+	},
+	{
+		name: 'typesense',
+		category: 'Search server · self-host / cloud',
+		where: 'Docker / Typesense Cloud + typesense client',
+		attaches: 'SearchPalette',
+	},
+	{
+		name: 'llamaparse',
+		category: 'Content pipeline · API',
+		where: 'cloud.llamaindex.ai',
+		attaches: 'article ingestion (build time, PDF/DOCX → markdown)',
+	},
+	{
+		name: 'vale',
+		category: 'Prose linter · Go CLI',
+		where: 'Scoop / Homebrew + .vale/ config',
+		attaches: 'editor + pre-commit hook',
+	},
+	{
+		name: 'lighthouse',
+		category: 'Quality audit · CLI + DevTools',
+		where: 'Chrome DevTools + @lhci/cli (CI)',
+		attaches: 'CI pipeline + local audits',
+	},
+	{
+		name: 'chromatic',
+		category: 'Visual regression · CLI',
+		where: 'chromatic.com + chromatic CLI',
+		attaches: 'CI pipeline (Storybook diffs)',
+	},
+]
+---
+
+<section class="mt-16">
+	<div class="mb-4 flex items-center justify-between">
+		<p class="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+			Tooling & integrations
+		</p>
+		<p class="text-xs font-mono text-muted-foreground">{tools.length} planned</p>
+	</div>
+
+	<p class="mb-4 max-w-3xl text-sm text-muted-foreground">
+		Products that don't sit in the runtime stack. Some are hosted services that produce
+		assets we consume (mapbox-studio styles, imgix image URLs). Some run at build time
+		(llamaparse). Some are CLI / CI / editor tools (vale, lighthouse, chromatic). Each
+		attaches to a specific component or step rather than ambient.
+	</p>
+
+	<div class="overflow-hidden rounded-lg border border-border">
+		{
+			tools.map((t, i) => (
+				<div
+					class:list={[
+						'grid grid-cols-12 items-center gap-4 bg-card px-6 py-5',
+						i !== tools.length - 1 && 'border-b border-border',
+					]}
+				>
+					<div class="col-span-3 flex items-baseline gap-2">
+						<span class="text-base font-semibold tracking-tight">{t.name}</span>
+					</div>
+					<div class="col-span-3">
+						<span class="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+							{t.category}
+						</span>
+					</div>
+					<div class="col-span-2 text-xs text-muted-foreground">{t.where}</div>
+					<div class="col-span-3 text-sm text-muted-foreground">→ {t.attaches}</div>
+					<div class="col-span-1 flex justify-end">
+						<span class="rounded-md bg-amber-50 px-2 py-0.5 text-xs font-mono uppercase tracking-widest text-amber-700">
+							planned
+						</span>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</section>

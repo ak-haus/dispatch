@@ -1,0 +1,16 @@
+---
+interface Props {
+	text: string
+}
+
+const { text } = Astro.props
+---
+
+<figure class="my-12">
+	<blockquote
+		class="mx-auto max-w-[24ch] border-l-4 border-lane-editorial-strong pl-6 font-narrative font-medium italic text-body-strong [text-wrap:balance]"
+		style="font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.75rem); line-height: 1.4;"
+	>
+		{text}
+	</blockquote>
+</figure>

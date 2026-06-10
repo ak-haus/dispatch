@@ -1,0 +1,43 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chapter-rail",
+  "type": "registry:component",
+  "title": "ChapterRail",
+  "description": "Per-article chapter navigation rail. Renders article's chapter structure with current-chapter indicator (aria-current='location'); porous-gradient mode-crosser between article surfaces (primary) and reception (condensed feature-story preview).",
+  "categories": ["custom", "chrome", "navigation", "wayfinding"],
+  "dependencies": ["clsx"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "components/custom/ChapterRail/ChapterRail.tsx",
+      "type": "registry:component",
+      "target": "components/custom/ChapterRail/ChapterRail.tsx"
+    },
+    {
+      "path": "components/custom/ChapterRail/ChapterRail.css",
+      "type": "registry:component",
+      "target": "components/custom/ChapterRail/ChapterRail.css"
+    },
+    {
+      "path": "components/custom/ChapterRail/index.ts",
+      "type": "registry:component",
+      "target": "components/custom/ChapterRail/index.ts"
+    }
+  ],
+  "meta": {
+    "primeWave": "W3-S-A",
+    "primePhase": "1-chrome",
+    "primeSpec": "representation/visual-system/components/ChapterRail/spec.md",
+    "primeUniversalConcepts": [
+      "C3-page-furniture-civic-wayfinding",
+      "C1-typeface-containment",
+      "C7-porous-gradient"
+    ],
+    "primeContainment": {
+      "typefaceSlot": "nav",
+      "scope": "prime-platform-wide"
+    },
+    "primeMode": "porous-gradient-mode-crosser",
+    "primeForwardPointer": "Progress coupling to ReadingProgress + district-edge tint per cartography wire at W5+ when ReadingProgress ships and CD3 ratifies cartography district fills."
+  }
+}

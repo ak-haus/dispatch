@@ -1,0 +1,113 @@
+/* ReadingProgress — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/ReadingProgress/spec.md
+ * Color source: spec Field 5 + 7 — "indicator is rendered AS atmospheric chrome
+ *               (paper-grain register; printed-bookmark feel per CD1 Concept
+ *               4)"; fill consumes `tokens.color.atmosphere.window-warm`.
+ * Typography source: --font-code (JetBrains Mono) for typographic-percentage
+ *               variant per spec Field 7.
+ *
+ * Visual archetype (spec Field 1): linear bar at viewport top (~2-3px height);
+ * scroll-pinned; non-interactive; subtle warmth not loudness. Per CD1 Concept
+ * 4 atmospheric register — the indicator IS atmospheric chrome, not a screen-
+ * illuminated UI element.
+ *
+ * REBUILD 2026-05-10 — Cycle 2 motifs TOMBSTONED per Mayor:
+ *   - Linear-gradient wine fill — wine usage was uncanon; spec says
+ *     atmospheric window-warm. Mayor: "nav is copper, reading progress sits
+ *     above the nav, it can't be red."
+ *   - Angled clip-path cap on right edge — Cycle 2 invention; not in spec.
+ *   - Drafting-grid pattern on track Light-theme-only — Cycle 2 invention.
+ *   - Typographic small-caps "PROGRESS · 47%" with middot — Cycle 2 elevation;
+ *     spec says simple percentage rendering in Meta-code slot.
+ *
+ * INTENTIONAL ANTI-PATTERNS:
+ *   - No background on root (Rule 1: substrate is --sky-low host-owned).
+ *   - No wine fill — wine is reserved for dispatch lane + focus rings; reading-
+ *     progress is atmospheric-chrome register per spec.
+ *   - No card chrome, no shadows.
+ *   - All color via canon tokens.
+ */
+
+.prime-reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.prime-reading-progress--inline {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: 100%;
+}
+
+/* Track is invisible by default — the bar reveals as the reader scrolls.
+ * Atmospheric register: indicator fills with --window-warm (warm-paper
+ * incandescent register per spec Field 7). */
+.prime-reading-progress__fill {
+  display: block;
+  height: 100%;
+  background: var(--window-warm);
+  /* Subtle inner edge keeps the warm fill from reading as flat solid */
+  box-shadow: inset 0 -1px 0 var(--reflect);
+  transition: width 80ms linear;
+}
+
+.prime-reading-progress__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Typographic-percentage variant per spec Field 2 alternative — quiet
+ * percentage in margin or footer; Meta-code slot for the figure. */
+.prime-reading-progress--typographic {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  height: auto;
+  background: transparent;
+}
+
+.prime-reading-progress--typographic .prime-reading-progress__fill {
+  display: none;
+}
+
+.prime-reading-progress--typographic .prime-reading-progress__label {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  font-family: var(--font-code);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prime-reading-progress__fill {
+    transition: none;
+  }
+}
+
+[data-prime-reduced-motion="reduce"] .prime-reading-progress__fill {
+  transition: none;
+}

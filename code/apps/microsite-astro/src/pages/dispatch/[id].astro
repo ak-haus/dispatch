@@ -1,0 +1,32 @@
+---
+/**
+ * Dynamic dispatch route — /dispatch/dispatch-01, /dispatch/dispatch-02, etc.
+ *
+ * Astro static-mode requires getStaticPaths to enumerate every dispatch
+ * entry at build time. Each entry resolves to its own pre-rendered HTML
+ * page, served as a flat file. No SSR needed.
+ *
+ * Why a folder route instead of a flat file:
+ *   - /dispatch/<id> reads as "this is the dispatch with id X"
+ *   - Avoids collision with future /<type>/<id> patterns (e.g. /atlas/<id>)
+ *   - The old /article URL is preserved by a sibling file that redirects
+ *     to the most recent dispatch (so existing links don't 404).
+ */
+import { getCollection, render } from 'astro:content'
+import DispatchArticleLayout from '@/layouts/DispatchArticleLayout.astro'
+
+export async function getStaticPaths() {
+	const entries = await getCollection('dispatch')
+	return entries.map((entry) => ({
+		params: { id: entry.id },
+		props: { entry },
+	}))
+}
+
+const { entry } = Astro.props
+const { Content, headings } = await render(entry)
+---
+
+<DispatchArticleLayout entry={entry} headings={headings}>
+	<Content />
+</DispatchArticleLayout>

@@ -1,0 +1,258 @@
+---
+import fs from 'node:fs'
+import path from 'node:path'
+import type { CollectionEntry, MarkdownHeading } from 'astro:content'
+import StackLayout from '@/layouts/StackLayout.astro'
+import BackToDispatch from '@/components/BackToDispatch.astro'
+import { ProvenanceTooltip } from '@/components/ProvenanceTooltip'
+import { ChapterRail } from '@/components/ChapterRail'
+
+interface Props {
+	entry: CollectionEntry<'dispatch'>
+	headings?: MarkdownHeading[]
+}
+
+const { entry, headings = [] } = Astro.props
+const mapboxToken = import.meta.env.PUBLIC_MAPBOX_TOKEN ?? ''
+
+// Probe for a commissioned neighborhood-scale cartographic illustration.
+const cartographyDir = path.join(process.cwd(), 'public', 'cartography')
+const neighborhoodImageName = ['neighborhood.webp', 'neighborhood.jpg', 'neighborhood.png'].find(
+	(f) => {
+		try { return fs.existsSync(path.join(cartographyDir, f)) } catch { return false }
+	},
+)
+const neighborhoodImage = neighborhoodImageName
+	? `/cartography/${neighborhoodImageName}`
+	: undefined
+
+// Probe for a per-article AI-generated banner illustration, by dispatch id.
+// public/banners/{entry.id}.{webp,jpg,png} → rendered as a top hero banner.
+// Falls back to a stylized vellum + lane-pigment placeholder when absent —
+// the placeholder is intentional so we can ship the layout now and drop
+// real illustrations in later without code changes.
+const bannerDir = path.join(process.cwd(), 'public', 'banners')
+const bannerName = ['webp', 'jpg', 'png']
+	.map((ext) => `${entry.id}.${ext}`)
+	.find((f) => {
+		try { return fs.existsSync(path.join(bannerDir, f)) } catch { return false }
+	})
+const bannerImage = bannerName ? `/banners/${bannerName}` : undefined
+
+const { data } = entry
+
+// Filter to h2 headings only — these are the canonical chapter anchors.
+const chapters = headings.filter((h) => h.depth === 2)
+
+const dateLabel = new Intl.DateTimeFormat('en-CA', {
+	year: 'numeric',
+	month: '2-digit',
+	day: '2-digit',
+	timeZone: 'UTC',
+}).format(data.date)
+const volumeLabel = `Vol. 1 · Dispatch ${entry.id.replace(/^dispatch-?/i, '').padStart(2, '0')} · ${dateLabel}`
+
+// Lane pigment for the banner placeholder accent.
+const LANE_TINT: Record<string, string> = {
+	'Human-led': 'var(--dispatch-lane-institutional-strong)',
+	Hybrid: 'var(--platform-accent-prime)',
+	'AI-led': 'var(--dispatch-lane-editorial-strong)',
+}
+const laneTint = LANE_TINT[data.provenance.lane] ?? 'var(--platform-accent-prime)'
+---
+
+<StackLayout
+	title={data.title}
+	kicker={data.kicker}
+	description={data.dek}
+	theme="vellum"
+	hideHero
+	fullWidthMain
+>
+	{/* ── Title hero ──────────────────────────────────────────────────
+	    Two-column split that mirrors the homepage cover's magazine-cover
+	    composition:
+	      - LEFT  (typography column): kicker → title → dek → meta →
+	        back link. Sits on a vellum substrate with a subtle map wash
+	        behind it for continuity with the homepage hero.
+	      - RIGHT (banner column): AI-generated illustration (when a file
+	        exists in /public/banners/<id>.*), otherwise a stylized
+	        placeholder block tinted to the article's lane pigment.
+
+	    Stacks to a single column below lg (1024px) — title first, banner
+	    below. The chapter rail starts UNDERNEATH this hero, not on top.
+
+	    Map backdrop lives behind the LEFT column only so the banner side
+	    stays readable as a discrete illustration plate. */}
+	<section
+		class="relative mb-12 w-full overflow-hidden border-b border-lane-institutional-strong/20"
+		aria-label="Article title hero"
+	>
+		<div class="grid grid-cols-1 lg:grid-cols-2">
+			{/* ─── Left: typography column ─────────────────────────────── */}
+			<div
+				class="relative isolate overflow-hidden"
+				style={`background-color: color-mix(in oklch, ${laneTint} 6%, var(--sky-low));`}
+			>
+				{/* District map faded behind the title column, like the home
+				    hero. Offset so the densest red cluster sits away from
+				    the title block. */}
+				<div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+					<img
+						src="/cartography/district.png"
+						alt=""
+						class="absolute left-[42%] top-1/2 h-auto w-auto min-h-[140vmax] min-w-[140vmax]"
+						style="transform: translate(-50%, -50%) rotate(-90deg) scale(0.95); opacity: 0.3; filter: saturate(0.85) contrast(1.0);"
+					/>
+					<div
+						class="absolute inset-0"
+						style="background: radial-gradient(55% 60% at 45% 50%, color-mix(in oklch, var(--sky-low) 70%, transparent) 0%, color-mix(in oklch, var(--sky-low) 40%, transparent) 60%, color-mix(in oklch, var(--sky-low) 8%, transparent) 100%);"
+					></div>
+				</div>
+
+				<div class="relative z-10 px-6 py-16 md:px-12 md:py-24 lg:py-28">
+					{/* Site rule: copper wireframe pill, embossed into the vellum.
+					    Same component used at the bottom of this article and on
+					    every other non-home surface (about, sitemap, articles). */}
+					<BackToDispatch />
+
+					{/* Kicker band — SITE RULE: kicker labels are black, prefixed
+					    with a pulsing red dot. Volume label opposite, mono caps. */}
+					<div class="mt-10 flex flex-wrap items-baseline justify-between gap-y-2 border-b border-lane-institutional-strong/30 pb-3">
+						<p class="flex items-center gap-2.5 font-nav text-[12px] font-extrabold uppercase tracking-[0.16em] text-body-strong">
+							<span
+								class="relative inline-flex h-2 w-2 rounded-full bg-accent-prime"
+								aria-hidden="true"
+								style="box-shadow: 0 0 0 3px color-mix(in oklch, var(--platform-accent-prime) 30%, transparent), 0 0 12px color-mix(in oklch, var(--platform-accent-prime) 60%, transparent);"
+							>
+								<span class="absolute inset-0 animate-ping rounded-full bg-accent-prime opacity-60"></span>
+							</span>
+							{data.kicker}
+						</p>
+						<p class="font-mono text-[12px] font-semibold uppercase tracking-[0.22em] text-body-strong">
+							{volumeLabel}
+						</p>
+					</div>
+
+					{/* H1 — SITE RULE: first letter renders in accent-red, the
+					    rest in body-strong. This is the canonical title drop-cap
+					    treatment for every dispatch. */}
+					<h1
+						class="mt-10 max-w-[18ch] font-narrative font-bold tracking-[-0.02em] text-body-strong"
+						style="font-size: clamp(2.25rem, 1.4rem + 2.5vw, 4rem); line-height: 1.04;"
+					>
+						<span class="text-accent-prime">{data.title.charAt(0)}</span>{data.title.slice(1)}
+					</h1>
+
+					{/* Dek */}
+					<p
+						class="mt-6 max-w-[52ch] font-narrative italic text-body-strong"
+						style="font-size: clamp(1.0625rem, 0.9rem + 0.4vw, 1.1875rem); line-height: 1.5;"
+					>
+						{data.dek}
+					</p>
+
+					{/* Meta row */}
+					<div class="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-lane-institutional-strong/30 pt-4 font-nav text-[12px] font-medium uppercase tracking-[0.06em] text-body-strong">
+						<span class="font-extrabold">{data.author.name}</span>
+						<span class="text-body-faint" aria-hidden="true">·</span>
+						<span>{data.author.role}</span>
+						<span class="text-body-faint" aria-hidden="true">·</span>
+						<time datetime={data.date.toISOString()}>{dateLabel}</time>
+						<span class="text-body-faint" aria-hidden="true">·</span>
+						<span>{data.readingTime}</span>
+						<span class="text-body-faint" aria-hidden="true">·</span>
+						<ProvenanceTooltip
+							client:idle
+							lane={data.provenance.lane}
+							summary={data.provenance.summary}
+						/>
+					</div>
+				</div>
+			</div>
+
+			{/* ─── Right: banner illustration plate ────────────────────── */}
+			<aside
+				class="relative isolate min-h-[320px] overflow-hidden border-t border-lane-institutional-strong/15 lg:min-h-0 lg:border-t-0 lg:border-l"
+				style={`background-color: color-mix(in oklch, ${laneTint} 18%, var(--sky-low));`}
+				aria-label="Article banner illustration"
+			>
+				{bannerImage ? (
+					<img
+						src={bannerImage}
+						alt={`Banner illustration for ${data.title}`}
+						class="absolute inset-0 h-full w-full object-cover"
+					/>
+				) : (
+					<div class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
+						{/* Lane-pigment block decoration */}
+						<span
+							class="absolute left-1/2 top-[18%] block h-24 w-24 -translate-x-1/2 rounded-sm"
+							style={`background-color: ${laneTint}; opacity: 0.18;`}
+							aria-hidden="true"
+						></span>
+						<span
+							class="relative z-10 font-mono text-[12px] font-bold uppercase tracking-[0.42em]"
+							style={`color: ${laneTint};`}
+						>
+							AI-generated banner · placeholder
+						</span>
+						<p class="relative z-10 max-w-[40ch] font-narrative italic text-body-strong text-[clamp(0.9375rem,1.1vw,1.0625rem)] leading-snug">
+							An illustration of <em>{data.kicker}</em>
+						</p>
+						<p class="relative z-10 mt-2 max-w-[42ch] font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
+							drop a file at <code class="not-italic text-body-strong">/public/banners/{entry.id}.webp</code>
+						</p>
+					</div>
+				)}
+			</aside>
+		</div>
+	</section>
+
+	{/* ── Article body region ──────────────────────────────────────────
+	    The body wrapper hosts BOTH the chapter rail and the article copy.
+	    Layout grid:
+	      [rail-column 56px]  [centered article column max-72ch]
+	    The rail column starts here (under the title hero) and uses
+	    `position: sticky` so it pins at the top of viewport once scrolled.
+	    The article column has its own mx-auto so the prose stays centered
+	    in the viewport regardless of the rail width. */}
+	<div class="relative z-10 lg:grid lg:grid-cols-[56px_minmax(0,1fr)] lg:gap-6">
+		{/* Rail column — only renders if there are h2 anchors. Hidden below lg. */}
+		{chapters.length > 0 && (
+			<div class="hidden lg:block lg:pl-3">
+				<ChapterRail
+					client:load
+					variant="article-default"
+					chapters={chapters}
+				/>
+			</div>
+		)}
+
+		{/* Article column. mx-auto centers within the cell; max-w bounds it. */}
+		<article id="dispatch-article" class="mx-auto max-w-[72ch] px-6 pb-12 md:px-0">
+		<div class="prose-dispatch">
+			<slot />
+		</div>
+
+		<!-- Article metadata: tag list. -->
+		<footer
+			class="mt-16 max-w-[56ch] border-t border-lane-institutional-strong/30 pt-6 font-body text-sm"
+		>
+			<p
+				class="font-mono text-xs font-medium uppercase tracking-widest text-lane-editorial-strong"
+			>
+				Filed under
+			</p>
+			<p class="mt-2 font-mono text-body-muted">
+				{data.tags.join(' · ')}
+			</p>
+		</footer>
+
+		<!-- Back-to-dispatch bottom link — mirrors the top affordance. -->
+		<div class="mt-12 border-t border-lane-institutional-strong/20 pt-6">
+			<BackToDispatch />
+		</div>
+		</article>
+	</div>
+</StackLayout>

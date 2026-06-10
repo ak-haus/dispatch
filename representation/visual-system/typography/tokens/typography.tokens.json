@@ -1,0 +1,58 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "DISpatch V1 typography tokens — DTCG format consumed by Style Dictionary v4 (W2-S-D). Slot-aliased so W2-S-F amends Wordmark + Nav without touching component-side token references. Authored W2-S-E 2026-05-10.",
+  "font": {
+    "family": {
+      "title": {
+        "$type": "fontFamily",
+        "$value": ["Vollkorn", "Iowan Old Style", "Georgia", "Times New Roman", "serif"],
+        "$description": "Title slot (display serif) — Vollkorn LOCKED at V1 per CD2 §10 Decision 7c. Surface roles: article masthead titles · pull-quotes · placeholder wordmark carrier."
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": ["Crimson Pro", "Iowan Old Style", "Georgia", "Times New Roman", "serif"],
+        "$description": "Body slot (reading serif) — Crimson Pro LOCKED at V1 per CD2 §10 Decision 7c. Surface roles: article body · long-form reading · footnotes · captions."
+      },
+      "nav": {
+        "$type": "fontFamily",
+        "$value": ["Pangram Sans", "Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        "$description": "Nav slot (geometric grotesque) — Pangram Pangram Sans Normal Extrabold LOCKED at V1 per Mayor 2026-05-10. Universal Prime-microsite wayfinding register; matches Mayor's NY-street-sign visual reference at OS/2 weight class 800 (Pangram displays as 'Extrabold 900' using their internal Variable-axis numbering — CSS-standard weight is 800). Inter retained as graceful fallback. Surface roles: nav links · primary site chrome · breadcrumbs · pagination indicators."
+      },
+      "code": {
+        "$type": "fontFamily",
+        "$value": ["JetBrains Mono", "SF Mono", "Cascadia Code", "Menlo", "Consolas", "monospace"],
+        "$description": "Code/Meta slot (monospace) — JetBrains Mono LOCKED at V1 per CD2 §10 Decision 7c. Surface roles: code blocks · terminal-search · DLDS panels · meta-numerals."
+      },
+      "civic": {
+        "$type": "fontFamily",
+        "$value": ["IM Fell English", "Vollkorn", "Georgia", "serif"],
+        "$description": "Civic/Dante slot (medieval-revival) — IM Fell English LOCKED at V1 per CD2 §10 Decision 7c. Surface roles: civic-cartography labels · Dante-passage epigraphs · cosmology-encoded asset typography."
+      },
+      "wordmark": {
+        "$type": "fontFamily",
+        "$value": ["Editorial New", "Vollkorn", "Iowan Old Style", "Georgia", "Times New Roman", "serif"],
+        "$description": "Wordmark slot (editorial display serif) — Pangram Pangram Editorial New Bold LOCKED at V1 per Mayor 2026-05-10. DISpatch-exclusive register (not platform-wide); carries cosmology-encoded split-color composition per CD2 §10 Decision 7b (`DIS` in accent-prime + `patch` in text-body-strong). Subsetted aggressively to 8 wordmark glyphs (D, I, S, p, a, t, c, h). Vollkorn retained as graceful fallback. Surface roles: masthead · favicon · brand-mark surfaces only."
+      }
+    },
+    "weight": {
+      "regular": { "$type": "fontWeight", "$value": 400 },
+      "italic": { "$type": "fontWeight", "$value": 400, "$description": "weight 400 + style italic" },
+      "semibold": { "$type": "fontWeight", "$value": 600 },
+      "bold": { "$type": "fontWeight", "$value": 700 },
+      "boldItalic": { "$type": "fontWeight", "$value": 700, "$description": "weight 700 + style italic" },
+      "extrabold": { "$type": "fontWeight", "$value": 800, "$description": "weight 800 — Pangram Sans Extrabold nav weight per W2-S-F Mayor 2026-05-10" }
+    }
+  },
+  "$extensions": {
+    "prime": {
+      "ownership": "W2-S-E (Title/Body/Code/Civic OFL) + W2-S-F (Nav/Wordmark premium Pangram) — landed 2026-05-10",
+      "cd2-citation": "color.md §5.3 V1 stack lock; §10 Decision 7c Mayor 2026-05-07; Mayor 2026-05-10 W2-S-F premium amendment",
+      "subset-manifest": "representation/visual-system/typography/manifest.md (14 V1 OFL cuts + 2 premium W2-S-F cuts; surface-grouped)",
+      "css-source": "representation/visual-system/typography/css/fonts.css (@font-face blocks + slot CSS variables + .wordmark + .nav-link state composition)",
+      "preload-snippet": "representation/visual-system/typography/css/preload.html (4 critical-weight preloads: Body + Title + Nav-Pangram + Wordmark-Editorial-New)",
+      "license-inventory": "representation/visual-system/typography/licenses/ (5 OFL-1.1 copies + 2 Pangram Pangram per-style EULA receipts)",
+      "premium-procurement": "Pangram Pangram Editorial New Bold (1 style) + Pangram Sans Normal Extrabold (1 style); procured Mayor 2026-05-10 within Indie tier; receipts pending at licenses/editorial-new-bold-receipt.pdf + licenses/pangram-sans-normal-extrabold-receipt.pdf",
+      "amend-protocol": "Slot tokens are the only seam. Future amendments to nav/wordmark fonts update font.family.{nav,wordmark}.$value arrays only. Component CSS never touched."
+    }
+  }
+}

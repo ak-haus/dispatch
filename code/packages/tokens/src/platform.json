@@ -1,0 +1,107 @@
+{
+  "$description": "Merged token set (platform + dispatch + asset JSON). Platform tier: cross-Building DNA; dispatch/asset tier governance lives in sibling src/*.json files and CD2. Compiles to --platform-* CSS custom properties via Style Dictionary v4 set-merge.",
+
+  "color": {
+    "$type": "color",
+
+    "platform": {
+      "accent-prime": {
+        "$value": "oklch(0.51 0.20 27)",
+        "$description": "Prime accent — Inferno-infra surfacing through Purgatorio-terraces. Cross-Building DNA carrier; visible expression of Prime's nervous system. Approximate Tailwind v4 nearest: red-600. Specific OKLCH calibrates via §7 tool-partner workflow.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "concept-citation": {
+              "universal-concept": "Inferno-infra surfacing through Purgatorio-terraces — Prime's heartbeat becomes visible at brand-bearing surfaces (CD2 §4.2 Decision 5)",
+              "reference-platforms": [
+                "NYT historical red banner (institutional accent)",
+                "The Economist red institutional cap",
+                "Cosmology-unified per Mayor 2026-05-07: 'red is Prime's accent color because Inferno is underneath Purgatorio'"
+              ]
+            },
+            "apca-validated-pairs": [
+              { "against-token": "{color.dispatch.vellum.25}", "lc-score": null, "surface-pairing": "wordmark-on-sky-high", "status": "pending-§7" },
+              { "against-token": "{color.dispatch.vellum.100}", "lc-score": null, "surface-pairing": "wordmark-on-sky-low", "status": "pending-§7" }
+            ],
+            "colorblind-validated": [
+              { "deficiency-type": "deuteranopia", "simulation-tool": null, "pass-status": "pending-§7", "mitigation-channel": "vermillion-bright-substitution-via-§3.4(c)" },
+              { "deficiency-type": "protanopia", "simulation-tool": null, "pass-status": "pending-§7", "mitigation-channel": "vermillion-bright-substitution-via-§3.4(c)" },
+              { "deficiency-type": "tritanopia", "simulation-tool": null, "pass-status": "pending-§7", "mitigation-channel": null }
+            ],
+            "ratified-at": "CD2 Decision 5a §10"
+          }
+        }
+      },
+
+      "wordmark": {
+        "$description": "DISpatch wordmark — Option C split-color cosmology-encoded composition per CD2 §5.2 Decision 7. `DIS` portion = City of Dis from Inferno; `patch` portion = institutional-publication weight. The wordmark literally embodies what its name means cosmologically.",
+
+        "dis": {
+          "$value": "{color.platform.accent-prime}",
+          "$description": "Wordmark `DIS` portion — inherits accent-prime via DTCG aliasing. Renders Inferno-infra surfacing at masthead scale.",
+          "$extensions": {
+            "prime": {
+              "tier": "platform",
+              "concept-citation": {
+                "universal-concept": "City of Dis from Inferno (CD1 thesis §4.2 — DISpatch's name encodes the cosmology)",
+                "reference-platforms": ["NYT historical red banner", "The Economist red institutional cap"]
+              },
+              "apca-validated-pairs": [
+                { "against-token": "{color.dispatch.vellum.25}", "lc-score": null, "surface-pairing": "wordmark-dis-on-sky-high", "status": "pending-§7", "lc-target": 90 }
+              ],
+              "colorblind-validated": [
+                { "deficiency-type": "deuteranopia", "simulation-tool": null, "pass-status": "graceful-degradation-documented", "mitigation-channel": "wordmark-reads-as-monochrome-dark-institutional-reading-preserved-per-CD2-§6.4" }
+              ],
+              "ratified-at": "CD2 Decision 7b §10"
+            }
+          }
+        },
+
+        "patch": {
+          "$value": "{color.platform.text.body.strong}",
+          "$description": "Wordmark `patch` portion — institutional-publication portion in dark serif. Resolves via DTCG aliasing to text-body-strong; specific value calibrates at CD4 component pairing per CD2 §5.2.",
+          "$extensions": {
+            "prime": {
+              "tier": "platform",
+              "concept-citation": {
+                "universal-concept": "Institutional-publication weight — magazine-thing portion of cosmology-encoded wordmark (CD2 §5.2 Decision 7b)",
+                "reference-platforms": ["The Atlantic Pentagram (institutional restraint)", "NYT magazine masthead serif weight"]
+              },
+              "apca-validated-pairs": [
+                { "against-token": "{color.dispatch.vellum.25}", "lc-score": null, "surface-pairing": "wordmark-patch-on-sky-high", "status": "pending-§7", "lc-target": 90 }
+              ],
+              "ratified-at": "CD2 Decision 7b §10"
+            }
+          }
+        }
+      },
+
+      "text": {
+        "$description": "Text role tokens — convention scaffolded at CD2 §2.4; specific OKLCH values calibrate at CD4 component pairing per CD2 §9.2 stub-vs-lock pattern. Body intensities ratify at CD4 via §7 tool-partner workflow.",
+
+        "body": {
+          "strong": {
+            "$value": "oklch(0.21 0.006 56)",
+            "$description": "Body text — strongest intensity (institutional-dark-serif placeholder). STUB per CD2 §9.2; CD4 calibrates against Vellum chrome at Lc ≥85 principal-grade per CD2 §3.3.",
+            "$extensions": {
+              "prime": {
+                "tier": "platform",
+                "stub-from": "CD4-pairing-via-§7-tool-partner-workflow",
+                "stub-fallback-rationale": "Tailwind v4 stone-900 nearest; institutional-dark-serif territory",
+                "concept-citation": {
+                  "universal-concept": "Reading-substrate strongest text intensity (CD2 §3.3 β principal-grade body Lc ≥85)",
+                  "reference-platforms": ["Quanta Magazine (Lc 80-85 body)", "NYT Magazine 2026 (Lc ~80-85)"]
+                },
+                "apca-validated-pairs": [
+                  { "against-token": "{color.dispatch.vellum.25}", "lc-score": null, "surface-pairing": "body-on-sky-high", "status": "pending-CD4", "lc-target": 85 },
+                  { "against-token": "{color.dispatch.vellum.100}", "lc-score": null, "surface-pairing": "body-on-sky-low", "status": "pending-CD4", "lc-target": 85 }
+                ],
+                "ratified-at": "CD4-component-pairing-pending"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+# Pristine upstream font binaries are reproducible from build/procure.py;
+# only WOFF2 production cuts (subsets/) are committed.
+sources/
+
+# pyftsubset temp files / Python artifacts
+__pycache__/
+*.pyc
+*.tmp

@@ -1,0 +1,38 @@
+{
+  "name": "prime-dispatch-microsite",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Prime DISpatch microsite \u2014 Astro 6 + Next.js 15 co-foundational hybrid monorepo (master plan \u00a71.7 reframe 2.6 + \u00a73.B).",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev:next": "pnpm --filter microsite-next dev",
+    "dev:astro": "pnpm --filter microsite-astro dev",
+    "dev:storybook": "pnpm --filter storybook dev",
+    "build": "pnpm -r build",
+    "build:next": "pnpm --filter microsite-next build",
+    "build:astro": "pnpm --filter microsite-astro build",
+    "build:storybook": "pnpm --filter storybook build",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "clean": "pnpm -r --parallel clean"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ],
+    "overrides": {
+      "devalue": "^5.8.1",
+      "postcss": "^8.5.10",
+      "esbuild": "^0.25.0",
+      "ws": "^8.20.1"
+    }
+  }
+}

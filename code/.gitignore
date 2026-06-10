@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+.astro/
+dist/
+out/
+build/
+
+# Cache
+.cache/
+.turbo/
+
+# Env
+.env
+.env*.local
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage
+coverage/
+*.lcov
+
+# TypeScript
+*.tsbuildinfo
+
+# Storybook build output (PCP-168 corrective per Mayor 2026-05-10 Path B SOP)
+storybook-static/

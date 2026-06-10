@@ -1,0 +1,82 @@
+/* MastheadWordmark — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/MastheadWordmark/spec.md
+ * Color source: CD2 §5.1 + §5.2 Decision 7 (wordmark inherits --accent-prime;
+ *               split-color cosmology-encoded — DIS red + patch dark serif).
+ * Typography source: --font-wordmark (Editorial New → Vollkorn fallback per
+ *                    fonts.css W2-S-F lock + W2-S-E V1 OFL stack).
+ *
+ * Visual archetype (Field 1 spec): typographic-only mark. The composition IS
+ * the chrome. Static masthead per CD1 Concept 4 atmospheric-chrome-not-animated
+ * rule + CD5 Decision 2 substrate-static-at-scroll-cadence.
+ *
+ * REBUILD 2026-05-10 — Cycle 2 italic-on-patch motif TOMBSTONED per Mayor;
+ * not in canon; "we definitely decided no italics."
+ *
+ * INTENTIONAL ANTI-PATTERNS:
+ *   - No background-color on root (Rule 1: substrate is host-owned;
+ *     atmospheric --sky-low per CD2 §4.5).
+ *   - No border, no card chrome. Bare typography is the visual character.
+ *   - No italics on patch half (Mayor lock; canon says split-color only).
+ *   - No ornament glyph between DIS and patch (the split-color IS the
+ *     ornament; Anthropic-ecosystem softening that came out of CD2 §5.2).
+ *   - No hardcoded hex; all color via canon tokens.
+ *   - No accent-prime on hover (Rule 3: wine reserved for DIS slot + focus
+ *     ring on critical interactions, not interaction states).
+ */
+
+.prime-wordmark {
+  font-family: var(--font-wordmark);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  color: inherit;
+}
+
+/* Scale variants — masthead / landing / header / favicon (W2-S-F smoke-test §1
+ * type ladder: 72 / 48 / 24 / 16 px nominal). */
+.prime-wordmark--masthead { font-size: 4.5rem; }
+.prime-wordmark--landing  { font-size: 3rem; }
+.prime-wordmark--header   { font-size: 1.5rem; }
+.prime-wordmark--favicon  { font-size: 1rem; }
+
+/* Compact — mobile breakpoint */
+.prime-wordmark--compact { font-size: 1.75rem; letter-spacing: -0.005em; }
+
+/* Split-color encoding (CD2 §5.2 Option C) */
+.prime-wordmark__dis {
+  color: var(--wordmark-dis);
+}
+
+.prime-wordmark__patch {
+  color: var(--wordmark-patch);
+  /* +8% mild patch hierarchy per Mayor 2026-05-10 W2-S-F lock — restores
+   * optical balance when capital DIS dominates lowercase patch at equal size. */
+  font-size: 1.08em;
+  letter-spacing: -0.005em;
+}
+
+/* Interactive states — opacity-only hover; wine focus ring (Rule 3). */
+a.prime-wordmark {
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 150ms ease-out;
+}
+
+a.prime-wordmark:hover { opacity: 0.85; }
+
+a.prime-wordmark:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.prime-wordmark { transition: none; }
+}
+
+[data-prime-reduced-motion="reduce"] a.prime-wordmark { transition: none; }

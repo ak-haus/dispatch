@@ -1,0 +1,76 @@
+<!--
+  preload.html — critical-weight preload snippets for V1 typography stack
+                 (W2-S-E OFL + W2-S-F premium Pangram)
+
+  Insert these <link rel="preload"> tags into the shared <head> partial that
+  Astro/Next.js renders on every surface. The four preloaded cuts are the
+  first-paint critical-weights (Body + Title + Nav + Wordmark) — combined
+  payload ≈ 95-115 KB; everything else loads on demand via @font-face's
+  `font-display: swap`.
+
+  W2-S-A integration: replace `/fonts/` prefix with whatever runtime asset
+  base resolves to (Astro's `~/assets` import or Next.js `public/fonts/`).
+  Keep `crossorigin="anonymous"` — required for same-origin self-host with
+  CORS-clean preload semantics.
+
+  Wordmark preload note: Editorial New is Unicode-range-scoped in fonts.css
+  to only the 8 wordmark characters; this preload sends the 1.5KB file
+  always, accepting the small bandwidth cost in exchange for guaranteed
+  masthead first-paint with the correct typeface (no Vollkorn → Editorial
+  New flash). On non-masthead surfaces, the browser still won't apply the
+  font (unicode-range guards), so the bandwidth cost is the only impact.
+
+  Authored 2026-05-10 by W2-S-E; amended 2026-05-10 by W2-S-F.
+-->
+
+<!-- Body (Crimson Pro Regular) — primary reading surface; first-paint critical -->
+<link
+  rel="preload"
+  href="/fonts/body/crimson-pro-400.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+
+<!-- Title (Vollkorn Regular) — masthead + headlines; first-paint critical -->
+<link
+  rel="preload"
+  href="/fonts/title/vollkorn-400.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+
+<!-- Nav (Pangram Sans Extrabold) — universal Prime-microsite nav chrome; first-paint critical -->
+<link
+  rel="preload"
+  href="/fonts/nav/pangram-sans-800.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+
+<!-- Wordmark (Editorial New Bold) — DISpatch masthead wordmark; first-paint critical -->
+<link
+  rel="preload"
+  href="/fonts/wordmark/editorial-new-700.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+
+<!--
+  NOT preloaded (load on demand via font-display: swap):
+    - Vollkorn Italic, Bold (quote-blocks + emphasis; load when scrolled to)
+    - Crimson Pro Italic, SemiBold, Bold, BoldItalic (load when reached in flow)
+    - Inter Regular, SemiBold (graceful fallback for Pangram Sans; loaded
+      only if Pangram Sans fails to load — extremely rare in practice)
+    - JetBrains Mono Regular, Bold (component-locked; loads with code-blocks)
+    - IM Fell English Regular, Italic (asset-locked; loads with cartography)
+
+  Rationale: the article-landing reading surface paints clean with four
+  preloaded cuts (Body + Title + Nav + Wordmark); secondary weights load
+  progressively as the reader scrolls. CLS impact minimized by font-display:
+  swap + size-adjust descriptors (added at W2-S-A integration if measurement
+  shows reflow visible to user).
+-->

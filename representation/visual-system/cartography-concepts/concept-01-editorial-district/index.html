@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en" data-surface="reception" data-district="editorial" data-zoom="borough" data-dial="mid">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DISpatch Editorial District — concept-01 cartography showcase at thesis-bar fidelity. W3-S-C cartography concept iteration; first concept artifact per CC7 dispatch brief done-criteria.">
+  <title>DISpatch — Editorial District (concept-01 showcase)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;500;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Inherits canonical token surface from first-render (DISpatch-locked) per master plan §0 C9 + CD2 ratification.
+       Token canon is one level up; relative path keeps us coherent without duplicating values. -->
+  <link rel="stylesheet" href="../../cartography/editorial-district/first-render/tokens.css">
+
+  <style>
+    /* ============================================
+       Concept-01 — Editorial District showcase
+       Hero cartography canvas (full-bleed) + editorial chrome overlay
+       Thesis-bar tier per CC7 W3-S-C done-criteria
+       ============================================ */
+
+    body {
+      background:
+        radial-gradient(ellipse at 50% 35%, var(--sky-high) 0%, var(--sky-low) 40%, oklch(0.94 0.015 86) 100%),
+        repeating-linear-gradient(0deg, oklch(0 0 0 / 0.010) 0px, transparent 1px, transparent 2px, oklch(0 0 0 / 0.006) 3px),
+        repeating-linear-gradient(90deg, oklch(0 0 0 / 0.010) 0px, transparent 1px, transparent 2px, oklch(0 0 0 / 0.006) 3px);
+      background-blend-mode: multiply, multiply, normal;
+    }
+
+    /* ============================================
+       Page shell — single-surface composition
+       ============================================ */
+    .shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: var(--space-5) var(--space-6) var(--space-12);
+      display: grid;
+      gap: var(--space-8);
+    }
+
+    /* ============================================
+       Site nav (consistent with first-render canon)
+       ============================================ */
+    .site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-sm);
+      font-weight: var(--type-weight-medium);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .site-nav__brand {
+      font-family: var(--type-title);
+      font-size: var(--type-scale-md);
+      font-weight: var(--type-weight-semibold);
+      letter-spacing: var(--tracking-snug);
+      text-transform: none;
+      color: var(--text-primary);
+    }
+    .site-nav__links { display: flex; gap: var(--space-6); list-style: none; }
+    .site-nav__link { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .site-nav__link:hover, .site-nav__link:focus { color: var(--text-primary); }
+    .site-nav__link--active { color: var(--text-primary); }
+
+    /* ============================================
+       Masthead + tagline
+       ============================================ */
+    .masthead {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-6) 0 0;
+    }
+    .masthead__breadcrumb {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: var(--type-weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      display: flex;
+      gap: var(--space-3);
+      align-items: baseline;
+    }
+    .masthead__breadcrumb-sep { opacity: 0.4; }
+    .masthead__wordmark {
+      font-family: var(--type-title);
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: var(--type-weight-bold);
+      line-height: 1.0;
+      letter-spacing: var(--tracking-tight);
+      margin: 0;
+    }
+    .masthead__wordmark-dis { color: var(--accent-prime); }
+    .masthead__wordmark-patch { color: var(--vellum-900); }
+    .masthead__caption {
+      font-family: var(--type-body);
+      font-size: var(--type-scale-md);
+      font-style: italic;
+      color: var(--text-secondary);
+      max-width: 64ch;
+      line-height: var(--leading-snug);
+    }
+
+    /* ============================================
+       Hero cartography composition
+       SVG hero + editorial overlay panel
+       ============================================ */
+    .hero {
+      position: relative;
+      display: grid;
+      gap: 0;
+    }
+
+    .hero__frame {
+      position: relative;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      background: var(--surface-cartography-substrate);
+      box-shadow:
+        0 1px 0 var(--surface-card-edge),
+        0 24px 64px -32px oklch(0.20 0.02 60 / 0.25),
+        inset 0 0 0 1px oklch(1 0 0 / 0.4);
+      overflow: hidden;
+    }
+
+    .hero__frame-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, var(--vellum-50) 0%, var(--vellum-100) 100%);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: var(--type-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--text-secondary);
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .hero__frame-header-left {
+      display: flex;
+      gap: var(--space-4);
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+    .hero__frame-header-pill {
+      font-family: var(--type-meta);
+      font-size: 10px;
+      letter-spacing: var(--tracking-normal);
+      text-transform: none;
+      padding: 2px var(--space-2);
+      background: var(--vellum-50);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-tertiary);
+    }
+    .hero__frame-header-pill--active {
+      background: oklch(0.96 0.040 35);
+      border-color: oklch(0.78 0.060 35);
+      color: var(--lane-editorial-text);
+    }
+    .hero__frame-header-dial {
+      display: inline-flex;
+      gap: 2px;
+      align-items: center;
+    }
+    .hero__frame-header-dial-step {
+      width: 16px;
+      height: 4px;
+      background: var(--vellum-300);
+      border-radius: 1px;
+    }
+    .hero__frame-header-dial-step--filled { background: var(--accent-prime); }
+
+    .hero__canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      background: var(--vellum-100);
+    }
+
+    /* ============================================
+       Editorial overlay panel — sits on top of cartography at corner
+       Holds: "where you are" + dial + live activity feed
+       Mobile: collapses below cartography
+       ============================================ */
+    .overlay {
+      position: absolute;
+      top: var(--space-12);
+      right: var(--space-5);
+      width: 320px;
+      max-width: calc(100% - var(--space-10));
+      background: oklch(0.985 0.008 88 / 0.94);
+      backdrop-filter: blur(6px) saturate(1.1);
+      -webkit-backdrop-filter: blur(6px) saturate(1.1);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      display: grid;
+      gap: var(--space-4);
+      box-shadow:
+        0 1px 0 var(--surface-card-edge),
+        0 16px 40px -20px oklch(0.20 0.02 60 / 0.30);
+      font-family: var(--type-body);
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 960px) {
+      .overlay {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        margin-top: var(--space-5);
+      }
+    }
+
+    .overlay__section { display: grid; gap: var(--space-2); }
+    .overlay__section-label {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: var(--type-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--text-tertiary);
+    }
+    .overlay__breadcrumb {
+      font-family: var(--type-body);
+      font-size: var(--type-scale-md);
+      line-height: var(--leading-snug);
+      color: var(--text-primary);
+    }
+    .overlay__breadcrumb-current {
+      font-family: var(--type-title);
+      font-weight: var(--type-weight-semibold);
+      letter-spacing: var(--tracking-snug);
+    }
+    .overlay__breadcrumb-step {
+      color: var(--text-secondary);
+    }
+    .overlay__breadcrumb-arrow { color: var(--text-tertiary); margin: 0 4px; }
+
+    .overlay__dial {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .overlay__dial-track {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+    .overlay__dial-segment {
+      width: 22px;
+      height: 5px;
+      background: var(--vellum-300);
+      border-radius: 1px;
+    }
+    .overlay__dial-segment--filled { background: var(--accent-prime); }
+    .overlay__dial-label {
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-xs);
+      color: var(--text-secondary);
+      letter-spacing: var(--tracking-snug);
+    }
+
+    .overlay__feed {
+      list-style: none;
+      display: grid;
+      gap: var(--space-3);
+      padding-top: var(--space-2);
+      border-top: 1px dashed var(--border-subtle);
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .overlay__feed-row {
+      display: grid;
+      grid-template-columns: 6px 1fr;
+      gap: var(--space-3);
+      align-items: baseline;
+      font-family: var(--type-meta);
+      font-size: var(--type-scale-xs);
+      color: var(--text-primary);
+      line-height: var(--leading-snug);
+    }
+    .overlay__feed-marker {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-prime);
+      transform: translateY(2px);
+    }
+    .overlay__feed-marker--quiet {
+      background: var(--vellum-400);
+    }
+    .overlay__feed-text {
+      display: grid;
+      gap: 2px;
+    }
+    .overlay__feed-label {
+      color: var(--text-primary);
+      font-weight: var(--type-weight-medium);
+    }
+    .overlay__feed-meta {
+      color: var(--text-tertiary);
+      font-size: 10px;
+      letter-spacing: var(--tracking-snug);
+    }
+
+    .overlay__lanes {
+      display: grid;
+      gap: var(--space-2);
+      padding-top: var(--space-3);
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .overlay__lane-row {
+      display: grid;
+      grid-template-columns: 12px 1fr auto;
+      gap: var(--space-2);
+      align-items: center;
+      font-family: var(--type-meta);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .overlay__lane-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+    .overlay__lane-swatch--editorial { background: var(--lane-editorial-fill); }
+    .overlay__lane-swatch--institutional { background: var(--lane-institutional-fill); }
+    .overlay__lane-swatch--dispatch { background: var(--lane-dispatch-fill); }
+    .overlay__lane-vector {
+      color: var(--text-tertiary);
+      font-size: 10px;
+      font-style: italic;
+    }
+
+    /* ============================================
+       Districts directory band (below hero)
+       "you are in one of several"
+       ============================================ */
+    .directory {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-4);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--border-subtle);
+    }
+    .directory__title {
+      grid-column: 1 / -1;
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: var(--type-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--text-secondary);
+    }
+    .directory__card {
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-4);
+      background: var(--vellum-50);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .directory__card--active {
+      background: oklch(0.96 0.040 35);
+      border-color: oklch(0.70 0.10 35);
+    }
+    .directory__card--future {
+      opacity: 0.55;
+      border-style: dashed;
+    }
+    .directory__card-name {
+      font-family: var(--type-title);
+      font-size: var(--type-scale-lg);
+      font-weight: var(--type-weight-semibold);
+      letter-spacing: var(--tracking-snug);
+      color: var(--text-primary);
+    }
+    .directory__card-character {
+      font-family: var(--type-body);
+      font-size: var(--type-scale-sm);
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: var(--leading-snug);
+    }
+    .directory__card-meta {
+      font-family: var(--type-meta);
+      font-size: 10px;
+      letter-spacing: var(--tracking-snug);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+    }
+
+    /* ============================================
+       Institutional fixture (Paradiso seed-mandate; persists across surfaces)
+       ============================================ */
+    .institutional-fixture {
+      margin-top: var(--space-12);
+      padding: var(--space-10) var(--space-8);
+      background: var(--surface-institutional-fixture);
+      border-top: 1px solid var(--border-card);
+      border-bottom: 1px solid var(--border-card);
+      display: grid;
+      gap: var(--space-3);
+      text-align: center;
+      max-width: 64ch;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: var(--radius-lg);
+    }
+    .institutional-fixture__heading {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      font-weight: var(--type-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--text-tertiary);
+    }
+    .institutional-fixture__mandate {
+      font-family: var(--type-title);
+      font-size: var(--type-scale-lg);
+      font-weight: var(--type-weight-medium);
+      font-style: italic;
+      line-height: var(--leading-snug);
+      letter-spacing: var(--tracking-snug);
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .institutional-fixture__attribution {
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      letter-spacing: var(--tracking-wide);
+      color: var(--text-tertiary);
+    }
+
+    /* Footer */
+    .site-footer {
+      margin-top: var(--space-8);
+      padding: var(--space-5) 0;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-3);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-xs);
+      color: var(--text-tertiary);
+      letter-spacing: var(--tracking-wide);
+    }
+    .site-footer__provenance {
+      font-family: var(--type-meta);
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--accent-prime);
+      color: var(--text-on-accent);
+      padding: var(--space-3) var(--space-4);
+      font-family: var(--type-nav);
+      font-size: var(--type-scale-sm);
+      text-decoration: none;
+      z-index: 100;
+    }
+    .skip-link:focus { left: var(--space-4); top: var(--space-4); }
+
+    /* ============================================
+       Cartography SVG — atmospheric pulse for Inferno markers + DISpatch marker
+       Reduced-motion compliance: pulse animates ONLY when prefers-reduced-motion is no-preference
+       ============================================ */
+    .pulse-ring { transform-origin: center; opacity: 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pulse-ring {
+        animation: pulse-ring-anim 3.2s ease-out infinite;
+      }
+      .pulse-ring--slow { animation-duration: 4.8s; }
+      .pulse-ring--fast { animation-duration: 2.4s; }
+      .dispatch-pulse {
+        animation: dispatch-pulse-anim 3.8s ease-out infinite;
+      }
+      @keyframes pulse-ring-anim {
+        0% { transform: scale(0.6); opacity: 0.55; }
+        80% { transform: scale(2.4); opacity: 0; }
+        100% { transform: scale(2.4); opacity: 0; }
+      }
+      @keyframes dispatch-pulse-anim {
+        0% { transform: scale(0.7); opacity: 0.65; }
+        70% { transform: scale(2.8); opacity: 0; }
+        100% { transform: scale(2.8); opacity: 0; }
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#overlay-feed">Skip to live activity feed</a>
+
+  <div class="shell">
+
+    <nav class="site-nav" aria-label="Primary">
+      <span class="site-nav__brand">DISpatch</span>
+      <ul class="site-nav__links">
+        <li><a class="site-nav__link site-nav__link--active" href="#" aria-current="page">Reception</a></li>
+        <li><a class="site-nav__link" href="#">Districts</a></li>
+        <li><a class="site-nav__link" href="#">Live</a></li>
+        <li><a class="site-nav__link" href="#">Search</a></li>
+      </ul>
+    </nav>
+
+    <header class="masthead" aria-labelledby="masthead-wordmark">
+      <p class="masthead__breadcrumb">
+        <span>Prime City</span>
+        <span class="masthead__breadcrumb-sep">·</span>
+        <span>Editorial District</span>
+        <span class="masthead__breadcrumb-sep">·</span>
+        <span>Magazine corner</span>
+      </p>
+      <h1 class="masthead__wordmark" id="masthead-wordmark">
+        <span class="masthead__wordmark-dis" aria-hidden="true">DIS</span><span class="masthead__wordmark-patch" aria-hidden="true">patch</span>
+        <span style="position:absolute; left:-9999px;">DISpatch</span>
+      </h1>
+      <p class="masthead__caption">A dev-diary published from one building in one corner of one district of Prime — and the cartography is the test pilot's payload.</p>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+
+      <div class="hero__frame">
+
+        <header class="hero__frame-header">
+          <div class="hero__frame-header-left">
+            <span id="hero-title">Editorial District &middot; borough zoom</span>
+            <span class="hero__frame-header-pill hero__frame-header-pill--active">V1 LOCKED &middot; CD3 §4</span>
+            <span class="hero__frame-header-pill">unified Prime grid</span>
+          </div>
+          <div class="hero__frame-header-dial" aria-label="Dial position: mid">
+            <span class="overlay__dial-label" style="margin-right: var(--space-2);">Dial</span>
+            <span class="hero__frame-header-dial-step hero__frame-header-dial-step--filled" aria-hidden="true"></span>
+            <span class="hero__frame-header-dial-step hero__frame-header-dial-step--filled" aria-hidden="true"></span>
+            <span class="hero__frame-header-dial-step" aria-hidden="true"></span>
+            <span class="overlay__dial-label" style="margin-left: var(--space-2);">mid</span>
+          </div>
+        </header>
+
+        <svg class="hero__canvas" viewBox="0 0 1440 900" role="img" aria-labelledby="hero-title hero-desc" preserveAspectRatio="xMidYMid meet">
+          <desc id="hero-desc">
+            A top-down cartographic rendering of the Editorial District within the unified Prime grid, shown at borough zoom.
+            The district is bounded by a soft, civic-flowing perimeter and contains a network of avenues (Letterpress, Folio, Serif, Quire, Imprint)
+            crossing horizontal streets (Masthead, Column, Spread, Margin, Galley), with a curving civic-axis spine threading from the
+            books-corner through the magazine-corner to the broadcast-corner edge. The magazine-corner neighborhood sits at the center
+            with the DISpatch building marker — a stacked-pages magazine icon with a soft red dispatch pulse — placed at the Serif × Spread junction.
+            Around the magazine-corner: future newspaper-corner, broadcast-corner, film-corner, podcast-corner, books-corner, and marketing-agency-corner
+            neighborhoods are rendered as anticipatory placeholders at diminished opacity. Beyond the district boundary, forward-pointed Civic and Art
+            districts surface at edge silhouette with most-diminished opacity per the anticipatory-not-missing render discipline. Wine-red Inferno
+            dispatch markers pop up at semantically meaningful positions across the cartography — CI/CD events, agent activations, observability
+            tracing, MCP gateway routing — each carrying a named activity label. A subtle paper-grain procedural texture overlays the entire substrate;
+            an editorial-warm contour gradient focuses warmth at the magazine-corner. The composition reads as one civic surface holding the bar.
+          </desc>
+
+          <defs>
+            <!-- Paper grain via fractal noise — tactile not noisy per CD1 thesis Concept 4 + Paris Review precedent -->
+            <filter id="paper-grain" x="0%" y="0%" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" seed="7"/>
+              <feColorMatrix values="0 0 0 0 0.86  0 0 0 0 0.80  0 0 0 0 0.72  0 0 0 0.10 0"/>
+              <feComposite in2="SourceGraphic" operator="in"/>
+            </filter>
+
+            <!-- Editorial-warm contour gradient — radial, focused near magazine-corner -->
+            <radialGradient id="contour-warm" cx="0.51" cy="0.54" r="0.46">
+              <stop offset="0%" stop-color="oklch(0.945 0.038 85)" stop-opacity="0.42"/>
+              <stop offset="50%" stop-color="oklch(0.925 0.025 88)" stop-opacity="0.20"/>
+              <stop offset="100%" stop-color="oklch(0.90 0.018 88)" stop-opacity="0"/>
+            </radialGradient>
+
+            <!-- Architectural hairline grid -->
+            <pattern id="arch-grid" patternUnits="userSpaceOnUse" width="40" height="40">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="oklch(0.80 0.022 85)" stroke-width="0.4" opacity="0.35"/>
+            </pattern>
+
+            <!-- Finer micro-grid (10px) for civic-architectural-document feel -->
+            <pattern id="arch-micro-grid" patternUnits="userSpaceOnUse" width="10" height="10">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="oklch(0.84 0.018 85)" stroke-width="0.25" opacity="0.20"/>
+            </pattern>
+
+            <!-- Editorial District fill — warm vellum substrate -->
+            <radialGradient id="district-vellum" cx="0.50" cy="0.50" r="0.62">
+              <stop offset="0%" stop-color="oklch(0.965 0.018 86)" stop-opacity="1"/>
+              <stop offset="80%" stop-color="oklch(0.955 0.016 86)" stop-opacity="0.92"/>
+              <stop offset="100%" stop-color="oklch(0.94 0.014 86)" stop-opacity="0.85"/>
+            </radialGradient>
+
+            <!-- Magazine-corner highlight fill — warm terracotta wash -->
+            <radialGradient id="magazine-corner-fill" cx="0.50" cy="0.50" r="0.65">
+              <stop offset="0%" stop-color="oklch(0.92 0.060 38)" stop-opacity="0.65"/>
+              <stop offset="60%" stop-color="oklch(0.93 0.040 40)" stop-opacity="0.40"/>
+              <stop offset="100%" stop-color="oklch(0.93 0.025 50)" stop-opacity="0.10"/>
+            </radialGradient>
+
+            <!-- Forward-pointed Civic District tint (cool-mineral graphite-blue) -->
+            <linearGradient id="civic-tint" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="oklch(0.55 0.065 240)" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="oklch(0.50 0.070 240)" stop-opacity="0.05"/>
+            </linearGradient>
+
+            <!-- Forward-pointed Art District tint (warm-saturated creative-pop) -->
+            <linearGradient id="art-tint" x1="1" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="oklch(0.70 0.13 55)" stop-opacity="0.20"/>
+              <stop offset="100%" stop-color="oklch(0.78 0.08 60)" stop-opacity="0.04"/>
+            </linearGradient>
+
+            <!-- Civic-axis spine gradient (institutional graphite-blue) -->
+            <linearGradient id="civic-axis-stroke" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="oklch(0.50 0.07 240)" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="oklch(0.45 0.06 240)" stop-opacity="0.55"/>
+            </linearGradient>
+
+            <!-- DISpatch building drop shadow -->
+            <filter id="building-shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+              <feOffset dx="0" dy="1.5" result="offsetblur"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- ============================================
+               Layer 1 — Atmospheric substrate
+               ============================================ -->
+          <rect width="1440" height="900" fill="var(--surface-cartography-substrate, oklch(0.96 0.012 88))"/>
+          <rect width="1440" height="900" fill="url(#arch-micro-grid)"/>
+          <rect width="1440" height="900" fill="url(#arch-grid)"/>
+          <rect width="1440" height="900" filter="url(#paper-grain)" opacity="0.55"/>
+          <rect width="1440" height="900" fill="url(#contour-warm)"/>
+
+          <!-- ============================================
+               Layer 2 — Forward-pointed neighbor districts (most-diminished; per §4.7)
+               District character expressed through silhouette forms, not geometric placeholders.
+               Civic = institutional architecture (dome, pillared portico, governmental block).
+               Art = creative-pop forms (gallery, theater, sculpture).
+               ============================================ -->
+          <!-- Civic District at top-left edge -->
+          <g opacity="0.95" aria-label="Forward-pointed Civic District">
+            <path d="M -60 -40 L 400 -40 L 380 80 L 110 130 L 90 290 L -60 320 Z"
+                  fill="url(#civic-tint)"
+                  stroke="oklch(0.45 0.065 240)" stroke-width="0.9" stroke-dasharray="7,5" opacity="0.95"/>
+            <text x="180" y="50"
+                  font-family="Vollkorn, Georgia, serif" font-size="22" font-weight="700"
+                  letter-spacing="0.14em" fill="oklch(0.40 0.075 240)" opacity="0.62"
+                  text-anchor="middle">CIVIC</text>
+            <text x="180" y="72"
+                  font-family="Inter, system-ui, sans-serif" font-size="9" font-style="italic"
+                  letter-spacing="0.08em" fill="oklch(0.45 0.07 240)" opacity="0.55"
+                  text-anchor="middle">forward-pointed · V1.5+</text>
+
+            <!-- Civic district silhouettes: institutional architecture
+                 Dome + columned portico + governmental block + clock tower
+                 Most-diminished opacity per §4.7 anticipatory-not-missing register -->
+            <g opacity="0.48" fill="oklch(0.42 0.06 240)" aria-hidden="true">
+              <!-- Domed capitol building (left) -->
+              <g transform="translate(38, 0)">
+                <rect x="0" y="20" width="58" height="40" rx="1"/>
+                <!-- Pediment -->
+                <polygon points="0,20 29,4 58,20"/>
+                <!-- Dome -->
+                <ellipse cx="29" cy="20" rx="14" ry="13" opacity="0.92"/>
+                <rect x="27" y="-2" width="4" height="10"/>
+                <!-- Columns (subtle vertical lines) -->
+                <g stroke="oklch(0.50 0.06 240)" stroke-width="0.5" opacity="0.6">
+                  <line x1="8" y1="22" x2="8" y2="58"/>
+                  <line x1="20" y1="22" x2="20" y2="58"/>
+                  <line x1="38" y1="22" x2="38" y2="58"/>
+                  <line x1="50" y1="22" x2="50" y2="58"/>
+                </g>
+              </g>
+              <!-- Clock tower (center) -->
+              <g transform="translate(120, -10)">
+                <rect x="0" y="40" width="30" height="32"/>
+                <rect x="4" y="10" width="22" height="30"/>
+                <polygon points="2,10 15,-4 28,10"/>
+                <!-- Clock face -->
+                <circle cx="15" cy="25" r="6" fill="oklch(0.85 0.04 86)" opacity="0.55"/>
+              </g>
+              <!-- Governmental colonnaded block (right) -->
+              <g transform="translate(180, 5)">
+                <rect x="0" y="22" width="80" height="32" rx="1"/>
+                <polygon points="0,22 40,8 80,22"/>
+                <g stroke="oklch(0.50 0.06 240)" stroke-width="0.5" opacity="0.55">
+                  <line x1="8" y1="24" x2="8" y2="52"/>
+                  <line x1="22" y1="24" x2="22" y2="52"/>
+                  <line x1="40" y1="24" x2="40" y2="52"/>
+                  <line x1="58" y1="24" x2="58" y2="52"/>
+                  <line x1="72" y1="24" x2="72" y2="52"/>
+                </g>
+              </g>
+              <!-- Administrative block (far right) -->
+              <g transform="translate(290, 0)">
+                <rect x="0" y="10" width="48" height="50"/>
+                <!-- Window grid signaling institution -->
+                <g fill="oklch(0.30 0.05 240)" opacity="0.55">
+                  <rect x="6" y="18" width="4" height="6"/>
+                  <rect x="18" y="18" width="4" height="6"/>
+                  <rect x="30" y="18" width="4" height="6"/>
+                  <rect x="42" y="18" width="4" height="6"/>
+                  <rect x="6" y="32" width="4" height="6"/>
+                  <rect x="18" y="32" width="4" height="6"/>
+                  <rect x="30" y="32" width="4" height="6"/>
+                  <rect x="42" y="32" width="4" height="6"/>
+                  <rect x="6" y="46" width="4" height="6"/>
+                  <rect x="18" y="46" width="4" height="6"/>
+                  <rect x="30" y="46" width="4" height="6"/>
+                  <rect x="42" y="46" width="4" height="6"/>
+                </g>
+              </g>
+            </g>
+
+            <!-- Civic street network hint (most-diminished) -->
+            <g opacity="0.30" stroke="oklch(0.42 0.06 240)" stroke-width="0.5" fill="none">
+              <line x1="-40" y1="100" x2="375" y2="92"/>
+              <line x1="-40" y1="115" x2="372" y2="107"/>
+            </g>
+          </g>
+
+          <!-- Art District at bottom-right edge -->
+          <g opacity="0.95" aria-label="Forward-pointed Art District">
+            <path d="M 1340 620 L 1500 600 L 1500 940 L 1300 940 L 1300 800 Z"
+                  fill="url(#art-tint)"
+                  stroke="oklch(0.55 0.13 50)" stroke-width="0.9" stroke-dasharray="7,5" opacity="0.95"/>
+            <text x="1410" y="780"
+                  font-family="Vollkorn, Georgia, serif" font-size="22" font-weight="700"
+                  letter-spacing="0.14em" fill="oklch(0.42 0.14 50)" opacity="0.62"
+                  text-anchor="middle">ART</text>
+            <text x="1410" y="800"
+                  font-family="Inter, system-ui, sans-serif" font-size="9" font-style="italic"
+                  letter-spacing="0.08em" fill="oklch(0.50 0.11 50)" opacity="0.55"
+                  text-anchor="middle">forward-pointed · V1.5+</text>
+
+            <!-- Art district silhouettes: creative-pop forms
+                 Theater dome + gallery + sculpture garden + studio block
+                 Most-diminished opacity per §4.7 anticipatory-not-missing register -->
+            <g opacity="0.48" fill="oklch(0.55 0.13 50)" aria-hidden="true">
+              <!-- Theater dome (left) -->
+              <g transform="translate(1320, 820)">
+                <rect x="0" y="30" width="64" height="50" rx="2"/>
+                <ellipse cx="32" cy="30" rx="32" ry="22"/>
+                <!-- Theater marquee dots -->
+                <g fill="oklch(0.60 0.14 55)" opacity="0.55">
+                  <circle cx="14" cy="50" r="1.6"/>
+                  <circle cx="24" cy="50" r="1.6"/>
+                  <circle cx="34" cy="50" r="1.6"/>
+                  <circle cx="44" cy="50" r="1.6"/>
+                  <circle cx="54" cy="50" r="1.6"/>
+                </g>
+              </g>
+              <!-- Sculpture garden (center) -->
+              <g transform="translate(1395, 850)">
+                <!-- Abstract obelisk -->
+                <polygon points="0,72 8,0 16,72"/>
+                <!-- Spherical sculpture -->
+                <circle cx="32" cy="56" r="14"/>
+                <!-- Plinth -->
+                <rect x="26" y="68" width="12" height="8"/>
+              </g>
+              <!-- Gallery block (right; large window/skylight) -->
+              <g transform="translate(1448, 824)">
+                <rect x="0" y="16" width="50" height="64" rx="2"/>
+                <!-- Skylight -->
+                <rect x="6" y="22" width="38" height="20" fill="oklch(0.80 0.08 55)" opacity="0.55"/>
+                <!-- Gallery entrance/columns -->
+                <rect x="20" y="58" width="10" height="22" fill="oklch(0.42 0.12 50)" opacity="0.55"/>
+              </g>
+            </g>
+
+            <!-- Art street network hint (most-diminished) -->
+            <g opacity="0.30" stroke="oklch(0.45 0.13 50)" stroke-width="0.5" fill="none">
+              <line x1="1310" y1="820" x2="1500" y2="818"/>
+              <line x1="1310" y1="870" x2="1500" y2="868"/>
+            </g>
+          </g>
+
+          <!-- ============================================
+               Layer 3 — Editorial District boundary (V1 LOCKED; full visual weight)
+               Soft-edged civic-flowing perimeter
+               ============================================ -->
+          <g aria-label="Editorial District (active focus)">
+            <!-- District fill -->
+            <path id="editorial-district-boundary"
+                  d="M 110 140
+                     C 110 130, 130 125, 200 120
+                     L 380 105
+                     C 480 100, 600 95, 720 95
+                     C 840 95, 960 102, 1060 110
+                     L 1280 130
+                     C 1330 135, 1350 150, 1360 200
+                     L 1360 380
+                     C 1360 480, 1350 580, 1335 680
+                     C 1325 750, 1300 790, 1240 800
+                     L 1000 815
+                     C 880 820, 720 820, 580 815
+                     L 340 800
+                     C 220 795, 130 770, 110 720
+                     L 90 540
+                     C 88 420, 92 270, 110 140 Z"
+                  fill="url(#district-vellum)"
+                  stroke="oklch(0.55 0.13 35)"
+                  stroke-width="1.4"
+                  opacity="0.97"/>
+
+            <!-- Magazine-corner contour-warm overlay confined to district -->
+            <path d="M 110 140
+                     C 110 130, 130 125, 200 120
+                     L 380 105
+                     C 480 100, 600 95, 720 95
+                     C 840 95, 960 102, 1060 110
+                     L 1280 130
+                     C 1330 135, 1350 150, 1360 200
+                     L 1360 380
+                     C 1360 480, 1350 580, 1335 680
+                     C 1325 750, 1300 790, 1240 800
+                     L 1000 815
+                     C 880 820, 720 820, 580 815
+                     L 340 800
+                     C 220 795, 130 770, 110 720
+                     L 90 540
+                     C 88 420, 92 270, 110 140 Z"
+                  fill="url(#contour-warm)" opacity="0.7"/>
+
+            <!-- ============================================
+                 Layer 4 — Street network within Editorial District
+                 Horizontal streets first (background), then vertical avenues
+                 ============================================ -->
+            <g aria-label="Street network" opacity="0.78">
+              <!-- Horizontal streets: Masthead, Column, Spread, Margin, Galley -->
+              <g stroke="oklch(0.62 0.035 75)" stroke-width="0.85" fill="none" opacity="0.92">
+                <path d="M 160 200 C 400 200, 800 198, 1300 202"/>
+                <path d="M 130 340 C 400 338, 800 338, 1330 342"/>
+                <path d="M 115 480 C 400 478, 800 478, 1340 482"/>
+                <path d="M 130 620 C 400 618, 800 618, 1320 622"/>
+                <path d="M 180 730 C 400 728, 800 728, 1280 732"/>
+              </g>
+              <!-- Vertical avenues: Letterpress, Folio, Serif, Quire, Imprint -->
+              <g stroke="oklch(0.58 0.038 75)" stroke-width="1.05" fill="none" opacity="0.92">
+                <path d="M 240 130 C 240 300, 240 600, 240 795"/>
+                <path d="M 460 105 C 460 300, 460 600, 460 810"/>
+                <path d="M 720 95 C 720 300, 720 600, 720 818"/>
+                <path d="M 980 110 C 980 300, 980 600, 980 808"/>
+                <path d="M 1200 130 C 1200 300, 1200 600, 1200 795"/>
+              </g>
+
+              <!-- Cross-streets (minor; tighter density) -->
+              <g stroke="oklch(0.68 0.028 78)" stroke-width="0.5" fill="none" opacity="0.62">
+                <path d="M 160 270 C 400 270, 800 268, 1300 272"/>
+                <path d="M 130 410 C 400 408, 800 408, 1330 412"/>
+                <path d="M 115 550 C 400 548, 800 548, 1340 552"/>
+                <path d="M 130 680 C 400 678, 800 678, 1320 682"/>
+                <path d="M 350 130 C 350 300, 350 600, 350 800"/>
+                <path d="M 590 105 C 590 300, 590 600, 590 812"/>
+                <path d="M 850 100 C 850 300, 850 600, 850 815"/>
+                <path d="M 1090 115 C 1090 300, 1090 600, 1090 800"/>
+              </g>
+
+              <!-- Avenue labels (subtle; civic street-sign register) -->
+              <g font-family="Inter, system-ui, sans-serif" font-size="8"
+                 letter-spacing="0.14em" fill="oklch(0.48 0.04 70)" opacity="0.50">
+                <text x="240" y="822" text-anchor="middle">LETTERPRESS</text>
+                <text x="460" y="828" text-anchor="middle">FOLIO</text>
+                <text x="980" y="824" text-anchor="middle">QUIRE</text>
+                <text x="1200" y="812" text-anchor="middle">IMPRINT</text>
+              </g>
+            </g>
+
+            <!-- Civic-axis spine (institutional graphite-blue; curves through center) -->
+            <path d="M 200 800 C 380 660, 580 580, 720 480 C 880 360, 1080 250, 1240 130"
+                  fill="none"
+                  stroke="url(#civic-axis-stroke)"
+                  stroke-width="3"
+                  opacity="0.85"
+                  stroke-linecap="round"/>
+            <path d="M 200 800 C 380 660, 580 580, 720 480 C 880 360, 1080 250, 1240 130"
+                  fill="none"
+                  stroke="oklch(0.32 0.05 240)"
+                  stroke-width="1.2"
+                  opacity="0.40"
+                  stroke-linecap="round"
+                  stroke-dasharray="2,5"/>
+
+            <!-- ============================================
+                 Layer 5 — Future-neighborhood-corner placeholders (further-diminished per §4.7)
+                 ============================================ -->
+            <!-- newspaper-corner (top-left) -->
+            <g opacity="0.45" aria-label="Future newspaper-corner (anticipatory)">
+              <rect x="200" y="240" width="170" height="140" rx="4"
+                    fill="oklch(0.94 0.025 35)"
+                    stroke="oklch(0.55 0.10 35)" stroke-width="0.7" stroke-dasharray="4,4"/>
+              <text x="285" y="312" font-family="Inter, system-ui, sans-serif" font-size="10"
+                    font-weight="500" letter-spacing="0.10em" fill="oklch(0.45 0.09 35)"
+                    text-anchor="middle">newspaper-corner</text>
+              <text x="285" y="328" font-family="Inter, system-ui, sans-serif" font-size="8"
+                    font-style="italic" letter-spacing="0.06em" fill="oklch(0.50 0.06 35)"
+                    text-anchor="middle">anticipatory</text>
+            </g>
+
+            <!-- broadcast-corner (top) -->
+            <g opacity="0.40" aria-label="Future broadcast-corner (anticipatory)">
+              <rect x="490" y="170" width="180" height="110" rx="4"
+                    fill="oklch(0.94 0.025 35)"
+                    stroke="oklch(0.55 0.10 35)" stroke-width="0.7" stroke-dasharray="4,4"/>
+              <text x="580" y="226" font-family="Inter, system-ui, sans-serif" font-size="10"
+                    font-weight="500" letter-spacing="0.10em" fill="oklch(0.45 0.09 35)"
+                    text-anchor="middle">broadcast-corner</text>
+              <text x="580" y="242" font-family="Inter, system-ui, sans-serif" font-size="8"
+                    font-style="italic" letter-spacing="0.06em" fill="oklch(0.50 0.06 35)"
+                    text-anchor="middle">anticipatory</text>
+            </g>
+
+            <!-- film-corner (top-right) -->
+            <g opacity="0.40" aria-label="Future film-corner (anticipatory)">
+              <rect x="830" y="190" width="160" height="120" rx="4"
+                    fill="oklch(0.94 0.025 35)"
+                    stroke="oklch(0.55 0.10 35)" stroke-width="0.7" stroke-dasharray="4,4"/>
+              <text x="910" y="246" font-family="Inter, system-ui, sans-serif" font-size="10"
+                    font-weight="500" letter-spacing="0.10em" fill="oklch(0.45 0.09 35)"
+                    text-anchor="middle">film-corner</text>
+              <text x="910" y="262" font-family="Inter, system-ui, sans-serif" font-size="8"
+                    font-style="italic" letter-spacing="0.06em" fill="oklch(0.50 0.06 35)"
+                    text-anchor="middle">anticipatory</text>
+            </g>
+
+            <!-- podcast-corner (right) -->
+            <g opacity="0.42" aria-label="Future podcast-corner (anticipatory)">
+              <rect x="1050" y="280" width="170" height="140" rx="4"
+                    fill="oklch(0.94 0.025 35)"
+                    stroke="oklch(0.55 0.10 35)" stroke-width="0.7" stroke-dasharray="4,4"/>
+              <text x="1135" y="354" font-family="Inter, system-ui, sans-serif" font-size="10"
+                    font-weight="500" letter-spacing="0.10em" fill="oklch(0.45 0.09 35)"
+                    text-anchor="middle">podcast-corner</text>
+              <text x="1135" y="370" font-family="Inter, system-ui, sans-serif" font-size="8"
+                    font-style="italic" letter-spacing="0.06em" fill="oklch(0.50 0.06 35)"
+                    text-anchor="middle">anticipatory</text>
+            </g>
+
+            <!-- books-corner (bottom-left) -->
+            <g opacity="0.40" aria-label="Future books-corner (anticipatory)">
+              <rect x="190" y="580" width="180" height="160" rx="4"
+                    fill="oklch(0.94 0.025 35)"
+                    stroke="oklch(0.55 0.10 35)" stroke-width="0.7" stroke-dasharray="4,4"/>
+              <text x="280" y="664" font-family="Inter, system-ui, sans-serif" font-size="10"
+                    font-weight="500" letter-spacing="0.10em" fill="oklch(0.45 0.09 35)"
+                    text-anchor="middle">books-corner</text>
+              <text x="280" y="680" font-family="Inter, system-ui, sans-serif" font-size="8"
+                    font-style="italic" letter-spacing="0.06em" fill="oklch(0.50 0.06 35)"
+                    text-anchor="middle">anticipatory</text>
+            </g>
+
+            <!-- marketing-agency-corner (bottom-right) -->
+            <g opacity="0.42" aria-label="Future marketing-agency-corner (anticipatory)">
+              <rect x="940" y="600" width="220" height="140" rx="4"
+                    fill="oklch(0.94 0.025 35)"
+                    stroke="oklch(0.55 0.10 35)" stroke-width="0.7" stroke-dasharray="4,4"/>
+              <text x="1050" y="666" font-family="Inter, system-ui, sans-serif" font-size="10"
+                    font-weight="500" letter-spacing="0.10em" fill="oklch(0.45 0.09 35)"
+                    text-anchor="middle">marketing-agency-corner</text>
+              <text x="1050" y="682" font-family="Inter, system-ui, sans-serif" font-size="8"
+                    font-style="italic" letter-spacing="0.06em" fill="oklch(0.50 0.06 35)"
+                    text-anchor="middle">anticipatory</text>
+            </g>
+
+            <!-- ============================================
+                 Layer 6 — District-name signage (cosmology-marker)
+                 EDITORIAL DISTRICT — burned-in Civic/Dante stand-in
+                 ============================================ -->
+            <text x="720" y="175"
+                  font-family="Vollkorn, Georgia, serif"
+                  font-size="42" font-weight="700"
+                  letter-spacing="0.22em"
+                  fill="oklch(0.32 0.11 35)" opacity="0.32"
+                  text-anchor="middle">EDITORIAL DISTRICT</text>
+            <text x="720" y="200"
+                  font-family="Inter, system-ui, sans-serif"
+                  font-size="11" font-style="italic"
+                  letter-spacing="0.14em"
+                  fill="oklch(0.40 0.09 35)" opacity="0.55"
+                  text-anchor="middle">Districts-Terrace · Purgatorio</text>
+
+            <!-- ============================================
+                 Layer 7 — Magazine-corner neighborhood (full visual weight; "you are here")
+                 ============================================ -->
+            <g aria-label="Magazine-corner neighborhood (you are here)">
+              <!-- Highlight fill -->
+              <path d="M 580 360
+                       Q 580 350, 600 350
+                       L 900 350
+                       Q 920 350, 920 370
+                       L 920 580
+                       Q 920 600, 900 600
+                       L 600 595
+                       Q 580 595, 580 575 Z"
+                    fill="url(#magazine-corner-fill)"
+                    stroke="oklch(0.55 0.13 35)" stroke-width="1.5"
+                    opacity="1"/>
+
+              <!-- Magazine-corner sub-label -->
+              <text x="745" y="376"
+                    font-family="Inter, system-ui, sans-serif"
+                    font-size="11" font-weight="600"
+                    letter-spacing="0.18em"
+                    fill="oklch(0.32 0.11 35)"
+                    text-anchor="middle">MAGAZINE CORNER</text>
+              <text x="745" y="394"
+                    font-family="Crimson Pro, Georgia, serif"
+                    font-size="11" font-style="italic"
+                    letter-spacing="0.04em"
+                    fill="oklch(0.40 0.10 35)"
+                    text-anchor="middle">you are here · Neighborhoods-Terrace</text>
+
+              <!-- Sub-block grid (architectural texture inside magazine-corner) -->
+              <g opacity="0.40" stroke="oklch(0.62 0.060 38)" stroke-width="0.5" fill="none">
+                <path d="M 600 420 L 900 420"/>
+                <path d="M 600 480 L 900 478"/>
+                <path d="M 600 540 L 900 540"/>
+                <path d="M 670 360 L 670 595"/>
+                <path d="M 770 350 L 770 600"/>
+                <path d="M 850 350 L 850 598"/>
+              </g>
+            </g>
+
+            <!-- ============================================
+                 Layer 8 — Metro-map skeleton (CD4 #8 MetroMapMarker anchor points)
+                 Smooth curving line connecting 8 junctions
+                 ============================================ -->
+            <g aria-label="Metro line connecting key junctions">
+              <!-- Background metro line stroke (wider, soft) -->
+              <path d="M 240 200
+                       C 320 270, 400 320, 460 340
+                       C 540 360, 660 360, 720 340
+                       C 780 330, 760 460, 720 480
+                       C 700 500, 880 500, 980 480
+                       C 1040 470, 1000 590, 980 620
+                       C 1020 660, 1140 720, 1200 730
+                       C 1100 740, 800 740, 540 738
+                       C 380 736, 280 736, 240 730"
+                    fill="none"
+                    stroke="oklch(0.45 0.08 240)"
+                    stroke-width="3.5"
+                    stroke-linecap="round"
+                    opacity="0.30"/>
+              <!-- Foreground metro line stroke (sharper) -->
+              <path d="M 240 200
+                       C 320 270, 400 320, 460 340
+                       C 540 360, 660 360, 720 340
+                       C 780 330, 760 460, 720 480
+                       C 700 500, 880 500, 980 480
+                       C 1040 470, 1000 590, 980 620
+                       C 1020 660, 1140 720, 1200 730
+                       C 1100 740, 800 740, 540 738
+                       C 380 736, 280 736, 240 730"
+                    fill="none"
+                    stroke="oklch(0.30 0.05 240)"
+                    stroke-width="1.2"
+                    stroke-linecap="round"
+                    opacity="0.62"/>
+
+              <!-- Metro stations: 8 named junctions -->
+              <g>
+                <!-- St1: Letterpress × Masthead -->
+                <g transform="translate(240, 200)" aria-label="Letterpress and Masthead">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="12" y="-8" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)">Letterpress · Masthead</text>
+                </g>
+                <!-- St2: Folio × Column -->
+                <g transform="translate(460, 340)" aria-label="Folio and Column">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="-10" y="-12" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)"
+                        text-anchor="end">Folio · Column</text>
+                </g>
+                <!-- St3: Serif × Column -->
+                <g transform="translate(720, 340)" aria-label="Serif and Column">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="0" y="-12" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)"
+                        text-anchor="middle">Serif · Column</text>
+                </g>
+                <!-- St5: Quire × Spread -->
+                <g transform="translate(980, 480)" aria-label="Quire and Spread">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="12" y="4" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)">Quire · Spread</text>
+                </g>
+                <!-- St6: Quire × Margin -->
+                <g transform="translate(980, 620)" aria-label="Quire and Margin">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="12" y="4" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)">Quire · Margin</text>
+                </g>
+                <!-- St7: Imprint × Galley -->
+                <g transform="translate(1200, 730)" aria-label="Imprint and Galley">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="12" y="4" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)">Imprint · Galley</text>
+                </g>
+                <!-- St8: Letterpress × Galley -->
+                <g transform="translate(240, 730)" aria-label="Letterpress and Galley">
+                  <circle r="6" fill="oklch(0.95 0.018 86)" stroke="oklch(0.30 0.05 240)" stroke-width="1.5"/>
+                  <circle r="2.5" fill="oklch(0.30 0.05 240)"/>
+                  <text x="-10" y="4" font-family="Inter, system-ui, sans-serif" font-size="9"
+                        font-weight="500" letter-spacing="0.02em" fill="oklch(0.30 0.05 240)"
+                        text-anchor="end">Letterpress · Galley</text>
+                </g>
+              </g>
+            </g>
+
+            <!-- ============================================
+                 Layer 9 — DISpatch building marker (UNIQUE magazine identifier)
+                 Position: Serif × Spread (720, 480) — magazine-corner heart
+                 ============================================ -->
+            <g transform="translate(720, 480)" aria-label="DISpatch building (you are here)">
+              <!-- Dispatch pulse ring (Inferno-coupled; reduced-motion-conditional) -->
+              <circle r="18" fill="oklch(0.55 0.18 22)" opacity="0.20" class="dispatch-pulse"/>
+
+              <!-- Building footprint -->
+              <rect x="-22" y="-22" width="44" height="44" rx="3"
+                    fill="oklch(0.96 0.025 35)"
+                    stroke="oklch(0.45 0.18 22)"
+                    stroke-width="1.6"
+                    filter="url(#building-shadow)"/>
+
+              <!-- Magazine icon — stacked pages -->
+              <g>
+                <rect x="-13" y="-14" width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.85"/>
+                <rect x="-13" y="-8"  width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.70"/>
+                <rect x="-13" y="-2"  width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.55"/>
+                <rect x="-13" y="4"   width="26" height="4" rx="0.8" fill="oklch(0.30 0.18 22)" opacity="0.40"/>
+                <!-- Dispatch red dot (Inferno-coupled signal) -->
+                <circle cx="0" cy="11" r="3.2" fill="oklch(0.50 0.20 22)"/>
+                <circle cx="0" cy="11" r="1.1" fill="oklch(0.96 0.025 35)"/>
+              </g>
+
+              <!-- Building label -->
+              <text x="0" y="-32"
+                    font-family="Vollkorn, Georgia, serif"
+                    font-size="14" font-weight="700"
+                    letter-spacing="-0.005em"
+                    fill="oklch(0.28 0.18 22)"
+                    text-anchor="middle">DISpatch</text>
+              <text x="0" y="38"
+                    font-family="Inter, system-ui, sans-serif"
+                    font-size="9" font-style="italic"
+                    letter-spacing="0.04em"
+                    fill="oklch(0.45 0.15 22)"
+                    text-anchor="middle">dev-diary · live</text>
+            </g>
+
+            <!-- ============================================
+                 Layer 10 — Inferno wine-red dispatch markers
+                 Semantically meaningful positions; named activity labels
+                 Density: concentrated near magazine-corner (active); sparse at edges (quiet)
+                 ============================================ -->
+            <g aria-label="Inferno-infra dispatch markers">
+
+              <!-- M1: ci-cd/dispatch-pipeline (active; near magazine-corner) -->
+              <g transform="translate(640, 440)">
+                <title>ci-cd · dispatch-pipeline · green (14:32)</title>
+                <circle r="10" fill="oklch(0.55 0.18 22)" opacity="0.18" class="pulse-ring pulse-ring--fast"/>
+                <circle r="4" fill="oklch(0.50 0.20 22)"/>
+                <circle r="1.4" fill="oklch(0.94 0.025 35)"/>
+                <text x="9" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.32 0.18 22)" font-weight="500">ci · pipeline · 14:32</text>
+              </g>
+
+              <!-- M2: agent.virgil-chat (idle near magazine-corner; quieter dot) -->
+              <g transform="translate(830, 520)">
+                <title>agent · virgil-chat · idle (1h)</title>
+                <circle r="3" fill="oklch(0.55 0.18 22)" opacity="0.55"/>
+                <text x="8" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.40 0.10 22)" opacity="0.75" font-weight="500">agent · virgil-chat</text>
+              </g>
+
+              <!-- M3: mcp.gateway.routing (active; top) -->
+              <g transform="translate(530, 270)">
+                <title>mcp · gateway · routing (14:31)</title>
+                <circle r="9" fill="oklch(0.55 0.18 22)" opacity="0.16" class="pulse-ring"/>
+                <circle r="3.5" fill="oklch(0.50 0.20 22)"/>
+                <circle r="1.2" fill="oklch(0.94 0.025 35)"/>
+                <text x="9" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.32 0.18 22)" font-weight="500">mcp · routing</text>
+              </g>
+
+              <!-- M4: phoenix.eval.running (active; top) -->
+              <g transform="translate(920, 230)">
+                <title>phoenix · eval · running (14:28)</title>
+                <circle r="9" fill="oklch(0.55 0.18 22)" opacity="0.16" class="pulse-ring pulse-ring--slow"/>
+                <circle r="3.5" fill="oklch(0.50 0.20 22)"/>
+                <circle r="1.2" fill="oklch(0.94 0.025 35)"/>
+                <text x="9" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.32 0.18 22)" font-weight="500">phoenix · eval</text>
+              </g>
+
+              <!-- M5: telemetry.signoz.ingesting (right) -->
+              <g transform="translate(1140, 380)">
+                <title>telemetry · signoz · ingesting</title>
+                <circle r="8" fill="oklch(0.55 0.18 22)" opacity="0.16" class="pulse-ring"/>
+                <circle r="3.5" fill="oklch(0.50 0.20 22)"/>
+                <circle r="1.2" fill="oklch(0.94 0.025 35)"/>
+                <text x="9" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.32 0.18 22)" font-weight="500">telemetry · signoz</text>
+              </g>
+
+              <!-- M6: vale.lint.queued (bottom-left) -->
+              <g transform="translate(380, 580)">
+                <title>vale · lint · queued (14:29)</title>
+                <circle r="3.2" fill="oklch(0.55 0.18 22)" opacity="0.78"/>
+                <text x="8" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.40 0.14 22)" font-weight="500">vale · lint</text>
+              </g>
+
+              <!-- M7: infra.deploy.pending (bottom-right) -->
+              <g transform="translate(1170, 660)">
+                <title>infra · deploy · pending</title>
+                <circle r="3.5" fill="oklch(0.55 0.18 22)" opacity="0.78"/>
+                <text x="-10" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.40 0.14 22)" font-weight="500"
+                      text-anchor="end">infra · deploy</text>
+              </g>
+
+              <!-- M8: security.audit.passed (left edge; very small/quiet) -->
+              <g transform="translate(160, 400)">
+                <title>security · audit · passed (13:45)</title>
+                <circle r="2.5" fill="oklch(0.55 0.18 22)" opacity="0.45"/>
+                <text x="8" y="3" font-family="JetBrains Mono, monospace" font-size="7"
+                      fill="oklch(0.45 0.10 22)" opacity="0.70" font-weight="500">security · audit ✓</text>
+              </g>
+
+              <!-- M9: langfuse.trace.sampling (bottom) -->
+              <g transform="translate(770, 750)">
+                <title>langfuse · trace · sampling</title>
+                <circle r="7" fill="oklch(0.55 0.18 22)" opacity="0.15" class="pulse-ring pulse-ring--slow"/>
+                <circle r="3" fill="oklch(0.50 0.20 22)"/>
+                <text x="9" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.32 0.18 22)" font-weight="500">langfuse · trace</text>
+              </g>
+
+              <!-- M10: linear.tracker.closed (right-center) -->
+              <g transform="translate(1080, 540)">
+                <title>linear · tracker · PCP-167 closed (14:25)</title>
+                <circle r="3.2" fill="oklch(0.55 0.18 22)" opacity="0.62"/>
+                <text x="8" y="4" font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="oklch(0.38 0.13 22)" font-weight="500">linear · PCP-167 ✓</text>
+              </g>
+
+              <!-- M11: chromatic.snapshot.pending (top-left edge of magazine-corner) -->
+              <g transform="translate(595, 380)">
+                <title>chromatic · snapshot · pending</title>
+                <circle r="2.5" fill="oklch(0.55 0.18 22)" opacity="0.55"/>
+                <text x="-8" y="3" font-family="JetBrains Mono, monospace" font-size="7"
+                      fill="oklch(0.42 0.12 22)" opacity="0.78" font-weight="500"
+                      text-anchor="end">chromatic</text>
+              </g>
+
+            </g>
+
+            <!-- ============================================
+                 Layer 11 — Cosmology surfacing legend (bottom-left of district)
+                 Three anchors: Inferno (live infra) · Paradiso (the bar) · Histories (lineage)
+                 Visible without dominance per Reframe 2 cosmology-via-signals discipline
+                 ============================================ -->
+            <g transform="translate(125, 758)" opacity="0.90" aria-label="Cosmology signal legend">
+              <rect x="0" y="0" width="240" height="46" rx="4"
+                    fill="oklch(0.985 0.008 88 / 0.88)"
+                    stroke="oklch(0.78 0.020 85)" stroke-width="0.6"/>
+              <!-- Inferno anchor -->
+              <circle cx="14" cy="13" r="3" fill="oklch(0.55 0.18 22)"/>
+              <text x="24" y="16" font-family="JetBrains Mono, monospace" font-size="9"
+                    fill="oklch(0.32 0.04 50)" font-weight="500">Inferno · live infra surfacing</text>
+              <!-- Paradiso anchor (institutional fixture; The Bar) -->
+              <rect x="11" y="20" width="6" height="6" fill="oklch(0.45 0.07 240)" opacity="0.85"/>
+              <text x="24" y="29" font-family="JetBrains Mono, monospace" font-size="9"
+                    fill="oklch(0.32 0.04 50)" font-weight="500">Paradiso · institutional fixture</text>
+              <!-- Histories anchor (deep-archive layer; lineage rail) -->
+              <g transform="translate(11, 33)" opacity="0.75">
+                <line x1="0" y1="3" x2="6" y2="3" stroke="oklch(0.50 0.04 60)" stroke-width="1"/>
+                <line x1="0" y1="6" x2="6" y2="6" stroke="oklch(0.50 0.04 60)" stroke-width="0.5"/>
+              </g>
+              <text x="24" y="42" font-family="JetBrains Mono, monospace" font-size="9"
+                    fill="oklch(0.32 0.04 50)" font-weight="500">Histories · lineage on demand</text>
+            </g>
+
+            <!-- ============================================
+                 Histories lineage rail — subtle on-demand affordance (right side of district)
+                 Per CD3 §5.6 — deep-archive layer accessible on-demand from any surface
+                 NOT primary navigable surface; subtle hint, not dominant
+                 ============================================ -->
+            <g transform="translate(1305, 480)" opacity="0.55" aria-label="Histories lineage rail (47 tombstoned predecessor articles)">
+              <title>Histories · 47 tombstoned predecessor articles accessible on-demand</title>
+              <!-- Rail strokes (suggest a stack of archived layers behind the current view) -->
+              <g stroke="oklch(0.50 0.04 60)" fill="none">
+                <line x1="0" y1="-50" x2="0" y2="50" stroke-width="1"/>
+                <line x1="-4" y1="-46" x2="-4" y2="46" stroke-width="0.7" opacity="0.75"/>
+                <line x1="-8" y1="-42" x2="-8" y2="42" stroke-width="0.5" opacity="0.55"/>
+                <line x1="-12" y1="-38" x2="-12" y2="38" stroke-width="0.4" opacity="0.40"/>
+                <line x1="-16" y1="-34" x2="-16" y2="34" stroke-width="0.3" opacity="0.28"/>
+              </g>
+              <!-- Tick marks signalling archive layers -->
+              <g stroke="oklch(0.50 0.04 60)" stroke-width="0.5" opacity="0.65">
+                <line x1="-2" y1="-32" x2="2" y2="-32"/>
+                <line x1="-2" y1="-14" x2="2" y2="-14"/>
+                <line x1="-2" y1="4" x2="2" y2="4"/>
+                <line x1="-2" y1="22" x2="2" y2="22"/>
+                <line x1="-2" y1="38" x2="2" y2="38"/>
+              </g>
+              <!-- Label -->
+              <text x="6" y="-54" font-family="Inter, system-ui, sans-serif"
+                    font-size="9" font-style="italic" letter-spacing="0.06em"
+                    fill="oklch(0.42 0.04 60)">Histories</text>
+              <text x="6" y="60" font-family="JetBrains Mono, monospace"
+                    font-size="8" letter-spacing="0.02em"
+                    fill="oklch(0.45 0.04 60)" opacity="0.75">47 predecessors</text>
+            </g>
+
+          </g><!-- end Editorial District -->
+
+          <!-- ============================================
+               Layer 12 — Forward-pointed Prime City affordance (bottom edge)
+               V1.5+ trajectory; per CD3 §4.4
+               ============================================ -->
+          <g aria-label="Forward-pointed Prime City (V1.5+)">
+            <line x1="540" y1="870" x2="900" y2="870"
+                  stroke="oklch(0.55 0.04 60)" stroke-width="0.5" opacity="0.30" stroke-dasharray="3,5"/>
+            <text x="720" y="862"
+                  font-family="Inter, system-ui, sans-serif"
+                  font-size="10" font-style="italic"
+                  letter-spacing="0.14em"
+                  fill="oklch(0.50 0.04 60)" opacity="0.65"
+                  text-anchor="middle">&larr; Prime City &middot; whole-city zoom &middot; V1.5+</text>
+          </g>
+
+          <!-- ============================================
+               Layer 13 — Subtle compass / scale anchor (top-right of district)
+               ============================================ -->
+          <g transform="translate(1290, 175)" opacity="0.55" aria-hidden="true">
+            <circle r="14" fill="none" stroke="oklch(0.50 0.04 60)" stroke-width="0.5"/>
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="oklch(0.50 0.04 60)" stroke-width="0.5"/>
+            <line x1="-10" y1="0" x2="10" y2="0" stroke="oklch(0.50 0.04 60)" stroke-width="0.5"/>
+            <text x="0" y="-18" font-family="Inter, system-ui, sans-serif" font-size="8"
+                  letter-spacing="0.15em" fill="oklch(0.45 0.04 60)" text-anchor="middle">N</text>
+          </g>
+
+        </svg>
+
+        <!-- ============================================
+             Editorial overlay panel (where you are + dial + live feed + lane legend)
+             ============================================ -->
+        <aside class="overlay" id="overlay-feed" aria-label="Editorial overlay">
+          <section class="overlay__section">
+            <span class="overlay__section-label">Where you are</span>
+            <p class="overlay__breadcrumb">
+              <span class="overlay__breadcrumb-step">Prime City</span>
+              <span class="overlay__breadcrumb-arrow">→</span>
+              <span class="overlay__breadcrumb-step">Editorial District</span>
+              <span class="overlay__breadcrumb-arrow">→</span>
+              <span class="overlay__breadcrumb-step">Magazine corner</span>
+              <span class="overlay__breadcrumb-arrow">→</span>
+              <span class="overlay__breadcrumb-current">DISpatch</span>
+            </p>
+          </section>
+
+          <section class="overlay__section">
+            <span class="overlay__section-label">Dial position</span>
+            <div class="overlay__dial">
+              <div class="overlay__dial-track" role="meter" aria-valuemin="0" aria-valuemax="3" aria-valuenow="2" aria-label="Dial position 2 of 3 (mid)">
+                <span class="overlay__dial-segment overlay__dial-segment--filled"></span>
+                <span class="overlay__dial-segment overlay__dial-segment--filled"></span>
+                <span class="overlay__dial-segment"></span>
+              </div>
+              <span class="overlay__dial-label">mid &middot; reading sanctuary</span>
+            </div>
+          </section>
+
+          <section class="overlay__section">
+            <span class="overlay__section-label">What's happening in the offices</span>
+            <ul class="overlay__feed">
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">ci-cd · dispatch-pipeline green</span>
+                  <span class="overlay__feed-meta">14:32 · CD6 brand-synthesis pass</span>
+                </span>
+              </li>
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">mcp.gateway · routing</span>
+                  <span class="overlay__feed-meta">14:31 · figma + linear + supabase</span>
+                </span>
+              </li>
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">phoenix.eval · running</span>
+                  <span class="overlay__feed-meta">14:28 · article-pattern fixtures</span>
+                </span>
+              </li>
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker overlay__feed-marker--quiet"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">vale.lint · queued</span>
+                  <span class="overlay__feed-meta">14:29 · DLDS lane validation</span>
+                </span>
+              </li>
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker overlay__feed-marker--quiet"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">linear · PCP-167 closed</span>
+                  <span class="overlay__feed-meta">14:25 · component visual workshop</span>
+                </span>
+              </li>
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker overlay__feed-marker--quiet"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">security.audit · passed</span>
+                  <span class="overlay__feed-meta">13:45 · pre-deploy scan</span>
+                </span>
+              </li>
+              <li class="overlay__feed-row">
+                <span class="overlay__feed-marker overlay__feed-marker--quiet"></span>
+                <span class="overlay__feed-text">
+                  <span class="overlay__feed-label">agent.virgil-chat · idle</span>
+                  <span class="overlay__feed-meta">quiet · last 1h</span>
+                </span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="overlay__lanes" aria-label="Lane legend">
+            <div class="overlay__lane-row">
+              <span class="overlay__lane-swatch overlay__lane-swatch--editorial" aria-hidden="true"></span>
+              <span>Editorial &middot; warm-earth</span>
+              <span class="overlay__lane-vector">surface</span>
+            </div>
+            <div class="overlay__lane-row">
+              <span class="overlay__lane-swatch overlay__lane-swatch--institutional" aria-hidden="true"></span>
+              <span>Institutional &middot; graphite-blue</span>
+              <span class="overlay__lane-vector">above</span>
+            </div>
+            <div class="overlay__lane-row">
+              <span class="overlay__lane-swatch overlay__lane-swatch--dispatch" aria-hidden="true"></span>
+              <span>Dispatch &middot; wine-red</span>
+              <span class="overlay__lane-vector">below</span>
+            </div>
+          </section>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ============================================
+         Districts directory band — you are in one of several
+         ============================================ -->
+    <section class="directory" aria-labelledby="directory-title">
+      <h2 class="directory__title" id="directory-title">Districts of Prime &middot; you are in one of several</h2>
+
+      <article class="directory__card">
+        <span class="directory__card-meta">forward-pointed · V1.5+</span>
+        <span class="directory__card-name">Civic</span>
+        <p class="directory__card-character">Prime's city departments &mdash; governance, institutional functions, the parts that hold the charter.</p>
+      </article>
+
+      <article class="directory__card">
+        <span class="directory__card-meta">forward-pointed · V1.5+</span>
+        <span class="directory__card-name">Art</span>
+        <p class="directory__card-character">Prime's creative output &mdash; videogames, books, film, interactive media. The studios.</p>
+      </article>
+
+      <article class="directory__card directory__card--active">
+        <span class="directory__card-meta">V1 LOCKED · you are here</span>
+        <span class="directory__card-name">Editorial</span>
+        <p class="directory__card-character">Prime's editorial output &mdash; magazine, newspaper, marketing agency, dispatch reading rooms. DISpatch publishes from here.</p>
+      </article>
+
+      <article class="directory__card directory__card--future">
+        <span class="directory__card-meta">future-arc · TBD</span>
+        <span class="directory__card-name">More districts</span>
+        <p class="directory__card-character">Additional district categories will populate as Prime's material content velocity warrants &mdash; each holding the bar in its own register.</p>
+      </article>
+    </section>
+
+    <!-- ============================================
+         Institutional fixture — Paradiso seed-mandate
+         ============================================ -->
+    <aside class="institutional-fixture" aria-labelledby="fixture-heading">
+      <p class="institutional-fixture__heading" id="fixture-heading">Paradiso seed-mandate &middot; placeholder</p>
+      <p class="institutional-fixture__mandate">A publication articulating its identity through nine spheres &mdash; this is what the publication is becoming.</p>
+      <p class="institutional-fixture__attribution">DISpatch &middot; Editorial District &middot; Brand-Terrace's pipeline output</p>
+    </aside>
+
+    <footer class="site-footer">
+      <span>DISpatch &middot; concept-01 cartography showcase &middot; W3-S-C</span>
+      <span class="site-footer__provenance">/representation/visual-system/cartography-concepts/concept-01-editorial-district/</span>
+    </footer>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+---
+/**
+ * /article — Articles browse page (DISpatch reading room).
+ *
+ * The nav link "Articles" lands here. NOT a redirect — a real browse
+ * surface. Renders the ArticlesBrowser island: every dispatch in print
+ * as a card, with real cover media (image / video / audio) playable
+ * in place, filterable by lane (Human / Hybrid / AI) and by media kind,
+ * sortable by date or reading time.
+ */
+
+import { getCollection } from 'astro:content'
+import StackLayout from '@/layouts/StackLayout.astro'
+import BackToDispatch from '@/components/BackToDispatch.astro'
+import { ArticlesBrowser, type ArticleListing } from '@/components/ArticlesBrowser'
+
+const entries = await getCollection('dispatch')
+entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+const formatDate = (d: Date) =>
+	new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+		timeZone: 'UTC',
+	}).format(d)
+
+const articles: ArticleListing[] = entries.map((e) => ({
+	id: e.id,
+	href: `/dispatch/${e.id}`,
+	title: e.data.title,
+	kicker: e.data.kicker,
+	dek: e.data.dek,
+	author: { name: e.data.author.name, role: e.data.author.role },
+	dateISO: e.data.date.toISOString(),
+	dateLabel: formatDate(e.data.date),
+	readingTime: e.data.readingTime,
+	lane: e.data.provenance.lane,
+	tags: e.data.tags,
+	hero: e.data.hero
+		? {
+				kind: 'image' as const,
+				src: e.data.hero.src,
+				alt: e.data.hero.alt,
+			}
+		: undefined,
+}))
+---
+
+<StackLayout
+	title="Articles"
+	kicker="Reading room · DISpatch"
+	description="Every dispatch in print, browsable by lane and media kind."
+	theme="vellum"
+	hideHero
+	fullWidthMain
+>
+	<div class="px-4 pt-8 sm:px-6 md:px-10 md:pt-12">
+		<BackToDispatch />
+	</div>
+	<ArticlesBrowser client:load articles={articles} />
+</StackLayout>

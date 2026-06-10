@@ -1,0 +1,44 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footnote",
+  "type": "registry:component",
+  "title": "Footnote",
+  "description": "In-text citation marker + prose container composite. Multi-voice typography per CD1 Concept 5 — marker (Meta-code), prose (Body), back-link (Nav). Article-only sanctuary affordance per CD1 Concept 7. Four variants: sidebar-popover (desktop), mobile-bottom-sheet, endnote, inline-aside.",
+  "categories": ["custom", "article-affordance", "typography"],
+  "dependencies": ["clsx"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "components/custom/Footnote/Footnote.tsx",
+      "type": "registry:component",
+      "target": "components/custom/Footnote/Footnote.tsx"
+    },
+    {
+      "path": "components/custom/Footnote/Footnote.css",
+      "type": "registry:component",
+      "target": "components/custom/Footnote/Footnote.css"
+    },
+    {
+      "path": "components/custom/Footnote/index.ts",
+      "type": "registry:component",
+      "target": "components/custom/Footnote/index.ts"
+    }
+  ],
+  "meta": {
+    "primeWave": "W3-S-A",
+    "primePhase": "1-chrome",
+    "primeSpec": "representation/visual-system/components/Footnote/spec.md",
+    "primeUniversalConcepts": [
+      "C5-multi-voice-typography",
+      "C1-typeface-containment",
+      "C7-article-as-sanctuary"
+    ],
+    "primeContainment": {
+      "marker": "meta",
+      "prose": "body",
+      "backLink": "nav"
+    },
+    "primeMode": "article-only-sanctuary",
+    "primeForwardPointer": "Sidebar/sheet open/close motion (sidebar slide-in ~200ms; bottom-sheet slide-up ~250ms) wires at CD5 round 2 ratification. Stateless open prop at W3-S-A; host-app coordinates state."
+  }
+}

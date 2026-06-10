@@ -1,0 +1,171 @@
+---
+manifest: prime-dispatch-visual-system
+version: 0.4.0
+ratified: 2026-05-13
+authored-against:
+  - W3-S-A canon-reconciliation-tombstone (2026-05-10 evening) — Cycle 1+2 scaffolding tombstoned; bridge re-emitted from canon
+  - W3-S-A canon-reconciliation-amend-1 (2026-05-11) — 3-cycle Dawn/Dusk/Night substrate restored + 4 Phase 2 components built
+  - Mayor 2026-05-13 furnace directive — chiseled surface canon; sandbox vaporized
+dependencies: [prime.md, brand.md]
+amendment-mechanic: append-decisions-with-superseded-by-markers
+discipline: |
+  Sandbox is a furnace. Load-bearing ideas chisel into canon via CD2 §10 / equivalent ledgers
+  with SUPERSEDED-BY markers; rejected ideas burn through canon-reconciliation tombstone records
+  and source files vaporize. Canon is the only preservation surface; git history is the only
+  diff archive.
+---
+
+# Prime DISpatch — Visual System MANIFEST
+
+# Machine-readable index of the visual-system canon. Agents reading cold start HERE.
+
+canon:
+
+  CD1:
+    title: Thesis + reference archive
+    path: representation/visual-system/thesis.md
+    inputs: representation/visual-system/reference-archive.md
+    ratified: 2026-05-08
+    role: north-star design intent + universal concepts + cited reference subset
+
+  CD2:
+    title: Color token system
+    path: representation/visual-system/color.md
+    ratified: 2026-05-07
+    amended: [2026-05-13 (Decision 12 — W2-S-F amendment canon-promotion)]
+    ledger-section: §10 (Decisions 1-12; append-only forward; SUPERSEDED-BY markers per amendment)
+    role: token contract (4-tier hierarchy; 8-field DTCG shape; OKLCH framework; APCA discipline; lane pigments; atmospheric chrome; wordmark; colorblind framework; tool partner workflow; DTCG exports; cross-stream stub interface)
+
+  CD3:
+    title: Cartography
+    path: representation/visual-system/cartography.md
+    ratified: 2026-05-08
+    concept-renders: representation/visual-system/cartography-concepts/concept-01-editorial-district/
+    role: cartography canon + FORMULA (Dawn/Night substrate OKLCH source per concept-01 §2.1+§2.2)
+
+  CD4:
+    title: Components
+    path: representation/visual-system/components.md
+    ratified: 2026-05-08
+    inventory: 20 V1 components — Phase 1 chrome (5) + Phase 2 chrome (6) + Phase 3 patterns (9)
+    specs-pattern: representation/visual-system/components/<Name>/spec.md (7-field template)
+    role: component contract (what each of the 20 V1 components is)
+
+  CD5:
+    title: Motion
+    path: representation/visual-system/motion.md
+    ratified: 2026-05-07
+    role: motion canon (single-rAF discipline; atmospheric-chrome-not-animated; theme-cycler motion category)
+
+sub-canon:
+
+  typography:
+    title: Typography canon
+    index: representation/visual-system/typography/README.md
+    contract: representation/visual-system/typography/fonts.md
+    tokens: representation/visual-system/typography/tokens/typography.tokens.json
+    css: representation/visual-system/typography/css/fonts.css
+    preload: representation/visual-system/typography/css/preload.html
+    role: 5-slot OFL + 2-slot premium contract; @font-face declarations; slot tokens (--font-{title,body,nav,code,civic,wordmark})
+
+  construction-rules:
+    title: Component-construction rules
+    path: representation/visual-system/components/construction-rules.md
+    ratified: 2026-05-13
+    role: 7 hard rules for component construction; canon-correct per W3-S-A canon-reconciliation 2026-05-10
+
+  components-multimedia:
+    path: representation/visual-system/components-multimedia.md
+    role: multimedia-component sub-canon
+
+operations:
+  title: Operator runbook
+  index: lifecycle/runbook.md
+  sops:
+    - lifecycle/runbook/sop/hybrid-foundation.md   # Astro 6 + Next.js 15 monorepo composition
+    - lifecycle/runbook/sop/token-pipeline.md      # Penpot → Style Dictionary v4 → DTCG outputs
+    - lifecycle/deploy/penpot/deploy-sop.md        # Hetzner self-host procedure
+  deploy: lifecycle/deploy/                        # Vercel Hobby primary + Cloudflare Pages alt + Render backend
+  stack-rubric: lifecycle/stack-rubric.md
+
+implementation:
+  bridge:
+    path: code/packages/tokens/
+    source: code/packages/tokens/src/{platform,dispatch,asset}.json
+    outputs: code/packages/tokens/dist/{tokens.css,tokens.tailwind.config.ts,tokens.toon}
+    consumer-pattern: '@prime-dispatch/tokens/css'
+  components-code:
+    path: code/packages/ui/src/components/
+    layers:
+      custom: Phase 1 chrome (5 built + post-reconciliation rebuild) + Phase 2 chrome (4 built; 2 pending — LiveTicker, SearchPalette)
+      patterns: Phase 3 business compositions (9 pending — CodeBlockCopyButton, MetroMapMarker, CartographyCanvas, ReceptionHero, EditorialDigest, DistrictMap, CrossPost, VirgilChat, LiveRoom)
+      ui: intentionally-empty (CD4 §7 — Prime register pulls past shadcn defaults)
+  storybook:
+    path: code/apps/storybook/
+    placement: HYBRID (Storybook RFC #22521 + Vercel official starter precedent)
+
+chiseled-history:
+  description: |
+    Records of what was tried and rejected. Agents read these BEFORE proposing ideas to avoid
+    re-introducing dead patterns. These ARE the load-bearing-for-elimination history records.
+  records:
+    - path: archive/cc-ledger/diffs/W3-S-A/cycle-2/canon-reconciliation-tombstone.md
+      date: 2026-05-10
+      authoritative: true
+      killed:
+        - Cycle 1 invented theme system (Light/Blueprint/Black with city-engineer/blueprint/video-game metaphors; cream substrate)
+        - Cycle 2 Cinzel Civic-Dante substitution (canon-correct is IM Fell English per CD2 §5.3 + CD1 Concept 1)
+        - Italic letterspace on wordmark patch (Mayor 2026-05-10 "we definitely decided no italics")
+        - Wine `::before` masthead-band on SiteNav (wine became chrome wallpaper)
+        - Middot `·` separators between nav-links (not in spec)
+        - Roman-numeral chapter markers + Cinzel small-caps + double-rule shadow rail + pilcrow section-break (Cycle 2 inventions)
+        - Wine linear-gradient ReadingProgress fill + angled clip-path cap + drafting-grid track (Cycle 2 inventions; canon = `--window-warm` atmospheric fill)
+        - Cinzel `❖` Footnote container label + overline ornament + column-rule ::after + small-caps swash back-link (Cycle 2 inventions)
+        - Per-theme hex variants per lane (Cycle 1 scaffolding drift; canon = one OKLCH per lane)
+    - path: archive/cc-ledger/diffs/W3-S-A/cycle-2/canon-reconciliation-amend-1-2026-05-11.md
+      date: 2026-05-11
+      authoritative: true
+      restored:
+        - 3-cycle Dawn/Dusk/Night substrate system per CD3 concept-01 FORMULA §2.1+§2.2
+        - Built 4 Phase 2 components (DldsPanel, MetaArticleOpener, NarrativeArticleOpener, InstitutionalFixture)
+
+agent-reading-recipes:
+  implement-new-component:
+    read-in-order:
+      - representation/visual-system/components.md                    # CD4 contract + 7-field template
+      - representation/visual-system/components/<Name>/spec.md        # what to build
+      - representation/visual-system/components/construction-rules.md # 7 hard rules
+      - representation/visual-system/color.md §10                     # tokens + amendment ledger
+      - representation/visual-system/typography/README.md             # font slots
+      - archive/cc-ledger/diffs/W3-S-A/cycle-2/canon-reconciliation-tombstone.md  # what NOT to invent
+  amend-a-token:
+    read-in-order:
+      - representation/visual-system/color.md §10 (Decisions 1-12 pattern; SUPERSEDED-BY discipline)
+      - representation/visual-system/color.md §11 done criteria
+      - lifecycle/runbook/sop/token-pipeline.md (workflow)
+  deploy-or-operate:
+    read-in-order:
+      - lifecycle/runbook.md (TOC + chapter shape; five durability axes)
+      - lifecycle/runbook/sop/{hybrid-foundation,token-pipeline}.md
+      - lifecycle/deploy/
+  understand-what-was-rejected:
+    read-in-order:
+      - archive/cc-ledger/diffs/W3-S-A/cycle-2/canon-reconciliation-tombstone.md
+      - archive/cc-ledger/diffs/W3-S-A/cycle-2/canon-reconciliation-amend-1-2026-05-11.md
+
+deferred-mayor-adjudication:
+  description: |
+    Backlog items Mayor 2026-05-11 close-out explicitly deferred to "another stream." These are
+    load-bearing-but-not-yet-canon. New work in these areas requires Mayor adjudication first.
+  items:
+    - id: cd2-3-cycle-canon-promotion
+      description: Promote 3-cycle Dawn/Dusk/Night to CD2 §2.5 as new Decision; Dusk OKLCH still pending Mayor lock (provisional in bridge at oklch(0.58 0.050 65))
+      source: archive/cc-ledger/diffs/W3-S-A/cycle-2/canon-reconciliation-amend-1-2026-05-11.md §3.2
+    - id: apca-pre-screen-dusk-night
+      description: APCA evidence rows for Dusk + Night cycle substrates (Dawn was W2-S-E validated)
+    - id: per-component-fidelity-audit
+      description: Mayor 2026-05-11 close-out flagged "some components still look bad vs canon"; per-component audit pending
+    - id: phase-2-remainder
+      description: LiveTicker + SearchPalette components not yet built
+    - id: phase-3-patterns
+      description: 9 Phase 3 pattern components pending (CodeBlockCopyButton, MetroMapMarker, CartographyCanvas, ReceptionHero, EditorialDigest, DistrictMap, CrossPost, VirgilChat, LiveRoom)

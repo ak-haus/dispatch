@@ -1,0 +1,3 @@
+setup:
+  project: prime-city-brand-sandbox
+  config: dev

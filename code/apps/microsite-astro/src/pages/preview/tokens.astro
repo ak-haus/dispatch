@@ -1,0 +1,292 @@
+---
+import StackLayout from '@/layouts/StackLayout.astro'
+
+/**
+ * Token preview — proves the canonical DISpatch color tokens are wired and
+ * render at their amendment-locked values. Internal QA + design-system
+ * reference page; not part of the public IA.
+ *
+ * Tokens shown in tier order:
+ *   1. Platform (cross-Building Prime DNA)
+ *   2. Dispatch lane pigments
+ *   3. Vellum atmospheric scale (numeric + spatial-perceptual aliases)
+ *   4. Text roles
+ *   5. Nav state walk (Decision 8 tonal-stepping)
+ *   6. Wordmark composition (Option C split-color)
+ */
+
+const platformSwatches = [
+	{
+		name: 'accent-prime',
+		value: '#8e2532',
+		swatch: 'bg-accent-prime',
+		text: 'text-accent-prime',
+		role: 'Wordmark DIS · focus ring · live signal · dispatch lane',
+	},
+	{
+		name: 'accent-prime-active',
+		value: '#6b2520',
+		swatch: 'bg-accent-prime-active',
+		text: 'text-accent-prime-active',
+		role: 'Nav active state — wine intermediate (tonal-stepping)',
+	},
+	{
+		name: 'copper',
+		value: '#b87333',
+		swatch: 'bg-copper',
+		text: 'text-copper',
+		role: 'Nav default — Prime-wide gilded identity',
+	},
+	{
+		name: 'copper-deep',
+		value: '#8b5224',
+		swatch: 'bg-copper-deep',
+		text: 'text-copper-deep',
+		role: 'Nav hover — engagement deepening',
+	},
+]
+
+const laneSwatches = [
+	{
+		name: 'lane-editorial-strong',
+		value: 'oklch(0.55 0.16 41)',
+		swatch: 'bg-lane-editorial-strong',
+		text: 'text-lane-editorial-strong',
+		role: 'Editorial lane — warm-earth. Filed-under, pull-quote border.',
+	},
+	{
+		name: 'lane-institutional-strong',
+		value: 'oklch(0.41 0.043 257)',
+		swatch: 'bg-lane-institutional-strong',
+		text: 'text-lane-institutional-strong',
+		role: 'Institutional lane — cool-mineral. Hairlines, DLDS chrome.',
+	},
+	{
+		name: 'lane-dispatch-strong',
+		value: '→ accent-prime',
+		swatch: 'bg-lane-dispatch-strong',
+		text: 'text-lane-dispatch-strong',
+		role: 'Dispatch lane — inherits Prime accent. Article kicker.',
+	},
+]
+
+const vellumScale = [
+	{ name: 'vellum-25', alias: 'sky-high', value: 'oklch(0.99 0.012 88)', swatch: 'bg-sky-high' },
+	{ name: 'vellum-50', alias: '(reserved)', value: 'oklch(0.985 0.010 88)', swatch: '' },
+	{ name: 'vellum-100', alias: 'sky-low', value: 'oklch(0.96 0.015 88)', swatch: 'bg-sky-low' },
+	{ name: 'vellum-200', alias: 'reflect', value: 'oklch(0.92 0.025 88)', swatch: 'bg-reflect' },
+	{ name: 'vellum-300', alias: 'window-warm', value: 'oklch(0.87 0.035 88)', swatch: 'bg-window-warm' },
+]
+
+const textRoles = [
+	{ name: 'body-strong', value: 'oklch(0.18 0.012 88)', text: 'text-body-strong' },
+	{ name: 'body-muted', value: 'oklch(0.48 0.010 88)', text: 'text-body-muted' },
+	{ name: 'body-faint', value: 'oklch(0.65 0.008 88)', text: 'text-body-faint' },
+]
+---
+
+<StackLayout
+	title="Token preview"
+	kicker="Design system · Token canon"
+	description="Canonical DISpatch tokens, wired to live styles."
+	theme="vellum"
+	hideHero
+>
+	<section class="py-12">
+		<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-accent-prime">
+			Design system · Token preview
+		</p>
+
+		<h1
+			class="mt-6 max-w-3xl font-narrative text-5xl font-bold leading-tight tracking-tight text-body-strong sm:text-6xl"
+		>
+			DISpatch tokens
+		</h1>
+
+		<p class="mt-6 max-w-2xl font-body text-lg leading-relaxed text-body-muted">
+			Canonical values per <span class="font-mono text-sm">representation/visual-system/color.md</span>
+			plus the <span class="font-mono text-sm">cd2-color-amendment-proposal</span> Mayor-locked
+			2026-05-10. The amendment is authoritative where it conflicts with color.md.
+		</p>
+
+		{/* ===== Platform tier ===== */}
+		<div class="mt-16">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Platform tier
+				</p>
+				<p class="font-mono text-xs text-body-faint">Cross-Building DNA · hex-locked</p>
+			</div>
+			<div class="divide-y divide-lane-institutional-strong/20">
+				{
+					platformSwatches.map((s) => (
+						<div class="grid grid-cols-12 items-center gap-4 py-5">
+							<div class="col-span-1">
+								<div class:list={['size-12 rounded-md', s.swatch]} />
+							</div>
+							<div class="col-span-3 font-narrative">
+								<p class="text-lg font-medium text-body-strong">{s.name}</p>
+								<p class={`mt-0.5 font-mono text-xs ${s.text}`}>{s.value}</p>
+							</div>
+							<div class="col-span-8 font-body text-sm text-body-muted">{s.role}</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		{/* ===== Lane pigments ===== */}
+		<div class="mt-16">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Dispatch lanes
+				</p>
+				<p class="font-mono text-xs text-body-faint">DISpatch-locked · 3 DLDS lanes</p>
+			</div>
+			<div class="divide-y divide-lane-institutional-strong/20">
+				{
+					laneSwatches.map((s) => (
+						<div class="grid grid-cols-12 items-center gap-4 py-5">
+							<div class="col-span-1">
+								<div class:list={['size-12 rounded-md', s.swatch]} />
+							</div>
+							<div class="col-span-3 font-narrative">
+								<p class="text-lg font-medium text-body-strong">{s.name}</p>
+								<p class={`mt-0.5 font-mono text-xs ${s.text}`}>{s.value}</p>
+							</div>
+							<div class="col-span-8 font-body text-sm text-body-muted">{s.role}</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		{/* ===== Vellum scale ===== */}
+		<div class="mt-16">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Vellum atmospheric scale
+				</p>
+				<p class="font-mono text-xs text-body-faint">5-step warm substrate · spatial-perceptual aliases</p>
+			</div>
+			<div class="grid grid-cols-5 gap-3">
+				{
+					vellumScale.map((v) => (
+						<div class="flex flex-col">
+							<div
+								class:list={[
+									'h-24 rounded-md border border-lane-institutional-strong/30',
+									v.swatch,
+								]}
+							/>
+							<p class="mt-2 font-mono text-xs font-medium text-body-strong">{v.name}</p>
+							<p class="font-mono text-[12px] text-body-muted">→ {v.alias}</p>
+							<p class="mt-1 font-mono text-[12px] text-body-faint">{v.value}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		{/* ===== Text roles ===== */}
+		<div class="mt-16">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Text roles
+				</p>
+				<p class="font-mono text-xs text-body-faint">Warm-bias hue 88° matching Vellum</p>
+			</div>
+			<div class="divide-y divide-lane-institutional-strong/20">
+				{
+					textRoles.map((t) => (
+						<div class="grid grid-cols-12 items-center gap-4 py-5">
+							<div class="col-span-3 font-narrative">
+								<p class="text-lg font-medium text-body-strong">{t.name}</p>
+								<p class={`mt-0.5 font-mono text-xs ${t.text}`}>{t.value}</p>
+							</div>
+							<div class="col-span-9">
+								<p class:list={['font-body text-base', t.text]}>
+									The quick brown fox jumps over the lazy dog — 1234567890
+								</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		{/* ===== Nav tonal-stepping walk ===== */}
+		<div class="mt-16">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Nav state walk
+				</p>
+				<p class="font-mono text-xs text-body-faint">
+					Decision 8 · illuminated-manuscript graduated discipline
+				</p>
+			</div>
+			<div class="grid grid-cols-4 gap-4">
+				<div class="rounded-md border border-lane-institutional-strong/20 bg-sky-high p-5">
+					<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] text-copper">
+						Default
+					</p>
+					<p class="mt-2 font-mono text-xs text-body-faint">copper · #b87333</p>
+				</div>
+				<div class="rounded-md border border-lane-institutional-strong/20 bg-sky-high p-5">
+					<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] text-copper-deep">
+						Hover
+					</p>
+					<p class="mt-2 font-mono text-xs text-body-faint">copper-deep · #8b5224</p>
+				</div>
+				<div class="rounded-md border border-lane-institutional-strong/20 bg-sky-high p-5">
+					<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] text-accent-prime-active">
+						Active
+					</p>
+					<p class="mt-2 font-mono text-xs text-body-faint">
+						accent-prime-active · #6b2520 (wine)
+					</p>
+				</div>
+				<div class="rounded-md border-2 border-accent-prime bg-sky-high p-5">
+					<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] text-copper">
+						Focus ring
+					</p>
+					<p class="mt-2 font-mono text-xs text-body-faint">
+						outline: accent-prime · #8e2532
+					</p>
+				</div>
+			</div>
+		</div>
+
+		{/* ===== Wordmark composition demo ===== */}
+		<div class="mt-16">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Wordmark composition
+				</p>
+				<p class="font-mono text-xs text-body-faint">Option C split-color · patch 1.08em</p>
+			</div>
+			<div class="mt-8 flex flex-col items-start gap-8">
+				<span class="font-wordmark text-2xl font-bold tracking-[-0.025em] leading-none">
+					<span class="text-wordmark-dis">DIS</span><span
+						class="text-wordmark-patch text-[1.08em] -ml-[0.02em]">patch</span>
+				</span>
+				<span class="font-wordmark text-5xl font-bold tracking-[-0.025em] leading-none">
+					<span class="text-wordmark-dis">DIS</span><span
+						class="text-wordmark-patch text-[1.08em] -ml-[0.02em]">patch</span>
+				</span>
+				<span class="font-wordmark text-7xl font-bold tracking-[-0.025em] leading-none">
+					<span class="text-wordmark-dis">DIS</span><span
+						class="text-wordmark-patch text-[1.08em] -ml-[0.02em]">patch</span>
+				</span>
+			</div>
+			<p class="mt-8 max-w-2xl font-body text-sm text-body-muted">
+				<span class="font-mono">DIS</span> renders in
+				<span class="text-accent-prime font-semibold">accent-prime</span> (Atlantic-pigment
+				editorial red, Inferno-cosmology surfacing). <span class="font-mono">patch</span>
+				renders in <span class="text-body-strong font-semibold">text-body-strong</span>
+				(institutional weight) at 1.08× optical balance correction. S→p kern via -0.02em
+				negative margin restores per-pair kerning Tailwind's uniform tracking can't see.
+			</p>
+		</div>
+	</section>
+</StackLayout>

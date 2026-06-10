@@ -1,0 +1,224 @@
+---
+import StackLayout from '@/layouts/StackLayout.astro'
+import BackToDispatch from '@/components/BackToDispatch.astro'
+import { SpheresSpread } from '@/components/home/SpheresSpread'
+
+const typeRoles = [
+	{
+		role: 'Wordmark',
+		face: 'Pangram Editorial New Bold',
+		stack: 'var(--font-wordmark)',
+		sample: 'DISpatch',
+		size: 'text-4xl',
+		fontClass: 'font-wordmark font-bold tracking-[-0.02em]',
+	},
+	{
+		role: 'Nav',
+		face: 'Pangram Sans Normal ExtraBold',
+		stack: 'var(--font-nav)',
+		sample: 'Home · Articles · Atlas · About',
+		size: 'text-sm',
+		fontClass: 'font-nav font-extrabold tracking-[0.06em]',
+	},
+	{
+		role: 'Narrative title',
+		face: 'Vollkorn Bold',
+		stack: 'var(--font-narrative)',
+		sample: 'The Reception Was Always Going to Be Quiet',
+		size: 'text-2xl',
+		fontClass: 'font-narrative font-bold tracking-tight',
+	},
+	{
+		role: 'Narrative italic',
+		face: 'Vollkorn Italic Medium',
+		stack: 'var(--font-narrative)',
+		sample: 'A magazine-building does not announce itself.',
+		size: 'text-lg',
+		fontClass: 'font-narrative font-medium italic',
+	},
+	{
+		role: 'Body',
+		face: 'Inter Regular',
+		stack: 'var(--font-body)',
+		sample:
+			'The Editorial District opens with a paradox: a publishing house that documents its own construction in real time.',
+		size: 'text-base',
+		fontClass: 'font-body font-normal',
+	},
+	{
+		role: 'Body emphasis',
+		face: 'Inter SemiBold',
+		stack: 'var(--font-body)',
+		sample: 'Empty shell — components land here as the build progresses.',
+		size: 'text-base',
+		fontClass: 'font-body font-semibold',
+	},
+	{
+		role: 'Code / meta',
+		face: 'JetBrains Mono Regular',
+		stack: 'var(--font-mono)',
+		sample: 'renderDLDS({ lane: "hybrid", c2pa: true })',
+		size: 'text-sm',
+		fontClass: 'font-mono font-normal',
+	},
+	{
+		role: 'DLDS / lane label',
+		face: 'JetBrains Mono Medium',
+		stack: 'var(--font-mono)',
+		sample: 'DLDS · HYBRID · 2026-05-12',
+		size: 'text-xs',
+		fontClass: 'font-mono font-medium uppercase tracking-widest',
+	},
+]
+
+// Color roles per representation/visual-system/color.md (canonical token system).
+// Naming: semantic-intent and spatial-perceptual aliases — consumer code never
+// references numeric (vellum-25, red-600) directly per §2.4 three-layer discipline.
+const colorRoles = [
+	{
+		name: 'Accent prime',
+		swatch: 'bg-accent-prime',
+		text: 'text-accent-prime',
+		usage: 'Prime brand identity · live signals · primary CTAs · Inferno-infra surfacing',
+		token: 'oklch(0.51 0.20 27)',
+	},
+	{
+		name: 'Lane · Institutional',
+		swatch: 'bg-lane-institutional-strong',
+		text: 'text-lane-institutional-strong',
+		usage: 'Hairlines · grid · DLDS chrome · institutional weight · Paradiso-charter pigment',
+		token: 'oklch(0.41 0.043 257)',
+	},
+	{
+		name: 'Lane · Editorial',
+		swatch: 'bg-lane-editorial-strong',
+		text: 'text-lane-editorial-strong',
+		usage: 'Pull quotes · "Filed under" labels · soft editorial accents · warm-earth lane',
+		token: 'oklch(0.55 0.16 41)',
+	},
+	{
+		name: 'Sky · low (Vellum)',
+		swatch: 'bg-sky-low border border-lane-institutional-strong/30',
+		text: 'text-body-strong',
+		usage: 'Reading surface · default page substrate · warm-white in ambient light',
+		token: 'oklch(0.96 0.015 88)',
+	},
+	{
+		name: 'Body · strong',
+		swatch: 'bg-body-strong',
+		text: 'text-body-strong',
+		usage: 'Primary text · warm near-black · never pure black',
+		token: 'oklch(0.18 0.012 88)',
+	},
+]
+---
+
+<StackLayout
+	title="About"
+	kicker="Colophon · Editorial mandate"
+	description="A note on the typography and the palette."
+	theme="vellum"
+	hideHero
+	fullWidthMain
+>
+	{/* Header column — constrained max-width for prose readability */}
+	<div class="mx-auto max-w-5xl px-6 pt-12 md:pt-16">
+		<BackToDispatch class="mb-10" />
+
+		<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+			Colophon · Editorial mandate
+		</p>
+
+		<h1
+			class="mt-6 max-w-3xl font-narrative text-5xl font-bold leading-tight tracking-tight text-body-strong sm:text-6xl"
+		>
+			About <span class="text-wordmark-dis">DIS</span>patch
+		</h1>
+
+		<p class="mt-8 max-w-2xl font-body text-lg leading-relaxed text-body-muted">
+			A serialized publication that documents the construction of Prime City through
+			dispatches from inside the work. Civic-archive aesthetic — paper, ink, the
+			occasional red signal. Below is the
+			<span class="text-body-strong font-semibold">colophon</span>: the typefaces and palette
+			that the rest of this site will speak in.
+		</p>
+	</div>
+
+	{/* Prime cosmology — promoted to lead 2026-05-14. Renders OUTSIDE the
+	    constrained header column so it can use its own internal layout
+	    (1880px max) and breathe properly. */}
+	<div class="mt-16">
+		<SpheresSpread client:visible />
+	</div>
+
+	{/* Design system column — constrained again for prose-style reading */}
+	<div class="mx-auto max-w-5xl px-6 pb-16">
+		<!-- Typography roles -->
+		<div class="mt-20">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Typography roles
+				</p>
+				<p class="font-mono text-xs text-body-faint">5 contained typefaces</p>
+			</div>
+
+			<div class="divide-y divide-lane-institutional-strong/20">
+				{
+					typeRoles.map((row) => (
+						<div class="grid grid-cols-12 gap-4 py-6">
+							<div class="col-span-3">
+								<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] text-body-strong">
+									{row.role}
+								</p>
+								<p class="mt-1 font-mono text-xs text-body-faint">{row.face}</p>
+							</div>
+							<div class="col-span-9">
+								<p class:list={[row.size, row.fontClass, 'text-body-strong']}>
+									{row.sample}
+								</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		<!-- Color roles -->
+		<div class="mt-20">
+			<div class="mb-4 flex items-baseline justify-between border-b border-lane-institutional-strong/30 pb-3">
+				<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted">
+					Color roles
+				</p>
+				<p class="font-mono text-xs text-body-faint">OKLCH · semantic, not decorative</p>
+			</div>
+
+			<div class="divide-y divide-lane-institutional-strong/20">
+				{
+					colorRoles.map((c) => (
+						<div class="grid grid-cols-12 items-center gap-4 py-5">
+							<div class="col-span-1">
+								<div class:list={['size-10 rounded-md', c.swatch]} />
+							</div>
+							<div class="col-span-3">
+								<p class:list={['font-narrative text-lg font-medium', c.text]}>
+									{c.name}
+								</p>
+							</div>
+							<div class="col-span-5 font-body text-sm text-body-muted">{c.usage}</div>
+							<div class="col-span-3 text-right font-mono text-xs text-body-faint">
+								{c.token}
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		<!-- Editorial close in narrative italic -->
+		<p
+			class="mx-auto mt-20 max-w-2xl border-t border-lane-institutional-strong/30 pt-10 text-center font-narrative text-lg italic text-body-muted"
+		>
+			Paper with ink. One color does the heavy lifting. Everything else is structure.
+		</p>
+	</div>
+</StackLayout>

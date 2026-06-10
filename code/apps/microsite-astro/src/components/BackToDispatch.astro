@@ -1,0 +1,44 @@
+---
+/**
+ * BackToDispatch — copper wireframe pill linking back to the homepage.
+ *
+ * Site-wide site rule (locked by AK 2026-05-14): every non-home surface
+ * (about, sitemap, articles browse, individual dispatch pages) renders
+ * this affordance near the top of its body.
+ *
+ * Visual: copper outline + transparent fill, layered inset/outset shadows
+ * to simulate an embossed press into the vellum substrate. Caps, extrabold,
+ * wide tracking. Hover fills copper-on-vellum. Animated arrow nudges left
+ * on hover.
+ *
+ * Same component is used at the top + bottom of dispatch reading pages,
+ * and at the top of about / sitemap / articles browse.
+ */
+
+interface Props {
+	/** Optional override for the destination href. Defaults to /. */
+	href?: string
+	/** Optional override for the link label. Defaults to "Back to DISpatch". */
+	label?: string
+	/** Optional className passed onto the wrapper for layout positioning. */
+	class?: string
+}
+
+const { href = '/', label = 'Back to DISpatch', class: wrapperClass = '' } = Astro.props
+---
+
+<div class:list={['inline-block', wrapperClass]}>
+	<a
+		href={href}
+		class="group inline-flex items-center gap-3 rounded-full border-2 border-copper bg-transparent px-6 py-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.22em] text-copper transition-all duration-200 hover:bg-copper hover:text-sky-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
+		style="box-shadow: inset 0 1px 0 color-mix(in oklch, var(--platform-copper) 40%, transparent), inset 0 -1px 0 color-mix(in oklch, var(--platform-copper) 22%, transparent), 0 1px 0 color-mix(in oklch, var(--platform-copper) 18%, transparent); text-shadow: 0 1px 0 color-mix(in oklch, var(--sky-low) 65%, transparent);"
+	>
+		<span
+			class="inline-block transition-transform duration-200 group-hover:-translate-x-1"
+			aria-hidden="true"
+		>
+			←
+		</span>
+		{label}
+	</a>
+</div>

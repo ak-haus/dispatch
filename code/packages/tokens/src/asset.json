@@ -1,0 +1,32 @@
+{
+  "color": {
+    "$type": "color",
+
+    "asset": {
+      "cartography": {
+        "pulse": {
+          "$value": "oklch(0.45 0.18 22)",
+          "$description": "Cartography wine-red infra-pulse marker — asset-tier inheritor of Prime accent at darker variant. Dispatch lights popping up on the cartography map = Inferno-infra activity becoming visible at city scale. STUB from CD2 §9.1; CD3 calibrates per-zoom-state values; CD3 retests at CD6 recombination per CD2 §9.4 stub-vs-lock pattern.",
+          "$extensions": {
+            "prime": {
+              "tier": "asset",
+              "stub-from": "CD2-§9.1-published-stub-CD3-cartography-workshop-calibrates",
+              "concept-citation": {
+                "universal-concept": "Asset-tier inheritor of Prime accent (Inferno-infra surfacing through Purgatorio-terraces) at darker variant — dispatch-lights-pop-up effect on the map (CD2 §4.3 5e + §9.1)",
+                "reference-platforms": ["D&D-map cartography tradition", "GTA-5-zoom city-scale facsimile (CD1 thesis §3)", "Medieval-rubric darker-variant inheritance"]
+              },
+              "apca-validated-pairs": [
+                { "against-token": "{color.dispatch.vellum.25}", "lc-score": null, "surface-pairing": "cartography-pulse-on-sky-high", "status": "pending-CD3-via-§7", "lc-target": 60, "γ-exception": "CD2 §3.3 cartography-far-zoom-deliberate-quietness-per-CD1-§4.4-dial-principle" }
+              ],
+              "colorblind-validated": [
+                { "deficiency-type": "deuteranopia", "simulation-tool": null, "pass-status": "pending-CD3-via-§7", "mitigation-channel": "secondary-semantic-channel-via-cartography-iconography-distinct-marker-shapes-per-dispatch-type" },
+                { "deficiency-type": "protanopia", "simulation-tool": null, "pass-status": "pending-CD3-via-§7", "mitigation-channel": "secondary-semantic-channel-via-cartography-iconography" }
+              ],
+              "ratified-at": "CD2 Decision 5e §10 + Decision 11 §10 stub-interface"
+            }
+          }
+        }
+      }
+    }
+  }
+}

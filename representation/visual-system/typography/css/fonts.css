@@ -1,0 +1,373 @@
+/* ============================================================================
+ * fonts.css — V1 typography stack (W2-S-E OFL + W2-S-F premium Pangram)
+ *
+ * Self-hosted @font-face declarations for DISpatch's typographic slots at V1:
+ *   - 5 OFL-1.1 families (Vollkorn / Crimson Pro / Inter / JetBrains Mono /
+ *     IM Fell English) per CD2 §10 Decision 7c (W2-S-E owned).
+ *   - 2 Pangram Pangram premium families (Editorial New Bold for wordmark;
+ *     Pangram Sans Extrabold for nav) per Mayor 2026-05-10 (W2-S-F owned).
+ *
+ * Slot tokens are CSS custom properties. Components consume slots, never
+ * families directly. Slot fallback chains preserve graceful degradation if
+ * premium families fail to load (Pangram Sans → Inter → system sans;
+ * Editorial New → Vollkorn → system serif).
+ *
+ * Path convention: WOFF2 binaries served from `/fonts/<surface>/<file>` where
+ * `<surface>` ∈ {body, title, nav, wordmark, code, civic}. W2-S-A integration
+ * wires the runtime base path.
+ *
+ * Authored 2026-05-10 by W2-S-E; amended 2026-05-10 by W2-S-F.
+ * ========================================================================== */
+
+/* ----------------------------------------------------------------------------
+ * Slot tokens (CSS custom properties)
+ * ---------------------------------------------------------------------------- */
+
+:root {
+  /* W2-S-A integration overrides this if the runtime asset path differs */
+  --woff2-base-path: "/fonts";
+
+  /* V1 LOCKED slots (W2-S-E owned) */
+  --font-title: "Vollkorn", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-body: "Crimson Pro", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-code: "JetBrains Mono", "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --font-civic: "IM Fell English", "Vollkorn", Georgia, serif;
+
+  /* V1 LOCKED slots (W2-S-F owned; landed 2026-05-10) */
+  /* Nav: Pangram Sans Extrabold is universal Prime-microsite nav per Mayor 2026-05-10. Inter retained as graceful fallback. */
+  --font-nav: "Pangram Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Wordmark: Editorial New Bold is DISpatch-exclusive wordmark per Mayor 2026-05-10. Vollkorn retained as graceful fallback. */
+  --font-wordmark: "Editorial New", "Vollkorn", "Iowan Old Style", Georgia, "Times New Roman", serif;
+}
+
+/* ----------------------------------------------------------------------------
+ * Vollkorn (Title slot; DISpatch-locked)
+ * Designer: Friedrich Althausen · License: OFL-1.1
+ * Upstream: github.com/Friedrich-Althausen/Vollkorn-Typeface
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Vollkorn";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/title/vollkorn-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Vollkorn";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/title/vollkorn-400-italic.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Vollkorn";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/title/vollkorn-700.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+/* ----------------------------------------------------------------------------
+ * Crimson Pro (Body slot; DISpatch-locked)
+ * Designer: Sebastian Kosch · License: OFL-1.1
+ * Upstream: github.com/Fonthausen/CrimsonPro
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/body/crimson-pro-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/body/crimson-pro-400-italic.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/body/crimson-pro-600.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/body/crimson-pro-700.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Crimson Pro";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/body/crimson-pro-700-italic.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+/* ----------------------------------------------------------------------------
+ * Editorial New (Wordmark slot; DISpatch-exclusive register)
+ * Foundry: Pangram Pangram · Designer: Mathieu Desjardins
+ * License: Pangram per-style EULA (Desktop+Web; see licenses/editorial-new-bold-receipt.pdf)
+ * Subset: 8 wordmark glyphs only (D, I, S, p, a, t, c, h) — 1.5KB
+ * Version: 2.200
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Editorial New";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/wordmark/editorial-new-700.woff2") format("woff2");
+  /* Unicode-range scoped to wordmark glyph set so browser fetches Editorial
+     New only on pages that render `DISpatch` wordmark characters. Non-wordmark
+     surfaces use the slot-fallback (Vollkorn / system serif) and never hit
+     the network for this font. */
+  unicode-range: U+0044, U+0049, U+0053, U+0061, U+0063, U+0068, U+0070, U+0074;
+}
+
+/* ----------------------------------------------------------------------------
+ * Pangram Sans (Nav slot primary; universal Prime-microsite wayfinding register)
+ * Foundry: Pangram Pangram · Designer: Mathieu Desjardins
+ * License: Pangram per-style EULA (Desktop+Web; see licenses/pangram-sans-normal-extrabold-receipt.pdf)
+ * Subset: Extended Latin + General Punctuation + Arrows — 11.3KB
+ * Version: 2.300
+ * Note: Pangram Sans Normal sub-family; OS/2 usWeightClass=800 (CSS-standard
+ * Extrabold). Pangram's product page displays this as "Extrabold 900" using
+ * their internal Variable-axis numbering — the file's CSS weight value is 800.
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Pangram Sans";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/nav/pangram-sans-800.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0100-017F, U+2010-203F, U+2190-21FF;
+}
+
+/* ----------------------------------------------------------------------------
+ * Inter (Nav slot fallback — kept per documentation-lifecycle append discipline)
+ * Designer: Rasmus Andersson · License: OFL-1.1
+ * Upstream: github.com/rsms/inter
+ * Role at V1: graceful fallback if Pangram Sans fails to load. Also covers
+ * accent characters outside Pangram Sans subset's Latin-Extended-A range.
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/nav/inter-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2026, U+2018-2019, U+201C-201D, U+2190-2199, U+20A0-20BF;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/nav/inter-600.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2026, U+2018-2019, U+201C-201D, U+2190-2199, U+20A0-20BF;
+}
+
+/* ----------------------------------------------------------------------------
+ * JetBrains Mono (Code/Meta slot; component-locked)
+ * Designer: JetBrains type team · License: OFL-1.1
+ * Upstream: github.com/JetBrains/JetBrainsMono
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/code/jetbrains-mono-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2500-257F, U+2580-259F, U+2200-22FF, U+2190-2199, U+27F0-27FF;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/code/jetbrains-mono-700.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2500-257F, U+2580-259F, U+2200-22FF, U+2190-2199, U+27F0-27FF;
+}
+
+/* ----------------------------------------------------------------------------
+ * IM Fell English (Civic/Dante slot; asset-locked)
+ * Designer: Igino Marini · License: OFL-1.1
+ * Upstream: iginomarini.com/fell + github mirror
+ * ---------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "IM Fell English";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/civic/im-fell-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+2018-2019, U+201C-201D, U+2026, U+2030;
+}
+
+@font-face {
+  font-family: "IM Fell English";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/civic/im-fell-400-italic.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+2018-2019, U+201C-201D, U+2026, U+2030;
+}
+
+/* ----------------------------------------------------------------------------
+ * Wordmark composition (CD2 §5.2 cosmology-encoded split-color)
+ *
+ * Component CSS for the masthead wordmark. Token-aliased; --font-wordmark
+ * resolves to Editorial New Bold (W2-S-F) with Vollkorn graceful fallback.
+ *
+ * Color tokens reference platform-wide accent + text tokens that ship from
+ * W2-S-D (Style Dictionary) per CD2 §5.2 token mapping. Until W2-S-D lands,
+ * concrete color values are inlined as a fallback.
+ * ---------------------------------------------------------------------------- */
+
+.wordmark {
+  font-family: var(--font-wordmark);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  /* W2-S-A integration adds line-height + size + position via component CSS */
+}
+
+/* ----------------------------------------------------------------------------
+ * Nav state composition (CD2 Decision 8 proposal — copper-default + tonal-stepping state)
+ *
+ * Universal Prime-microsite nav: Pangram Sans Extrabold renders wayfinding-
+ * grade salience; state effects via color/opacity/underline + tonal stepping
+ * across the copper→deeper-copper→wine-intermediate→wordmark-red gradient.
+ *
+ * State pattern (Mayor 2026-05-10 lock — variant α):
+ *   default  → --platform-copper                  #b87333  (Prime gilded register)
+ *   hover    → --platform-copper-deep             #8b5224  (engagement deepening)
+ *   active   → --platform-accent-prime-active     #6b2520  (wine intermediate; sits
+ *                                                          chromatically BETWEEN copper
+ *                                                          and wordmark-red — illuminated-
+ *                                                          manuscript graduated discipline)
+ *   focus    → outline color = --platform-accent-prime  #8e2532  (wordmark-red ring)
+ *
+ * Tokens land via W2-S-D Style Dictionary; inline hex fallbacks in place
+ * until then. CD2 amendment proposal (Decision 7 amend + Decision 8 add)
+ * staged at cc-ledger/diffs/W2-S-F/cd2-color-amendment-proposal.md;
+ * awaits Mayor canon promotion to color.md.
+ * ---------------------------------------------------------------------------- */
+
+.nav-link {
+  font-family: var(--font-nav);
+  font-weight: 800;
+  font-style: normal;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  color: var(--platform-copper, #b87333);
+  opacity: 0.85;
+  transition: opacity 150ms ease-out, color 150ms ease-out;
+  position: relative;
+}
+
+.nav-link:hover {
+  opacity: 1;
+  color: var(--platform-copper-deep, #8b5224);
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--platform-accent-prime, #8e2532);
+  outline-offset: 4px;
+}
+
+.nav-link[aria-current="page"],
+.nav-link.is-active {
+  opacity: 1;
+  color: var(--platform-accent-prime-active, #6b2520);
+}
+
+.nav-link[aria-current="page"]::after,
+.nav-link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.25em;
+  height: 2px;
+  background: currentColor;
+}
+
+.nav-link[aria-disabled="true"],
+.nav-link.is-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.wordmark-dis {
+  /* Resolves to W2-S-D --platform-accent-prime once tokens.css ships.
+     Inline fallback #8e2532 = Atlantic-pigment hybrid (Mayor 2026-05-10
+     CD2 amendment proposal at cc-ledger/diffs/W2-S-F/cd2-color-amendment-proposal.md
+     — pending Mayor canon promotion). Replaces prior "alarm" #c8392b. */
+  color: var(--platform-accent-prime, #8e2532);
+}
+
+.wordmark-patch {
+  /* Resolves to W2-S-D --platform-text-body-strong once tokens.css ships.
+     font-size: 1.08em = +8% mild hierarchy (Mayor 2026-05-10 lock).
+     Restores optical balance lost when capital DIS dominates lowercase
+     patch at equal point size; subtly tips reading toward patch-as-primary
+     with DIS-as-cosmology-marker. */
+  color: var(--platform-text-body-strong, currentColor);
+  font-size: 1.08em;
+}
+
+/* ----------------------------------------------------------------------------
+ * Standing-history note — W2-S-F landed 2026-05-10
+ *
+ * Editorial New Bold + Pangram Sans Extrabold @font-face blocks landed above.
+ * Slot tokens --font-nav and --font-wordmark amended to prefer the premium
+ * Pangram families with Inter / Vollkorn retained as graceful fallbacks per
+ * feedback_documentation_lifecycle.md append discipline.
+ *
+ * Wordmark Unicode-range optimization: Editorial New @font-face is scoped to
+ * the 8 unique characters of "DISpatch" — browsers fetch the 1.5KB file ONLY
+ * on pages that contain the wordmark literally. Article-only surfaces save
+ * the network round-trip entirely.
+ *
+ * Forward-arc — future Variable cut upgrade (post-V1 if Mayor escalates):
+ *   - Pangram Sans Normal Variable cut (24 styles + axis): unlocks weight-axis
+ *     nav state transitions (CSS font-variation-settings: "wght" <value>).
+ *     Replaces single static 800 with axis-aware @font-face block. Pricing
+ *     escalates beyond Indie tier; requires Mayor amendment.
+ *   - Editorial New Variable cut (16 styles + axis): unlocks weight-dialing
+ *     for wordmark across registers without re-procurement. Same escalation.
+ *
+ * Forward-arc — future width sub-family addition (post-V1):
+ *   Pangram Sans Compact / Slim / Compressed widths available within same
+ *   144-style superfamily if future Prime surfaces need width variation
+ *   (e.g., narrow chrome on Buildings interfaces). Inherits the same
+ *   slot-aliased pattern — add @font-face block + amend slot fallback chain.
+ * ---------------------------------------------------------------------------- */

@@ -1,0 +1,177 @@
+/* Footnote — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/Footnote/spec.md
+ * Color source: spec Field 7 — marker `tokens.color.text.accent` /
+ *               prose `tokens.color.text.primary` / back-link `tokens.color.
+ *               chrome.text` / sidebar substrate `tokens.color.atmosphere.
+ *               window-warm`.
+ * Typography source: marker `tokens.type.meta.500` (JetBrains Mono Meta-code) /
+ *               prose `tokens.type.body.400` (Crimson Pro Body) / back-link
+ *               `tokens.type.nav.400` (Pangram Sans Nav).
+ *
+ * Visual archetype (spec Field 1): two-part composition — inline marker
+ * (bare superscript citation reference) + sidebar/sheet/endnote/inline-aside
+ * container. Per CD1 Concept 5 multi-voice typography: three-typeface marriage
+ * within one component (Meta-code marker + Body prose + Nav back-link).
+ *
+ * REBUILD 2026-05-10 — Cycle 2 motifs TOMBSTONED per Mayor:
+ *   - Cinzel small-caps "❖ N." container label prefix + overline ornament —
+ *     Cinzel substituted IM Fell against canon; not in spec.
+ *   - Column-rule vertical hairline 8px right of left border (::after) —
+ *     Cycle 2 invention; not in spec.
+ *   - Small-caps swash back-link with leading ⟵ bracket ornament — Cycle 2
+ *     invention; spec says simple Nav-slot back-link.
+ *
+ * INTENTIONAL ANTI-PATTERNS:
+ *   - No background on root (substrate is --sky-low host-owned for inline-
+ *     aside variant; contained variants paint --window-warm per spec Field 7).
+ *   - No accent-prime on prose (wine is for marker accent only per spec).
+ *   - No ornaments, no overlines, no swashes (canon discipline: three-
+ *     typeface marriage IS the visual character).
+ */
+
+.prime-footnote {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+/* Container variants */
+.prime-footnote--sidebar-popover {
+  background: var(--window-warm);
+  padding: 1rem 1.125rem;
+  border-radius: 2px;
+  border-left: 2px solid var(--rail-edge);
+}
+
+.prime-footnote--mobile-bottom-sheet {
+  background: var(--window-warm);
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--rail-edge);
+}
+
+.prime-footnote--endnote {
+  /* Endnote variant: footnotes collected at article end as flow content. */
+  background: transparent;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rail-edge);
+}
+
+.prime-footnote--inline-aside {
+  background: transparent;
+  padding: 0.5rem 0;
+  border-left: 1px solid var(--rail-edge);
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+/* Container label — simple numeric prefix per spec Field 1.
+ * Meta-code slot for the label digit per spec Field 7. */
+.prime-footnote__label {
+  display: inline-block;
+  font-family: var(--font-code);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: var(--text-accent);
+  margin-right: 0.5em;
+  vertical-align: baseline;
+}
+
+/* Prose — Body slot (Crimson Pro; long-form sanctuary register). */
+.prime-footnote__prose {
+  font-family: var(--font-body);
+  display: inline;
+  color: inherit;
+}
+
+.prime-footnote__prose p {
+  margin: 0 0 0.5rem;
+}
+
+.prime-footnote__prose p:last-child {
+  margin-bottom: 0;
+}
+
+.prime-footnote__prose code {
+  font-family: var(--font-code);
+  font-size: 0.875em;
+  padding: 0.05em 0.3em;
+  background: var(--surface-inset);
+  border-radius: 2px;
+}
+
+/* Back-link — Nav slot per spec Field 7. Simple text link. */
+.prime-footnote__back-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-family: var(--font-nav);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--chrome-text);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 150ms ease-out, color 150ms ease-out;
+}
+
+.prime-footnote__back-link:hover {
+  opacity: 1;
+  color: var(--copper-deep);
+}
+
+.prime-footnote__back-link:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+ * FootnoteMarker — inline citation reference in body text.
+ * Meta-code monospace per spec Field 7; bare superscript per spec Field 1.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+.prime-footnote-marker {
+  font-family: var(--font-code);
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: super;
+  color: var(--text-accent);
+  text-decoration: none;
+  padding: 0 0.125em;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 150ms ease-out;
+}
+
+.prime-footnote-marker sup {
+  font-family: inherit;
+}
+
+.prime-footnote-marker:hover {
+  color: var(--copper-deep);
+}
+
+.prime-footnote-marker:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 2px;
+  border-radius: 2px;
+  color: var(--text-strong);
+}
+
+.prime-footnote-marker[aria-expanded="true"] {
+  color: var(--accent-prime-active);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prime-footnote-marker,
+  .prime-footnote__back-link {
+    transition: none;
+  }
+}
+
+[data-prime-reduced-motion="reduce"] .prime-footnote-marker,
+[data-prime-reduced-motion="reduce"] .prime-footnote__back-link {
+  transition: none;
+}

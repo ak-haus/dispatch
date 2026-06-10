@@ -1,0 +1,49 @@
+---
+/**
+ * /sitemap — DISpatch atlas.
+ *
+ * Renders the SitemapAtlas React island: every page in DISpatch as a zone in
+ * the Editorial District. Hover/click to navigate. Real cartographic backdrop,
+ * lane-coded zones, paired-index right rail, recent dispatch preview.
+ */
+
+import { getCollection } from 'astro:content'
+import StackLayout from '@/layouts/StackLayout.astro'
+import BackToDispatch from '@/components/BackToDispatch.astro'
+import { SitemapAtlas, type ArticleEntry } from '@/components/SitemapAtlas'
+
+const entries = await getCollection('dispatch')
+entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+const formatDate = (d: Date) =>
+	new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+		timeZone: 'UTC',
+	}).format(d)
+
+const articles: ArticleEntry[] = entries.map((e) => ({
+	href: `/dispatch/${e.id}`,
+	title: e.data.title,
+	kicker: e.data.kicker,
+	dek: e.data.dek,
+	dateLabel: formatDate(e.data.date),
+	readingTime: e.data.readingTime,
+	lane: e.data.provenance.lane,
+}))
+---
+
+<StackLayout
+	title="Atlas"
+	kicker="Sitemap · Editorial District"
+	description="Every page in DISpatch as a zone in the same district. Hover a zone to read its register; click to step inside."
+	theme="vellum"
+	hideHero
+	fullWidthMain
+>
+	<div class="px-4 pt-8 sm:px-6 md:px-10 md:pt-12">
+		<BackToDispatch />
+	</div>
+	<SitemapAtlas client:load articles={articles} />
+</StackLayout>

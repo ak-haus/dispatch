@@ -1,0 +1,38 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "reading-progress",
+  "type": "registry:component",
+  "title": "ReadingProgress",
+  "description": "Scroll-pinned reading-progress indicator. Article-only affordance per CD1 Concept 7 sanctuary discipline. Linear bar (default) or typographic percentage. Atmospheric chrome — warmth, not loudness.",
+  "categories": ["custom", "chrome", "article-affordance"],
+  "dependencies": ["clsx"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "components/custom/ReadingProgress/ReadingProgress.tsx",
+      "type": "registry:component",
+      "target": "components/custom/ReadingProgress/ReadingProgress.tsx"
+    },
+    {
+      "path": "components/custom/ReadingProgress/ReadingProgress.css",
+      "type": "registry:component",
+      "target": "components/custom/ReadingProgress/ReadingProgress.css"
+    },
+    {
+      "path": "components/custom/ReadingProgress/index.ts",
+      "type": "registry:component",
+      "target": "components/custom/ReadingProgress/index.ts"
+    }
+  ],
+  "meta": {
+    "primeWave": "W3-S-A",
+    "primePhase": "1-chrome",
+    "primeSpec": "representation/visual-system/components/ReadingProgress/spec.md",
+    "primeUniversalConcepts": [
+      "C4-atmosphere-as-physical-substrate",
+      "C7-article-as-sanctuary"
+    ],
+    "primeMode": "article-only-sanctuary",
+    "primeForwardPointer": "Stateless at W3-S-A; scroll-listener integration with single-rAF discipline + ChapterRail progress delegation wires at W5+ when component lands in actual article surfaces."
+  }
+}

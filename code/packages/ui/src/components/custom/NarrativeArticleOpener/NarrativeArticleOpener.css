@@ -1,0 +1,132 @@
+/* NarrativeArticleOpener — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/NarrativeArticleOpener/spec.md
+ *
+ * Visual archetype: whitespace-prioritized; NARRATIVE-spacious scale + long
+ * leading; literary voice prominent. Per CD1 Concept 7 article-as-sanctuary:
+ * chrome restrained BELOW standfirst (not in metadata band); the opener
+ * does not perform — the reader arrives.
+ *
+ * Substrate-agnostic root (Rule 1: --sky-low host-owned).
+ */
+
+.prime-narrative-opener {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 3rem 0 2rem;
+  border-bottom: 1px solid var(--rail-edge);
+}
+
+/* Epigraph — italicized literary citation above headline (NYT Magazine /
+ * New Yorker / Paris Review pattern). Body slot italic. */
+.prime-narrative-opener__epigraph {
+  margin: 0 0 0.5rem;
+  padding: 0 0 0 1.25rem;
+  border-left: 2px solid var(--rail-edge);
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* Title — NARRATIVE-spacious scale per catalogue §5.3. Long leading; large
+ * scale; measured measure. Title slot (Vollkorn / Editorial New). */
+.prime-narrative-opener__title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0;
+  max-width: 22ch;
+}
+
+/* Standfirst — italicized Body voice; long leading; spacious */
+.prime-narrative-opener__standfirst {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.3125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 50ch;
+}
+
+.prime-narrative-opener__media {
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+/* Restrained chrome — Nav slot; muted; small scale; placed BELOW standfirst
+ * per article-as-sanctuary register. */
+.prime-narrative-opener__restrained-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rail-edge);
+  font-family: var(--font-nav);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.prime-narrative-opener__sep {
+  color: var(--rail-edge);
+  user-select: none;
+}
+
+.prime-narrative-opener__date {
+  font-family: var(--font-code);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Variants */
+.prime-narrative-opener--epigraph .prime-narrative-opener__epigraph {
+  font-size: 1.25rem;
+  padding-left: 0;
+  border-left: 0;
+  font-style: italic;
+  text-align: center;
+  max-width: 36ch;
+  margin: 0 auto 1rem;
+  color: var(--text-strong);
+}
+
+.prime-narrative-opener--drop-cap .prime-narrative-opener__standfirst::first-letter {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-style: normal;
+  font-size: 3.5em;
+  float: left;
+  line-height: 0.9;
+  padding-right: 0.1em;
+  padding-top: 0.05em;
+  color: var(--text-strong);
+}
+
+.prime-narrative-opener--image-absent {
+  /* No media slot renders; no additional rule needed since media is
+   * conditional in the .tsx */
+}
+
+.prime-narrative-opener--compact {
+  gap: 1rem;
+  padding: 1.5rem 0 1rem;
+}
+
+.prime-narrative-opener--compact .prime-narrative-opener__title {
+  font-size: clamp(1.875rem, 5vw, 2.5rem);
+}
+
+.prime-narrative-opener--compact .prime-narrative-opener__standfirst {
+  font-size: 1.125rem;
+}

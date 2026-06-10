@@ -1,0 +1,195 @@
+/*
+ * DISpatch — Editorial District first-render tokens
+ *
+ * CC-Mayor-delegated 2026-05-09 per W1 CD6 Brand Synthesis Pass.
+ * Descriptive blueprint per master plan §0 C9; W2 Style Dictionary v4 compilation produces canonical tokens.css.
+ *
+ * Token approximations from CD2 ratified OKLCH values + Vellum atmospheric scale + lane pigments.
+ * OKLCH values calibrated for sRGB + P3 gamut safety per CD2 §2.3 chroma envelope governance.
+ *
+ * 5-typeface containment governance per CD1 thesis Concept 1 + thesis-statement §2 Concept 1:
+ *   Title (Vollkorn) — DISpatch-locked
+ *   Body (Crimson Pro) — DISpatch-locked
+ *   Nav (Inter as Founders Grotesk-equivalent stand-in) — Prime-platform-wide
+ *   Meta-code (JetBrains Mono Variable) — component-locked
+ *   Civic/Dante — asset-locked; deferred to cartography rendering at W3+W5
+ */
+
+:root {
+  /* ============================================
+     Vellum atmospheric scale (DISpatch-locked tier extension)
+     Per CD2 §2.2 + §4.5 + thesis-statement §4.1
+     ============================================ */
+  --vellum-25:  oklch(0.99  0.005 88);   /* sky-high — warmest, lightest */
+  --vellum-50:  oklch(0.985 0.008 88);
+  --vellum-100: oklch(0.96  0.012 88);   /* sky-low — warm-white room */
+  --vellum-200: oklch(0.92  0.020 88);   /* reflect — atmospheric reflectivity */
+  --vellum-300: oklch(0.87  0.030 85);   /* window-warm — incandescent shift */
+  --vellum-400: oklch(0.78  0.040 80);
+  --vellum-500: oklch(0.65  0.040 75);
+  --vellum-600: oklch(0.50  0.040 70);
+  --vellum-700: oklch(0.38  0.030 65);
+  --vellum-800: oklch(0.25  0.020 60);
+  --vellum-900: oklch(0.18  0.015 55);
+  --vellum-950: oklch(0.13  0.010 50);
+
+  /* Atmospheric chrome aliases (ratified at CD2 §4.5 from RES-009 fold) */
+  --sky-high: var(--vellum-25);
+  --sky-low: var(--vellum-100);
+  --reflect: var(--vellum-200);
+  --window-warm: var(--vellum-300);
+
+  /* ============================================
+     Prime-platform-wide accent (Inferno-infra-surfacing dispatch-red)
+     Per CD2 Decision 5 + Decision 7
+     ============================================ */
+  --accent-prime: oklch(0.55 0.18 22);          /* dispatch-red */
+  --accent-prime-hover: oklch(0.50 0.18 22);
+  --accent-prime-active: oklch(0.45 0.20 22);
+
+  /* ============================================
+     DISpatch-locked lane pigments (per CD2 §4)
+     Three cosmology directional vectors meeting at Editorial District's surface
+     ============================================ */
+  /* Lane 1 Editorial — Surface vector (warm-earth terracotta family) */
+  --lane-editorial-fill: oklch(0.62 0.13 35);
+  --lane-editorial-text: oklch(0.32 0.11 35);
+  --lane-editorial-border: oklch(0.55 0.13 35);
+
+  /* Lane 2 Institutional — Above / Paradiso vector (cool-mineral graphite-blue family) */
+  --lane-institutional-fill: oklch(0.45 0.07 240);
+  --lane-institutional-text: oklch(0.25 0.06 240);
+  --lane-institutional-border: oklch(0.40 0.07 240);
+
+  /* Lane 3 Dispatch — Below / Inferno vector (alias of accent-prime) */
+  --lane-dispatch-fill: var(--accent-prime);
+  --lane-dispatch-text: oklch(0.28 0.18 22);
+  --lane-dispatch-border: var(--accent-prime-active);
+
+  /* Asset-locked cartography pulse (asset-tier inheritor; darker variant for map markers) */
+  --asset-cartography-pulse: oklch(0.45 0.18 22);
+
+  /* ============================================
+     Typography (5-typeface containment governance per CD1 Concept 1)
+     ============================================ */
+  --type-title: 'Vollkorn', 'Vollkorn Fallback', Georgia, serif;
+  --type-body: 'Crimson Pro', 'Crimson Pro Fallback', Georgia, serif;
+  --type-nav: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+  --type-meta: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* --type-civic deferred to W3 cartography pipeline */
+
+  /* Type scale (1.250 modular per master plan §3.A baseline) */
+  --type-scale-xs: 0.75rem;
+  --type-scale-sm: 0.875rem;
+  --type-scale-base: 1rem;
+  --type-scale-md: 1.125rem;
+  --type-scale-lg: 1.25rem;
+  --type-scale-xl: 1.5rem;
+  --type-scale-2xl: 2rem;
+  --type-scale-3xl: 2.5rem;
+  --type-scale-4xl: 3.5rem;
+  --type-scale-display: 5rem;
+
+  /* Type weights */
+  --type-weight-regular: 400;
+  --type-weight-medium: 500;
+  --type-weight-semibold: 600;
+  --type-weight-bold: 700;
+
+  /* Leading */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-base: 1.5;
+  --leading-loose: 1.75;
+
+  /* Tracking */
+  --tracking-tight: -0.02em;
+  --tracking-snug: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
+
+  /* ============================================
+     Spacing (rem-based)
+     ============================================ */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Radii */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* ============================================
+     Surface tokens (texture-surface declarations per CD4 §4.5 from RES-009 fold)
+     ============================================ */
+  --surface-page: var(--sky-low);
+  --surface-page-elevated: var(--sky-high);
+  --surface-card-edge: var(--window-warm);
+  --surface-footer: var(--sky-low);
+  --surface-cartography-substrate: var(--sky-low);
+  --surface-institutional-fixture: var(--window-warm);
+
+  /* Text on surfaces */
+  --text-primary: var(--vellum-900);
+  --text-secondary: var(--vellum-700);
+  --text-tertiary: var(--vellum-600);
+  --text-meta: var(--vellum-700);
+  --text-on-accent: var(--vellum-25);
+
+  /* Borders */
+  --border-subtle: oklch(0.85 0.020 85);
+  --border-card: oklch(0.80 0.025 85);
+}
+
+/* ============================================
+   Reset + base
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--type-body);
+  font-size: var(--type-scale-base);
+  line-height: var(--leading-base);
+  color: var(--text-primary);
+  background: var(--surface-page);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, var(--sky-high) 0%, var(--sky-low) 35%, var(--sky-low) 100%),
+    repeating-linear-gradient(0deg, oklch(0 0 0 / 0.012) 0px, transparent 1px, transparent 2px, oklch(0 0 0 / 0.008) 3px),
+    repeating-linear-gradient(90deg, oklch(0 0 0 / 0.012) 0px, transparent 1px, transparent 2px, oklch(0 0 0 / 0.008) 3px);
+  background-blend-mode: multiply, multiply, normal;
+  min-height: 100vh;
+}

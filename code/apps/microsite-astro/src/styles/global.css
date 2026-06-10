@@ -1,0 +1,851 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@400;500;600;700&family=Vollkorn:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./tokens.css";
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+/* All cycle-aware Tailwind utilities now cascade via var() chains that
+ * route through tokens.css [data-prime-cycle="…"] blocks. No --color-*
+ * overrides are needed here — those would only matter if @theme inline
+ * declarations referenced --color-* names, which they don't. Cycle values
+ * for substrate, text roles, accents, lanes, wordmark, and cartography
+ * pulse live in tokens.css and apply automatically. */
+
+/* ── Letterpress / burned-in text effects ─────────────────────────────────
+ * Editorial type sits ON the cartographic substrate, not floating above it.
+ * Two depth treatments — pick based on type weight.
+ *   .dispatch-emboss  → light press; for caps/labels at 11–14px
+ *   .dispatch-burnin  → heavier press; for display type (wordmark / volume
+ *                       label / dek paragraph) at 16px+
+ * Both pair `text-shadow` with `mix-blend-mode: multiply` so dark ink darkens
+ * naturally where it overlaps the cartographic backdrop, mimicking ink
+ * absorbing into paper. Cycle blocks invert the blend mode for night.
+ * ─────────────────────────────────────────────────────────────────────── */
+.dispatch-emboss {
+  mix-blend-mode: multiply;
+  text-shadow:
+    0 1px 0 color-mix(in oklch, var(--sky-low) 75%, transparent),
+    0 -0.5px 0 color-mix(in oklch, var(--platform-text-body-strong) 18%, transparent);
+}
+
+.dispatch-burnin {
+  mix-blend-mode: multiply;
+  text-shadow:
+    0 1px 1.5px color-mix(in oklch, var(--sky-low) 65%, transparent),
+    0 -1px 0 color-mix(in oklch, var(--platform-text-body-strong) 22%, transparent),
+    0 0 1px color-mix(in oklch, var(--platform-text-body-strong) 10%, transparent);
+}
+
+/* Dark-cycle letterpress (dusk + night).
+ *
+ * Default multiply (above) darkens dark ink into light paper — right for
+ * dawn, wrong for dark substrates. On dark cycles BOTH emboss and burnin
+ * drop the blend mode entirely.
+ *
+ * Why no screen blend: the chrome (emboss small caps + burnin wordmark)
+ * sits over the cartography asset, which contains BRIGHT-RED building
+ * shapes. Screen-blending red text (accent-prime / accent-prime-active /
+ * wordmark-dis) over red backdrop saturates each channel toward 1.0 —
+ * the text reads as washed cream/white wherever it overlaps a red roof.
+ * Multicolor wordmark spans cross-blend independently, compounding it
+ * into a horror-glow look at display size.
+ *
+ * Solution: render colors verbatim, ground type with a soft drop shadow
+ * for press depth. The cartography backdrop is already pre-muted (opacity
+ * 0.55 + brightness 0.93); shadow adds the editorial "weight on paper"
+ * register without interaction artifacts.
+ */
+
+[data-prime-cycle="dusk"] .dispatch-emboss,
+[data-prime-cycle="night"] .dispatch-emboss {
+  mix-blend-mode: normal;
+  text-shadow: 0 1px 3px color-mix(in oklch, black 65%, transparent);
+}
+
+[data-prime-cycle="dusk"] .dispatch-burnin {
+  mix-blend-mode: normal;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+}
+
+[data-prime-cycle="night"] .dispatch-burnin {
+  mix-blend-mode: normal;
+  text-shadow: 0 2px 8px color-mix(in oklch, black 75%, transparent);
+}
+
+/* ── CoverSpread vellum wash ──────────────────────────────────────────────
+ * Hero radial that concentrates the page substrate over the type column.
+ * On dawn this lifts a cream pool out of the muted cartography for type
+ * legibility. On dark cycles --sky-low is dark, so the same radial would
+ * stamp a dark "smoke cloud" exactly where the wordmark sits — read as
+ * a horror vignette. Dark cycles drop the wash entirely; the pre-muted
+ * cartography (opacity 0.55, brightness 0.93) is calm enough on its own
+ * and the wordmark's drop shadow grounds it.
+ * ─────────────────────────────────────────────────────────────────────── */
+.cover-vellum-wash {
+  background: radial-gradient(
+    60% 55% at 50% 45%,
+    color-mix(in oklch, var(--sky-low) 90%, transparent) 0%,
+    color-mix(in oklch, var(--sky-low) 65%, transparent) 50%,
+    color-mix(in oklch, var(--sky-low) 12%, transparent) 100%
+  );
+}
+
+[data-prime-cycle="dusk"] .cover-vellum-wash,
+[data-prime-cycle="night"] .cover-vellum-wash {
+  background: none;
+}
+
+/* Pangram Pangram Foundry — licensed 2026-05-12.
+   Product pages display Variable-axis weights (Extrabold = 900), but the
+   actual OS/2 usWeightClass in the static file is 800. Use CSS-standard
+   values so font-extrabold (Tailwind 800) and font-bold (700) resolve
+   without synthetic-weight fallback. */
+@font-face {
+  font-family: 'Pangram Editorial New';
+  src: url('/fonts/PPEditorialNew-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pangram Sans';
+  src: url('/fonts/PPPangramSans-Extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Tailwind dark: variant matches both legacy .dark and the canonical
+   [data-prime-cycle="night"] attribute so dark:* utilities work in either. */
+@custom-variant dark (&:where(.dark, .dark *, [data-prime-cycle="night"], [data-prime-cycle="night"] *));
+@custom-variant dusk (&:where([data-prime-cycle="dusk"], [data-prime-cycle="dusk"] *));
+
+/* ============================================================================
+ * Tailwind v4 @theme inline — exposes canonical tokens as utility classes.
+ *
+ * Two layers of utilities:
+ *   1. Semantic-intent: bg-accent-prime, text-copper, border-lane-editorial,
+ *      etc. — short consumer names that resolve to platform/dispatch tokens.
+ *   2. Spatial-perceptual: bg-sky-high, bg-sky-low, bg-reflect, bg-window-warm
+ *      — atmospheric vocabulary aliases.
+ *
+ * Numeric layer (vellum-25, etc.) is the compile source-of-truth in tokens.css
+ * and NOT exposed as a Tailwind utility (per color.md §2.4 discipline:
+ * consumer code references upper layers, never numeric).
+ * ========================================================================== */
+
+@theme inline {
+  /* shadcn neutral palette (sitemap-only — non-DISpatch surface) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* ===== Platform tier ===== */
+  --color-accent-prime: var(--platform-accent-prime);
+  --color-accent-prime-active: var(--platform-accent-prime-active);
+  --color-copper: var(--platform-copper);
+  --color-copper-deep: var(--platform-copper-deep);
+  /* Wordmark — point at platform tokens so cycle overrides cascade.
+     The previous hardcoded-hex workaround froze these to dawn values:
+     Tailwind v4 @theme inline emits the literal verbatim into the utility
+     (no var() reference), so the runtime cycle attribute could never
+     change them. Pointing at --platform-wordmark-* preserves the var()
+     reference in the compiled utility and routes through tokens.css. */
+  --color-wordmark-dis: var(--platform-wordmark-dis);
+  --color-wordmark-patch: var(--platform-wordmark-patch);
+
+  /* ===== Dispatch tier — lane pigments. Previously pointed at undefined
+     --lane-editorial / --lane-institutional / --lane-dispatch (those names
+     don't exist anywhere), so the utilities rendered as transparent or
+     unset. Repaired to point at the actual --dispatch-lane-* tokens. */
+  --color-lane-editorial-strong: var(--dispatch-lane-editorial-strong);
+  --color-lane-institutional-strong: var(--dispatch-lane-institutional-strong);
+  --color-lane-dispatch-strong: var(--dispatch-lane-dispatch-strong);
+
+  /* ===== Dispatch tier — text roles. body-muted previously pointed at
+     undefined --text-muted, which made bullets (·), em-dashes (—), and
+     any other text-body-muted element render invisible. body-faint was
+     a hardcoded literal that froze to dawn. Both now use var() chains
+     so cycle overrides in tokens.css cascade correctly. */
+  --color-text-body-strong: var(--platform-text-body-strong);
+  --color-text-body-muted: var(--dispatch-text-body-muted);
+  --color-text-body-faint: var(--dispatch-text-body-faint);
+  /* Aliases for shorter utility names */
+  --color-body-strong: var(--platform-text-body-strong);
+  --color-body-muted: var(--dispatch-text-body-muted);
+  --color-body-faint: var(--dispatch-text-body-faint);
+
+  /* ===== Spatial-perceptual atmospheric chrome ===== */
+  --color-sky-high: var(--sky-high);
+  --color-sky-low: var(--sky-low);
+  --color-reflect: var(--reflect);
+  --color-window-warm: var(--window-warm);
+
+  /* ===== Asset tier ===== */
+  --color-cartography-pulse: var(--asset-cartography-pulse);
+
+  /* ===== Typography slots ===== */
+  --font-wordmark: 'Pangram Editorial New', 'Vollkorn', Georgia, serif;
+  --font-nav: 'Pangram Sans', 'Inter', system-ui, sans-serif;
+  --font-narrative: 'Vollkorn', Georgia, 'Iowan Old Style', serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+  /* Civic-Dante slot — IM Fell English. Asset-locked to medieval / civic
+     content per CD2 §5.3 (NOT Cinzel — tombstoned 2026-05-10). */
+  --font-civic: 'IM Fell English', 'EB Garamond', Georgia, serif;
+}
+
+:root {
+  /* shadcn neutral palette (sitemap-only surface) */
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+/* Dark-cycle shadcn neutral palette is defined in tokens.css under both
+   .dark and [data-prime-cycle="night"] selectors. */
+
+/* Disable SVG animate elements under prefers-reduced-motion.
+   Covers CartographyCanvas feTurbulence drift + building marker pulse rings.
+   display:none removes them from the SVG animation pipeline entirely. */
+@media (prefers-reduced-motion: reduce) {
+  svg animate {
+    display: none;
+  }
+}
+
+/* Homepage hero — masthead hide/reveal.
+   The Masthead is `sticky top-0` so it occupies 80px in normal flow.
+   When `dispatch-hero` is active, we promote it to `fixed top-0` so the
+   transform: translateY(-100%) hide actually moves it OUT of flow — the
+   cover spread then renders flush against the top of the viewport with
+   no dead cream sliver above it.
+   SSR sets `dispatch-hero` on body (see StackLayout fullbleed branch).
+   Lenis-velocity hook in EditorialDistrictMapHero toggles `past-hero`
+   the instant the reader starts scrolling. */
+body.dispatch-hero header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  transition: opacity 0.35s ease, transform 0.35s ease !important;
+}
+body.dispatch-hero:not(.past-hero) header {
+  opacity: 0 !important;
+  transform: translateY(-100%) !important;
+  pointer-events: none !important;
+}
+body.dispatch-hero.past-hero header {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.dispatch-hero header {
+    transition: opacity 0.2s ease !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* DISpatch surface — opt-in via <body class="dispatch-surface"> from pages
+     that should use the warm Vellum substrate + body-strong ink.
+     Sitemap stays on shadcn neutral declared above. */
+  body.dispatch-surface {
+    background-color: var(--sky-low);
+    color: var(--platform-text-body-strong);
+    font-family: var(--font-body);
+  }
+}
+
+/* DISpatch prose — explicit markdown body styling for content collections.
+   Lives in @layer components so utility classes on child elements still win. */
+@layer components {
+  .prose-dispatch {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--platform-text-body-strong);
+    text-align: left;
+  }
+
+  .prose-dispatch > p {
+    margin-bottom: 1.2em;
+    text-wrap: pretty;
+    overflow-wrap: anywhere;
+  }
+
+  .prose-dispatch > p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose-dispatch > h2 {
+    font-family: var(--font-narrative);
+    font-weight: 700;
+    font-size: 1.625rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--platform-text-body-strong);
+    margin-top: 2.5em;
+    margin-bottom: 0.6em;
+    max-width: 40ch;
+    text-wrap: balance;
+  }
+
+  .prose-dispatch > h3 {
+    font-family: var(--font-narrative);
+    font-weight: 600;
+    font-size: 1.1875rem;
+    line-height: 1.3;
+    color: var(--platform-text-body-strong);
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    max-width: 36ch;
+    text-wrap: balance;
+  }
+
+  .prose-dispatch > hr {
+    border: 0;
+    border-top: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 30%, transparent);
+    margin: 2.5em 0;
+  }
+
+  .prose-dispatch > ul,
+  .prose-dispatch > ol {
+    margin-bottom: 1.2em;
+    padding-left: 1.5em;
+  }
+
+  .prose-dispatch > ul { list-style-type: disc; }
+  .prose-dispatch > ol { list-style-type: decimal; }
+
+  .prose-dispatch li { margin-bottom: 0.4em; }
+
+  .prose-dispatch li::marker {
+    color: var(--dispatch-lane-institutional-strong);
+  }
+
+  .prose-dispatch strong {
+    font-weight: 600;
+    color: var(--platform-text-body-strong);
+  }
+
+  .prose-dispatch em {
+    font-style: italic;
+  }
+
+  .prose-dispatch a {
+    color: var(--platform-text-body-strong);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--platform-accent-prime) 50%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  .prose-dispatch a:hover {
+    text-decoration-color: var(--platform-accent-prime);
+  }
+
+  .prose-dispatch :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    background-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 8%, transparent);
+    color: var(--platform-text-body-strong);
+  }
+
+  .prose-dispatch pre {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5em 0;
+    border-radius: 6px;
+    border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 20%, transparent);
+    overflow-x: auto;
+  }
+
+  .prose-dispatch pre code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+  }
+
+  .prose-dispatch blockquote {
+    border-left: 2px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 40%, transparent);
+    padding-left: 1.25em;
+    margin: 1.5em 0;
+    font-style: italic;
+    color: var(--dispatch-text-body-muted);
+  }
+}
+
+/* ============================================================================
+ * SearchPalette styles (cmd-K palette).
+ *
+ * Per spec.md Fields 5-7:
+ *   - Substrate: --window-warm (warm-paper printed-search-card register)
+ *   - Backdrop:  --sky-low at 40% opacity overlay
+ *   - Open/close: 250ms ease-out enter, 200ms ease-in exit using
+ *                 transition-behavior: allow-discrete + @starting-style
+ *   - Reduced-motion: instant appearance-toggle, no backdrop fade
+ *   - Typography slots: Meta-code (input + footer), Nav (match title),
+ *                       Body (match snippet)
+ * ========================================================================== */
+
+@layer components {
+  .dispatch-search-palette {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    margin: auto;
+    padding: 0;
+    border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 30%, transparent);
+    border-radius: 10px;
+    width: min(640px, calc(100vw - 32px));
+    max-height: min(560px, calc(100vh - 64px));
+    background-color: var(--window-warm);
+    color: var(--platform-text-body-strong);
+    font-family: var(--font-body);
+    box-shadow:
+      0 10px 30px -10px color-mix(in oklch, var(--platform-text-body-strong) 50%, transparent),
+      0 4px 12px -4px color-mix(in oklch, var(--platform-text-body-strong) 25%, transparent);
+    overflow: hidden;
+    overscroll-behavior: contain;
+
+    /* Open/close motion. transition-behavior: allow-discrete is what lets
+       opacity + transform interpolate across the discrete display change
+       that native <dialog>.showModal() triggers. */
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+    transition:
+      opacity 200ms ease-in,
+      transform 200ms ease-in,
+      overlay 200ms ease-in allow-discrete,
+      display 200ms ease-in allow-discrete;
+  }
+
+  .dispatch-search-palette[open] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition:
+      opacity 250ms ease-out,
+      transform 250ms ease-out,
+      overlay 250ms ease-out allow-discrete,
+      display 250ms ease-out allow-discrete;
+  }
+
+  @starting-style {
+    .dispatch-search-palette[open] {
+      opacity: 0;
+      transform: translateY(8px) scale(0.985);
+    }
+  }
+
+  /* Backdrop — sky-low at 40% opacity per spec Field 5. */
+  .dispatch-search-palette::backdrop {
+    background-color: color-mix(in oklch, var(--sky-low) 60%, transparent);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition:
+      opacity 200ms ease-in,
+      backdrop-filter 200ms ease-in,
+      overlay 200ms ease-in allow-discrete,
+      display 200ms ease-in allow-discrete;
+  }
+
+  .dispatch-search-palette[open]::backdrop {
+    opacity: 1;
+    transition:
+      opacity 250ms ease-out,
+      backdrop-filter 250ms ease-out,
+      overlay 250ms ease-out allow-discrete,
+      display 250ms ease-out allow-discrete;
+  }
+
+  @starting-style {
+    .dispatch-search-palette[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* Mobile variant — full-screen overlay */
+  .dispatch-search-palette[data-variant='mobile'] {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    border: 0;
+    inset: 0;
+  }
+
+  /* Reduced-motion: instant appearance-toggle, no backdrop fade */
+  @media (prefers-reduced-motion: reduce) {
+    .dispatch-search-palette,
+    .dispatch-search-palette[open],
+    .dispatch-search-palette::backdrop,
+    .dispatch-search-palette[open]::backdrop {
+      transition: none;
+    }
+  }
+
+  /* Input row — Meta-code typography (terminal-search register) */
+  .dispatch-search-palette__input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 20%, transparent);
+  }
+
+  .dispatch-search-palette__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    color: var(--dispatch-text-body-muted);
+  }
+
+  .dispatch-search-palette input[type='search'] {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    padding: 0.25rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--platform-text-body-strong);
+    caret-color: var(--platform-accent-prime);
+  }
+
+  .dispatch-search-palette input[type='search']::placeholder {
+    color: var(--dispatch-text-body-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* WebKit search cancel button — let users clear via the input UX */
+  .dispatch-search-palette input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .dispatch-search-palette__close {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 25%, transparent);
+    border-radius: 4px;
+    padding: 0.125rem 0.4rem;
+    color: var(--dispatch-text-body-muted);
+    cursor: pointer;
+    transition: color 150ms ease-out, border-color 150ms ease-out, background-color 150ms ease-out;
+  }
+
+  .dispatch-search-palette__close:hover {
+    color: var(--platform-text-body-strong);
+    border-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 40%, transparent);
+    background-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 5%, transparent);
+  }
+
+  .dispatch-search-palette__close:focus-visible {
+    outline: 2px solid var(--platform-accent-prime);
+    outline-offset: 2px;
+  }
+
+  .dispatch-search-palette kbd {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: inherit;
+  }
+
+  /* Match list */
+  .dispatch-search-palette__list {
+    list-style: none;
+    margin: 0;
+    padding: 0.375rem 0;
+    overflow-y: auto;
+    max-height: calc(560px - 56px - 48px);
+  }
+
+  .dispatch-search-palette[data-variant='mobile'] .dispatch-search-palette__list {
+    max-height: calc(100vh - 56px - 48px);
+  }
+
+  .dispatch-search-palette__match {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.875rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 100ms ease-out;
+    border-left: 2px solid transparent;
+  }
+
+  .dispatch-search-palette__match[data-selected='true'] {
+    background-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 6%, transparent);
+    border-left-color: var(--platform-accent-prime);
+  }
+
+  .dispatch-search-palette__match-type {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    flex: 0 0 auto;
+    padding-top: 0.125rem;
+  }
+
+  .dispatch-search-palette__type-badge {
+    font-family: var(--font-nav);
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dispatch-text-body-muted);
+    padding: 0.1rem 0.375rem;
+    border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 25%, transparent);
+    border-radius: 3px;
+  }
+
+  .dispatch-search-palette__lane-pigment {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--dispatch-lane-institutional-strong);
+  }
+
+  .dispatch-search-palette__lane-pigment[data-lane='Hybrid'] {
+    background-color: var(--platform-accent-prime);
+  }
+
+  .dispatch-search-palette__lane-pigment[data-lane='AI-led'] {
+    background-color: var(--dispatch-lane-editorial-strong);
+  }
+
+  /* (Human-led falls through to default = lane-institutional-strong) */
+
+  .dispatch-search-palette__match-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .dispatch-search-palette__match-title {
+    margin: 0;
+    font-family: var(--font-nav);
+    font-size: 0.875rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--platform-text-body-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dispatch-search-palette__match-snippet {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--dispatch-text-body-muted);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .dispatch-search-palette__match-kicker {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--dispatch-text-body-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Query-highlight on title + snippet */
+  .dispatch-search-palette mark {
+    background: color-mix(in oklch, var(--platform-accent-prime) 18%, transparent);
+    color: inherit;
+    padding: 0 0.05em;
+    border-radius: 2px;
+  }
+
+  /* Hint / empty / no-match panel */
+  .dispatch-search-palette__hint {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    color: var(--dispatch-text-body-muted);
+  }
+
+  .dispatch-search-palette__hint-title {
+    margin: 0 0 0.375rem;
+    font-family: var(--font-nav);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--platform-accent-prime);
+  }
+
+  .dispatch-search-palette__hint-body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .dispatch-search-palette__hint-body code {
+    font-family: var(--font-mono);
+    background: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 8%, transparent);
+    padding: 0.05em 0.3em;
+    border-radius: 2px;
+  }
+
+  /* Footer with keyboard hints */
+  .dispatch-search-palette__footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 20%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--dispatch-text-body-faint);
+    flex-wrap: wrap;
+  }
+
+  .dispatch-search-palette__footer kbd {
+    display: inline-block;
+    padding: 0.05em 0.35em;
+    border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 25%, transparent);
+    border-radius: 3px;
+    margin-right: 0.1em;
+  }
+
+  .dispatch-search-palette__footer-spacer {
+    margin-left: auto;
+  }
+
+  /* ============================================================================
+   * ChapterRail mobile bottom-sheet dialog.
+   *
+   * Per spec.md Fields 5-7:
+   *   - Substrate: --sky-low (Vellum atmospheric chrome register)
+   *   - Slides up from viewport bottom on open, slides down on close
+   *   - @starting-style + transition-behavior: allow-discrete for open/close
+   *   - Reduced-motion: instant appearance-toggle, no slide animation
+   * ========================================================================== */
+
+  .chapter-rail-sheet {
+    position: fixed;
+    inset: auto 0 0;
+    margin: 0;
+    width: 100%;
+    max-height: 75dvh;
+    border-radius: 1rem 1rem 0 0;
+    border: none;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--sky-low);
+    color: var(--platform-text-body-strong);
+
+    /* Closed state (start and end of transition) */
+    transform: translateY(100%);
+    opacity: 0;
+    transition:
+      transform 200ms ease-out,
+      opacity 200ms ease-out,
+      overlay 200ms ease-out allow-discrete,
+      display 200ms ease-out allow-discrete;
+  }
+
+  .chapter-rail-sheet[open] {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  @starting-style {
+    .chapter-rail-sheet[open] {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  .chapter-rail-sheet::backdrop {
+    background-color: rgb(0 0 0 / 35%);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    transition:
+      opacity 200ms ease-out,
+      overlay 200ms ease-out allow-discrete,
+      display 200ms ease-out allow-discrete;
+  }
+
+  .chapter-rail-sheet[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .chapter-rail-sheet[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chapter-rail-sheet,
+    .chapter-rail-sheet[open],
+    .chapter-rail-sheet::backdrop,
+    .chapter-rail-sheet[open]::backdrop {
+      transition: none;
+    }
+  }
+}
+

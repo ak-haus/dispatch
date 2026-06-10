@@ -1,0 +1,45 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "masthead-wordmark",
+  "type": "registry:component",
+  "title": "MastheadWordmark",
+  "description": "DISpatch building-name typographic anchor at the top of every surface. Cross-surface chrome; renders <h1> on reception (homepage) and <span> on article surfaces to preserve heading-hierarchy contract.",
+  "categories": ["custom", "chrome", "identity"],
+  "dependencies": ["clsx"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "components/custom/MastheadWordmark/MastheadWordmark.tsx",
+      "type": "registry:component",
+      "target": "components/custom/MastheadWordmark/MastheadWordmark.tsx"
+    },
+    {
+      "path": "components/custom/MastheadWordmark/MastheadWordmark.css",
+      "type": "registry:component",
+      "target": "components/custom/MastheadWordmark/MastheadWordmark.css"
+    },
+    {
+      "path": "components/custom/MastheadWordmark/index.ts",
+      "type": "registry:component",
+      "target": "components/custom/MastheadWordmark/index.ts"
+    }
+  ],
+  "cssVars": {
+    "light": {
+      "wordmark-dis": "oklch(0.51 0.20 27)",
+      "wordmark-patch": "oklch(0.21 0.006 56)"
+    }
+  },
+  "meta": {
+    "primeWave": "W3-S-A",
+    "primePhase": "1-chrome",
+    "primeSpec": "representation/visual-system/components/MastheadWordmark/spec.md",
+    "primeUniversalConcepts": ["C1-typeface-containment", "C6-institutional-anchor"],
+    "primeContainment": {
+      "typefaceSlot": "title",
+      "scope": "dispatch-locked"
+    },
+    "primeMode": "cross-surface-chrome",
+    "primeForwardPointer": "Registry manifest forward-pointer authored at W3-S-A; full file content inlining + MCP server registration land at W5+ per master plan §4 W5."
+  }
+}

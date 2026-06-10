@@ -1,0 +1,206 @@
+---
+import '@/styles/global.css'
+import { Masthead } from '@/components/Masthead'
+import { buildSearchIndex } from '@/lib/search-index'
+
+interface Props {
+	title: string
+	kicker: string
+	description: string
+	theme?: 'neutral' | 'vellum'
+	hideHero?: boolean
+	/** fullbleed — full-viewport layout (homepage cover). Removes <main>
+	 *  max-width/padding AND adds `dispatch-hero` body class so the masthead
+	 *  starts hidden until first scroll. Use ONLY when the page wants the
+	 *  cover-style hero animation behavior. */
+	fullbleed?: boolean
+	/** fullWidthMain — removes <main> max-width/padding so children render
+	 *  edge-to-edge, but keeps the masthead visible. Use for layouts that
+	 *  want hero sections to span the viewport (article pages) without
+	 *  inheriting homepage-only behaviors. */
+	fullWidthMain?: boolean
+}
+
+const {
+	title,
+	kicker,
+	description,
+	theme = 'neutral',
+	hideHero = false,
+	fullbleed = false,
+	fullWidthMain = false,
+} = Astro.props
+const unconstrained = fullbleed || fullWidthMain
+
+const isVellum = theme === 'vellum'
+const currentPath = Astro.url.pathname
+
+// Per AK 2026-05-14: every surface gets the full nav (reception variant).
+// The compressed 'article' variant has been retired — sub-page surfaces use
+// the BackToDispatch pill at the top of the page body instead.
+const navVariant: 'reception' | 'article' = 'reception'
+
+// Server-rendered search index per SearchPalette spec.md §10. Built at
+// Astro page-render time from the dispatch content collection; passed as
+// a prop to the Masthead React island so the SearchPalette can query
+// without runtime fetches.
+const searchIndex = await buildSearchIndex()
+---
+
+<!doctype html>
+<html lang="en" data-prime-cycle="dawn">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title} — DISpatch</title>
+
+		<!--
+			Theme-cycler FOUC prevention.
+
+			Reads the persisted cycle from localStorage and applies the
+			data-prime-cycle attribute SYNCHRONOUSLY before <body> renders.
+			Without this, the page paints in Dawn first then flashes to the
+			persisted cycle on hydration.
+
+			Three cycles: dawn (default) | dusk (twilight) | night (dark).
+			.dark class is mirrored for legacy shadcn compatibility on the
+			sitemap surface.
+		-->
+		<script is:inline>
+			;(() => {
+				try {
+					const cycle = localStorage.getItem('prime-cycle')
+					if (cycle === 'dusk' || cycle === 'night') {
+						document.documentElement.setAttribute('data-prime-cycle', cycle)
+						if (cycle === 'night') document.documentElement.classList.add('dark')
+					}
+				} catch (_) {
+					/* localStorage unavailable (private mode); fall through to default Dawn */
+				}
+			})()
+		</script>
+	</head>
+	<body
+		class:list={[
+			'flex min-h-screen flex-col antialiased',
+			isVellum ? 'dispatch-surface' : 'bg-background text-foreground',
+			fullbleed && 'dispatch-hero',
+		]}
+	>
+		<Masthead
+			client:load
+			theme={theme}
+			currentPath={currentPath}
+			variant={navVariant}
+			searchIndex={searchIndex}
+		/>
+
+		<main class:list={[
+				'flex-1 w-full',
+				!unconstrained && 'mx-auto max-w-5xl px-6 py-16',
+			]}>
+			{
+				!hideHero && (
+					<div class="space-y-3">
+						<p
+							class:list={[
+								'text-xs uppercase tracking-widest',
+								isVellum
+									? 'font-nav text-body-muted'
+									: 'font-mono text-muted-foreground',
+							]}
+						>
+							{kicker}
+						</p>
+						<h1
+							class:list={[
+								'text-5xl tracking-tight',
+								isVellum
+									? 'font-narrative font-bold text-body-strong'
+									: 'font-semibold',
+							]}
+						>
+							{title}
+						</h1>
+						<p
+							class:list={[
+								'max-w-2xl text-lg',
+								isVellum ? 'font-body text-body-muted' : 'text-muted-foreground',
+							]}
+						>
+							{description}
+						</p>
+					</div>
+				)
+			}
+
+			<slot />
+		</main>
+
+		<footer
+			class:list={[
+				'border-t',
+				isVellum ? 'border-lane-institutional-strong/20' : 'border-border',
+			]}
+		>
+			<div
+				class:list={[
+					'mx-auto max-w-5xl px-6 py-6 text-xs',
+					isVellum ? 'font-mono text-body-faint' : 'font-mono text-muted-foreground',
+				]}
+			>
+				DISpatch · A Prime City editorial publication · &copy; 2026
+			</div>
+		</footer>
+
+		<!--
+			Sitewide Lenis scroll orchestration.
+
+			Treats scroll as a first-class storytelling system. Downstream
+			components subscribe to window.__lenis for velocity-smoothed scroll.
+			Reduced-motion users get native scroll. Anchor links intercepted
+			for in-page smooth navigation.
+		-->
+		<script>
+			import Lenis from 'lenis'
+
+			const prefersReducedMotion = window.matchMedia(
+				'(prefers-reduced-motion: reduce)'
+			).matches
+
+			if (!prefersReducedMotion) {
+				const lenis = new Lenis({
+					duration: 1.1,
+					easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+					smoothWheel: true,
+					touchMultiplier: 1.5,
+					wheelMultiplier: 1,
+				})
+
+				function raf(time: number) {
+					lenis.raf(time)
+					requestAnimationFrame(raf)
+				}
+				requestAnimationFrame(raf)
+
+				document.addEventListener('click', (event) => {
+					const target = event.target as HTMLElement | null
+					const anchor = target?.closest('a[href^="#"]') as HTMLAnchorElement | null
+					if (!anchor) return
+					const href = anchor.getAttribute('href')
+					if (!href || href === '#') return
+					const id = href.slice(1)
+					const dest = document.getElementById(id)
+					if (!dest) return
+					event.preventDefault()
+					lenis.scrollTo(dest, { offset: -16 })
+					history.pushState(null, '', href)
+				})
+
+				;(window as Window & { __lenis?: Lenis }).__lenis = lenis
+			} else {
+				document.documentElement.style.scrollBehavior = 'auto'
+			}
+		</script>
+	</body>
+</html>

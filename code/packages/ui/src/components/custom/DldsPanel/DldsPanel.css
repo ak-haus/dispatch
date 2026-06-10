@@ -1,0 +1,128 @@
+/* DldsPanel — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/DldsPanel/spec.md
+ * Color source: spec Field 7 — lane pigments per voice/lane-schema.md
+ *               taxonomy (editorial / institutional / dispatch); meta text
+ *               --text-muted; substrate --sky-low host-owned.
+ * Typography source: --font-code (JetBrains Mono Meta-code slot) per spec
+ *               Field 7 tokens.type.meta.500.
+ *
+ * Visual archetype: horizontal metadata band carrying lane swatch + lane
+ * name + authorship attribution. Substrate-agnostic root. Meta-code register
+ * (technical-grotesque silhouette) signals META content category before
+ * reader reads a word, per CD1 Concept 5.
+ */
+
+.prime-dlds-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Lane swatch — small color square; lane semantic per spec Field 7 */
+.prime-dlds-panel__swatch {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.prime-dlds-panel--lane-editorial .prime-dlds-panel__swatch {
+  background: var(--lane-editorial);
+}
+
+.prime-dlds-panel--lane-institutional .prime-dlds-panel__swatch {
+  background: var(--lane-institutional);
+}
+
+.prime-dlds-panel--lane-dispatch .prime-dlds-panel__swatch {
+  background: var(--lane-dispatch);
+}
+
+.prime-dlds-panel__lane {
+  font-weight: 700;
+  color: var(--text-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+}
+
+.prime-dlds-panel__sep {
+  color: var(--rail-edge);
+  font-weight: 400;
+  user-select: none;
+}
+
+.prime-dlds-panel__authorship {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.prime-dlds-panel__citizen {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.prime-dlds-panel__ai-role {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.prime-dlds-panel__drift {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+}
+
+.prime-dlds-panel__drift--stable { color: var(--text-muted); }
+.prime-dlds-panel__drift--monitored { color: var(--copper); }
+.prime-dlds-panel__drift--drift-detected { color: var(--accent-prime); }
+
+.prime-dlds-panel__c2pa {
+  font-weight: 700;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--lane-institutional);
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--lane-institutional);
+  border-radius: 2px;
+}
+
+.prime-dlds-panel__detail {
+  flex-basis: 100%;
+  margin-top: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--window-warm);
+  border-left: 2px solid var(--rail-edge);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  color: var(--text-primary);
+  line-height: 1.55;
+}
+
+.prime-dlds-panel__detail p {
+  margin: 0;
+}
+
+.prime-dlds-panel--narrative-restrained {
+  font-size: 0.6875rem;
+  opacity: 0.85;
+}
+
+.prime-dlds-panel--meta-prominent {
+  font-size: 0.8125rem;
+}

@@ -1,0 +1,79 @@
+/* InstitutionalFixture — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/InstitutionalFixture/spec.md
+ * Color source: spec Field 7 — text quiet weight on --window-warm
+ *               atmospheric substrate (per CD1 Concept 4 paper-grain register
+ *               continuity; printed-institutional-anchor feel).
+ * Typography source: spec Field 7 — tokens.type.title.400 at quiet-fixture
+ *               scale (Title slot, DISpatch-locked, but at quiet weight —
+ *               distinct from MastheadWordmark's display weight).
+ *
+ * Visual archetype: quiet typographic mandate prose on warm-paper substrate.
+ * Per CD1 Concept 6 institutional anchor: roots give authority; gravity
+ * comes from consistency (identical position + identical typographic
+ * treatment on every surface).
+ */
+
+.prime-institutional-fixture {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--window-warm);
+  border-top: 1px solid var(--rail-edge);
+  border-bottom: 1px solid var(--rail-edge);
+}
+
+.prime-institutional-fixture__mandate {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.prime-institutional-fixture__charter-link {
+  font-family: var(--font-nav);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--copper);
+  text-decoration: none;
+  align-self: flex-start;
+  transition: color 150ms ease-out;
+  opacity: 0.85;
+}
+
+.prime-institutional-fixture__charter-link:hover {
+  opacity: 1;
+  color: var(--copper-deep);
+}
+
+.prime-institutional-fixture__charter-link:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.prime-institutional-fixture--full-charter {
+  padding: 1.75rem 2rem;
+}
+
+.prime-institutional-fixture--full-charter .prime-institutional-fixture__mandate {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prime-institutional-fixture__charter-link {
+    transition: none;
+  }
+}
+
+[data-prime-reduced-motion="reduce"] .prime-institutional-fixture__charter-link {
+  transition: none;
+}

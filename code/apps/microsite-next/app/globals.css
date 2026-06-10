@@ -1,0 +1,99 @@
+/* ============================================================================
+ * Prime DISpatch — Tailwind v4 entry (microsite-next)
+ *
+ * Identical token bridge to microsite-astro/src/styles/tailwind.css —
+ * both apps share the same design DNA via @prime-dispatch/tokens.
+ *
+ * microsite-next is the platform-integration surface; the hub webapp
+ * (Prime) eventually consumes this surface as an embedded application.
+ * Same tokens, same fonts, same framework discipline.
+ * ========================================================================== */
+
+@import "tailwindcss";
+@import "@prime-dispatch/tokens/css";
+
+@theme {
+  /* Color: Platform tier */
+  --color-accent-prime: var(--accent-prime);
+  --color-accent-prime-active: var(--accent-prime-active);
+  --color-copper: var(--copper);
+  --color-copper-deep: var(--copper-deep);
+  --color-text-body-strong: var(--text-body-strong);
+
+  /* Color: Vellum atmospheric scale */
+  --color-vellum-25: var(--vellum-25);
+  --color-vellum-50: var(--vellum-50);
+  --color-vellum-100: var(--vellum-100);
+  --color-vellum-200: var(--vellum-200);
+  --color-vellum-300: var(--vellum-300);
+
+  /* Color: Spatial-perceptual aliases */
+  --color-sky-high: var(--sky-high);
+  --color-sky-low: var(--sky-low);
+  --color-reflect: var(--reflect);
+  --color-window-warm: var(--window-warm);
+
+  /* Color: Lane pigments (DLDS provenance) */
+  --color-lane-editorial: var(--lane-editorial);
+  --color-lane-institutional: var(--lane-institutional);
+  --color-lane-dispatch: var(--lane-dispatch);
+
+  /* Color: Wordmark */
+  --color-wordmark-dis: var(--wordmark-dis);
+  --color-wordmark-patch: var(--wordmark-patch);
+
+  /* Color: Asset */
+  --color-asset-cartography-pulse: var(--asset-cartography-pulse);
+
+  /* Color: Semantic + chrome */
+  --color-text-strong: var(--text-strong);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-text-accent: var(--text-accent);
+  --color-chrome-text: var(--chrome-text);
+  --color-chrome-text-hover: var(--chrome-text-hover);
+  --color-chrome-text-active: var(--chrome-text-active);
+  --color-chrome-background: var(--chrome-background);
+  --color-chrome-border: var(--chrome-border);
+  --color-chrome-indicator: var(--chrome-indicator);
+  --color-surface-page: var(--surface-page);
+  --color-surface-inset: var(--surface-inset);
+  --color-rail-edge: var(--rail-edge);
+  --color-grid-line: var(--grid-line);
+
+  /* Typography slots */
+  --font-body: "Inter", "Crimson Pro", "Iowan Old Style", Georgia, "Times New Roman", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-title: "Vollkorn", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-display: "Vollkorn", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-nav: "Pangram Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-code: "JetBrains Mono", "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --font-wordmark: "Editorial New", "Vollkorn", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-civic: "IM Fell English", "Vollkorn", Georgia, serif;
+
+  /* Architectural micro-grid */
+  --spacing-hairline: 10px;
+  --spacing-major-grid: 40px;
+
+  /* Motion timing */
+  --default-transition-duration: 320ms;
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  body {
+    background-color: var(--surface-page);
+    color: var(--text-strong);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

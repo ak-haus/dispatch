@@ -1,0 +1,209 @@
+/* SiteNav — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/SiteNav/spec.md
+ * Color source: CD2 §4.3 + W2-S-F Decision 8 nav state arc (copper default
+ *               → copper-deep hover → accent-prime-active active; wine focus
+ *               ring is the ONLY wine usage in the nav).
+ * Typography source: --font-nav (Pangram Sans Extrabold → Inter fallback).
+ *
+ * Visual archetype (Field 1 spec): horizontal page-furniture band with three
+ * slots (left wordmark / center primary-links / right affordances).
+ * Substrate-agnostic root (Rule 1: --sky-low host-owned).
+ *
+ * REBUILD 2026-05-10 — Cycle 2 motifs TOMBSTONED per Mayor:
+ *   - Wine 2px upper rule (::before NYT-Magazine double-rule) — wine wallpaper,
+ *     not in canon; Mayor: "copper getting eaten alive by red, site lost
+ *     elegant red accent."
+ *   - Middot · separators between nav-links — not in canon spec.
+ *   - Small-caps SEARCH + hairline magnifier glyph treatment — typographic
+ *     elevation not in canon; reverting to plain Search button.
+ *
+ * INTENTIONAL ANTI-PATTERNS:
+ *   - No background on root (Rule 1).
+ *   - No wine on idle/hover states (wine = focus ring + active state only;
+ *     precious accent, not wallpaper).
+ *   - No middot · separators (Cycle 2 invention; tombstoned).
+ *   - No upper-rule ::before (Cycle 2 invention; tombstoned).
+ *   - No card chrome, no box-shadow.
+ *   - All color via canon tokens; no hardcoded hex.
+ *
+ * BACKLOG (Mayor 2026-05-10): nav-link cluster currently center-aligned;
+ * should be right-aligned (justify-content shift). Deferred to end of
+ * Phase 1 per Mayor.
+ */
+
+.prime-site-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.125rem 1.5rem;
+  border-bottom: 1px solid var(--rail-edge);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prime-site-nav__left,
+.prime-site-nav__center,
+.prime-site-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.prime-site-nav__center {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.prime-site-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.prime-site-nav__link {
+  font-family: var(--font-nav);
+  font-weight: 800;
+  font-style: normal;
+  letter-spacing: -0.005em;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  color: var(--copper);
+  opacity: 0.85;
+  transition: opacity 150ms ease-out, color 150ms ease-out;
+  position: relative;
+  padding: 0.25em 0;
+}
+
+.prime-site-nav__link:hover {
+  opacity: 1;
+  color: var(--copper-deep);
+}
+
+.prime-site-nav__link:focus-visible {
+  /* Wine focus ring — the ONE place wine appears in nav. Critical-interaction
+   * accent per CD2 §5.1 + Rule 3 lane-semantic deployment. */
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.prime-site-nav__link[aria-current="page"],
+.prime-site-nav__link.is-active {
+  opacity: 1;
+  /* Wine-intermediate active state per W2-S-F Decision 8 tonal-stepping arc.
+   * Active = sits chromatically between copper and wordmark-red. */
+  color: var(--accent-prime-active);
+}
+
+.prime-site-nav__link[aria-current="page"]::after,
+.prime-site-nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.25em;
+  height: 2px;
+  background: currentColor;
+}
+
+.prime-site-nav__link[aria-disabled="true"],
+.prime-site-nav__link.is-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* Search affordance — typographic button per spec Field 4 (aria-haspopup
+ * dialog). No chip border; no small-caps treatment. */
+.prime-site-nav__affordance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-nav);
+  font-weight: 700;
+  font-size: 0.875rem;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  padding: 0.375rem 0.5rem;
+  cursor: pointer;
+  transition: color 150ms ease-out, opacity 150ms ease-out;
+  opacity: 0.85;
+}
+
+.prime-site-nav__affordance:hover {
+  color: var(--copper-deep);
+  opacity: 1;
+}
+
+.prime-site-nav__affordance:focus-visible {
+  outline: 2px solid var(--accent-prime);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Magnifier glyph — kept as inline SVG accompaniment to "Search" label */
+.prime-site-nav__affordance-glyph {
+  width: 0.875rem;
+  height: 0.875rem;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* Article variant — Search affordance hidden per CD1 Concept 7 sanctuary
+ * + SiteNav spec Field 2 article variant. */
+.prime-site-nav--article .prime-site-nav__center {
+  justify-content: flex-start;
+}
+
+.prime-site-nav__affordance.is-hidden {
+  display: none;
+}
+
+/* Mobile hamburger */
+.prime-site-nav__hamburger {
+  display: none;
+  background: transparent;
+  border: 0;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--text-strong);
+}
+
+@media (max-width: 720px) {
+  .prime-site-nav__center { display: none; }
+  .prime-site-nav__hamburger { display: inline-flex; }
+  .prime-site-nav--mobile-menu-open .prime-site-nav__center {
+    display: flex;
+    position: absolute;
+    inset: 100% 0 auto 0;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.5rem;
+    background: var(--surface-page);
+    border-bottom: 1px solid var(--rail-edge);
+  }
+  .prime-site-nav--mobile-menu-open .prime-site-nav__list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prime-site-nav__link,
+  .prime-site-nav__affordance {
+    transition: none;
+  }
+}
+
+[data-prime-reduced-motion="reduce"] .prime-site-nav__link,
+[data-prime-reduced-motion="reduce"] .prime-site-nav__affordance {
+  transition: none;
+}
