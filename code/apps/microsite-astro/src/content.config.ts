@@ -12,12 +12,11 @@ const dlds = z.enum(['Human-led', 'Hybrid', 'AI-led'])
  * Per spec 2026-05-13:
  *   - 1–6 surfaces. Order in array = display order on the deck.
  *   - `media` is required (the asset that shows on the card body).
- *   - `engagement` is optional. If absent, the metrics row is hidden.
- *     If present, missing individual metrics fall back to render defaults
- *     so visual identity is preserved during the data migration.
- *   - `url` is required for external platforms (linkedin/hashnode/dev/
- *     instagram); optional for dispatch (auto-derives from entry id)
- *     and newsletter (renders as email mockup).
+ *   - `engagement` is optional and HONEST-ONLY: metrics render solely
+ *     from real numbers in frontmatter. If absent, cards keep their
+ *     platform chrome and show no metrics. No render defaults exist.
+ *   - `url` is optional everywhere. Set it only when the surface has a
+ *     real published URL; never invent placeholder URLs.
  * ───────────────────────────────────────────────────────────────────── */
 
 const mediaKind = z.enum(['image', 'video', 'audio'])

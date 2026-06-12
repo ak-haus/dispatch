@@ -145,26 +145,10 @@ const PLATFORM_TINT: Record<Platform, string> = {
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI']
 
-/* ─── Engagement defaults — used to preserve visual identity for cards
- *     where the editor's frontmatter omits individual metrics. If the
- *     entire engagement block is absent, metrics rows are hidden. */
-const ENGAGEMENT_DEFAULTS: Record<Platform, CrossfireEngagement> = {
-	dispatch: {},
-	newsletter: {},
-	linkedin: { likes: 247, comments: 43, reposts: 12 },
-	hashnode: { likes: 184, comments: 23, bookmarks: 47 },
-	dev: { reactions: 412, comments: 38 },
-	instagram: { likes: 2418 },
-}
-
-function resolveEngagement(
-	kind: Platform,
-	provided: CrossfireEngagement | undefined,
-): CrossfireEngagement | undefined {
-	if (!provided) return undefined
-	const defaults = ENGAGEMENT_DEFAULTS[kind]
-	return { ...defaults, ...provided }
-}
+/* ─── Engagement honesty — metrics render ONLY from real frontmatter
+ *     data. There are no render defaults: a surface without engagement
+ *     shows its platform chrome without numbers. Fabricated metrics are
+ *     forbidden (revival repair, 2026-06-11). */
 
 function toSlot(surface: CrossfireSurface, index: number): CrossfireSlot {
 	return {
@@ -172,7 +156,6 @@ function toSlot(surface: CrossfireSurface, index: number): CrossfireSlot {
 		kicker: `${ROMAN[index] ?? String(index + 1)} · ${KICKER_DESCRIPTOR[surface.kind]}`,
 		platformLabel: PLATFORM_LABEL[surface.kind],
 		tint: PLATFORM_TINT[surface.kind],
-		engagement: resolveEngagement(surface.kind, surface.engagement),
 	}
 }
 
@@ -583,9 +566,9 @@ function DossierCard({
 /* ═══════════════════════════════════════════════════════════════════════
  * PlatformThumbnail — full thumbnail in the SHAPE of the destination
  * platform. One variant per surface. Reads engagement + per-surface data
- * from the slot prop. Falls back to ENGAGEMENT_DEFAULTS when a slot has
- * an engagement block with missing individual metrics; hides metrics
- * entirely when engagement is absent.
+ * from the slot prop. Metrics render only when the frontmatter carries
+ * real numbers; when engagement is absent the card keeps its platform
+ * chrome and simply shows no metrics. No fabricated defaults.
  * ═══════════════════════════════════════════════════════════════════════ */
 
 type PlatformProps = {
@@ -850,26 +833,24 @@ function HashnodeCard({ headline, story, slot }: PlatformProps) {
 						</span>
 					))}
 				</div>
-				{e && (
-					<div className="mt-auto flex items-center gap-4 border-t border-[#e6e8eb] pt-3 text-[12px] text-[#677182]">
-						{typeof e.likes === 'number' && (
-							<span className="flex items-center gap-1">
-								<Heart className="size-4" strokeWidth={2} /> {e.likes}
-							</span>
-						)}
-						{typeof e.comments === 'number' && (
-							<span className="flex items-center gap-1">
-								<MessageCircle className="size-4" strokeWidth={2} /> {e.comments}
-							</span>
-						)}
-						{typeof e.bookmarks === 'number' && (
-							<span className="flex items-center gap-1">
-								<Bookmark className="size-4" strokeWidth={2} /> {e.bookmarks}
-							</span>
-						)}
-						<span className="ml-auto">{story.readingTime}</span>
-					</div>
-				)}
+				<div className="mt-auto flex items-center gap-4 border-t border-[#e6e8eb] pt-3 text-[12px] text-[#677182]">
+					{typeof e?.likes === 'number' && (
+						<span className="flex items-center gap-1">
+							<Heart className="size-4" strokeWidth={2} /> {e.likes}
+						</span>
+					)}
+					{typeof e?.comments === 'number' && (
+						<span className="flex items-center gap-1">
+							<MessageCircle className="size-4" strokeWidth={2} /> {e.comments}
+						</span>
+					)}
+					{typeof e?.bookmarks === 'number' && (
+						<span className="flex items-center gap-1">
+							<Bookmark className="size-4" strokeWidth={2} /> {e.bookmarks}
+						</span>
+					)}
+					<span className="ml-auto">{story.readingTime}</span>
+				</div>
 			</div>
 		</article>
 	)
@@ -912,26 +893,24 @@ function DevCard({ headline, story, slot }: PlatformProps) {
 						</span>
 					))}
 				</div>
-				{e && (
-					<div className="mt-auto flex items-center justify-between pt-2 text-[12px] text-[#717171]">
-						<div className="flex items-center gap-3">
-							{typeof e.reactions === 'number' && (
-								<span className="flex items-center gap-1">
-									<Heart className="size-4" strokeWidth={1.8} /> {e.reactions} reactions
-								</span>
-							)}
-							{typeof e.comments === 'number' && (
-								<span className="flex items-center gap-1">
-									<MessageCircle className="size-4" strokeWidth={1.8} /> {e.comments}
-								</span>
-							)}
-						</div>
-						<div className="flex items-center gap-3">
-							<span>{story.readingTime}</span>
-							<Bookmark className="size-4" strokeWidth={1.8} />
-						</div>
+				<div className="mt-auto flex items-center justify-between pt-2 text-[12px] text-[#717171]">
+					<div className="flex items-center gap-3">
+						{typeof e?.reactions === 'number' && (
+							<span className="flex items-center gap-1">
+								<Heart className="size-4" strokeWidth={1.8} /> {e.reactions} reactions
+							</span>
+						)}
+						{typeof e?.comments === 'number' && (
+							<span className="flex items-center gap-1">
+								<MessageCircle className="size-4" strokeWidth={1.8} /> {e.comments}
+							</span>
+						)}
 					</div>
-				)}
+					<div className="flex items-center gap-3">
+						<span>{story.readingTime}</span>
+						<Bookmark className="size-4" strokeWidth={1.8} />
+					</div>
+				</div>
 			</div>
 		</article>
 	)
