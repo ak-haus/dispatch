@@ -7,11 +7,16 @@
  * never shows an edge). Pause-on-hover so the reader can stop and read
  * any individual commit without losing the kinetic feel.
  *
+ * Data honesty: commits come from this repo's own `git log`, captured at
+ * BUILD time by scripts/generate-commits.mjs into src/data/commits.json
+ * and imported here. No fetch, no seed data, no fabrication — the ticker
+ * is the actual construction record of ak-haus/dispatch.
+ *
  * Accessibility:
  *   - prefers-reduced-motion: ticker freezes (no infinite scroll).
  *     Reader can still scroll the section horizontally with the wheel.
  *   - Each commit is a focusable, semantic <li> with its full metadata
- *     readable in DOM order (screen readers see the SEED commits exactly
+ *     readable in DOM order (screen readers see the real commits exactly
  *     once — the duplicates carry aria-hidden).
  *
  * Why GSAP not CSS: GSAP gives us pause/resume on hover with frame-perfect
@@ -24,6 +29,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { PALETTE } from './shared/palette'
+import commitsData from '../../data/commits.json'
 
 type Commit = {
 	hash: string
@@ -46,89 +52,17 @@ const TYPE_COLORS: Record<Commit['type'], string> = {
 	style: PALETTE.wheat,
 }
 
-const SEED_COMMITS: Commit[] = [
-	{
-		hash: '9e46960',
-		type: 'feat',
-		scope: 'visual-system/cartography-concepts',
-		subject: 'land W3-S-C concept-01 Editorial District render',
-		date: '2026-05-13',
-		author: 'AK Almoumen',
-		filesChanged: 4,
-		insertions: 312,
-		deletions: 18,
-	},
-	{
-		hash: '91a7934',
-		type: 'docs',
-		scope: 'cc-ledger/incidents',
-		subject: 'land server-observability-state-snapshot post-ClickHouse-CPU-saturation',
-		date: '2026-05-13',
-		author: 'AK Almoumen',
-		filesChanged: 1,
-		insertions: 156,
-		deletions: 0,
-	},
-	{
-		hash: '5f958b3',
-		type: 'chore',
-		scope: 'cc-ledger/session-artifacts/2026-05-10-CC7',
-		subject: 'land mid-session context capture',
-		date: '2026-05-13',
-		author: 'AK Almoumen',
-		filesChanged: 2,
-		insertions: 88,
-		deletions: 4,
-	},
-	{
-		hash: '01cb02b',
-		type: 'chore',
-		scope: 'cc-ledger/doctrine',
-		subject: 'land 4 doctrine files from CC7 incident-response amend-1',
-		date: '2026-05-12',
-		author: 'AK Almoumen',
-		filesChanged: 4,
-		insertions: 421,
-		deletions: 12,
-	},
-	{
-		hash: '4230296',
-		type: 'chore',
-		scope: 'cc-ledger/Summaries',
-		subject: 'land CC7 First Wave Summaries',
-		date: '2026-05-12',
-		author: 'AK Almoumen',
-		filesChanged: 6,
-		insertions: 538,
-		deletions: 0,
-	},
-]
+/** Real commits from this repo's git log, captured at build time by
+ *  scripts/generate-commits.mjs. See the data-honesty note above. */
+const COMMITS: Commit[] = commitsData as Commit[]
 
 export function BuildTicker() {
-	const [commits, setCommits] = useState<Commit[]>(SEED_COMMITS)
-	const [isLive, setIsLive] = useState(false)
+	const commits = COMMITS
 	const [paused, setPaused] = useState(false)
 	const reducedMotion = useReducedMotion()
 
 	const trackRef = useRef<HTMLUListElement>(null)
 	const tweenRef = useRef<{ pause: () => void; resume: () => void } | null>(null)
-
-	// Optional /api/commits.json fetch (unchanged contract from prior version)
-	useEffect(() => {
-		let cancelled = false
-		fetch('/api/commits.json')
-			.then((r) => (r.ok ? r.json() : null))
-			.then((data) => {
-				if (!cancelled && Array.isArray(data) && data.length > 0) {
-					setCommits(data.slice(0, 8))
-					setIsLive(true)
-				}
-			})
-			.catch(() => undefined)
-		return () => {
-			cancelled = true
-		}
-	}, [])
 
 	// GSAP marquee — continuous right-to-left scroll. Duplicated content
 	// guarantees a seamless loop: when track has scrolled half its width,
@@ -204,13 +138,12 @@ export function BuildTicker() {
 						<span
 							className="inline-flex h-1.5 w-1.5 rounded-full"
 							style={{
-								backgroundColor: isLive ? PALETTE.accent : PALETTE.copper,
-								boxShadow: isLive
-									? '0 0 8px color-mix(in oklch, var(--platform-accent-prime) 60%, transparent)'
-									: 'none',
+								backgroundColor: PALETTE.accent,
+								boxShadow:
+									'0 0 8px color-mix(in oklch, var(--platform-accent-prime) 60%, transparent)',
 							}}
 						/>
-						{isLive ? 'Live · main' : 'Seed · main'}
+						Build snapshot · main
 					</span>
 				</motion.div>
 
@@ -236,7 +169,7 @@ export function BuildTicker() {
 								className="ml-4 font-mono text-[12px] uppercase tracking-[0.22em]"
 								style={{ color: PALETTE.wheat }}
 							>
-								prime-city-brand-sandbox · git log --oneline · live
+								ak-haus/dispatch · git log --oneline
 							</span>
 						</div>
 						<span
@@ -299,7 +232,9 @@ export function BuildTicker() {
 						<span>
 							{commits.length} commits · last update {commits[0]?.date}
 						</span>
-						<span style={{ color: PALETTE.copperDeep }}>working tree clean</span>
+						<span style={{ color: PALETTE.copperDeep }}>
+							recorded at build · HEAD {commits[0]?.hash}
+						</span>
 					</div>
 				</motion.div>
 
@@ -307,7 +242,7 @@ export function BuildTicker() {
 				    Reads as a tape-machine annotation rather than a paragraph. */}
 				<p className="mt-5 flex w-full items-baseline justify-between gap-6 whitespace-nowrap font-mono text-[12px] uppercase tracking-[0.32em] text-body-muted">
 					<span>
-						<span className="text-body-strong font-bold">Live</span>
+						<span className="text-body-strong font-bold">Log</span>
 						<span aria-hidden="true" className="mx-3 text-body-faint">·</span>
 						The work as it lands on{' '}
 						<span className="font-bold" style={{ color: PALETTE.copper }}>
