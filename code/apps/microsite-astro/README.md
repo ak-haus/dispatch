@@ -1,53 +1,62 @@
 ---
-title: Astro Starter Kit: Minimal
+title: DISpatch microsite — Astro app
 origin: prime-authored
 sphere: 3-purgatorio/4-buildings-terrace
 audience: [citizens, mayor, eden]
 authority: mayor
 status: active
 load_bearing: true
-last_amended: 2026-05-17
+last_amended: 2026-06-11
 ---
-# Astro Starter Kit: Minimal
+# DISpatch microsite
 
-```sh
-npm create astro@latest -- --template minimal
-```
+The DISpatch editorial surface — Prime's dev-diary magazine. A JS-first
+scrollytelling site: Astro 6 static output with React 19 islands, animated
+by GSAP + ScrollTrigger, Motion, and Lenis smooth scroll, styled with
+Tailwind v4 on the DISpatch token bridge. Eleven static pages: home, six
+MDX dispatches (`/dispatch/[id]`), about, sitemap, article surface, and a
+token preview.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+Run from this directory (or via `pnpm --filter microsite-astro <cmd>` from
+the workspace root `code/`):
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command | What it does |
+|---|---|
+| `pnpm dev` | regenerate the commit feed, then dev server at `http://localhost:4321` |
+| `pnpm build` | regenerate the commit feed, then production build → `dist/` |
+| `pnpm preview` | serve the production build locally |
+| `pnpm exec tsc --noEmit --project tsconfig.json` | typecheck |
+| `pnpm astro sync` | re-validate content collections after frontmatter changes |
+| `pnpm commits:generate` | rebuild `src/data/commits.json` from `git log` |
+
+After CSS or `@theme inline` edits: `rm -rf .astro node_modules/.vite` and
+restart dev — Tailwind v4 caches inlined values.
+
+## Structure
 
 ```text
 /
-├── 0-terra/
+├── scripts/              build-time tooling (commit feed, cartography)
+├── public/               static assets (banners/, cartography/, fonts/)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── content/dispatch/ the dispatches (.mdx) — editor-owned
+│   ├── content.config.ts Zod schema for dispatch frontmatter
+│   ├── components/       React islands + Astro components
+│   ├── layouts/          StackLayout (Lenis wiring) + article layouts
+│   ├── lib/              search index builder + pure query helpers
+│   ├── data/             commits.json — generated from git log at build
+│   └── pages/            Astro routes (incl. /dispatch/[id])
+├── deploy.md             Vercel deploy guide (current truth)
+└── doppler.yaml          Doppler scope: project prime-city, config dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Rules of the room
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `0-terra/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Build discipline lives in the repo-root `CLAUDE.md` (JS-first motion stack,
+Tailwind v4 `@theme inline` semantics, CSS scoping checks, wordmark law:
+DIS is always red). Visual canon lives in `canon-brief.md` and
+`representation/visual-system/`. Content is editor-owned MDX; the schema is
+the contract. Engagement metrics and platform URLs in frontmatter are
+honest-only — real numbers or nothing.
