@@ -5,7 +5,7 @@
  * `astro:content` imports here so React islands can consume safely.
  *
  * The index BUILDER (which reads the content collection at server-render
- * time) lives in `./search-server.ts`. That file imports `astro:content`
+ * time) lives in `./search-index.ts`. That file imports `astro:content`
  * and is therefore server-only; it must NOT be imported from React
  * islands or Vite will bundle `astro:content` into the client and crash.
  */

@@ -28,9 +28,9 @@ export async function buildSearchIndex(): Promise<SearchRecord[]> {
 			type: 'article',
 			title: entry.data.title,
 			snippet,
-			// Single article surface for V1; switches to /dispatch/[slug] when
-			// the dynamic route lands.
-			href: '/article',
+			// Each dispatch resolves to its own page via the /dispatch/[id]
+			// dynamic route.
+			href: `/dispatch/${entry.id}`,
 			lane: entry.data.provenance.lane,
 			kicker: entry.data.kicker,
 			tags: entry.data.tags,
