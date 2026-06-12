@@ -1,5 +1,82 @@
 [
 	{
+		"hash": "657a2ea",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Revival complete: PRESERVATION.md amended to LIVE truth; deploy evidence captured",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 5,
+		"insertions": 39,
+		"deletions": 28
+	},
+	{
+		"hash": "363192d",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Audit triage: 4 moderate hono advisories in superseded cross-fire — accepted with rationale; shipped static chain clean",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 1,
+		"insertions": 38,
+		"deletions": 0
+	},
+	{
+		"hash": "941ea27",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Hygiene: .gitattributes (LF), real microsite README, single authoritative vercel.json",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 5,
+		"insertions": 73,
+		"deletions": 201
+	},
+	{
+		"hash": "fc37182",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Doc drift repairs: deploy.md to current truth; cross-fire SUPERSEDED; doppler prime-city",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 5,
+		"insertions": 59,
+		"deletions": 50
+	},
+	{
+		"hash": "f09f309",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Crossfire honesty: remove all fabricated engagement, fake URLs, fake sentTo",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 4,
+		"insertions": 47,
+		"deletions": 105
+	},
+	{
+		"hash": "b5e1123",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "BuildTicker: honest commits from the repo's own git log at build time",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 4,
+		"insertions": 148,
+		"deletions": 90
+	},
+	{
+		"hash": "c437db0",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Search index: point records at the real /dispatch/[id] routes; fix stale search-server.ts doc comment",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 2,
+		"insertions": 4,
+		"deletions": 4
+	},
+	{
 		"hash": "0b79a37",
 		"type": "chore",
 		"scope": "repo",
@@ -9,38 +86,5 @@
 		"filesChanged": 2,
 		"insertions": 0,
 		"deletions": 318
-	},
-	{
-		"hash": "916f0b6",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Power-down log: Render suspended, Vercel detached, n8n blocked (API 502, inert)",
-		"date": "2026-06-09",
-		"author": "AK ALMoumen",
-		"filesChanged": 1,
-		"insertions": 12,
-		"deletions": 6
-	},
-	{
-		"hash": "c5e524b",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Preservation manifest: confirm zero Dispatch data in shared Supabase; site already dark",
-		"date": "2026-06-09",
-		"author": "AK ALMoumen",
-		"filesChanged": 1,
-		"insertions": 16,
-		"deletions": 10
-	},
-	{
-		"hash": "2598bdf",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Preserve Dispatch: cold-storage snapshot for Prime V2 revival",
-		"date": "2026-06-09",
-		"author": "AK ALMoumen",
-		"filesChanged": 687,
-		"insertions": 94485,
-		"deletions": 0
 	}
 ]
