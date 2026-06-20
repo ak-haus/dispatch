@@ -65,7 +65,7 @@ pnpm typecheck          # typecheck all workspaces
 ## Live vendor paths
 
 **Vercel project:** `dispatch` (`[redacted-vercel-project]`) | production branch: `main`  
-**Deploy config:** `vercel.json` at repo root (`3-purgatorio/4-buildings-terrace/dispatch/code/vercel.json`) — source of truth; dashboard overrides are drift.
+**Deploy config:** `code/vercel.json` (the single authoritative file) — source of truth; dashboard overrides are drift.
 
 **Post-deploy mandatory check:** after every production deploy, verify `HTTP 200` on the root route before declaring success. A Vercel `READY` status does NOT guarantee pages were built — the Astro/Vite trap (below) produces `READY` with zero rendered HTML.
 
