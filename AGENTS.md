@@ -16,9 +16,9 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
   `curl -sI https://dispatchmag.dev/ | grep HTTP` (must be `200`: Astro 6 + Vite can report READY with **zero**
   rendered HTML); touching the **locked visual canon** (CD1–5 — palette/typography/cartography/lanes); editing
   content (`.mdx` — **AK owns content**).
-- **ALWAYS:** default to **motion/JS over static** — the visual product *is* the JavaScript (static is the failure
-  state); split the **`DISpatch` wordmark** (`DIS` is always red); verify with `tsc --noEmit` + a Tailwind cache-reset
-  before claiming done (see `.claude/CLAUDE.md`).
+- **ALWAYS:** verify before claiming done — `tsc --noEmit` clean + a Tailwind cache-reset + the post-deploy `curl`
+  200; keep secrets in Doppler; stay in the scope you were asked. *(House style, enforced in `.claude/CLAUDE.md`,
+  not a safety control: motion/JS over static — the visual product is the JS; split the `DISpatch` wordmark, `DIS` red.)*
 
 ## Commands (the real ones — pnpm monorepo; run from `code/` unless noted)
 - Dev (the LIVE Astro surface): `cd code/apps/microsite-astro && pnpm dev` (`:4321`) · Next dashboard: `cd code && pnpm dev:next`.
