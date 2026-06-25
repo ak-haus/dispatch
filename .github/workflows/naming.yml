@@ -1,0 +1,12 @@
+name: naming
+on: [push, pull_request]
+jobs:
+  ls-lint:
+    name: naming convention (ls-lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bunx @ls-lint/ls-lint@2

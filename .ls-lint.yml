@@ -1,0 +1,22 @@
+# ls-lint — file/folder naming enforcement (the GLOSSARY conventions, as code).
+# Naming SOP: literal directories; metaphors live in GLOSSARY.md, never as dir names.
+# Extend the .md allowlist with THIS repo's grandfathered ALL-CAPS canon (e.g. ISA, ARCHITECTURE).
+ls:
+  .dir: regex:^[a-z0-9._-]+$
+  .md: regex:^([a-z0-9]+(-[a-z0-9]+)*|AGENTS|CLAUDE|GLOSSARY|README|PRESERVATION)$
+ignore:
+  - .git
+  - "**/node_modules"
+  - "**/.venv"
+  - "**/__pycache__"
+  - "**/dist"
+  - "**/.astro"
+  # the application follows React/Astro framework conventions (PascalCase component dirs) — the naming SOP
+  # governs the repo's GOVERNANCE structure, not framework-idiomatic app code.
+  - code
+  # PascalCase dirs named after components (specs + test fixtures) — design canon, not harness-enforced.
+  - representation/visual-system/components
+  - lifecycle/fixtures
+  # pre-existing capitalized governance dirs — flagged in GLOSSARY for a follow-up rename to lowercase.
+  - INSPO
+  - Specs

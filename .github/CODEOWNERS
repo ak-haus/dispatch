@@ -1,0 +1,9 @@
+# CODEOWNERS — @AKALMoumen owns the canon (locked visual identity) + the deploy/safety spine.
+/AGENTS.md            @AKALMoumen
+/GLOSSARY.md          @AKALMoumen
+/PRESERVATION.md      @AKALMoumen
+/.claude/             @AKALMoumen
+/.github/             @AKALMoumen
+/representation/      @AKALMoumen
+/lifecycle/           @AKALMoumen
+/code/vercel.json     @AKALMoumen

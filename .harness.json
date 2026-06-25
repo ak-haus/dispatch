@@ -1,0 +1,10 @@
+{
+  "harness_source": "PAI/HARNESS/library",
+  "harness_version": "0.1.0",
+  "tier": "standard",
+  "integration": "later",
+  "generated": "2026-06-25",
+  "components": [
+    "semantic_lint"
+  ]
+}
