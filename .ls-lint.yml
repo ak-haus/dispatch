@@ -17,6 +17,6 @@ ignore:
   # PascalCase dirs named after components (specs + test fixtures) — design canon, not harness-enforced.
   - representation/visual-system/components
   - lifecycle/fixtures
-  # pre-existing capitalized governance dirs — flagged in GLOSSARY for a follow-up rename to lowercase.
-  - INSPO
-  - Specs
+  # informal archival content (design inspiration + superseded RFCs) — top-level names conform; subtree exempt by content, like code/.
+  - inspo
+  - specs

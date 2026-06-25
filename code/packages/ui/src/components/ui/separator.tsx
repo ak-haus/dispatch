@@ -6,7 +6,7 @@ import { cn } from "../../utils/cn";
  * Prime Separator primitive (F5; thin Radix wrapper).
  *
  * Default 1px hairline in rail-edge tone (theme-cycle responsive). Architects
- * the micro-grid hairline pattern per INSPO/dispatch-brief.md (10px + 40px
+ * the micro-grid hairline pattern per inspo/dispatch-brief.md (10px + 40px
  * hairlines on body — separators inside content are the same family).
  */
 

@@ -10,7 +10,7 @@ import { cn } from "../../utils/cn";
  * the accent-prime register; `editorial` + `institutional` reserve their
  * lanes; `outline` + `ghost` + `link` are minimal-chrome variants.
  *
- * Per INSPO/dispatch-brief.md atmospheric rule: sharp 0px radius on primary
+ * Per inspo/dispatch-brief.md atmospheric rule: sharp 0px radius on primary
  * buttons; icon-toggles use 50% (handled at call site or via separate
  * IconToggle component).
  *

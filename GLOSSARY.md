@@ -32,5 +32,5 @@
 - **Files:** lowercase-kebab for content; language-native for code (TS/JS `camelCase`); ALL-CAPS-KEBAB reserved for root
   meta (`README`, `AGENTS`, `GLOSSARY`, `CLAUDE`) + `PRESERVATION`.
 - **Folders:** lowercase, by function, literal. Metaphors (cartography, lanes, cycle, letterpress, Waves) live here +
-  in code/docs, **never** as directory names. *(`INSPO/` + `Specs/` are pre-existing capitalized dirs — flagged for a
-  follow-up rename to `inspo/`/`specs/`; ls-lint ignores them until then.)* **Rename, don't delete**; supersede in git.
+  in code/docs, **never** as directory names. *(`inspo/` + `specs/` hold informal archival content — design inspiration +
+  superseded RFCs; their subtrees keep original naming, ls-lint-exempt by content like `code/`.)* **Rename, don't delete**; supersede in git.

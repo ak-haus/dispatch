@@ -25,14 +25,14 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
 - Build: `cd code && pnpm build` (or `build:astro` / `build:next`). Type-check: `cd code && pnpm typecheck`.
 - Tokens (Style Dictionary): `cd code/packages/tokens && pnpm build`. Content collections: `pnpm astro sync`.
 - After CSS / `@theme inline` edits: `rm -rf .astro node_modules/.vite` then restart `pnpm dev` (Tailwind v4 caches inlined values).
-- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = `.github/workflows/naming.yml` (the first CI — a typecheck gate is owed).
+- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = `naming.yml` (ls-lint) + `typecheck.yml` (`pnpm typecheck` — the TS packages: next · storybook · cross-fire · ui · tokens). The Astro surface's `astro check` is a tracked follow-up (needs `@astrojs/check` + 2 type fixes).
 
 ## Layout (navigate by this; folders carry a `README.md` — `ls` a folder and read it)
 - `code/` — the **pnpm monorepo**: `apps/microsite-astro` (Astro 6, **LIVE**) · `apps/microsite-next` (Next 15 dashboard) ·
   `apps/storybook` · `packages/tokens` (Style Dictionary) · `packages/ui` · `vercel.json` (deploy SoT).
 - **Brand canon** — `representation/visual-system/` (the **CD1–5** ratified Decision Docs: thesis · color · cartography ·
-  components · motion). `lifecycle/` — the append-only operator **runbook** + `deploy/`. `Specs/` — product RFCs.
-- `context/` (session snapshots) · `incidents/` · `INSPO/` (design inspiration) · `automations/` (**DEAD** n8n) · `PRESERVATION.md` (the cold-storage snapshot record).
+  components · motion). `lifecycle/` — the append-only operator **runbook** + `deploy/`. `specs/` — product RFCs.
+- `context/` (session snapshots) · `incidents/` · `inspo/` (design inspiration) · `automations/` (**DEAD** n8n) · `PRESERVATION.md` (the cold-storage snapshot record).
 
 ## Concept → path (resolve a name to its home)
 - **microsite-astro** (the LIVE editorial surface) → `code/apps/microsite-astro`. **tokens pipeline** → `code/packages/tokens`.

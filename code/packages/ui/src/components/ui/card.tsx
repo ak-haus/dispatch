@@ -5,7 +5,7 @@ import { cn } from "../../utils/cn";
  * Prime Card primitive (F5; shadcn-canonical + Prime token-mapped).
  *
  * Composition slots — Card / CardHeader / CardTitle / CardDescription /
- * CardContent / CardFooter. Per INSPO/dispatch-brief.md: no shadows; depth
+ * CardContent / CardFooter. Per inspo/dispatch-brief.md: no shadows; depth
  * via background tone changes (surface-page → surface-inset).
  *
  * Default radius is 0px (per Kinfolk/Monocle/Exhibition editorial register).
