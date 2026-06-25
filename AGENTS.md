@@ -32,7 +32,7 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
   `apps/storybook` · `packages/tokens` (Style Dictionary) · `packages/ui` · `vercel.json` (deploy SoT).
 - **Brand canon** — `representation/visual-system/` (the **CD1–5** ratified Decision Docs: thesis · color · cartography ·
   components · motion). `lifecycle/` — the append-only operator **runbook** + `deploy/`. `specs/` — product RFCs.
-- `context/` (session snapshots) · `incidents/` · `inspo/` (design inspiration) · `automations/` (**DEAD** n8n) · `PRESERVATION.md` (the cold-storage snapshot record).
+- `context/` (session snapshots) · `incidents/` (⚠ incl. the **OPEN** [app-audit-needed brief](incidents/2026-06-24-application-audit-needed.md) — the app itself needs a dedicated repair session, distinct from the harness) · `inspo/` (design inspiration) · `automations/` (**DEAD** n8n) · `PRESERVATION.md` (the cold-storage snapshot record).
 
 ## Concept → path (resolve a name to its home)
 - **microsite-astro** (the LIVE editorial surface) → `code/apps/microsite-astro`. **tokens pipeline** → `code/packages/tokens`.
