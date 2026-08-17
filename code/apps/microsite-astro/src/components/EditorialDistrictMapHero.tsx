@@ -24,7 +24,7 @@
 
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { MotionConfig, useReducedMotion } from 'motion/react'
 import type { StoryArticle } from './StoryCardCluster'
 import { Marginalia } from './home/shared/Marginalia'
@@ -37,6 +37,12 @@ import { Colophon } from './home/Colophon'
 
 export type EditorialDistrictMapHeroProps = {
 	articles: StoryArticle[]
+	/** Build-time date label (en-US long form, UTC) baked by index.astro.
+	 *  Used verbatim for the server render + first client render so static
+	 *  HTML and hydration agree; an effect swaps in the live date after
+	 *  mount. Computing `new Date()` during render caused a React #418
+	 *  hydration mismatch on every stale static deploy (fixed 2026-08-17). */
+	initialDateLabel: string
 	/** Crossfire deck source. May be the same as articles[0] (when the
 	 *  featured/newest dispatch has crossfire data) OR an older dispatch
 	 *  (when the newest is a draft without surfaces wired). Decoupled
@@ -58,17 +64,23 @@ export function EditorialDistrictMapHero({
 	articles,
 	crossfireArticle,
 	dispatchCount,
+	initialDateLabel,
 }: EditorialDistrictMapHeroProps) {
 	const reducedMotion = useReducedMotion()
 	const featured = articles[0]
 	const rest = articles.slice(1)
 
-	const dateLabel = new Intl.DateTimeFormat('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric',
-		timeZone: 'UTC',
-	}).format(new Date())
+	const [dateLabel, setDateLabel] = useState(initialDateLabel)
+	useEffect(() => {
+		setDateLabel(
+			new Intl.DateTimeFormat('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+				timeZone: 'UTC',
+			}).format(new Date()),
+		)
+	}, [])
 	const issueLabel = `Vol. 01 · No. ${String(dispatchCount).padStart(2, '0')}`
 
 	// Masthead hide/reveal — Lenis-velocity + top-edge hover.

@@ -22,6 +22,16 @@ const formatDate = (d: Date) =>
 
 const mapboxToken = import.meta.env.PUBLIC_MAPBOX_TOKEN ?? ''
 
+// Build-time issue date for the hero masthead strip. Baked into the static
+// HTML so server and client agree at hydration; the hero island refreshes it
+// to the live date after mount (see EditorialDistrictMapHero).
+const heroDateLabel = new Intl.DateTimeFormat('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	timeZone: 'UTC',
+}).format(new Date())
+
 // Probe for a commissioned district-scale cartographic illustration.
 // If public/cartography/district.{webp,jpg,png} exists, it's used as the base
 // layer; the procedural SVG overlay composes on top. Falls back to pure SVG.
@@ -45,7 +55,7 @@ const depthImage = depthFileName ? `/cartography/${depthFileName}` : undefined
 // Aspect ratio of the cartographic illustration (width / height). Drives the
 // page container so the image fills the entire scrollable area edge-to-edge.
 // Adjust this value if you swap to an image with a different natural aspect.
-//   0.753 = current district.png (928×1232, ~3:4 portrait)
+//   0.753 = current district.webp (928×1232, ~3:4 portrait)
 //   1.0   = square
 //   1.33  = 4:3 landscape
 //   0.428 = procedural map ratio (1200/2800, very tall)
@@ -108,6 +118,7 @@ const crossfireArticle: StoryArticle | undefined = articles.find(
 		articles={articles}
 		crossfireArticle={crossfireArticle}
 		dispatchCount={entries.length}
+		initialDateLabel={heroDateLabel}
 		mapboxToken={mapboxToken}
 		backgroundImage={districtImage}
 		depthImage={depthImage}
