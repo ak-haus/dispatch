@@ -1,6 +1,6 @@
-import { useForm, type DefaultValues, type UseFormReturn } from "react-hook-form";
+import { useForm, type DefaultValues, type FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ZodTypeAny, z } from "zod";
+import type { z } from "zod";
 
 /**
  * Type-safe form hook wired to a Zod schema.
@@ -12,18 +12,18 @@ import type { ZodTypeAny, z } from "zod";
  *     server (Astro Endpoints / Next Server Actions) + client (this hook)
  *
  * Usage:
- *   const schema = z.object({ email: z.string().email(), age: z.number().int().positive() });
+ *   const schema = z.object({ email: z.email(), age: z.number().int().positive() });
  *   const form = useSchemaForm(schema, { defaultValues: { age: 18 } });
  *   form.register("email"); // typed
  *   form.handleSubmit((values) => { ... }); // values: { email: string; age: number }
  */
-export function useSchemaForm<TSchema extends ZodTypeAny>(
+export function useSchemaForm<TSchema extends z.ZodType<FieldValues>>(
   schema: TSchema,
   options?: {
     defaultValues?: DefaultValues<z.infer<TSchema>>;
     mode?: "onChange" | "onBlur" | "onSubmit" | "onTouched" | "all";
   },
-): UseFormReturn<z.infer<TSchema>> {
+) {
   const form = useForm<z.infer<TSchema>>({
     resolver: zodResolver(schema),
     defaultValues: options?.defaultValues,
