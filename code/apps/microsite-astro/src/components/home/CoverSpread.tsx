@@ -47,7 +47,7 @@ export function CoverSpread({
 			{/* Cartographic backdrop — MUTED for legibility. */}
 			<div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
 				<img
-					src="/cartography/district.png"
+					src="/cartography/district.webp"
 					alt=""
 					className="absolute left-[36%] top-1/2 h-auto w-auto min-h-[120vmax] min-w-[120vmax]"
 					style={{

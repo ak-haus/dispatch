@@ -70,9 +70,9 @@ const MEDIA_ICONS = {
  * synthesize a default heroMedia from the existing /cartography assets so
  * every card actually shows real media instead of a beige placeholder. */
 const DEFAULT_HERO_ROTATION: ArticleListing['hero'][] = [
-	{ kind: 'video', src: '/cartography/district.mp4', poster: '/cartography/district.png', alt: 'Cartographic motion' },
-	{ kind: 'image', src: '/cartography/district.png', alt: 'Editorial District' },
-	{ kind: 'image', src: '/banners/dispatch-02.png', alt: 'Dispatch banner' },
+	{ kind: 'video', src: '/cartography/district.mp4', poster: '/cartography/district.webp', alt: 'Cartographic motion' },
+	{ kind: 'image', src: '/cartography/district.webp', alt: 'Editorial District' },
+	{ kind: 'image', src: '/banners/dispatch-02.webp', alt: 'Dispatch banner' },
 	{ kind: 'audio', src: '/cartography/district.mp4', alt: 'Audio dispatch' },
 ]
 
@@ -130,7 +130,7 @@ export function ArticlesBrowser({ articles }: { articles: ArticleListing[] }) {
 						className="pointer-events-none absolute inset-0"
 					>
 						<img
-							src="/cartography/district.png"
+							src="/cartography/district.webp"
 							alt=""
 							className="absolute inset-0 h-full w-full object-cover"
 							style={{ opacity: 0.15, filter: 'saturate(0.8) blur(0.5px)' }}
