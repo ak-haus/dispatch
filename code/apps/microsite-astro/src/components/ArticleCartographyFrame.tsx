@@ -25,7 +25,7 @@
  */
 
 export type ArticleCartographyFrameProps = {
-	/** Optional override — defaults to /cartography/district.mp4 */
+	/** Optional override — defaults to /cartography/district.mp4 (poster: district.webp) */
 	videoSrc?: string
 	/** Poster image while the video loads (and fallback for no-video UAs). */
 	posterSrc?: string
@@ -36,7 +36,7 @@ export type ArticleCartographyFrameProps = {
 
 export function ArticleCartographyFrame({
 	videoSrc = '/cartography/district.mp4',
-	posterSrc = '/cartography/district.png',
+	posterSrc = '/cartography/district.webp',
 	opacity = 0.32,
 	className,
 }: ArticleCartographyFrameProps) {

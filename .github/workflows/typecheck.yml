@@ -2,8 +2,8 @@ name: typecheck
 on: [push, pull_request]
 
 # tsc --noEmit across the TypeScript workspace packages (the "owed" gate).
-# Coverage: microsite-next · storybook · cross-fire · ui · tokens. The live Astro
-# surface (microsite-astro) typechecks via `astro check`, tracked separately (see AGENTS.md).
+# Coverage: microsite-next · storybook · ui · tokens, plus the live Astro surface
+# (microsite-astro) via `astro check` — all under `pnpm typecheck`.
 jobs:
   typecheck:
     name: typecheck (tsc)

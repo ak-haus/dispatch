@@ -324,7 +324,6 @@ export function ChapterRail({
 				<ol className="relative flex h-full flex-col">
 					{chapters.map((ch, i) => {
 						const isActive = i === activeIndex
-						const slicePos = (i + 0.5) / chapters.length // 0..1 normalized center
 						return (
 							<li
 								key={ch.slug}

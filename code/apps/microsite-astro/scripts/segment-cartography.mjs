@@ -30,7 +30,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
 
 function findDefaultImage() {
-	const cartoDir = path.join(projectRoot, 'public/cartography')
+	const cartoDir = path.join(projectRoot, '../../../representation/cartography-sources')
 	for (const name of ['district.png', 'district.jpg', 'district.jpeg']) {
 		const p = path.join(cartoDir, name)
 		if (fs.existsSync(p)) return p

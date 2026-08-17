@@ -1,0 +1,28 @@
+---
+import StackLayout from '@/layouts/StackLayout.astro'
+---
+
+<StackLayout
+	title="Not in print"
+	kicker="Editorial District · Prime City"
+	description="This page never went to print. The dispatch you are looking for does not exist at this address."
+	theme="vellum"
+>
+	<div class="mx-auto max-w-[60ch] py-10">
+		<p class="font-mono text-[12px] font-bold uppercase tracking-[0.42em] text-body-muted">
+			Error 404 · address unknown
+		</p>
+		<p class="mt-6 font-narrative text-lg italic leading-relaxed text-body-strong">
+			This page never went to print. Whatever was promised at this address — a
+			dispatch, a district, a margin note — the presses have no record of it.
+		</p>
+		<p class="mt-8">
+			<a
+				href="/"
+				class="font-nav text-[12px] font-medium uppercase tracking-[0.06em] text-body-strong underline underline-offset-4 hover:text-body-muted"
+			>
+				← Back to the front page of <span class="text-wordmark-dis font-bold not-italic">DIS</span><span class="text-wordmark-patch not-italic">patch</span>
+			</a>
+		</p>
+	</div>
+</StackLayout>

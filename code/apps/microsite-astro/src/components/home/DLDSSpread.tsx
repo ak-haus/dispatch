@@ -20,14 +20,14 @@ import { LANE_COLORS } from './shared/lane-colors'
 import type { StoryArticle } from '../StoryCardCluster'
 
 /* Cover banner for the next-edition placeholder. Refreshed when AK drops a
- * new asset into /public/banners/. Currently dispatch-07.png. */
-const NEXT_EDITION_BANNER = '/banners/dispatch-07.png'
+ * new asset into /public/banners/. Currently dispatch-07.webp. */
+const NEXT_EDITION_BANNER = '/banners/dispatch-07.webp'
 
 const BANNERS = [
-	'/banners/dispatch-02.png',
-	'/banners/dispatch-03.png',
-	'/banners/Dispatch-04.png',
-	'/banners/Dispatch-05.png',
+	'/banners/dispatch-02.webp',
+	'/banners/dispatch-03.webp',
+	'/banners/dispatch-04.webp',
+	'/banners/dispatch-05.webp',
 	'/banners/dispatch-06.webp',
 ] as const
 

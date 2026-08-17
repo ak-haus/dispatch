@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Prime DISpatch microsite \u2014 Astro 6 + Next.js 15 co-foundational hybrid monorepo (master plan \u00a71.7 reframe 2.6 + \u00a73.B).",
+  "description": "Prime DISpatch microsite — Astro 6 + Next.js 15 co-foundational hybrid monorepo (master plan §1.7 reframe 2.6 + §3.B).",
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=10.0.0"
@@ -21,7 +21,7 @@
     "clean": "pnpm -r --parallel clean"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

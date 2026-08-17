@@ -984,7 +984,7 @@ function InstagramCard({ headline, story, slot }: PlatformProps) {
 			{/* Likes + caption */}
 			<div className="px-3 pb-3 pt-1">
 				{e && typeof e.likes === 'number' && (
-					<p className="text-[13px] font-semibold">{e.likes.toLocaleString()} likes</p>
+					<p className="text-[13px] font-semibold">{e.likes.toLocaleString('en-US')} likes</p>
 				)}
 				<p className="mt-1 line-clamp-2 text-[13px] leading-[1.4]">
 					<span className="font-semibold">{igHandle}</span> {igCaption} {story.dek.slice(0, 80)}…

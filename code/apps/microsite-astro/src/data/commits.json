@@ -1,5 +1,71 @@
 [
 	{
+		"hash": "3f50414",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "agents(boundary): sharpen the ALWAYS tier — lead with the verify-before-done invariant, demote house-style (#4)",
+		"date": "2026-06-25",
+		"author": "AKALMoumen",
+		"filesChanged": 1,
+		"insertions": 3,
+		"deletions": 3
+	},
+	{
+		"hash": "5d361c6",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "incidents: flag the app needs a dedicated audit + repair session (app debt, not harness) (#3)",
+		"date": "2026-06-24",
+		"author": "AKALMoumen",
+		"filesChanged": 3,
+		"insertions": 54,
+		"deletions": 1
+	},
+	{
+		"hash": "5bbb135",
+		"type": "chore",
+		"scope": "harness-tidy",
+		"subject": "lowercase inspo/ + specs/; add the owed tsc CI gate (#2)",
+		"date": "2026-06-24",
+		"author": "AKALMoumen",
+		"filesChanged": 106,
+		"insertions": 39,
+		"deletions": 14
+	},
+	{
+		"hash": "ccc5a60",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "harness: Standard-tier retrofit via the rebalanced factory (3rd product — Dispatch) (#1)",
+		"date": "2026-06-24",
+		"author": "AKALMoumen",
+		"filesChanged": 8,
+		"insertions": 197,
+		"deletions": 178
+	},
+	{
+		"hash": "8a742f8",
+		"type": "docs",
+		"scope": "repo",
+		"subject": "fix stale deploy-config path to code/vercel.json (Append)",
+		"date": "2026-06-20",
+		"author": "AK ALMoumen",
+		"filesChanged": 1,
+		"insertions": 1,
+		"deletions": 1
+	},
+	{
+		"hash": "4d8c022",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "Refresh committed commits.json snapshot (regenerates at every build; committed copy is the no-git fallback)",
+		"date": "2026-06-11",
+		"author": "AK ALMoumen",
+		"filesChanged": 1,
+		"insertions": 66,
+		"deletions": 22
+	},
+	{
 		"hash": "657a2ea",
 		"type": "chore",
 		"scope": "repo",
@@ -20,71 +86,5 @@
 		"filesChanged": 1,
 		"insertions": 38,
 		"deletions": 0
-	},
-	{
-		"hash": "941ea27",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Hygiene: .gitattributes (LF), real microsite README, single authoritative vercel.json",
-		"date": "2026-06-11",
-		"author": "AK ALMoumen",
-		"filesChanged": 5,
-		"insertions": 73,
-		"deletions": 201
-	},
-	{
-		"hash": "fc37182",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Doc drift repairs: deploy.md to current truth; cross-fire SUPERSEDED; doppler prime-city",
-		"date": "2026-06-11",
-		"author": "AK ALMoumen",
-		"filesChanged": 5,
-		"insertions": 59,
-		"deletions": 50
-	},
-	{
-		"hash": "f09f309",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Crossfire honesty: remove all fabricated engagement, fake URLs, fake sentTo",
-		"date": "2026-06-11",
-		"author": "AK ALMoumen",
-		"filesChanged": 4,
-		"insertions": 47,
-		"deletions": 105
-	},
-	{
-		"hash": "b5e1123",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "BuildTicker: honest commits from the repo's own git log at build time",
-		"date": "2026-06-11",
-		"author": "AK ALMoumen",
-		"filesChanged": 4,
-		"insertions": 148,
-		"deletions": 90
-	},
-	{
-		"hash": "c437db0",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Search index: point records at the real /dispatch/[id] routes; fix stale search-server.ts doc comment",
-		"date": "2026-06-11",
-		"author": "AK ALMoumen",
-		"filesChanged": 2,
-		"insertions": 4,
-		"deletions": 4
-	},
-	{
-		"hash": "0b79a37",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Purge dead CI workflows: stale 3-purgatorio paths, dead Doppler project, 30-min cron burning Actions on guaranteed failures",
-		"date": "2026-06-11",
-		"author": "AK ALMoumen",
-		"filesChanged": 2,
-		"insertions": 0,
-		"deletions": 318
 	}
 ]

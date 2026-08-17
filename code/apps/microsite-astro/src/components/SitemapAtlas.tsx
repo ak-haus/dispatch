@@ -14,7 +14,7 @@
 
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence, MotionConfig, useReducedMotion } from 'motion/react'
 import { Compass, Map as MapIcon, FileText, MessageSquareText, Landmark, Newspaper, ArrowRight } from 'lucide-react'
 
@@ -30,13 +30,13 @@ type AtlasZone = {
 	lane: ZoneLane
 	icon: typeof Compass
 	/** Marker position in 0–100 viewport-relative space, placed ON one of
-	 *  the red building footprints in /cartography/district.png. */
+	 *  the red building footprints in /cartography/district.webp. */
 	anchor: { x: number; y: number }
 	description: string
 	entries?: { label: string; href: string; meta?: string }[]
 }
 
-/* Marker positions sit on the red building cluster of district.png.
+/* Marker positions sit on the red building cluster of district.webp.
  * Eyeballed against the rendered image; tuned so each light lands on a
  * distinct red footprint rather than empty grid space. */
 const ZONES: AtlasZone[] = [
@@ -187,7 +187,7 @@ export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
 					>
 						{/* Cartographic backdrop — full opacity now since no polygons compete */}
 						<img
-							src="/cartography/district.png"
+							src="/cartography/district.webp"
 							alt=""
 							aria-hidden="true"
 							className="absolute inset-0 h-full w-full object-cover"

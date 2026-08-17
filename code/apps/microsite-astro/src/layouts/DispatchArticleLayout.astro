@@ -1,7 +1,8 @@
 ---
 import fs from 'node:fs'
 import path from 'node:path'
-import type { CollectionEntry, MarkdownHeading } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import type { MarkdownHeading } from 'astro'
 import StackLayout from '@/layouts/StackLayout.astro'
 import BackToDispatch from '@/components/BackToDispatch.astro'
 import { ProvenanceTooltip } from '@/components/ProvenanceTooltip'
@@ -13,18 +14,6 @@ interface Props {
 }
 
 const { entry, headings = [] } = Astro.props
-const mapboxToken = import.meta.env.PUBLIC_MAPBOX_TOKEN ?? ''
-
-// Probe for a commissioned neighborhood-scale cartographic illustration.
-const cartographyDir = path.join(process.cwd(), 'public', 'cartography')
-const neighborhoodImageName = ['neighborhood.webp', 'neighborhood.jpg', 'neighborhood.png'].find(
-	(f) => {
-		try { return fs.existsSync(path.join(cartographyDir, f)) } catch { return false }
-	},
-)
-const neighborhoodImage = neighborhoodImageName
-	? `/cartography/${neighborhoodImageName}`
-	: undefined
 
 // Probe for a per-article AI-generated banner illustration, by dispatch id.
 // public/banners/{entry.id}.{webp,jpg,png} → rendered as a top hero banner.
@@ -99,7 +88,7 @@ const laneTint = LANE_TINT[data.provenance.lane] ?? 'var(--platform-accent-prime
 				    the title block. */}
 				<div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
 					<img
-						src="/cartography/district.png"
+						src="/cartography/district.webp"
 						alt=""
 						class="absolute left-[42%] top-1/2 h-auto w-auto min-h-[140vmax] min-w-[140vmax]"
 						style="transform: translate(-50%, -50%) rotate(-90deg) scale(0.95); opacity: 0.3; filter: saturate(0.85) contrast(1.0);"

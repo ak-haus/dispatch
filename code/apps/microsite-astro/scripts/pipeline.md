@@ -13,7 +13,7 @@ last_amended: 2026-05-17
 End-to-end workflow for turning a static cartographic illustration into an interactive, layered, dynamic-feeling map experience. Three independent steps that compound when combined.
 
 ```
-0-terra/cartography/district.png              ← the base illustration (already in place)
+0-terra/cartography-sources/district.png              ← the base illustration (already in place)
    │
    ├─→ Step 1: Segmentation         → src/lib/generated-zones.ts        (clickable polygons)
    ├─→ Step 2: Depth map             → 0-terra/cartography/district.depth.png (3D parallax)
@@ -39,7 +39,7 @@ pnpm cartography:segment         # reads district.png, writes generated-zones.ts
 Expected output:
 
 ```
-▸ Reading 0-terra/cartography/district.png
+▸ Reading 0-terra/cartography-sources/district.png
 ▸ 928×1232 (2052KB PNG)
 ▸ Segmenting "dispatch"...
   found 12 candidate region(s) ≥ 60px
@@ -123,7 +123,7 @@ Add to `global.css`:
 
 ```css
 .cartography-depth-layer {
-  background-image: url('/cartography/district.png');
+  background-image: url('/cartography/district.webp');
   background-size: 100% auto;
   /* The depth map is the parallax driver */
   mask-image: url('/cartography/district.depth.png');
@@ -156,7 +156,7 @@ RunwayML Gen-3 (or Pika, Krea, Luma) converts a still image into a 4-6 second mo
 ### Workflow
 
 1. **Sign up at runwayml.com** (or pika.art / krea.ai / lumalabs.ai — all have free trial credits)
-2. **Upload `0-terra/cartography/district.png`**
+2. **Upload `0-terra/cartography-sources/district.png`**
 3. **Image-to-video** with a prompt like:
    ```
    subtle ambient motion, paper texture drift, soft light shift across buildings,

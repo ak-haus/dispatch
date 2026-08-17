@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
 import mdx from '@astrojs/mdx'
+import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 
 // Prime DISpatch — Astro 6 editorial surface.
@@ -20,7 +21,8 @@ import tailwindcss from '@tailwindcss/vite'
 //
 // https://astro.build/config
 export default defineConfig({
-	integrations: [react(), mdx()],
+	site: 'https://dispatchmag.dev',
+	integrations: [react(), mdx(), sitemap()],
 	vite: {
 		plugins: [tailwindcss()],
 		resolve: {

@@ -8,11 +8,11 @@
   dispatchmag.dev. `code/apps/microsite-astro`.
 - **microsite-next** — the secondary Next 15 dashboard surface (App Router, RSC); in development. `code/apps/microsite-next`.
 - **hybrid foundation** — Astro 6 + Next 15 as **co-foundational** (not parallel peers); composition patterns in `lifecycle/runbook/sop/`.
-- **cross-fire** — the former Hono voice-ingest backend. **DEAD / superseded** by the standalone `~/crossfire` product. Do not resume.
+- **cross-fire** — the former Hono voice-ingest backend. **PURGED 2026-08-17** (superseded by the standalone `~/crossfire` product; history in git). Do not resurrect.
 
 ## Visual system
 - **DISpatch wordmark** — `DIS` always renders dispatch-red, split into two spans (see `.claude/CLAUDE.md`). No exception.
-- **tokens pipeline** — Style Dictionary v4 → `tokens.json` → CSS + Tailwind config + toon exports. `code/packages/tokens`.
+- **tokens pipeline** — Style Dictionary v5 → CSS + Tailwind config + toon exports. `code/packages/tokens`.
 - **CD1–5** — the five ratified **Decision Docs** (the locked visual canon): thesis · color · cartography · components · motion. `representation/visual-system/`.
 - **cartography** — the vectorized district/zone map used as the editorial substrate (SVG/PNG/MP4); token-driven layers paint on it.
 - **lanes** (dispatch / editorial / platform) — three semantically distinct pigment groups inherited via `--lane-*`; **not** interchangeable.
