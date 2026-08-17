@@ -205,19 +205,6 @@ export const CartographyCanvas = forwardRef<SVGSVGElement, CartographyCanvasProp
 
 		// Compass rose points (rotated diamond shapes)
 		const compass = map.compass
-		const compassPoints = (size: number) => {
-			const c = compass.center
-			return {
-				n: `${c[0]},${c[1] - size}`,
-				e: `${c[0] + size},${c[1]}`,
-				s: `${c[0]},${c[1] + size}`,
-				w: `${c[0] - size},${c[1]}`,
-				ne: `${c[0] + size * 0.35},${c[1] - size * 0.35}`,
-				se: `${c[0] + size * 0.35},${c[1] + size * 0.35}`,
-				sw: `${c[0] - size * 0.35},${c[1] + size * 0.35}`,
-				nw: `${c[0] - size * 0.35},${c[1] - size * 0.35}`,
-			}
-		}
 
 		const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
 			if (!wrapperRef.current) return
@@ -672,7 +659,7 @@ export const CartographyCanvas = forwardRef<SVGSVGElement, CartographyCanvasProp
 						{map.dispatchBuildings.map((b) => {
 							const offset = b.primary ? 6 : 4
 							// b.footprint is [TL, TR, BR, BL] (clockwise from top-left)
-							const [tl, tr, br, bl] = b.footprint
+							const [, tr, br, bl] = b.footprint
 							// East face: front edge (br→tr) connects to offset rear edge
 							const eastFace: Point[] = [
 								tr,
