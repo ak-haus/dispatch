@@ -4,7 +4,7 @@
 
 > `@AGENTS.md` pulls in the vendor-neutral map (the boundary, commands, layout). Below is the **editorial
 > discipline** — the non-inferable house rules for this JS-first scrollytelling microsite. Shared PAI doctrine lives
-> in `~/.claude/CLAUDE.md`. The visual canon is `representation/visual-system/` (CD1–5); the spec is the external master plan.
+> in `~/.claude/CLAUDE.md`. The visual canon is `representation/visual-system/` (CD1–5); the founding master plan is historical (purged with Prime V1, 2026-06-10 — in `ak-haus/prime-city` git history).
 
 ## Project identity — JS-first
 The visual product **IS the JavaScript.** Static HTML/CSS is the substrate; React + GSAP + Motion + Lenis is what
@@ -13,12 +13,12 @@ state, not the goal. Default to motion, to interaction, to libraries already in 
 
 ## Animation stack — strict priority order
 - **Tier 1 (use first):** **GSAP 3.15** + ScrollTrigger + CustomEase (scroll choreography, pinning, scrub, timelines) ·
-  **motion (v11)** (component entrance/exit, hover/tap, layout, AnimatePresence, gestures) · **Lenis 1.3** (page smooth
-  scroll — wired at `StackLayout.astro`, `window.__lenis`; bridge via `gsap.ticker.add(lenis.raf)`).
-- **Tier 2 (domain):** react-three-fiber/three.js · maplibre-gl · wavesurfer/howler · diff2html/shiki · @observablehq/plot/d3 · photoswipe · lucide-react (verify the icon exists — v1.14 lacks Linkedin/Instagram).
+  **motion (v12)** (component entrance/exit, hover/tap, layout, AnimatePresence, gestures) · **Lenis 1.3** (page smooth
+  scroll — wired at `StackLayout.astro`, `window.__lenis`, driven by a plain `requestAnimationFrame` loop there).
+- **Tier 2 (domain):** maplibre-gl · wavesurfer/howler · diff2html/shiki · @observablehq/plot/d3 · photoswipe · lucide-react (verify the icon exists — v1.31 still lacks Linkedin/Instagram).
 - **Tier 3 (refinement only):** react-spring · tw-animate-css.
 - **Forbidden:** layout-thrashing animation (`width`/`height`/`top`/`left`/`margin`/`padding` — use `transform`+`opacity`);
-  placeholder media on launch-ready code (use `/cartography/district.{png,mp4}` or `/banners/dispatch-02.png`, never a colored rectangle).
+  placeholder media on launch-ready code (use `/cartography/district.{webp,mp4}` or `/banners/dispatch-02.webp`, never a colored rectangle).
 
 ## Tailwind v4 — read before touching `global.css`
 `@theme inline` resolves `var()` chains at **BUILD time** from other `@theme inline` blocks + `:root` values processed
@@ -29,7 +29,8 @@ AND override the `--color-*` property inside the cycle selector at runtime (the 
 
 ## CSS scoping — read before adding semantic tags
 `global.css` has tag selectors. Before a new `<header>`/`<nav>`/`<main>`/`<footer>`/`<aside>`/`<section>` in ANY
-component, grep `^(header|nav|main|footer|aside|section)\b` in `code/apps/microsite-astro/src/styles/global.css`. The
+component, grep -E `(^|[ >])(header|nav|main|footer|aside|section)[ ,{.:]` in `code/apps/microsite-astro/src/styles/global.css`
+(the selectors are descendants, e.g. `body.dispatch-hero header` — a line-anchored grep misses them). The
 masthead hide-behavior binds to body `.dispatch-hero` and matches ALL `<header>` on hero pages — use `<motion.div>`
 unless you've audited the cascade.
 
@@ -60,4 +61,4 @@ below-the-fold, `client:idle` non-critical) · keep React components under ~400 
 ## Common pitfalls (don't repeat)
 `:root` after `@theme inline` (hardcode in `@theme inline`) · `<motion.header>` for a section title (use `<motion.div>`) ·
 placeholder slots when real assets exist · `text-body-faint` below 10px · importing `Linkedin`/`Instagram` from
-lucide-react v1.14 · `pin:true` with `pinSpacing:false` on full-viewport sections (causes prior-section bleed).
+lucide-react (absent through v1.31) · `pin:true` with `pinSpacing:false` on full-viewport sections (causes prior-section bleed).
