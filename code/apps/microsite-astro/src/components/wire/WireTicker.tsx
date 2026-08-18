@@ -45,7 +45,7 @@ export function WireTicker() {
 						<span
 							id="wire-ticker-label"
 							className="font-mono text-[12px] uppercase tracking-[0.42em]"
-							style={{ color: PALETTE.copper }}
+							style={{ color: PALETTE.copperLabel }}
 						>
 							Live Wire
 						</span>
@@ -105,7 +105,7 @@ export function WireTicker() {
 
 				{/* Tape line to the full wire */}
 				<p className="mt-6 flex items-baseline justify-between font-mono text-[12px] uppercase tracking-[0.32em] text-body-muted">
-					<a href="/wire" className="transition-colors hover:text-body-strong" style={{ color: PALETTE.copper }}>
+					<a href="/wire" className="transition-colors hover:text-body-strong" style={{ color: PALETTE.copperLabel }}>
 						The full wire →
 					</a>
 					<span className="hidden md:inline">Success-only · sanitized at the source · posted automatically by Crossfire</span>

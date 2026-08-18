@@ -739,7 +739,7 @@ function ReceptionCondensed({
 							href={`${articleHref}#${ch.slug}`}
 							className={[
 								'flex items-center gap-2 rounded-sm py-1 outline-none',
-								'font-nav text-[12px] font-medium text-copper',
+								'font-nav text-[12px] font-medium text-copper-label',
 								'hover:text-copper-deep',
 								'transition-colors duration-200',
 								'focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-1 focus-visible:ring-offset-sky-low',

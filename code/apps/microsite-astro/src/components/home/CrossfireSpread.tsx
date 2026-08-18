@@ -306,7 +306,7 @@ export function CrossfireSpread({
 					<div className="flex items-baseline gap-4">
 						<span
 							className="font-mono text-[12px] font-bold uppercase tracking-[0.42em]"
-							style={{ color: PALETTE.copper }}
+							style={{ color: PALETTE.copperLabel }}
 						>
 							Crossfire
 						</span>

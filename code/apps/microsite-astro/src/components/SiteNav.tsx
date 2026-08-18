@@ -152,7 +152,7 @@ function ArticleNav() {
 					className={[
 						'inline-flex items-baseline gap-2 font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] outline-none',
 						'transition-colors duration-200 ease-out',
-						'text-copper hover:text-copper-deep',
+						'text-copper-label hover:text-copper-deep',
 						'focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low',
 					].join(' ')}
 				>
@@ -211,7 +211,7 @@ function MobileNav({
 										'focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low',
 										isActive
 											? 'text-accent-prime-active'
-											: 'text-copper hover:text-copper-deep',
+											: 'text-copper-label hover:text-copper-deep',
 									].join(' ')}
 								>
 									{isActive && (
@@ -477,7 +477,7 @@ function navLinkClass(isActive: boolean): string {
 		'relative font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] outline-none pb-1',
 		'transition-colors duration-200 ease-out',
 		'focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low',
-		isActive ? 'text-accent-prime-active' : 'text-copper hover:text-copper-deep',
+		isActive ? 'text-accent-prime-active' : 'text-copper-label hover:text-copper-deep',
 		'active:opacity-75 active:transition-[opacity] active:duration-75',
 	].join(' ')
 }

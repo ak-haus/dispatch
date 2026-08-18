@@ -104,7 +104,7 @@ export function WirePage() {
 					suppressHydrationWarning
 					className="dispatch-emboss flex flex-wrap items-baseline gap-x-4 gap-y-2 font-mono text-[12px] uppercase tracking-[0.32em]"
 				>
-					<span style={{ color: PALETTE.copper }}>Crossfire publish wire</span>
+					<span style={{ color: PALETTE.copperLabel }}>Crossfire publish wire</span>
 					{state.status === 'reconnecting' && <span role="status">reconnecting</span>}
 					{freshness ? <span>{freshness}</span> : <span>build snapshot</span>}
 				</p>
@@ -217,7 +217,7 @@ function FilterPill({ label, active, onClick }: { label: string; active: boolean
 			className="min-h-6 rounded-full border px-3 py-1 font-mono text-[12px] uppercase tracking-[0.18em] transition-colors"
 			style={
 				active
-					? { backgroundColor: PALETTE.copper, borderColor: PALETTE.copper, color: 'oklch(0.98 0.01 90)' }
+					? { backgroundColor: PALETTE.copperLabel, borderColor: PALETTE.copperLabel, color: PALETTE.onCopper }
 					: { borderColor: 'color-mix(in oklch, var(--color-body-strong, currentColor) 30%, transparent)' }
 			}
 		>

@@ -65,7 +65,7 @@ export function ArticleSpread({
 					<div className="flex items-baseline gap-4">
 						<span
 							className="font-mono text-[12px] uppercase tracking-[0.42em]"
-							style={{ color: PALETTE.copper }}
+							style={{ color: PALETTE.copperLabel }}
 						>
 							Article I.
 						</span>
@@ -92,7 +92,7 @@ export function ArticleSpread({
 								className="block h-1.5 w-1.5 rounded-full"
 								style={{ backgroundColor: LANE_COLORS[featured.data.provenance.lane] }}
 							/>
-							<span style={{ color: PALETTE.copper }}>{featured.data.kicker}</span>
+							<span style={{ color: PALETTE.copperLabel }}>{featured.data.kicker}</span>
 							<span className="text-body-faint">·</span>
 							<span className="text-body-faint">{featured.data.dateLabel}</span>
 							<span className="text-body-faint">·</span>
@@ -126,7 +126,7 @@ export function ArticleSpread({
 						    off the page." */}
 						<a
 							href={featured.href}
-							className="group mt-10 inline-flex items-center gap-3 rounded-full border-2 border-copper bg-transparent px-6 py-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.22em] text-copper transition-all duration-200 hover:bg-copper hover:text-sky-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
+							className="group mt-10 inline-flex items-center gap-3 rounded-full border-2 border-copper bg-transparent px-6 py-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.22em] text-copper-label transition-all duration-200 hover:bg-copper-label hover:text-sky-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 							style={{
 								boxShadow:
 									'inset 0 1px 0 color-mix(in oklch, var(--platform-copper) 40%, transparent), inset 0 -1px 0 color-mix(in oklch, var(--platform-copper) 22%, transparent), 0 1px 0 color-mix(in oklch, var(--platform-copper) 18%, transparent)',

@@ -28,7 +28,7 @@ export function Colophon({
 					<div>
 						<p
 							className="font-mono text-[12px] uppercase tracking-[0.42em]"
-							style={{ color: PALETTE.copper }}
+							style={{ color: PALETTE.copperLabel }}
 						>
 							Colophon
 						</p>
