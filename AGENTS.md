@@ -3,7 +3,7 @@
 > The vendor-neutral instruction file for any AI agent in this repo (Claude reads it via `@AGENTS.md` in
 > `.claude/CLAUDE.md`, which also carries the full **editorial discipline**). Terse + TRUE — a MAP, not a manual.
 > Dispatch is an **editorial Astro/Next scrollytelling microsite** that showcases Prime, **live at dispatchmag.dev**.
-> The founding **master plan** is historical (purged with Prime V1, 2026-06-10 — in `ak-haus/prime-city` git
+> The founding **master plan** is historical (purged with Prime V1, 2026-06-10 — in the private `ak-haus/prime-city`
 > history); current governance lives in THIS repo's canon (`representation/`, `specs/`, this file). The repo
 > remains a Lane-P tenant of Prime.
 
@@ -11,9 +11,8 @@
 Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel GitHub App is not installed).
 - **NEVER:** commit secrets (Doppler `prime-city`); ship a **placeholder** (a colored rectangle / registration marks)
   on launch-ready code — real assets live in `code/apps/microsite-astro/public/`; animate **layout** properties
-  (`width`/`height`/`top`/`left`/`margin`/`padding`) — use `transform`+`opacity`; resurrect the purged rails
-  (`cross-fire` · `litellm` · `automations/` n8n — purged 2026-08-17, superseded by the standalone `~/crossfire`
-  product; history in git).
+  (`width`/`height`/`top`/`left`/`margin`/`padding`) — use `transform`+`opacity`; resurrect the dead V1 rails
+  (superseded 2026-08-17 by the standalone Crossfire product; their records live in the private ops archive).
 - **ASK FIRST (confirm before):** a **Vercel deploy** — and after it the **mandatory** post-deploy check
   `curl -sI https://dispatchmag.dev/ | grep HTTP` (must be `200`: Astro 6 + Vite can report READY with **zero**
   rendered HTML); touching the **locked visual canon** (CD1–5 — palette/typography/cartography/lanes); editing
@@ -27,21 +26,25 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
 - Build: `cd code && pnpm build` (or `build:astro` / `build:next`). Type-check: `cd code && pnpm typecheck`.
 - Tokens (Style Dictionary): `cd code/packages/tokens && pnpm build`. Content collections: `pnpm astro sync`.
 - After CSS / `@theme inline` edits: `rm -rf .astro node_modules/.vite` then restart `pnpm dev` (Tailwind v4 caches inlined values).
-- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = `naming.yml` (ls-lint) + `typecheck.yml` (`pnpm typecheck` — next · storybook · ui · tokens, plus the live Astro surface via `astro check`).
+- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = six gates on every push/PR: `build (astro)` ·
+  `e2e (playwright + axe)` · `lighthouse (budget ratchet)` · `naming convention (ls-lint)` · `typecheck (tsc)` ·
+  `unit (vitest)` — plus a 6h `uptime (prod smoke)` cron. Red = do-not-merge.
 
 ## Layout (navigate by this; folders carry an `index.md` — `ls` a folder and read it)
 - `code/` — the **pnpm monorepo**: `apps/microsite-astro` (Astro 6, **LIVE**) · `apps/microsite-next` (Next 15 dashboard) ·
   `apps/storybook` · `packages/tokens` (Style Dictionary) · `packages/ui` · `vercel.json` (deploy SoT).
 - **Brand canon** — `representation/visual-system/` (the **CD1–5** ratified Decision Docs: thesis · color · cartography ·
-  components · motion). `lifecycle/` — the append-only operator **runbook** + `deploy/`. `specs/` — product RFCs.
-- `context/` (session snapshots) · `incidents/` (all resolved — the [app-audit brief](incidents/2026-06-24-application-audit-needed.md) closed 2026-08-17 by the repair session) · `inspo/` (design inspiration) · `PRESERVATION.md` (the preservation + power-state record).
+  components · motion). `lifecycle/` — component build records + fixtures. `specs/` — curated product specs.
+- `docs/adr/` — the decision records (ADR-0001 Live Wire · ADR-0002 golden-readiness · ADR-0003 design stack) ·
+  `inspo/` (design inspiration) · `PRESERVATION.md` (the provenance record; operational history lives in the private ops archive).
 
 ## Concept → path (resolve a name to its home)
 - **microsite-astro** (the LIVE editorial surface) → `code/apps/microsite-astro`. **tokens pipeline** → `code/packages/tokens`.
-- **the canon / CD1–5** (locked visual identity) → `representation/visual-system/`. **the runbook** (operator spine) → `lifecycle/runbook.md`.
+- **the canon / CD1–5** (locked visual identity) → `representation/visual-system/`.
 - **the editorial discipline** (JS-first · the animation stack · Tailwind v4 · the wordmark · pitfalls) → `.claude/CLAUDE.md`.
-- **the master plan** (founding constitutional spec) → historical, in `ak-haus/prime-city` git history (Prime V1 purged 2026-06-10). **terms** → `GLOSSARY.md`.
+- **the master plan** (founding constitutional spec) → historical, in the private `ak-haus/prime-city` history (Prime V1
+  purged 2026-06-10). **terms** → `GLOSSARY.md`.
 
 ## Where to go deeper (read on-demand)
 - The editorial discipline + dev rules → `.claude/CLAUDE.md`. The visual canon → `representation/visual-system/` (CD1–5).
-  The operator runbook → `lifecycle/`. The cold-storage / dead-rails record → `PRESERVATION.md`.
+  The decision records → `docs/adr/`. The provenance record → `PRESERVATION.md`.

@@ -24,9 +24,7 @@ canon-files:
   typography-contract:  representation/visual-system/typography/fonts.md
   typography-tokens:    representation/visual-system/typography/tokens/typography.tokens.json
   typography-css:       representation/visual-system/typography/css/fonts.css
-  operations-runbook:   lifecycle/runbook.md
-  operations-sops:      lifecycle/runbook/sop/{hybrid-foundation,token-pipeline}.md
-  operations-deploy:    lifecycle/deploy/                                       # Vercel + CF Pages + Render configs
+  operations-deploy:    code/vercel.json                                        # deploy SoT (manual CLI)
   bridge-source:        code/packages/tokens/src/{platform,dispatch,asset}.json
   bridge-outputs:       code/packages/tokens/dist/{tokens.css,tokens.tailwind.config.ts,tokens.toon}
   bridge-consumer:      '@prime-dispatch/tokens/css'
@@ -47,11 +45,9 @@ agent-reading-recipes:
   amend-a-token:
     - CD2 color.md §10                         # Decision 12 is the worked example of supersede-with-markers
     - CD2 color.md §11                         # done criteria
-    - lifecycle/runbook/sop/token-pipeline.md  # pipeline workflow
   deploy-or-operate:
-    - lifecycle/runbook.md                     # TOC + five durability axes
-    - lifecycle/runbook/sop/                   # SOPs
-    - lifecycle/deploy/                        # configs
+    - code/vercel.json                         # deploy SoT
+    - code/apps/microsite-astro/deploy.md      # deploy runbook (manual CLI)
   understand-what-was-rejected:
     - chiseled-history.tombstone
     - chiseled-history.amend-1
@@ -83,7 +79,7 @@ load_bearing: true
 
 ## What you're operating inside
 
-Prime DISpatch is Prime's V1 dev-diary microsite — Astro 6 + Next.js 15 hybrid; pnpm 10 monorepo. Brand canon lives at `representation/visual-system/`. Five ratified Decision Documents (CD1-5) + sub-canon (typography, construction rules) + ops (runbook, deploy) + bridge (tokens + component library) + chiseled-history records.
+Prime DISpatch is Prime's V1 dev-diary microsite — Astro 6 + Next.js 15 hybrid; pnpm 10 monorepo. Brand canon lives at `representation/visual-system/`. Five ratified Decision Documents (CD1-5) + sub-canon (typography, construction rules) + ops records + bridge (tokens + component library) + chiseled-history records.
 
 **Sandbox is a furnace, not a museum.** Load-bearing ideas chisel into canon via the CD2 §10 ledger pattern (append-only with SUPERSEDED-BY / AMENDED-IN-PART markers). Rejected ideas burn through canon-reconciliation tombstone records; source files vaporize. Git history is the only diff archive; canon is the only preservation surface.
 
@@ -222,21 +218,17 @@ Per canon-reconciliation-tombstone (2026-05-10). Agents read this list BEFORE pr
 
 ## Token pipeline (operations)
 
-- **Source-of-truth:** Penpot self-host on Hetzner (Doppler-managed secrets)
-- **Authoring:** Mayor edits in Penpot UI → fires `repository_dispatch` webhook
-- **Build:** GitHub Actions `tokens-build.yml` pulls DTCG export → validates 8-field shape + cross-tier alias rule → Style Dictionary v4 with `usesDtcg: true` → emits `tokens.css` + `tokens.tailwind.config.ts` + `tokens.toon`
-- **Auto-PR if drift:** Mayor reviews → Repo Code merges at Wave-gate close
-- **Consumer:** `@prime-dispatch/tokens/css` subpath export resolves to bridge `dist/tokens.css`
+**Superseded (2026-08-18):** the V1 Penpot-on-VPS token pipeline never shipped. The tokens bridge is
+hand-maintained (`0.0.0-w3-s-a-bridge`, `code/packages/tokens`) until ADR-0003 Stage S2 lands the
+generated pipeline (`docs/adr/0003-vertical-design-stack-architecture.md`).
 
-Full SOP at `lifecycle/runbook/sop/token-pipeline.md`. Penpot deploy at `lifecycle/deploy/penpot/deploy-sop.md`.
+- **Consumer (current truth):** `@prime-dispatch/tokens/css` subpath export resolves to bridge `dist/tokens.css`
 
 ---
 
 ## Deploy lanes (W2-S-C; Mayor 2026-05-10 lock)
 
-- **PRIMARY:** Vercel Hobby (Astro 6 native post Vercel-Astro acquisition Jan 2026); config at `lifecycle/deploy/vercel.json`
-- **Alt standby:** Cloudflare Pages (DR + edge-cache complement); configs at `lifecycle/deploy/cloudflare-pages/`
-- **Backend standby:** Render Hobby (W4+ activation when backend services land); manifest at `lifecycle/deploy/render.yaml`
+- **PRIMARY:** Vercel (Astro 6 native); config at `code/vercel.json` — the single authoritative file
 
 ---
 

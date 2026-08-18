@@ -6,8 +6,8 @@ captured: 2026-05-13
 authored-by: Claude Sonnet 4.6
 reviewed-by: AK (pending)
 priority: launch-blocker for editorial autonomy
-related-context: context/2026-05-13_dispatch-cc8-build-state.md
-parent-spec: specs/Claude brief — Crossfire (cross-fire/)
+related-context: (archived privately — B14 public cut 2026-08-18)
+parent-spec: superseded by docs/adr/0001-crossfire-live-activity.md
 sphere: 3-purgatorio/4-buildings-terrace
 audience: [citizens, mayor, eden]
 authority: mayor

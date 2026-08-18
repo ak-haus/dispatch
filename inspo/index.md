@@ -21,6 +21,5 @@ last_amended: 2026-05-18
 - [midjourney_session](midjourney_session/index.md) — (midjourney_session folder; no README yet)
 - [README](tldraw-inspo/README.md) *(active)* — (tldraw-inspo folder)
 - [UI-UX](UI-UX/index.md) — (UI-UX folder; no README yet)
-- [DISpatch Microsite Stack — Canonical Budget Ledger v0.1](2026-05-09-microsite-stack-budget-ledger-v0.md) *(active)* — (2026-05-09-microsite-stack-budget-ledger-v0.md)
 - [DISpatch Claude Prompt Stack](dispatch-claude-prompt-stack.md) *(active)* — (dispatch-claude-prompt-stack.md)
 - [DISpatch — Typography & Color Tokens](dispatch-design-tokens.md) *(active)* — (dispatch-design-tokens.md)

@@ -22,9 +22,9 @@ root; the microsite is one workspace member.
 
 ## Setup (current truth)
 
-1. Vercel project: **dispatch** (`[redacted-vercel-project]`, team
-   `[redacted-vercel-team]`) — preserved from V1 and re-linked to
-   `ak-haus/dispatch` at revival (2026-06-11).
+1. Vercel project: **dispatch** (project + team IDs live in the Vercel
+   dashboard and the local `.vercel/` link, not this repo) — preserved from V1
+   and re-linked to `ak-haus/dispatch` at revival (2026-06-11).
 2. Project settings — encoded in the committed `code/vercel.json`, which is
    authoritative:
    - **Root Directory** → `code`

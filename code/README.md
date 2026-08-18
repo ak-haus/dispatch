@@ -12,7 +12,7 @@ last_amended: 2026-05-17
 
 Astro 6 + Next.js 15 **co-foundational hybrid** monorepo. Per master plan §1.7 reframe 2.6 + §3.B platform foundation: both frameworks integrated into the platform substrate from the start, both accessible from the infrastructure level throughout. NOT parallel-peers; NOT umbrella+bolt-on. Both load-bearing.
 
-Composition patterns (when to reach for which framework, hybrid composition recipes, dial mechanics) documented at [../lifecycle/runbook/sop/hybrid-foundation.md](../lifecycle/runbook/sop/hybrid-foundation.md).
+Composition patterns (when to reach for which framework, hybrid composition recipes, dial mechanics) were documented in the V1 operator runbook (private ops archive since the B14 public cut, 2026-08-18).
 
 ## Workspace layout
 
@@ -48,9 +48,7 @@ pnpm typecheck          # typecheck all workspaces
 
 ## Discipline references
 
-- Composition strategy: [../lifecycle/runbook/sop/hybrid-foundation.md](../lifecycle/runbook/sop/hybrid-foundation.md)
 - Architectural rationale: master plan §1.7 reframe 2.6 + §3.B Stream-B platform foundation
-- File ownership: master plan §5.1 (Stream-B owns `lifecycle/` + code repos; Stream-D owns `lifecycle/runbook/`)
 - Eventual destination: `buildings/dev-diary/` repo per W5 deliverable (V1 builds in-place inside `prime-city-brand-sandbox/v1-dev-diary-microsite/code/`)
 
 ## What this scaffold does NOT contain (downstream Wave fills)
@@ -64,7 +62,7 @@ pnpm typecheck          # typecheck all workspaces
 
 ## Live vendor paths
 
-**Vercel project:** `dispatch` (`[redacted-vercel-project]`) | production branch: `main`  
+**Vercel project:** `dispatch` (project IDs live in the Vercel dashboard, not this repo) | production branch: `main`  
 **Deploy config:** `code/vercel.json` (the single authoritative file) — source of truth; dashboard overrides are drift.
 
 **Post-deploy mandatory check:** after every production deploy, verify `HTTP 200` on the root route before declaring success. A Vercel `READY` status does NOT guarantee pages were built — the Astro/Vite trap (below) produces `READY` with zero rendered HTML.
