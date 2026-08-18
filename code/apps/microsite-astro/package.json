@@ -14,6 +14,7 @@
     "typecheck": "astro check",
     "test": "vitest run",
     "lighthouse": "lhci autorun",
+    "smoke:prod": "playwright test --config playwright.prod.config.ts",
     "astro": "astro",
     "e2e:build": "PUBLIC_WIRE_FEED_URL=https://wire-ledger.test/feed.json astro build",
     "test:e2e": "pnpm e2e:build && playwright test",

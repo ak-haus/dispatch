@@ -1,0 +1,39 @@
+name: uptime
+on:
+  schedule:
+    # Every 6 hours — deliberate cost floor for a PRIVATE repo (metered
+    # Actions minutes): ~4 runs/day ≈ 180 min/month. The realistic outage
+    # classes for a static Vercel site (bad deploy, DNS, platform) are
+    # covered by deploy-time gates + this synthetic; a tighter cadence or a
+    # dedicated uptime vendor is an AK option on the Golden Board (A6).
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+# Production uptime synthetic (Golden Board A6). READ-ONLY page visits with
+# a real browser: the curl header oracle is blind to JS death — a 200 shell
+# with dead islands passed every check we had. No credentials; nothing is
+# ever written or published. Failure notifies via GitHub's failed-run email.
+jobs:
+  uptime:
+    name: uptime (prod smoke)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - name: Header oracle (fast fail)
+        working-directory: .
+        run: curl -sIf --max-time 30 https://dispatchmag.dev/ | grep -E "^HTTP/[0-9.]+ 200"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter microsite-astro exec playwright install --with-deps chromium
+      - name: JS-death detector (hydration smoke)
+        run: pnpm --filter microsite-astro smoke:prod
