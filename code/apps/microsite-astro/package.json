@@ -11,6 +11,7 @@
     "dev": "node scripts/generate-commits.mjs && node scripts/generate-wire-snapshot.mjs && astro dev",
     "build": "node scripts/generate-commits.mjs && node scripts/generate-wire-snapshot.mjs && astro build",
     "preview": "astro preview",
+    "fetch:fonts": "node scripts/fetch-fonts.mjs",
     "typecheck": "astro check",
     "test": "vitest run",
     "lighthouse": "lhci autorun",

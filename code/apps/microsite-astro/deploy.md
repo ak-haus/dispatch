@@ -22,6 +22,11 @@ root; the microsite is one workspace member.
 
 ## Setup (current truth)
 
+0. Fonts: the two licensed Pangram Pangram webfonts are NOT in the repo
+   (per-style EULA — private asset rail since the B14 public cut). Before the
+   first local build: `pnpm fetch:fonts` (hydrates `public/fonts/` from
+   production; canonical copies live in the private ops archive).
+
 1. Vercel project: **dispatch** (project + team IDs live in the Vercel
    dashboard and the local `.vercel/` link, not this repo) — preserved from V1
    and re-linked to `ak-haus/dispatch` at revival (2026-06-11).

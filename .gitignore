@@ -17,3 +17,9 @@ storybook-static/
 # OS
 .DS_Store
 .env*
+
+# Licensed webfonts — private asset rail, never committed (PP EULA; B14 2026-08-18).
+# Hydrate locally with: cd code/apps/microsite-astro && pnpm fetch:fonts
+code/apps/microsite-astro/public/fonts/PP*.woff2
+representation/visual-system/typography/subsets/nav/pangram-sans-800.woff2
+representation/visual-system/typography/subsets/wordmark/editorial-new-700.woff2
