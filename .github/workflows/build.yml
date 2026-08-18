@@ -1,0 +1,27 @@
+name: build
+on: [push, pull_request]
+
+# The LIVE surface must be provably buildable on every commit — before this
+# job, a merge-green commit could still fail `astro build` (Golden Board A1).
+# Hermetic by design: PUBLIC_WIRE_FEED_URL is absent in CI, so
+# generate-wire-snapshot.mjs keeps the committed snapshot and exits 0 — no
+# network dependency, no platform credentials in CI.
+jobs:
+  build:
+    name: build (astro)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:astro
