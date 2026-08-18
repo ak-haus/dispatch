@@ -4,7 +4,9 @@
 
 > `@AGENTS.md` pulls in the vendor-neutral map (the boundary, commands, layout). Below is the **editorial
 > discipline** — the non-inferable house rules for this JS-first scrollytelling microsite. Shared PAI doctrine lives
-> in `~/.claude/CLAUDE.md`. The visual canon is `representation/visual-system/` (CD1–5); the founding master plan is historical (purged with Prime V1, 2026-06-10 — in `ak-haus/prime-city` git history).
+> in `~/.claude/CLAUDE.md`. **Read `DESIGN.md` (repo root) before generating or editing any UI** — it is the
+> generated brand contract (ADR-0003 §Stage 7), drift-gated in CI. The visual canon behind it is
+> `representation/visual-system/` (CD1–5); the founding master plan is historical (purged with Prime V1, 2026-06-10 — in `ak-haus/prime-city` git history).
 
 ## Project identity — JS-first
 The visual product **IS the JavaScript.** Static HTML/CSS is the substrate; React + GSAP + Motion + Lenis is what
@@ -46,12 +48,9 @@ below-the-fold, `client:idle` non-critical) · keep React components under ~400 
   (`representation/visual-system/`). Mutable: motion + scroll + interaction + responsive behavior.
 
 ## Universal type rules (apply everywhere)
-- **Wordmark `DISpatch` — `DIS` is always red.** Anywhere the literal word renders, split it:
-  `<span class="text-wordmark-dis font-bold">DIS</span><span class="text-wordmark-patch">patch</span>` (add `not-italic`
-  to both in italic prose). No exception.
-- **Smallest legible text is 12px** (WCAG/industry, May 2026); the old 9/10px caps are deprecated.
-- **Editorial type on the cartographic substrate uses letterpress** — `.dispatch-emboss` (light, 11–14px caps/labels)
-  or `.dispatch-burnin` (heavy, display 16px+): both pair `text-shadow` + `mix-blend-mode:multiply`.
+Moved to `DESIGN.md` §Typography (the generated brand contract — wordmark `DIS`-red split rule, 12px floor,
+letterpress on the substrate). They apply everywhere, no exception; read them there, edit them in
+`code/packages/tokens/scripts/emit/layout-design-md.mjs` (never in the generated file).
 
 ## Verification before claiming done
 1. `cd code/apps/microsite-astro && pnpm exec tsc --noEmit --project tsconfig.json` — no errors in YOUR files.

@@ -3,7 +3,7 @@
 # Extend the .md allowlist with THIS repo's grandfathered ALL-CAPS canon (e.g. ISA, ARCHITECTURE).
 ls:
   .dir: regex:^[a-z0-9._-]+$
-  .md: regex:^([a-z0-9]+(-[a-z0-9]+)*|AGENTS|CLAUDE|GLOSSARY|README|PRESERVATION)$
+  .md: regex:^([a-z0-9]+(-[a-z0-9]+)*|AGENTS|CLAUDE|GLOSSARY|README|PRESERVATION|DESIGN)$
 ignore:
   - .git
   - "**/node_modules"

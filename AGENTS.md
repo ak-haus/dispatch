@@ -17,7 +17,8 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
   `curl -sI https://dispatchmag.dev/ | grep HTTP` (must be `200`: Astro 6 + Vite can report READY with **zero**
   rendered HTML); touching the **locked visual canon** (CD1–5 — palette/typography/cartography/lanes); editing
   content (`.mdx` — **AK owns content**).
-- **ALWAYS:** verify before claiming done — `tsc --noEmit` clean + a Tailwind cache-reset + the post-deploy `curl`
+- **ALWAYS:** read `DESIGN.md` (repo root — the generated brand contract) before generating or editing any UI;
+  verify before claiming done — `tsc --noEmit` clean + a Tailwind cache-reset + the post-deploy `curl`
   200; keep secrets in Doppler; stay in the scope you were asked. *(House style, enforced in `.claude/CLAUDE.md`,
   not a safety control: motion/JS over static — the visual product is the JS; split the `DISpatch` wordmark, `DIS` red.)*
 
@@ -26,9 +27,10 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
 - Build: `cd code && pnpm build` (or `build:astro` / `build:next`). Type-check: `cd code && pnpm typecheck`.
 - Tokens (Style Dictionary): `cd code/packages/tokens && pnpm build`. Content collections: `pnpm astro sync`.
 - After CSS / `@theme inline` edits: `rm -rf .astro node_modules/.vite` then restart `pnpm dev` (Tailwind v4 caches inlined values).
-- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = six gates on every push/PR: `build (astro)` ·
+- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = eight gates on every push/PR: `build (astro)` ·
   `e2e (playwright + axe)` · `lighthouse (budget ratchet)` · `naming convention (ls-lint)` · `typecheck (tsc)` ·
-  `unit (vitest)` — plus a 6h `uptime (prod smoke)` cron. Red = do-not-merge.
+  `unit (vitest)` · `tokens (drift gate)` · `design (contract drift gate)` — plus a 6h `uptime (prod smoke)` cron.
+  Red = do-not-merge.
 
 ## Layout (navigate by this; folders carry an `index.md` — `ls` a folder and read it)
 - `code/` — the **pnpm monorepo**: `apps/microsite-astro` (Astro 6, **LIVE**) · `apps/microsite-next` (Next 15 dashboard) ·
@@ -40,6 +42,7 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
 
 ## Concept → path (resolve a name to its home)
 - **microsite-astro** (the LIVE editorial surface) → `code/apps/microsite-astro`. **tokens pipeline** → `code/packages/tokens`.
+- **the brand contract** (agent-facing compilation of the canon; generated, never hand-edited) → `DESIGN.md`.
 - **the canon / CD1–5** (locked visual identity) → `representation/visual-system/`.
 - **the editorial discipline** (JS-first · the animation stack · Tailwind v4 · the wordmark · pitfalls) → `.claude/CLAUDE.md`.
 - **the master plan** (founding constitutional spec) → historical, in the private `ak-haus/prime-city` history (Prime V1
