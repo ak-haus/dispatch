@@ -1,0 +1,332 @@
+{
+  "color": {
+    "$type": "color",
+    "ui": {
+      "accent-prime": {
+        "$value": "{color.platform.accent-prime}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "accent-prime",
+            "css": "var(--platform-accent-prime)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API (ui/next consumers)",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "accent-prime-active": {
+        "$value": "{color.platform.accent-prime-active}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "accent-prime-active",
+            "css": "var(--platform-accent-prime-active)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "copper": {
+        "$value": "{color.platform.copper}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "copper",
+            "css": "var(--platform-copper)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "copper-deep": {
+        "$value": "{color.platform.copper-deep}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "copper-deep",
+            "css": "var(--platform-copper-deep)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "text-strong": {
+        "$value": "{color.platform.text-body-strong}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "text-strong",
+            "css": "var(--platform-text-body-strong)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "text-primary": {
+        "$value": "{color.platform.text-body-strong}",
+        "$description": "W2 short-name alias; grounded by the in-code fallback #2a261e (MetroMapMarker.tsx:99) = dark-ink register.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "text-primary",
+            "css": "var(--platform-text-body-strong)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "text-muted": {
+        "$value": "{color.dispatch.text.body.muted}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "text-muted",
+            "css": "var(--dispatch-text-body-muted)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "text-accent": {
+        "$value": "{color.platform.accent-prime}",
+        "$description": "W2 short-name alias — accent register for text (Footnote).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "text-accent",
+            "css": "var(--platform-accent-prime)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "lane-editorial": {
+        "$value": "{color.dispatch.lane.editorial.strong}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "lane-editorial",
+            "css": "var(--dispatch-lane-editorial-strong)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "lane-institutional": {
+        "$value": "{color.dispatch.lane.institutional.strong}",
+        "$description": "W2 short-name alias; grounded by the in-code fallback #5a6770 (MetroMapMarker.tsx:83) = cool-mineral register.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "lane-institutional",
+            "css": "var(--dispatch-lane-institutional-strong)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "lane-dispatch": {
+        "$value": "{color.dispatch.lane.dispatch.strong}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "lane-dispatch",
+            "css": "var(--dispatch-lane-dispatch-strong)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "wordmark-dis": {
+        "$value": "{color.platform.wordmark.dis}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "wordmark-dis",
+            "css": "var(--platform-wordmark-dis)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "wordmark-patch": {
+        "$value": "{color.platform.wordmark.patch}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "wordmark-patch",
+            "css": "var(--platform-wordmark-patch)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "vellum-25": {
+        "$value": "{color.dispatch.vellum.25}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "vellum-25",
+            "css": "var(--dispatch-vellum-25)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "microsite-next @theme bridge"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "vellum-50": {
+        "$value": "{color.dispatch.vellum.50}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "vellum-50",
+            "css": "var(--dispatch-vellum-50)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "microsite-next @theme bridge"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "vellum-100": {
+        "$value": "{color.dispatch.vellum.100}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "vellum-100",
+            "css": "var(--dispatch-vellum-100)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "microsite-next @theme bridge"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "vellum-200": {
+        "$value": "{color.dispatch.vellum.200}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "vellum-200",
+            "css": "var(--dispatch-vellum-200)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "microsite-next @theme bridge"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "vellum-300": {
+        "$value": "{color.dispatch.vellum.300}",
+        "$description": "W2 short-name alias.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "vellum-300",
+            "css": "var(--dispatch-vellum-300)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "microsite-next @theme bridge"
+              ]
+            },
+            "ratified-at": "S2 alias repair (ADR-0003 §Stage 2)"
+          }
+        }
+      },
+      "$description": "UI short-name slot aliases — the W2-era token API still consumed by packages/ui component CSS and microsite-next's @theme bridge (census 2026-08-18: --copper ×5, --text-muted ×15, --accent-prime ×9, … referenced bare with no definition since the tiered rename). Each alias resolves to its tiered canon token so Storybook/ui/next rendering becomes honest (ADR-0003: S5 depends on S2 for exactly this). Purely additive for microsite-astro: none of these names are referenced there. UNRESOLVABLE names are deliberately ABSENT — --chrome-text(-hover/-active), --chrome-background, --chrome-border, --chrome-indicator, --surface-page, --surface-inset, --rail-edge, --grid-line have no defined value anywhere in repo or archive history (forward-declared only); filed as an S5 gap rather than invented here."
+    }
+  }
+}

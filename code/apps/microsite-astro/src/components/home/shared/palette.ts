@@ -31,10 +31,18 @@ export const PALETTE = {
 	accentActive: 'var(--platform-accent-prime-active)',
 
 	// ── Tier 2: Prime City's color ──────────────────────────────────────
-	/** Copper — kicker labels, section labels, filled CTA pills. */
+	/** Copper — DISPLAY-size text, icon affordances, borders. Size-scoped
+	 *  per F5 (ADR-0003 register §10): below the WCAG large-text threshold
+	 *  use copperLabel, never this. */
 	copper: 'var(--platform-copper)',
+	/** Copper at label sizes — the F5 AA variant (4.66:1 on sky-low). Kicker
+	 *  labels, section labels, 12-13px links, and filled pills that carry
+	 *  light label text. */
+	copperLabel: 'var(--platform-copper-label)',
 	/** Deeper copper for hover/active interactive states. */
 	copperDeep: 'var(--platform-copper-deep)',
+	/** Text on copperLabel fills (pills, CTA hover) — resolves to vellum-25. */
+	onCopper: 'var(--platform-on-copper)',
 
 	// ── Tier 3: surface fills (gold/copper, NEVER pale-yellow) ───────
 	/** Block-fill at saturated-copper tier. 80% platform-copper + 20%

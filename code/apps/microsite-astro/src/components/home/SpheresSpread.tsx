@@ -138,7 +138,7 @@ export function SpheresSpread() {
 				<div className="mt-20 border-t border-body-strong/25 pt-4">
 					<p
 						className="mb-4 font-mono text-[12px] font-bold uppercase tracking-[0.42em]"
-						style={{ color: PALETTE.copper }}
+						style={{ color: PALETTE.copperLabel }}
 					>
 						Canonical Prime cosmology · 7 layers registered
 					</p>
@@ -202,7 +202,7 @@ export function SpheresSpread() {
 								{/* Folder — typographic, no box */}
 								<code
 									className="hidden font-mono text-[12px] uppercase tracking-[0.18em] md:inline"
-									style={{ color: PALETTE.copper }}
+									style={{ color: PALETTE.copperLabel }}
 								>
 									{layer.folder}
 								</code>

@@ -1,0 +1,167 @@
+{
+  "cartography": {
+    "stroke": {
+      "$description": "Street line-weight hierarchy (formula.md §3.1; stroke-width ratio ≈ 6.5:4.5:2.5:1.75:1).",
+      "arterial": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2.6,
+          "unit": "px"
+        },
+        "$description": "Civic-axis arterial @ 0.85 opacity.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.1"
+          }
+        }
+      },
+      "avenue": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.8,
+          "unit": "px"
+        },
+        "$description": "Major avenue @ 0.85.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.1"
+          }
+        }
+      },
+      "local": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        },
+        "$description": "Local street @ 0.78.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.1"
+          }
+        }
+      },
+      "minor": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.7,
+          "unit": "px"
+        },
+        "$description": "Cross-street/minor @ 0.65.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.1"
+          }
+        }
+      },
+      "hairline": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.4,
+          "unit": "px"
+        },
+        "$description": "Lot-line hairline @ 0.45.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.1"
+          }
+        }
+      }
+    },
+    "boundary": {
+      "$description": "Boundary strokes (formula.md §3.2).",
+      "district-active": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.6,
+          "unit": "px"
+        },
+        "$description": "District boundary (active), solid @ 0.92.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.2"
+          }
+        }
+      },
+      "neighbor-forward": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.9,
+          "unit": "px"
+        },
+        "$description": "Forward-pointed neighbor, dashed 7-5 @ 0.65.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.2"
+          }
+        }
+      },
+      "neighborhood": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.2,
+          "unit": "px"
+        },
+        "$description": "Neighborhood boundary, solid soft @ 0.78.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.2"
+          }
+        }
+      },
+      "future-corner": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.7,
+          "unit": "px"
+        },
+        "$description": "Future-corner placeholder, dashed 4-4 @ 0.45.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.2"
+          }
+        }
+      },
+      "water-edge": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.4,
+          "unit": "px"
+        },
+        "$description": "Water edge, smooth @ 0.82.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §3.2"
+          }
+        }
+      }
+    },
+    "grid": {
+      "lot-line-spacing": {
+        "$type": "dimension",
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        },
+        "$description": "Lot-line hairline background grid spacing (architectural-document register).",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "ratified-at": "formula.md §4.1"
+          }
+        }
+      }
+    },
+    "$description": "Cartographic substrate stroke system — DTCG 2025.10 dimension tokens. The ONLY hard ratified px values in the visual-system canon (formula.md: authority mayor, load_bearing true). Governs the cartographic substrate (streets/boundaries/markers), NOT component chrome — no UI border-weight system is ratified (GAP filed). No CSS emission yet (CartographyCanvas consumes literals today); source-of-truth for CD3 work and DESIGN.md (S3)."
+  }
+}

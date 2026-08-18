@@ -126,7 +126,7 @@ export function BuildTicker() {
 					<div className="flex items-baseline gap-4">
 						<span
 							className="font-mono text-[12px] uppercase tracking-[0.42em]"
-							style={{ color: PALETTE.copper }}
+							style={{ color: PALETTE.copperLabel }}
 						>
 							Build Ticker
 						</span>
@@ -245,7 +245,7 @@ export function BuildTicker() {
 						<span className="text-body-strong font-bold">Log</span>
 						<span aria-hidden="true" className="mx-3 text-body-faint">·</span>
 						The work as it lands on{' '}
-						<span className="font-bold" style={{ color: PALETTE.copper }}>
+						<span className="font-bold" style={{ color: PALETTE.copperLabel }}>
 							main
 						</span>
 					</span>

@@ -1,0 +1,210 @@
+{
+  "font": {
+    "family": {
+      "wordmark": {
+        "$type": "fontFamily",
+        "$value": [
+          "Pangram Editorial New",
+          "Vollkorn",
+          "Georgia",
+          "serif"
+        ],
+        "$description": "Wordmark slot — Pangram Pangram Editorial New Bold (700), subset to 8 glyphs (D,I,S,p,a,t,c,h). Masthead / favicon / brand-mark surfaces only. Family name matches the live @font-face registration ('Pangram Editorial New'; canon json spells it 'Editorial New' — live registration wins for rendering fidelity).",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "font-wordmark",
+            "css": "'Pangram Editorial New', 'Vollkorn', Georgia, serif",
+            "theme": true,
+            "ratified-at": "Mayor 2026-05-10 W2-S-F premium lock; live stack (global.css @theme)"
+          }
+        }
+      },
+      "nav": {
+        "$type": "fontFamily",
+        "$value": [
+          "Pangram Sans",
+          "Inter",
+          "system-ui",
+          "sans-serif"
+        ],
+        "$description": "Nav slot — Pangram Sans Normal Extrabold, CSS weight 800 (OS/2 usWeightClass 800; Pangram markets it as 'Extrabold 900'). Universal Prime-microsite wayfinding register.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "font-nav",
+            "css": "'Pangram Sans', 'Inter', system-ui, sans-serif",
+            "theme": true,
+            "ratified-at": "Mayor 2026-05-10 W2-S-F premium lock; live stack (global.css @theme)"
+          }
+        }
+      },
+      "narrative": {
+        "$type": "fontFamily",
+        "$value": [
+          "Vollkorn",
+          "Georgia",
+          "Iowan Old Style",
+          "serif"
+        ],
+        "$description": "Narrative/display serif slot — Vollkorn (the live name for the canon Title register). Article masthead titles, pull-quotes, prose headings.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "font-narrative",
+            "css": "'Vollkorn', Georgia, 'Iowan Old Style', serif",
+            "theme": true,
+            "ratified-at": "CD2 §10 Decision 7c (Title=Vollkorn lock); live stack (global.css @theme)"
+          }
+        }
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": [
+          "Inter",
+          "system-ui",
+          "-apple-system",
+          "sans-serif"
+        ],
+        "$description": "Body slot — LIVE stack (Inter). CONTRADICTS canon Body=Crimson Pro (Decision 7c) — filed, not silently resolved; see file $description.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "font-body",
+            "css": "'Inter', system-ui, -apple-system, sans-serif",
+            "theme": true,
+            "ratified-at": "live stack (global.css @theme) — canon contradiction FILED at S2"
+          }
+        }
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": [
+          "JetBrains Mono",
+          "ui-monospace",
+          "SF Mono",
+          "Cascadia Mono",
+          "monospace"
+        ],
+        "$description": "Code/Meta slot (live name: mono) — JetBrains Mono. Code blocks, terminal-search, DLDS panels, meta-numerals, byline timestamps.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "font-mono",
+            "css": "'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace",
+            "theme": true,
+            "ratified-at": "CD2 §10 Decision 7c (Code=JetBrains Mono lock); live stack (global.css @theme)"
+          }
+        }
+      },
+      "civic": {
+        "$type": "fontFamily",
+        "$value": [
+          "IM Fell English",
+          "EB Garamond",
+          "Georgia",
+          "serif"
+        ],
+        "$description": "Civic/Dante slot — IM Fell English (NOT Cinzel — tombstoned 2026-05-10). Civic-cartography labels, Dante-passage epigraphs. Live fallback 'EB Garamond' differs from canon fallback 'Vollkorn' — live transcribed, drift noted.",
+        "$extensions": {
+          "prime": {
+            "tier": "asset",
+            "cssName": "font-civic",
+            "css": "'IM Fell English', 'EB Garamond', Georgia, serif",
+            "theme": true,
+            "ratified-at": "CD2 §10 Decision 7c (Civic=IM Fell lock); live stack (global.css @theme)"
+          }
+        }
+      },
+      "title": {
+        "$type": "fontFamily",
+        "$value": [
+          "Vollkorn",
+          "Iowan Old Style",
+          "Georgia",
+          "Times New Roman",
+          "serif"
+        ],
+        "$description": "Canon Title slot (W2 API name) — consumed by packages/ui component CSS (var(--font-title), e.g. MetaArticleOpener.css:46) which had NO definition in the astro compile. Canon stack per typography.tokens.json. Emitted as a :root custom property (not a @theme slot — the astro theme uses 'narrative' for this register).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "font-title",
+            "css": "'Vollkorn', 'Iowan Old Style', Georgia, 'Times New Roman', serif",
+            "root": true,
+            "ratified-at": "CD2 §10 Decision 7c; typography.tokens.json font.family.title"
+          }
+        }
+      },
+      "code": {
+        "$type": "fontFamily",
+        "$value": [
+          "JetBrains Mono",
+          "SF Mono",
+          "Cascadia Code",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "$description": "Canon Code slot (W2 API name) — consumed by packages/ui component CSS (var(--font-code), e.g. DldsPanel.css:21) which had NO definition in the astro compile. Canon stack per typography.tokens.json.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "font-code",
+            "css": "'JetBrains Mono', 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace",
+            "root": true,
+            "ratified-at": "CD2 §10 Decision 7c; typography.tokens.json font.family.code"
+          }
+        }
+      }
+    },
+    "weight": {
+      "$description": "Ratified weight tokens (typography.tokens.json). Source-of-truth for DESIGN.md (S3); no CSS emission — Tailwind's native font-* utilities already carry these.",
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400,
+        "$description": "Body/default weight.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "ratified-at": "typography.tokens.json font.weight"
+          }
+        }
+      },
+      "semibold": {
+        "$type": "fontWeight",
+        "$value": 600,
+        "$description": "Emphasis weight (prose strong, h3).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "ratified-at": "typography.tokens.json font.weight"
+          }
+        }
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$description": "Display/wordmark weight (Editorial New Bold, Vollkorn Bold).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "ratified-at": "typography.tokens.json font.weight"
+          }
+        }
+      },
+      "extrabold": {
+        "$type": "fontWeight",
+        "$value": 800,
+        "$description": "Nav weight — Pangram Sans Normal Extrabold (CSS 800 per OS/2 usWeightClass; marketed 'Extrabold 900').",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "ratified-at": "typography.tokens.json font.weight; Mayor 2026-05-10 W2-S-F"
+          }
+        }
+      }
+    },
+    "$description": "Typography tokens — DTCG 2025.10. Family slots carry the LIVE shipped stacks (global.css @theme + @font-face, the rendering truth: zero visual change law) for the six live slots, plus the two canon slots (title/code) the packages/ui components consume. FILED CONTRADICTION (S2, unresolved — AK decision needed): canon locks Body = Crimson Pro (typography.tokens.json; color.md Decision 7c) but the live app ships --font-body = Inter and never loads Crimson Pro; canon mandates self-hosted WOFF2 (fonts.md 'NO runtime CDN') but the live app loads OFL families from the Google Fonts CDN. Neither side is silently 'fixed' here — the live values are transcribed and the conflict is recorded."
+  }
+}

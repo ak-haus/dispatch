@@ -1,0 +1,398 @@
+{
+  "color": {
+    "$type": "color",
+    "dispatch": {
+      "lane": {
+        "$description": "Lane pigments — three cosmology directional vectors per CD2 §4.2 Decision 5. Lanes apply LOCALLY as accents per CD2 §4.1 — NOT global page gradients.",
+        "editorial": {
+          "strong": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.55,
+                0.16,
+                41
+              ]
+            },
+            "$description": "Lane 1 Editorial — warm-earth pigment family (terracotta range). Surface vector — the city itself, where citizens live and work.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-lane-editorial-strong",
+                "css": "oklch(0.55 0.16 41)",
+                "concept-citation": {
+                  "universal-concept": "Surface register — atmospheric paper substrate (CD1 Concept 4); the city itself (CD2 §4.2)",
+                  "reference-platforms": [
+                    "The Paris Review Pentagram-Willey",
+                    "INQUE Magazine",
+                    "NYT Magazine 2026"
+                  ]
+                },
+                "ratified-at": "CD2 Decision 5b §10"
+              }
+            }
+          }
+        },
+        "institutional": {
+          "strong": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.41,
+                0.043,
+                257
+              ]
+            },
+            "$description": "Lane 2 Institutional — cool-mineral pigment family (graphite-blue range). Above vector — Paradiso-charter descending through Purgatorio-terraces.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-lane-institutional-strong",
+                "css": "oklch(0.41 0.043 257)",
+                "concept-citation": {
+                  "universal-concept": "Above register — Paradiso-charter descending; institutional weight inscribed from The Bar",
+                  "reference-platforms": [
+                    "The Atlantic Pentagram",
+                    "Sotheby's Pentagram"
+                  ]
+                },
+                "ratified-at": "CD2 Decision 5c §10"
+              }
+            }
+          }
+        },
+        "dispatch": {
+          "strong": {
+            "$value": "{color.platform.accent-prime}",
+            "$description": "Lane 3 Dispatch — inherits accent-prime via DTCG aliasing per CD2 §4.3 5d. Below vector — Inferno-infra surfacing.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-lane-dispatch-strong",
+                "css": "var(--platform-accent-prime)",
+                "concept-citation": {
+                  "universal-concept": "Below register — Inferno-infra surfacing visible at magazine-IA accent scale",
+                  "reference-platforms": [
+                    "Cosmology-unified per Mayor 2026-05-07 (CD2 §4.2 Decision 5)"
+                  ]
+                },
+                "ratified-at": "CD2 Decision 5d §10"
+              }
+            }
+          }
+        }
+      },
+      "text": {
+        "$description": "Text roles (DISpatch-locked) — warm-bias hue 88° matching the Vellum substrate.",
+        "body": {
+          "strong": {
+            "$value": "{color.platform.text-body-strong}",
+            "$description": "Dispatch body-strong — aliases the platform primary text token.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-text-body-strong",
+                "css": "var(--platform-text-body-strong)",
+                "concept-citation": {
+                  "universal-concept": "Reading-substrate strongest text intensity (CD2 §3.3)",
+                  "reference-platforms": [
+                    "Quanta Magazine",
+                    "NYT Magazine 2026"
+                  ]
+                },
+                "ratified-at": "CD2 §2.4 three-layer naming"
+              }
+            }
+          },
+          "muted": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.48,
+                0.01,
+                88
+              ]
+            },
+            "$description": "Muted ink — secondary text (excerpts, meta rows, descriptions). 5.81:1 on sky-low: clears WCAG 1.4.3 AA at every size on the vellum substrate.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-text-body-muted",
+                "css": "oklch(0.48 0.010 88)",
+                "concept-citation": {
+                  "universal-concept": "Secondary reading intensity on the vellum substrate (CD2 §3.3)",
+                  "reference-platforms": [
+                    "The Paris Review",
+                    "INQUE Magazine"
+                  ]
+                },
+                "ratified-at": "amendment-locked value (tokens.css authority chain)"
+              }
+            }
+          },
+          "faint": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.5,
+                0.01,
+                88
+              ]
+            },
+            "$description": "Faint ink — tertiary whisper register (separators, end-lines, footer chrome). 5.33:1 on sky-low: AA on the vellum substrate. NOTE (filed S2): the dusk (3.34:1) and night (3.52:1) cycle values sit below 4.5:1 at 12px — a pre-existing canon condition recorded for the D1 gate, not silently changed here.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-text-body-faint",
+                "css": "oklch(0.50 0.010 88)",
+                "concept-citation": {
+                  "universal-concept": "Tertiary whisper register (CD2 §3.3)",
+                  "reference-platforms": [
+                    "The Paris Review",
+                    "INQUE Magazine"
+                  ]
+                },
+                "ratified-at": "amendment-locked value (tokens.css authority chain)"
+              }
+            }
+          },
+          "muted-deep": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [
+                0.46,
+                0.01,
+                88
+              ]
+            },
+            "$description": "Muted-deep: the F5 AA variant of muted ink for TINTED panels (the wheat article-hero band, copper-tinted washes) where muted's 0.48 falls to 4.33:1. Darkened within the ink family (C/H held) to 4.72:1 on the wheat surface (#e1d0b8) and 6.33:1 on sky-low. Per-node math in __tests__/contrast.test.mjs.",
+            "$extensions": {
+              "prime": {
+                "tier": "dispatch",
+                "cssName": "dispatch-text-body-muted-deep",
+                "css": "oklch(0.46 0.010 88)",
+                "concept-citation": {
+                  "universal-concept": "Size/surface-scoped AA variant of the muted ink (ADR-0003 register §10, F5)",
+                  "reference-platforms": [
+                    "WCAG 2.2 SC 1.4.3"
+                  ]
+                },
+                "ratified-at": "ADR-0003 register §10 (AK, 2026-08-18) — executed S2"
+              }
+            }
+          }
+        }
+      },
+      "vellum": {
+        "25": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.99,
+              0.012,
+              88
+            ]
+          },
+          "$description": "Atmospheric chrome — printed paper held to natural light; warmest, lightest register. Resolves --sky-high.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "dispatch-vellum-25",
+              "css": "oklch(0.99  0.012 88)",
+              "concept-citation": {
+                "universal-concept": "Atmosphere as physical writing substrate at high-luminance natural-light register (CD1 Concept 4)",
+                "reference-platforms": [
+                  "The Paris Review Pentagram-Willey",
+                  "INQUE Magazine"
+                ]
+              },
+              "ratified-at": "CD2 Decision 2 + Decision 6a §10; amendment-locked value"
+            }
+          }
+        },
+        "50": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.985,
+              0.01,
+              88
+            ]
+          },
+          "$description": "Vellum interop step at Tailwind v4 50 L territory; reserved for atmospheric-warm pairings.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "dispatch-vellum-50",
+              "css": "oklch(0.985 0.010 88)",
+              "concept-citation": {
+                "universal-concept": "Atmospheric warm-tinted Tailwind interop step (CD2 §2.2)",
+                "reference-platforms": [
+                  "Vellum scale parallel to Tailwind v4 neutral families"
+                ]
+              },
+              "ratified-at": "CD2 Decision 2 §10; amendment-locked value"
+            }
+          }
+        },
+        "100": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.96,
+              0.015,
+              88
+            ]
+          },
+          "$description": "Atmospheric chrome — warm-white in ambient room lighting. Resolves --sky-low. The page substrate.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "dispatch-vellum-100",
+              "css": "oklch(0.96  0.015 88)",
+              "concept-citation": {
+                "universal-concept": "Atmosphere as physical writing substrate at warm-white ambient register (CD1 Concept 4)",
+                "reference-platforms": [
+                  "The Paris Review Pentagram-Willey",
+                  "INQUE Magazine"
+                ]
+              },
+              "ratified-at": "CD2 Decision 2 + Decision 6a §10; amendment-locked value"
+            }
+          }
+        },
+        "200": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.92,
+              0.025,
+              88
+            ]
+          },
+          "$description": "Atmospheric chrome — printed-paper micro-reflection of incident light. Resolves --reflect.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "dispatch-vellum-200",
+              "css": "oklch(0.92  0.025 88)",
+              "concept-citation": {
+                "universal-concept": "Atmospheric reflectivity at micro-reflection register (CD1 Concept 4)",
+                "reference-platforms": [
+                  "The Paris Review"
+                ]
+              },
+              "ratified-at": "CD2 Decision 2 + Decision 6a §10; amendment-locked value"
+            }
+          }
+        },
+        "300": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [
+              0.87,
+              0.035,
+              88
+            ]
+          },
+          "$description": "Atmospheric chrome — warm yellow shift of incandescent room light on warm paper; card edges / footer / cosmology markers. Resolves --window-warm.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "dispatch-vellum-300",
+              "css": "oklch(0.87  0.035 88)",
+              "concept-citation": {
+                "universal-concept": "Atmospheric warmth — incandescent room light on warm paper (CD1 Concept 4 + CD2 §4.5.1)",
+                "reference-platforms": [
+                  "The Paris Review",
+                  "INQUE Magazine"
+                ]
+              },
+              "ratified-at": "CD2 Decision 2 + Decision 6a §10; amendment-locked value"
+            }
+          }
+        },
+        "$description": "Vellum atmospheric scale (color.md §2.2 + §4.5) — numeric source-of-truth, DISpatch-locked tier extension parallel to Tailwind v4's neutral families. Atmosphere as physical writing substrate (CD1 Concept 4)."
+      },
+      "chrome": {
+        "$description": "Spatial-perceptual aliases (color.md §4.5.2) — resolve to Vellum numeric source-of-truth. Consumer code references aliases when spatial-atmospheric semantics is the right anchor.",
+        "sky-high": {
+          "$value": "{color.dispatch.vellum.25}",
+          "$description": "Warmest, lightest; printed paper held to natural light.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "sky-high",
+              "css": "var(--dispatch-vellum-25)",
+              "concept-citation": {
+                "universal-concept": "Spatial-perceptual layer resolves to Vellum numeric per CD2 §2.4 + §4.5.2",
+                "reference-platforms": [
+                  "The Paris Review Pentagram-Willey",
+                  "INQUE Magazine"
+                ]
+              },
+              "ratified-at": "CD2 Decision 6a + 6b §10"
+            }
+          }
+        },
+        "sky-low": {
+          "$value": "{color.dispatch.vellum.100}",
+          "$description": "Warm-white mid-stratum; printed paper in ambient room lighting.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "sky-low",
+              "css": "var(--dispatch-vellum-100)",
+              "concept-citation": {
+                "universal-concept": "Spatial-perceptual layer per CD2 §4.5.2",
+                "reference-platforms": [
+                  "The Paris Review Pentagram-Willey",
+                  "INQUE Magazine"
+                ]
+              },
+              "ratified-at": "CD2 Decision 6a + 6b §10"
+            }
+          }
+        },
+        "reflect": {
+          "$value": "{color.dispatch.vellum.200}",
+          "$description": "Printed-paper substrate's micro-reflection of incident light.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "reflect",
+              "css": "var(--dispatch-vellum-200)",
+              "concept-citation": {
+                "universal-concept": "Spatial-perceptual layer per CD2 §4.5.2",
+                "reference-platforms": [
+                  "The Paris Review"
+                ]
+              },
+              "ratified-at": "CD2 Decision 6a + 6b §10"
+            }
+          }
+        },
+        "window-warm": {
+          "$value": "{color.dispatch.vellum.300}",
+          "$description": "Warm yellow shift of incandescent room light on warm paper.",
+          "$extensions": {
+            "prime": {
+              "tier": "dispatch",
+              "cssName": "window-warm",
+              "css": "var(--dispatch-vellum-300)",
+              "concept-citation": {
+                "universal-concept": "Spatial-perceptual layer per CD2 §4.5.2",
+                "reference-platforms": [
+                  "The Paris Review",
+                  "INQUE Magazine"
+                ]
+              },
+              "ratified-at": "CD2 Decision 6a + 6b §10"
+            }
+          }
+        }
+      },
+      "$description": "DISpatch tier — Building-locked tokens: lane pigments, text roles, Vellum atmospheric scale, spatial-perceptual chrome aliases. DTCG 2025.10. Vellum values are the AMENDMENT-LOCKED truth (tokens.css authority chain; the pre-S2 src values oklch(0.985 0.018 87) etc. were the un-amended CD2 v1 draft — that drift is exactly what S2 kills)."
+    }
+  }
+}
