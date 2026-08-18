@@ -1,0 +1,105 @@
+{
+  "motion": {
+    "reduced-motion": {
+      "max-duration": {
+        "$type": "duration",
+        "$value": {
+          "value": 200,
+          "unit": "ms"
+        },
+        "$description": "Reduced-motion floor (RATIFIED STRUCTURAL LOCK, launch-non-negotiable per WCAG 2.1 SC 2.3.3): under prefers-reduced-motion, every motion vector clamps to static OR an opacity-only crossfade of at most this duration.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 motion.md §2 (reduced-motion-respect floor)"
+          }
+        }
+      }
+    },
+    "budget": {
+      "$description": "Per-frame work budgets at display cadence (RATIFIED gates, CD5 Decision 4). CI/perf-gate values, not design durations.",
+      "frame-60hz": {
+        "$type": "duration",
+        "$value": {
+          "value": 16,
+          "unit": "ms"
+        },
+        "$description": "Frame budget at 60Hz.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 §2 Layer 4 + Decision 4"
+          }
+        }
+      },
+      "frame-120hz": {
+        "$type": "duration",
+        "$value": {
+          "value": 8,
+          "unit": "ms"
+        },
+        "$description": "Frame budget at 120Hz.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 §2 Layer 4 + Decision 4"
+          }
+        }
+      },
+      "frame-144hz": {
+        "$type": "duration",
+        "$value": {
+          "value": 7,
+          "unit": "ms"
+        },
+        "$description": "Frame budget at 144Hz.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 §2 Layer 4 + Decision 4"
+          }
+        }
+      },
+      "frame-240hz": {
+        "$type": "duration",
+        "$value": {
+          "value": 4,
+          "unit": "ms"
+        },
+        "$description": "Frame budget at 240Hz (ceiling; no application rAF cap).",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 §2 Layer 4 + Decision 4"
+          }
+        }
+      },
+      "inp-max": {
+        "$type": "duration",
+        "$value": {
+          "value": 200,
+          "unit": "ms"
+        },
+        "$description": "Core Web Vitals gate: INP ceiling.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 §2 gates table"
+          }
+        }
+      },
+      "cls-max": {
+        "$type": "number",
+        "$value": 0.1,
+        "$description": "Core Web Vitals gate: CLS ceiling (transform-only animation rule is the mechanism).",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "ratified-at": "CD5 §2 gates table"
+          }
+        }
+      }
+    },
+    "$description": "Motion tokens — DTCG 2025.10. CD5 (motion.md) ratifies GATES and STRUCTURAL LOCKS, not design durations: every design-facing duration/easing/amplitude in CD5 carries the 'currently inclined toward' register and is explicitly refinable at W3 — transcribing those as tokens would be invention (CD5 §0 C8 language discipline). What IS ratified and tokenizable: the reduced-motion crossfade cap and the per-frame work budgets. No easing curves, stagger intervals, spring configs, or scroll-scrub parameters exist anywhere in canon (verified sweep 2026-08-18) — GAP filed for W3/CD5 ratification, not synthesized here. No CSS emission (no consumer yet); source-of-truth for DESIGN.md (S3) and the perf gates (S1/A4)."
+  }
+}

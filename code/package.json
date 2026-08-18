@@ -15,7 +15,8 @@
     "dev:storybook": "pnpm --filter storybook dev",
     "build": "pnpm -r build",
     "build:next": "pnpm --filter microsite-next build",
-    "build:astro": "pnpm --fail-if-no-match --filter microsite-astro build",
+    "build:astro": "pnpm --fail-if-no-match --filter @prime-dispatch/tokens build && pnpm --fail-if-no-match --filter microsite-astro build",
+    "build:tokens": "pnpm --fail-if-no-match --filter @prime-dispatch/tokens build",
     "build:storybook": "pnpm --filter storybook build",
     "typecheck": "pnpm -r --parallel typecheck",
     "clean": "pnpm -r --parallel clean"

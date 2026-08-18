@@ -2,6 +2,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "./tokens.css";
+@import "./tokens.theme.css";
 @import "maplibre-gl/dist/maplibre-gl.css";
 
 /* All cycle-aware Tailwind utilities now cascade via var() chains that
@@ -122,17 +123,14 @@
 @custom-variant dusk (&:where([data-prime-cycle="dusk"], [data-prime-cycle="dusk"] *));
 
 /* ============================================================================
- * Tailwind v4 @theme inline — exposes canonical tokens as utility classes.
+ * DISpatch tokens → Tailwind utilities: the @theme inline block is GENERATED
+ * (src/styles/tokens.theme.css, imported at the top of this file) by
+ * @prime-dispatch/tokens — ADR-0003 §Stage 2. Edit packages/tokens/src/**.json
+ * and rebuild; never hand-edit the generated file.
  *
- * Two layers of utilities:
- *   1. Semantic-intent: bg-accent-prime, text-copper, border-lane-editorial,
- *      etc. — short consumer names that resolve to platform/dispatch tokens.
- *   2. Spatial-perceptual: bg-sky-high, bg-sky-low, bg-reflect, bg-window-warm
- *      — atmospheric vocabulary aliases.
- *
- * Numeric layer (vellum-25, etc.) is the compile source-of-truth in tokens.css
- * and NOT exposed as a Tailwind utility (per color.md §2.4 discipline:
- * consumer code references upper layers, never numeric).
+ * The residual block below is the shadcn framework shim for the SITEMAP-ONLY
+ * surface (plus its --radius-* derivations) — a compatibility bridge, not
+ * DISpatch canon, so it stays hand-held here.
  * ========================================================================== */
 
 @theme inline {
@@ -159,60 +157,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-  /* ===== Platform tier ===== */
-  --color-accent-prime: var(--platform-accent-prime);
-  --color-accent-prime-active: var(--platform-accent-prime-active);
-  --color-copper: var(--platform-copper);
-  --color-copper-deep: var(--platform-copper-deep);
-  /* Wordmark — point at platform tokens so cycle overrides cascade.
-     The previous hardcoded-hex workaround froze these to dawn values:
-     Tailwind v4 @theme inline emits the literal verbatim into the utility
-     (no var() reference), so the runtime cycle attribute could never
-     change them. Pointing at --platform-wordmark-* preserves the var()
-     reference in the compiled utility and routes through tokens.css. */
-  --color-wordmark-dis: var(--platform-wordmark-dis);
-  --color-wordmark-patch: var(--platform-wordmark-patch);
-
-  /* ===== Dispatch tier — lane pigments. Previously pointed at undefined
-     --lane-editorial / --lane-institutional / --lane-dispatch (those names
-     don't exist anywhere), so the utilities rendered as transparent or
-     unset. Repaired to point at the actual --dispatch-lane-* tokens. */
-  --color-lane-editorial-strong: var(--dispatch-lane-editorial-strong);
-  --color-lane-institutional-strong: var(--dispatch-lane-institutional-strong);
-  --color-lane-dispatch-strong: var(--dispatch-lane-dispatch-strong);
-
-  /* ===== Dispatch tier — text roles. body-muted previously pointed at
-     undefined --text-muted, which made bullets (·), em-dashes (—), and
-     any other text-body-muted element render invisible. body-faint was
-     a hardcoded literal that froze to dawn. Both now use var() chains
-     so cycle overrides in tokens.css cascade correctly. */
-  --color-text-body-strong: var(--platform-text-body-strong);
-  --color-text-body-muted: var(--dispatch-text-body-muted);
-  --color-text-body-faint: var(--dispatch-text-body-faint);
-  /* Aliases for shorter utility names */
-  --color-body-strong: var(--platform-text-body-strong);
-  --color-body-muted: var(--dispatch-text-body-muted);
-  --color-body-faint: var(--dispatch-text-body-faint);
-
-  /* ===== Spatial-perceptual atmospheric chrome ===== */
-  --color-sky-high: var(--sky-high);
-  --color-sky-low: var(--sky-low);
-  --color-reflect: var(--reflect);
-  --color-window-warm: var(--window-warm);
-
-  /* ===== Asset tier ===== */
-  --color-cartography-pulse: var(--asset-cartography-pulse);
-
-  /* ===== Typography slots ===== */
-  --font-wordmark: 'Pangram Editorial New', 'Vollkorn', Georgia, serif;
-  --font-nav: 'Pangram Sans', 'Inter', system-ui, sans-serif;
-  --font-narrative: 'Vollkorn', Georgia, 'Iowan Old Style', serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
-  /* Civic-Dante slot — IM Fell English. Asset-locked to medieval / civic
-     content per CD2 §5.3 (NOT Cinzel — tombstoned 2026-05-10). */
-  --font-civic: 'IM Fell English', 'EB Garamond', Georgia, serif;
 }
 
 :root {

@@ -1,0 +1,224 @@
+{
+  "color": {
+    "$type": "color",
+    "platform": {
+      "accent-prime": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5569,
+            0.1451,
+            0.1961
+          ],
+          "hex": "#8e2532"
+        },
+        "$description": "Accent-prime: Atlantic-pigment editorial red (amendment 2026-05-10). Replaces #c8392b (alarm vermilion). Cosmology framing preserved: Inferno-infra surfacing at the masthead.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-accent-prime",
+            "css": "#8e2532",
+            "concept-citation": {
+              "universal-concept": "Inferno-infra surfacing through Purgatorio-terraces — Prime's heartbeat visible at brand-bearing surfaces (CD2 §4.2 Decision 5)",
+              "reference-platforms": [
+                "NYT historical red banner",
+                "The Economist red institutional cap",
+                "The Atlantic (Atlantic-pigment register, Decision 12a)"
+              ]
+            },
+            "ratified-at": "CD2 Decision 5a §10 + amendment 2026-05-10 (Decision 12a)"
+          }
+        }
+      },
+      "accent-prime-active": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4196,
+            0.1451,
+            0.1255
+          ],
+          "hex": "#6b2520"
+        },
+        "$description": "Accent-prime-active: wine intermediate for nav active state. Sits chromatically BETWEEN copper and wordmark-red per illuminated-manuscript graduated-pigment discipline (Decision 8).",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-accent-prime-active",
+            "css": "#6b2520",
+            "concept-citation": {
+              "universal-concept": "Graduated-pigment engagement arc (illuminated-manuscript discipline, CD2 amendment Decision 8)",
+              "reference-platforms": [
+                "Illuminated-manuscript graduated pigments"
+              ]
+            },
+            "ratified-at": "CD2 amendment 2026-05-10 Decision 8"
+          }
+        }
+      },
+      "copper": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7216,
+            0.451,
+            0.2
+          ],
+          "hex": "#b87333"
+        },
+        "$description": "Copper: Prime-wide gilded identity. Default nav link color at display registers. Decision 8 redistributes copper-as-institution from wordmark to nav. Size-scoped per F5 (register §10, ADR-0003): display-size copper stays canon (WCAG large-text 3:1); label/body-size copper text uses copper-label.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-copper",
+            "css": "#b87333",
+            "concept-citation": {
+              "universal-concept": "Gilded institutional identity redistributed to wayfinding (CD2 amendment Decision 8)",
+              "reference-platforms": [
+                "Illuminated-manuscript gilding"
+              ]
+            },
+            "ratified-at": "CD2 amendment 2026-05-10 Decision 8"
+          }
+        }
+      },
+      "copper-deep": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5451,
+            0.3216,
+            0.1412
+          ],
+          "hex": "#8b5224"
+        },
+        "$description": "Copper-deep: nav hover state. Engagement deepening within copper register.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-copper-deep",
+            "css": "#8b5224",
+            "concept-citation": {
+              "universal-concept": "Engagement deepening within the gilded register (CD2 amendment Decision 8)",
+              "reference-platforms": [
+                "Illuminated-manuscript gilding"
+              ]
+            },
+            "ratified-at": "CD2 amendment 2026-05-10 Decision 8"
+          }
+        }
+      },
+      "copper-label": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.54,
+            0.117,
+            60
+          ]
+        },
+        "$description": "Copper-label: the F5 size-scoped AA variant of copper for label/body-size text (<18pt regular / <14pt bold) and for fills that carry light label text. Darkened within the canon copper hue family (C/H held from #b87333) to the lightest value clearing WCAG 1.4.3 AA with margin: 4.66:1 on sky-low (#f6f1e7), 5.11:1 on sky-high, 4.94:1 under vellum-25 text as a fill, 4.66:1 under sky-low text. Sits between copper (L 0.60) and copper-deep (L 0.48) so the hover-deepening arc survives. Display-size copper stays canon per register §10.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-copper-label",
+            "css": "oklch(0.54 0.117 60)",
+            "concept-citation": {
+              "universal-concept": "Size-scoped split of the gilded register — WCAG 2.2 AA at label sizes without surrendering display copper (ADR-0003 register §10, F5)",
+              "reference-platforms": [
+                "WCAG 2.2 SC 1.4.3 (4.5:1 below large-text threshold)"
+              ]
+            },
+            "ratified-at": "ADR-0003 register §10 (AK, 2026-08-18) — executed S2; per-node math in __tests__/contrast.test.mjs"
+          }
+        }
+      },
+      "on-copper": {
+        "$value": "{color.dispatch.vellum.25}",
+        "$description": "Text role for copper-label-filled surfaces (filter pill, CTA hover fills). Resolves to vellum-25: 4.94:1 on copper-label. Added at F5 execution so no component hardcodes its own on-fill literal.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-on-copper",
+            "css": "var(--dispatch-vellum-25)",
+            "concept-citation": {
+              "universal-concept": "Single on-fill text role over the gilded register (ADR-0003 register §10, F5)",
+              "reference-platforms": [
+                "WCAG 2.2 SC 1.4.3"
+              ]
+            },
+            "ratified-at": "ADR-0003 register §10 (AK, 2026-08-18) — executed S2"
+          }
+        }
+      },
+      "text-body-strong": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.18,
+            0.012,
+            88
+          ]
+        },
+        "$description": "Text-body-strong: primary text token. Warm-bias near-black paired with the Vellum scale's warm-yellow hue family (~88°). Never pure black.",
+        "$extensions": {
+          "prime": {
+            "tier": "platform",
+            "cssName": "platform-text-body-strong",
+            "css": "oklch(0.18 0.012 88)",
+            "concept-citation": {
+              "universal-concept": "Reading-substrate strongest text intensity (CD2 §3.3 β principal-grade body)",
+              "reference-platforms": [
+                "Quanta Magazine (Lc 80-85 body)",
+                "NYT Magazine 2026"
+              ]
+            },
+            "ratified-at": "CD2 §3.3 + amendment-locked value (tokens.css authority chain)"
+          }
+        }
+      },
+      "wordmark": {
+        "$description": "Wordmark composition (color.md §5.2 Option C split-color cosmology-encoded): DIS portion = accent-prime (Inferno-surfacing red); patch portion = text-body-strong (institutional weight).",
+        "dis": {
+          "$value": "{color.platform.accent-prime}",
+          "$description": "Wordmark `DIS` portion — inherits accent-prime via DTCG aliasing. City of Dis from Inferno at masthead scale.",
+          "$extensions": {
+            "prime": {
+              "tier": "platform",
+              "cssName": "platform-wordmark-dis",
+              "css": "var(--platform-accent-prime)",
+              "concept-citation": {
+                "universal-concept": "City of Dis from Inferno (CD1 thesis §4.2)",
+                "reference-platforms": [
+                  "NYT historical red banner",
+                  "The Economist red institutional cap"
+                ]
+              },
+              "ratified-at": "CD2 Decision 7b §10"
+            }
+          }
+        },
+        "patch": {
+          "$value": "{color.platform.text-body-strong}",
+          "$description": "Wordmark `patch` portion — institutional-publication weight in dark serif.",
+          "$extensions": {
+            "prime": {
+              "tier": "platform",
+              "cssName": "platform-wordmark-patch",
+              "css": "var(--platform-text-body-strong)",
+              "concept-citation": {
+                "universal-concept": "Institutional-publication weight (CD2 §5.2 Decision 7b)",
+                "reference-platforms": [
+                  "The Atlantic Pentagram",
+                  "NYT magazine masthead serif weight"
+                ]
+              },
+              "ratified-at": "CD2 Decision 7b §10"
+            }
+          }
+        }
+      },
+      "$description": "Platform tier — Prime-platform-wide tokens (cross-Building DNA). DTCG 2025.10. Values are the amendment-locked truth (authority chain: color.md CD2 v1 → cd2-color-amendment-proposal 2026-05-10 Mayor-locked → tokens.css); $extensions.prime.css carries the exact emission string, validated for equivalence against $value by validate-dtcg.mjs."
+    }
+  }
+}

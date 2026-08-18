@@ -1,0 +1,370 @@
+{
+  "color": {
+    "$type": "color",
+    "shadcn": {
+      "background": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.145,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark background.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "background",
+            "css": "oklch(0.145 0 0)",
+            "ratified-at": "shadcn shim (sitemap-only), tokens.css authority chain"
+          }
+        }
+      },
+      "foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.985,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "foreground",
+            "css": "oklch(0.985 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "card": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.205,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark card.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "card",
+            "css": "oklch(0.205 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "card-foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.985,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark card foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "card-foreground",
+            "css": "oklch(0.985 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "popover": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.205,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark popover.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "popover",
+            "css": "oklch(0.205 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "popover-foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.985,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark popover foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "popover-foreground",
+            "css": "oklch(0.985 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "primary": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.922,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark primary.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "primary",
+            "css": "oklch(0.922 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "primary-foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.205,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark primary foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "primary-foreground",
+            "css": "oklch(0.205 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "secondary": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.269,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark secondary.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "secondary",
+            "css": "oklch(0.269 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "secondary-foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.985,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark secondary foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "secondary-foreground",
+            "css": "oklch(0.985 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.269,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark muted.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "muted",
+            "css": "oklch(0.269 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "muted-foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.708,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark muted foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "muted-foreground",
+            "css": "oklch(0.708 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "accent": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.269,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark accent.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "accent",
+            "css": "oklch(0.269 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "accent-foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.985,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark accent foreground.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "accent-foreground",
+            "css": "oklch(0.985 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "destructive": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.704,
+            0.191,
+            22.216
+          ]
+        },
+        "$description": "shadcn dark destructive.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "destructive",
+            "css": "oklch(0.704 0.191 22.216)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "border": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ],
+          "alpha": 0.1
+        },
+        "$description": "shadcn dark border.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "border",
+            "css": "oklch(1 0 0 / 10%)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "input": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ],
+          "alpha": 0.15
+        },
+        "$description": "shadcn dark input.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "input",
+            "css": "oklch(1 0 0 / 15%)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "ring": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.556,
+            0,
+            0
+          ]
+        },
+        "$description": "shadcn dark ring.",
+        "$extensions": {
+          "prime": {
+            "tier": "component",
+            "cycle": "night",
+            "cssName": "ring",
+            "css": "oklch(0.556 0 0)",
+            "ratified-at": "shadcn shim"
+          }
+        }
+      },
+      "$description": "shadcn neutral palette under Night — SITEMAP-ONLY surface (non-DISpatch); other surfaces use vellum tokens. Emitted into the .dark block only (the light shadcn palette stays hand-held in global.css :root — it is a shadcn framework shim, not DISpatch canon). Values transcribed verbatim from the pre-S2 tokens.css .dark block."
+    }
+  }
+}

@@ -1,66 +1,64 @@
 ---
-title: `@prime-dispatch/tokens`
+title: "`@prime-dispatch/tokens`"
 origin: prime-authored
 sphere: 3-purgatorio/4-buildings-terrace
 audience: [citizens, mayor, eden]
 authority: mayor
 status: active
 load_bearing: true
-last_amended: 2026-05-17
+last_amended: 2026-08-18
 ---
 # `@prime-dispatch/tokens`
 
-Design tokens consumable by `apps/microsite-next`, `apps/microsite-astro`, and `apps/storybook`.
+The S2 token engine (ADR-0003 §Stage 2, executed 2026-08-18): **git is the token
+source of truth**, Style Dictionary v5 is the engine, DTCG 2025.10 is the format.
+The W3-S-A hand-copy bridge is dead — the CSS the apps ship is compiled from the
+DTCG source here, and CI fails closed on any drift.
 
-**State (2026-05-10):** **W3-S-A sample-token bridge active + Mayor inline amendment (Vellum re-tune).** W2-S-D's compiled color samples shipped verbatim from `cc-ledger/diffs/W2-S-D/code/build/expected-outputs/` to unblock W3-S-A component scaffolding; the Vellum atmospheric scale (vellum-25 through vellum-300 + chrome aliases sky-high/sky-low/reflect/window-warm) was re-tuned per Mayor 2026-05-10 sensory feedback ("white with a touch of cream, subtly off-white" direction). W2 Wave-gate close cluster swaps real Style Dictionary v4 + DTCG pipeline outputs in; CD2 amendment proposal at `cc-ledger/diffs/W3-S-A/signal-proposal-2026-05-10_atmospheric-vellum-hue-85-perceptual-bias.md` stages canonical CD2 ratification via Conductor relay.
+## Layout
 
-**Mayor inline amendment scope (Vellum + chrome only — re-tuned 2026-05-10):**
+| Path | What |
+|---|---|
+| `src/color/{platform,dispatch,asset}.json` | Tiered color canon (dawn), amendment-locked values |
+| `src/color/ui-slots.json` | W2 short-name alias API (packages/ui + microsite-next consumers) |
+| `src/color/shadcn-dark.json` | Sitemap-only shadcn dark shim (`.dark` block) |
+| `src/cycles/{dusk,night}.json` | Cycle override trees → `[data-prime-cycle]` cascade blocks |
+| `src/typography.json` | Family slots (live stacks; canon contradictions FILED inline) + ratified weights |
+| `src/motion.json` | The ratified CD5 gates (reduced-motion cap, frame budgets) — design durations are deliberately absent (unratified) |
+| `src/cartography.json` | formula.md stroke system — the only mayor-ratified px values in canon |
+| `scripts/emit/` | Layout templates + fail-closed renderer (both directions: missing token OR unemitted token throws) |
+| `scripts/validate-dtcg.mjs` | 2025.10 shape + prime-extension + emission-integrity validator |
+| `__tests__/contrast.test.mjs` | F5 per-node WCAG math (21 assertions, runs in the drift gate) |
 
-| Token | W2-S-D verbatim | Mayor-amended | Shift |
-| --- | --- | --- | --- |
-| `vellum-25` / `sky-high` | `oklch(0.99 0.012 88)` | `oklch(0.998 0.002 80)` | L↑ C÷6 H−8° |
-| `vellum-50` | `oklch(0.985 0.018 87)` | `oklch(0.99 0.004 78)` | L↑ C÷4.5 H−9° |
-| `vellum-100` / `sky-low` | `oklch(0.96 0.025 85)` | `oklch(0.975 0.006 75)` | L↑ C÷4.2 H−10° |
-| `vellum-200` / `reflect` | `oklch(0.92 0.040 82)` | `oklch(0.95 0.010 72)` | L↑ C÷4 H−10° |
-| `vellum-300` / `window-warm` | `oklch(0.87 0.055 78)` | `oklch(0.92 0.016 68)` | L↑ C÷3.4 H−10° |
+## Outputs
 
-Lane pigments + accent + wordmark + cartography pulse tokens UNCHANGED (not atmospheric substrate).
+`pnpm --filter @prime-dispatch/tokens build` → validate, then emit:
 
-## Active outputs (W3-S-A bridge)
+- `apps/microsite-astro/src/styles/tokens.css` — **committed, generated**: `:root`
+  dawn + dusk/night runtime cascade blocks + `.dark` shadcn
+- `apps/microsite-astro/src/styles/tokens.theme.css` — **committed, generated**:
+  the Tailwind v4 `@theme inline` block (var() chains only — a literal inside
+  `@theme inline` freezes into compiled utilities and cycle theming dies; the
+  cycle overrides live in tokens.css, OUTSIDE the theme block)
+- `dist/tokens.css` (`./css`) + `dist/tokens.theme.css` (`./theme`) for package
+  consumers (Storybook preview, microsite-next)
 
-| Output | Format | Consumer entry |
-| --- | --- | --- |
-| `dist/tokens.css` | CSS custom properties (`:root` + short aliases) | `import "@prime-dispatch/tokens/css"` |
-| `dist/tokens.tailwind.config.ts` | Tailwind v4 OKLCH-native theme | `import tokens from "@prime-dispatch/tokens/tailwind"` |
-| `dist/tokens.toon` | TOON token-economy file | AI agents (per master plan §1.7 reframe 2.7) |
+The `tokens (drift gate)` workflow rebuilds and `git diff --exit-code`s — red =
+do-not-merge. Emission strings (`$extensions.prime.css`) are validated for
+equivalence against the structured `$value`, so the spec form and the byte-exact
+CSS can never fork.
 
-**Coverage:** Color-only at W3-S-A bridge — 4 platform + 12 dispatch + 1 asset stub (17 V1 CD2-ratified tokens). Typography / spacing / motion tokens land in subsequent CD2 + CD5 + W2-S-D rounds.
+## F5 (register §10) — size-scoped copper split
 
-**Phase 1 component pattern:** Components reference typography / spacing / motion slots by CSS custom property naming convention (e.g., `var(--type-title-700)`, `var(--space-scale-4)`, `var(--motion-fast)`) so the variables become live as soon as they're defined upstream.
+`--platform-copper-label` (oklch 0.54 0.117 60; 4.66:1 on sky-low) carries all
+label/body-size copper text and label-bearing fills; display copper stays canon
+(#b87333, ≥3:1 large-text). `--platform-on-copper` is the single on-fill text
+role. `--dispatch-text-body-muted-deep` (0.46) covers tinted panels. Dusk/night
+variants alias cycle canon (already AA). Filed, not fixed: dusk/night `faint`
+sits at 3.34/3.52:1 (pre-existing canon, D1-gate decision); the un-valued
+`--chrome-*`/`--surface-*`/`--rail-edge`/`--grid-line` slot names (S5 gap);
+the Body=Inter-vs-Crimson-Pro and Google-Fonts-CDN-vs-self-host canon
+contradictions (typography.json `$description`s).
 
-## Pipeline (W2-S-D)
-
-- **Authoring surface:** Penpot self-host on Hetzner
-- **Build trigger:** CI on Penpot push
-- **Build tool:** Style Dictionary v4 with `typeDtcgDelegate` wired
-- **Cosmology anchor:** CD2 wordmark resolution + copper-color doctrine (`representation/visual-system/color.md` §5 + §10 Decision 7)
-
-## Bridge swap (W2 Wave-gate close)
-
-When W2 Wave-gate close cluster ships, Repo Code copies the W2-S-D pipeline into this package:
-
-1. `cc-ledger/diffs/W2-S-D/code/style-dictionary.config.mjs` → `code/packages/tokens/style-dictionary.config.mjs`
-2. `cc-ledger/diffs/W2-S-D/code/build/` → `code/packages/tokens/build/`
-3. `cc-ledger/diffs/W2-S-D/code/tokens/` → `code/packages/tokens/tokens/`
-4. `npm run build` regenerates `dist/*` from real Penpot DTCG sources (replacing the verbatim bridge copies).
-
-Component code consuming `@prime-dispatch/tokens/css` and `/tailwind` keeps working through the swap because the consumer-facing API is unchanged — only the artifact provenance shifts from sample-bridge to live-pipeline.
-
-## What this stub still does NOT provide
-
-- Typography tokens (CD2 + CD4 ratifies subsequent round)
-- Spacing tokens (CD2 ratifies subsequent round)
-- Motion tokens (CD5 ratifies)
-- Theme variants (light / dusk / dark — CD2 ratifies subsequent round)
-
-Forward-pointed consumer references in W3-S-A component stories use the named CSS custom property convention so variables become live without consumer rewrites when the upstream rounds land.
+Legacy `tokens.toon` / `tokens.tailwind.config.ts` emissions and their W2
+fixtures were retired with the bridge (no consumers existed).
