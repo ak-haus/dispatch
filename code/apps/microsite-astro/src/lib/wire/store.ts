@@ -86,7 +86,17 @@ async function tick() {
 
 function revalidateNow() {
 	if (typeof document !== 'undefined' && document.hidden) return
-	if (state.lastFetched !== null && Date.now() - state.lastFetched < REVALIDATE_THROTTLE_MS) return
+	if (state.lastFetched !== null && Date.now() - state.lastFetched < REVALIDATE_THROTTLE_MS) {
+		// Deferred, not dropped. On return-from-hidden the timer was cleared by
+		// the hide branch — a bare return here would end the polling chain
+		// permanently and strand status on 'paused'. Re-arm the chain for the
+		// remainder of the interval and restore honesty: a fetch <5s old IS live.
+		if (started && timer === null) {
+			schedule(Math.max(1_000, baseIntervalMs - (Date.now() - state.lastFetched)))
+			if (state.status === 'paused') emit({ ...state, status: 'live' })
+		}
+		return
+	}
 	void tick()
 }
 

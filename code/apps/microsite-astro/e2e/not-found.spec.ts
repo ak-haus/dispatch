@@ -5,7 +5,7 @@
  * 200 would poison crawlers) AND the editorial not-in-print page.
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
 
 test('an unknown address returns status 404 with the editorial page', async ({ page }) => {

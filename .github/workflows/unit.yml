@@ -25,5 +25,5 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter microsite-astro test
-      - run: pnpm --filter @prime-dispatch/ui test
+      - run: pnpm --fail-if-no-match --filter microsite-astro test
+      - run: pnpm --fail-if-no-match --filter @prime-dispatch/ui test

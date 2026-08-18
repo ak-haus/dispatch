@@ -34,6 +34,6 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter microsite-astro exec playwright install --with-deps chromium
+      - run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
       - name: JS-death detector (hydration smoke)
-        run: pnpm --filter microsite-astro smoke:prod
+        run: pnpm --fail-if-no-match --filter microsite-astro smoke:prod

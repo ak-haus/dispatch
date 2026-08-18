@@ -161,6 +161,66 @@ describe('failure discipline — last-good + backoff', () => {
 		expect(fetchMock).toHaveBeenCalledTimes(5)
 	})
 
+	it('backoff growth is exponential, not linear (2/4/8s divergence at a 1s base)', async () => {
+		// Mutant killer: base·2^n vs base·2·n coincide at n=1,2 under the 60s
+		// base (the cap truncates before they diverge). A 1s base exposes the
+		// divergence at n=3: exponential 8s vs linear 6s.
+		vi.spyOn(Math, 'random').mockReturnValue(1)
+		store.configureWireInterval(1_000)
+		fetchMock.mockRejectedValue(new Error('down'))
+		subscribe()
+		await flush() // miss 1 → ceiling 2s
+		expect(fetchMock).toHaveBeenCalledTimes(1)
+		await flush(2_000) // miss 2 → ceiling 4s
+		expect(fetchMock).toHaveBeenCalledTimes(2)
+		await flush(4_000) // miss 3 → ceiling 8s (linear would arm 6s)
+		expect(fetchMock).toHaveBeenCalledTimes(3)
+		await flush(6_000) // a linear mutant fires here
+		expect(fetchMock).toHaveBeenCalledTimes(3)
+		await flush(2_000) // t=8s after miss 3 — the exponential retry
+		expect(fetchMock).toHaveBeenCalledTimes(4)
+	})
+
+	it('a miss after recovery starts a NEW streak (failures reset, ceiling re-based)', async () => {
+		// Mutant killer: deleting `failures = 0` on success survives the plain
+		// reset test (the success path schedules baseInterval regardless). The
+		// tell is the NEXT miss: with the reset it is miss #1 (status stays
+		// live); without it it is miss #4 (instant 'reconnecting').
+		vi.spyOn(Math, 'random').mockReturnValue(1)
+		fetchMock.mockRejectedValue(new Error('down'))
+		subscribe()
+		await flush() // miss 1
+		await flush(120_000) // miss 2
+		await flush(240_000) // miss 3
+		expect(store.getSnapshot().status).toBe('reconnecting')
+		fetchMock.mockResolvedValue(ok(feedWith('back')))
+		await flush(300_000) // capped retry succeeds
+		expect(store.getSnapshot().status).toBe('live')
+
+		fetchMock.mockRejectedValue(new Error('down again'))
+		await flush(60_000) // one miss on a fresh streak
+		expect(store.getSnapshot().status).toBe('live') // NOT reconnecting
+		fetchMock.mockResolvedValue(ok(feedWith('again')))
+		await flush(120_000) // and its ceiling is base·2¹, not the 300s cap
+		expect(store.getSnapshot().status).toBe('live')
+		expect(store.getSnapshot().feed.entries[0]?.id).toBe('again')
+	})
+
+	it('jitter draws from [0, ceiling] with a 1s floor (random=0 retries at 1s)', async () => {
+		// Mutant killer: both other backoff tests pin random=1, where full
+		// jitter and no-jitter are indistinguishable. random=0 separates them:
+		// jittered delay = max(1s, 0) = 1s; a no-jitter mutant waits 120s.
+		vi.spyOn(Math, 'random').mockReturnValue(0)
+		fetchMock.mockRejectedValue(new Error('down'))
+		subscribe()
+		await flush() // miss 1
+		expect(fetchMock).toHaveBeenCalledTimes(1)
+		await flush(999)
+		expect(fetchMock).toHaveBeenCalledTimes(1)
+		await flush(1) // the 1s floor fires
+		expect(fetchMock).toHaveBeenCalledTimes(2)
+	})
+
 	it('treats an HTTP error status as a miss', async () => {
 		fetchMock.mockResolvedValue(httpError(500))
 		subscribe()
@@ -216,6 +276,30 @@ describe('visibility discipline', () => {
 		window.dispatchEvent(new Event('focus')) // outside the window — revalidates
 		await flush()
 		expect(fetchMock).toHaveBeenCalledTimes(2)
+	})
+
+	it('hide→unhide inside the throttle window re-arms the chain instead of killing it', async () => {
+		// Regression (found by the 2026-08-18 adversarial verify): the hide
+		// branch clears the timer; if the return lands <5s after a successful
+		// fetch, the throttle used to bare-return — no timer, no chain, status
+		// stranded on 'paused' forever. A tab-flick killed the wire.
+		fetchMock.mockResolvedValue(ok(feedWith('a')))
+		subscribe()
+		await flush()
+		expect(store.getSnapshot().status).toBe('live')
+
+		hidden = true
+		document.dispatchEvent(new Event('visibilitychange'))
+		expect(store.getSnapshot().status).toBe('paused')
+		await flush(2_000) // return well inside the 5s throttle
+		hidden = false
+		document.dispatchEvent(new Event('visibilitychange'))
+
+		expect(store.getSnapshot().status).toBe('live') // not stranded paused
+		fetchMock.mockResolvedValue(ok(feedWith('b')))
+		await flush(60_000) // the chain must still be alive
+		expect(fetchMock.mock.calls.length).toBeGreaterThanOrEqual(2)
+		expect(store.getSnapshot().feed.entries[0]?.id).toBe('b')
 	})
 
 	it('a scheduled tick that lands while hidden parks as paused instead of fetching', async () => {

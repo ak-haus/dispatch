@@ -7,7 +7,7 @@
  * happens once React has attached handlers. A dead island fails this test.
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
 import { makeEntry, makeFeed, serveWireFeed } from './helpers/wire-fixture'
 

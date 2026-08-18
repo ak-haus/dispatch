@@ -6,7 +6,7 @@
  * the suite owns the route shape.
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
 
 async function firstDispatchPath(request: import('@playwright/test').APIRequestContext): Promise<string> {

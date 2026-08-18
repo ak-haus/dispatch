@@ -7,7 +7,7 @@
  * surfaces on the button); resume jumps to CURRENT state.
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
 import { makeEntry, makeFeed, serveWireFeed } from './helpers/wire-fixture'
 

@@ -52,6 +52,9 @@ async function run(env: Record<string, string> = {}) {
 	delete clean.PUBLIC_WIRE_FEED_URL
 	return execFileAsync(process.execPath, [join(sandbox, 'scripts', 'generate-wire-snapshot.mjs')], {
 		env: { ...clean, ...env },
+		// Belt to the script's own __dirname-relative resolution: even a
+		// cwd-resolution regression in the script stays inside the sandbox.
+		cwd: sandbox,
 	})
 }
 

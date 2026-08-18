@@ -24,7 +24,10 @@ export default defineConfig({
 	webServer: {
 		command: 'pnpm preview',
 		port: PORT,
-		reuseExistingServer: !process.env.CI,
+		// NEVER reuse: a dev server on 4321 serves src with .env.local's REAL
+		// ledger URL — silently substituting it for the e2e-built preview would
+		// break the never-prod law. A port conflict must fail loudly instead.
+		reuseExistingServer: false,
 		timeout: 30_000,
 	},
 })
