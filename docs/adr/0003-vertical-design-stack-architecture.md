@@ -1,6 +1,6 @@
 # ADR-0003 — The vertical design stack: stage-by-stage architecture
 
-- **Status:** **PROPOSED** (awaiting AK accept/amend) — produced by the Build 3 decision session, 2026-08-18
+- **Status:** **ACCEPTED** — by AK, 2026-08-18 (U-ledger checkpoint session): accepted as written; all 10 register items answered with the recommended defaults (decisions inline in §AK decision register)
 - **Date:** 2026-08-18
 - **Deciders:** AK (final authority)
 - **Governs:** the eight-stage vertical AI design pipeline adopted by [ADR-0002 Decision 3](0002-golden-readiness-doctrine.md); repos `ak-haus/dispatch` (primary) + `ak-haus/crossfire` (consumer of the brand contract)
@@ -161,18 +161,18 @@ Agent-compat: MCP + REST + HogQL end-to-end after one-time signup. Cost: $0. Ris
 
 **Recommended path: $0/month recurring.** Usage-based exposure: ideation images (~$0.04–0.24/image), semantic-judge vision calls (cents to low dollars per PR, model-tier dependent `[pin the model to pin the cost]`), PostHog $0 within 1M events. **Ceilings (established by this ADR; board row E6 becomes the tracking row):** if any stage's usage-based spend exceeds **$10/month** or any vendor tier is proposed, it returns to AK as a decision — nothing auto-upgrades. Paid forks priced for the register: Chromatic Starter $179/mo · Argos Pro $100/mo · v0 Plus $30/mo · Figma Professional seat $16/mo · Plausible $9/mo · Autonoma PAYG $100/150K credits · Supernova Pro $35/seat/mo (all vendor-page-fetched 2026-08-18; re-fetch at adoption).
 
-## AK decision register (option sets — yours, not picked here)
+## AK decision register (ANSWERED — AK, 2026-08-18, all recommended defaults; alternatives retained per record shape)
 
-1. **Chromatic account** (unblocks Stage 4 cloud lane): create at chromatic.com with the ak-haus org, token → Doppler + `gh secret set CHROMATIC_PROJECT_TOKEN` — or run Playwright-floor-only at $0 with no review UI.
-2. **Diff-approval policy:** (A) AK reviews every visual diff in Chromatic's UI (preserves the sign-off law; the UI is the DRAFT surface) vs (B) agents disposition via API with AK sampling. A is the doctrine-consistent default.
-3. **Browser coverage:** free Chrome-only now vs Starter $179/mo for Safari/FF/Edge — the Safari `mix-blend-mode` letterpress risk is real; Argos Pro $100/mo is the cheaper paid fallback if its browser matrix checks out `[unverified this session]`.
-4. **Figma posture:** (A) free Starter + one OAuth click, dormant MCP lane (recommended-shaped: $0) vs (B) Professional seat $16/mo for write-to-canvas experiments vs (C) no Figma. Also: authenticate the harness's Figma MCP either way, or S4's lane stays dead.
-5. **Ideation spend:** lean $0 (Nano Banana Pro only) vs +v0 (free tier or Plus $30/mo) vs +Figma Make; Midjourney personal seat keep/drop; Stitch trial yes/no.
-6. **Brand-contract shape:** Stitch-spec-conform vs house-hybrid (spec frontmatter + house prose); open-design installed as local auditor vs skipped.
-7. **Storybook 9→10 timing:** stay on 9.1 (stable, plain-file stories) vs upgrade before story #1 for first-party MCP (cheapest-now argument).
-8. **Semantic gate posture:** report-only period length before blocking; judge model tier; Autonoma adopt (cloud vs self-host) or skip.
-9. **Analytics:** PostHog EU cookieless no-banner (A) vs consent-banner full-fidelity (B) vs Plausible $9/mo (C) vs Vercel-only (D); replay off/on-behind-consent; loop cadence (weekly / on-demand / per-release).
-10. **F5 tie-in:** the copper-contrast canon decision now resolves both the suspended axe rule and the DESIGN.md lint's contrast findings — one decision, two gates re-arm.
+1. **Chromatic account** (unblocks Stage 4 cloud lane): create at chromatic.com with the ak-haus org, token → Doppler + `gh secret set CHROMATIC_PROJECT_TOKEN` — or run Playwright-floor-only at $0 with no review UI. → **Decided: create the account** (free tier, ak-haus org). The signup is AK's one-time human click, performed when S1 builds; token wiring is session work.
+2. **Diff-approval policy:** (A) AK reviews every visual diff in Chromatic's UI (preserves the sign-off law; the UI is the DRAFT surface) vs (B) agents disposition via API with AK sampling. → **Decided: A.**
+3. **Browser coverage:** free Chrome-only now vs Starter $179/mo for Safari/FF/Edge — the Safari `mix-blend-mode` letterpress risk is real; Argos Pro $100/mo is the cheaper paid fallback if its browser matrix checks out `[unverified this session]`. → **Decided: free Chrome-only.** The Safari letterpress risk stays recorded, not solved; revisit at the D1 gate.
+4. **Figma posture:** (A) free Starter + one OAuth click, dormant MCP lane ($0) vs (B) Professional seat $16/mo for write-to-canvas experiments vs (C) no Figma. → **Decided: A.** Dormant read-only lane; the one-time OAuth of the harness's Figma MCP is AK's click (claude.ai connector settings), performed by S4 build time.
+5. **Ideation spend:** lean $0 (Nano Banana Pro only) vs +v0 (free tier or Plus $30/mo) vs +Figma Make; Midjourney personal seat keep/drop; Stitch trial yes/no. → **Decided: lean $0.** Nano Banana Pro primary; v0 free tier optional when a UI-structure exploration warrants it; Stitch trial skipped (MCP claim unverified); Figma Make not adopted; Midjourney stays outside the pipeline (personal seat is AK's discretion, no pipeline dependency).
+6. **Brand-contract shape:** Stitch-spec-conform vs house-hybrid (spec frontmatter + house prose); open-design installed as local auditor vs skipped. → **Decided: house-hybrid.** Spec-shaped YAML frontmatter + house prose (letterpress/cycle rules need the expressiveness); open-design skipped for now — optional workstation auditor, never critical path.
+7. **Storybook 9→10 timing:** stay on 9.1 (stable, plain-file stories) vs upgrade before story #1 for first-party MCP (cheapest-now argument). → **Decided: stay on 9.1.** Plain-file CSF3 stories now; the 9→10 upgrade remains a separate later decision.
+8. **Semantic gate posture:** report-only period length before blocking; judge model tier; Autonoma adopt (cloud vs self-host) or skip. → **Decided: 2-week report-only window, then ratchet to blocking; judge pinned to a Sonnet-tier model (pins the cost); Autonoma skipped** (functional E2E already covered by the Playwright ×4).
+9. **Analytics:** PostHog EU cookieless no-banner (A) vs consent-banner full-fidelity (B) vs Plausible $9/mo (C) vs Vercel-only (D); replay off/on-behind-consent; loop cadence (weekly / on-demand / per-release). → **Decided: A.** PostHog EU Cloud cookieless, no consent banner; session replay OFF at launch; weekly loop cadence. The one-time signup is AK's click, performed when S6 builds.
+10. **F5 tie-in:** the copper-contrast canon decision now resolves both the suspended axe rule and the DESIGN.md lint's contrast findings — one decision, two gates re-arm. → **Decided: size-scoped token split.** Display-size copper stays canon (WCAG large-text threshold 3:1); body/label-size copper plus muted/faint ink gain darkened AA variants, exact per-node math against the dispatch#8 inventory. Letterpress-only was rejected as the remedy: axe measures the color pair, so `text-shadow`+`multiply` cannot un-fail the rule. Execution rides S2 (the variants are tokens); on landing, `SUSPENDED_RULES` in `e2e/helpers/axe.ts` is deleted and both gates re-arm.
 
 ## Consequences
 
