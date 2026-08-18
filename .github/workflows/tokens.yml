@@ -1,0 +1,31 @@
+name: tokens
+on: [push, pull_request]
+
+# The S2 drift gate (ADR-0003 §Stage 2, gate #7): the committed token CSS must
+# be exactly what the DTCG source compiles to. Rebuild → any diff = red =
+# do-not-merge, fail-closed — the same discipline as the six live gates. This
+# is the mechanism that makes hand-edited token CSS (the pre-S2 dual-source
+# failure) structurally impossible. The F5 contrast conformance suite rides
+# here too: a source edit that breaks a WCAG ratio is also drift.
+jobs:
+  tokens:
+    name: tokens (drift gate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --fail-if-no-match --filter @prime-dispatch/tokens build
+      - run: pnpm --fail-if-no-match --filter @prime-dispatch/tokens test
+      - name: drift check — committed generated CSS must match the rebuild
+        run: git diff --exit-code
