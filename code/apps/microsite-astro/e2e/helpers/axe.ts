@@ -72,16 +72,32 @@ async function settleMotion(page: Page): Promise<void> {
 	)
 }
 
+/**
+ * Rules axe may leave in `incomplete` (A13): color-contrast is permanently
+ * uncomputable on the letterpress chrome — `.dispatch-emboss`/`.dispatch-burnin`
+ * pair text with `mix-blend-mode: multiply`, and axe cannot flatten blend
+ * modes into an effective color pair. Those nodes are governed by the token
+ * math in packages/tokens/__tests__/contrast.test.mjs instead. Every OTHER
+ * rule must be fully determinate: a new entry in `incomplete` is an
+ * undetermined accessibility question and fails the suite until it is either
+ * fixed or added here with a reason.
+ */
+const INCOMPUTABLE_RULES = new Set(['color-contrast'])
+
 export async function expectNoAxeViolations(page: Page, testInfo: TestInfo): Promise<void> {
 	await settleMotion(page)
 	const results = await new AxeBuilder({ page }).withTags(TAGS).analyze()
-	if (results.violations.length > 0) {
+	const undetermined = results.incomplete.filter((v) => !INCOMPUTABLE_RULES.has(v.id))
+	if (results.violations.length > 0 || undetermined.length > 0) {
 		await testInfo.attach('axe-violations', {
-			body: JSON.stringify(results.violations, null, 2),
+			body: JSON.stringify({ violations: results.violations, incomplete: undetermined }, null, 2),
 			contentType: 'application/json',
 		})
 	}
 	expect(
 		results.violations.map((v) => `${v.id}: ${v.help} (${v.nodes.length} node${v.nodes.length === 1 ? '' : 's'})`),
+	).toEqual([])
+	expect(
+		undetermined.map((v) => `incomplete ${v.id}: ${v.help} (${v.nodes.length} node${v.nodes.length === 1 ? '' : 's'})`),
 	).toEqual([])
 }
