@@ -8,12 +8,13 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "node scripts/generate-commits.mjs && astro dev",
-    "build": "node scripts/generate-commits.mjs && astro build",
+    "dev": "node scripts/generate-commits.mjs && node scripts/generate-wire-snapshot.mjs && astro dev",
+    "build": "node scripts/generate-commits.mjs && node scripts/generate-wire-snapshot.mjs && astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
     "astro": "astro",
     "commits:generate": "node scripts/generate-commits.mjs",
+    "wire:snapshot": "node scripts/generate-wire-snapshot.mjs",
     "cartography:segment": "node scripts/segment-cartography.mjs",
     "cartography:segment:sam": "doppler run --project prime-city --config dev -- node scripts/segment-sam.mjs",
     "cartography:depth": "doppler run --project prime-city --config dev -- node scripts/depth-cartography.mjs"

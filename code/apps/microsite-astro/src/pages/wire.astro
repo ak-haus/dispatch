@@ -1,0 +1,21 @@
+---
+import StackLayout from '@/layouts/StackLayout.astro'
+import { WirePage } from '@/components/wire'
+---
+
+<!--
+	/wire — the full Live Wire surface (ADR-0001: both-surfaces decision).
+
+	Crossfire's publish record, polled from the sanitized public ledger the
+	pipeline itself writes. The island prerenders the build-time snapshot
+	(src/data/wire-snapshot.json) so first paint carries real HTML and the
+	page stays honest with JS off; hydration takes over polling at 30s.
+-->
+<StackLayout
+	title="The Wire"
+	kicker="Live from Crossfire · Editorial District"
+	description="Every Crossfire publish as it fires — success-only, sanitized at the source, straight from the pipeline's authoritative record."
+	theme="vellum"
+>
+	<WirePage client:load />
+</StackLayout>

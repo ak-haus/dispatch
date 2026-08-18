@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-18T05:07:02.527Z",
+  "attribution": "Posted automatically by Crossfire",
+  "entries": [
+    {
+      "id": "2026-06-12-bluesky-d3-landed-206e0c0a",
+      "ts": "2026-06-12T04:03:45.209Z",
+      "platform": "bluesky",
+      "kind": "publish",
+      "title": "D3 landed.",
+      "url": "https://bsky.app/profile/akalmoumen.bsky.social/post/3mo2uc4d34w2r",
+      "pipeline_run": "run-e23da4fa91c3",
+      "excerpt": "Durable content engine writes domain truth to Prime's Supabase. Three-layer idempotency on publishes. Legacy V1 deleted. One publish path: the durable workflow."
+    }
+  ]
+}

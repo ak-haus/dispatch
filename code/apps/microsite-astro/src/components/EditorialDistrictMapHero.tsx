@@ -7,15 +7,16 @@
  * its own file under `./home/` so individual sections can be committed,
  * reverted, or swapped without touching the others.
  *
- * Spread order (locked 2026-05-13 amend):
+ * Spread order (locked 2026-05-13 amend; wire strip added per ADR-0001):
  *   1. CoverSpread       cartographic video + wordmark stagger reveal
  *   2. ArticleSpread     featured dispatch as a magazine article opening
  *   3. DLDSSpread        other dispatches in print (sibling discovery)
  *   4. CrossfireSpread   GSAP-driven 3-panel staging slots (next session
  *                        wires real article excerpts in)
- *   5. BuildTicker       recent commits in a Shadcn-style code panel
- *   6. SpheresSpread     a way forward — Prime cosmology overview
- *   7. Colophon          publisher details + editors' epigraph
+ *   5. WireTicker        Live Wire — Crossfire's real publish feed
+ *   6. Colophon          publisher details + editors' epigraph
+ *   7. BuildTicker       commit tape at the very bottom of the page
+ *   (SpheresSpread moved to /about per AK 2026-05-14)
  *
  * Add a new spread: create a file under `./home/`, import it here, drop
  * it in the JSX. Remove a spread: delete its file + its import + its JSX
@@ -34,6 +35,7 @@ import { BuildTicker } from './home/BuildTicker'
 import { CrossfireSpread } from './home/CrossfireSpread'
 import { DLDSSpread } from './home/DLDSSpread'
 import { Colophon } from './home/Colophon'
+import { WireTicker } from './wire'
 
 export type EditorialDistrictMapHeroProps = {
 	articles: StoryArticle[]
@@ -181,6 +183,9 @@ export function EditorialDistrictMapHero({
 					dateLabel={dateLabel}
 				/>
 			)}
+			{/* Live Wire — Crossfire's sanitized publish feed (ADR-0001): the
+			    proof-strip directly under the Crossfire spread it evidences. */}
+			<WireTicker />
 			<Colophon issueLabel={issueLabel} dateLabel={dateLabel} />
 			{/* Build ticker last — sits at the very bottom of the page like a
 			    stock-ticker tape under the colophon. SpheresSpread (Prime
