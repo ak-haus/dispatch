@@ -13,6 +13,8 @@
     "preview": "astro preview",
     "typecheck": "astro check",
     "astro": "astro",
+    "e2e:build": "PUBLIC_WIRE_FEED_URL=https://wire-ledger.test/feed.json astro build",
+    "test:e2e": "pnpm e2e:build && playwright test",
     "commits:generate": "node scripts/generate-commits.mjs",
     "wire:snapshot": "node scripts/generate-wire-snapshot.mjs",
     "cartography:segment": "node scripts/segment-cartography.mjs",
@@ -55,6 +57,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.62.1",
     "@types/howler": "^2.2.13",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

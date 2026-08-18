@@ -43,3 +43,7 @@ coverage/
 
 # Storybook build output (PCP-168 corrective per Mayor 2026-05-10 Path B SOP)
 storybook-static/
+
+# Playwright (e2e — Golden Board A2)
+playwright-report/
+test-results/
