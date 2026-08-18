@@ -42,6 +42,12 @@ DTCG source here, and CI fails closed on any drift.
   cycle overrides live in tokens.css, OUTSIDE the theme block)
 - `dist/tokens.css` (`./css`) + `dist/tokens.theme.css` (`./theme`) for package
   consumers (Storybook preview, microsite-next)
+- `DESIGN.md` at the **repo root** — the S3 brand contract (ADR-0003 §Stage 7):
+  spec-shaped YAML token frontmatter (Google Labs DESIGN.md spec, register §6
+  house-hybrid) + house prose with pointers into
+  `representation/visual-system/`, rendered by `scripts/emit/layout-design-md.mjs`.
+  Committed, generated, never hand-edited; gate #8 (`design (contract drift
+  gate)`) rebuilds and fails closed on any diff.
 
 The `tokens (drift gate)` workflow rebuilds and `git diff --exit-code`s — red =
 do-not-merge. Emission strings (`$extensions.prime.css`) are validated for

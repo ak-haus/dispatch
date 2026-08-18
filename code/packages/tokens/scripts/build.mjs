@@ -20,8 +20,10 @@ import StyleDictionary from 'style-dictionary';
 import { collectByCssName, render } from './emit/emit.mjs';
 import { assembleTokensCss, DAWN, DUSK, NIGHT, SHADCN_DARK } from './emit/layout-tokens-css.mjs';
 import { THEME } from './emit/layout-theme-css.mjs';
+import { renderDesignMd } from './emit/layout-design-md.mjs';
 
 const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
+const repoRoot = join(pkgRoot, '../../..');
 const astroStyles = join(pkgRoot, '../../apps/microsite-astro/src/styles');
 const distDir = join(pkgRoot, 'dist');
 
@@ -117,12 +119,17 @@ const tokensCss = assembleTokensCss({
 });
 const themeCss = render(THEME.split('\n'), themeDict, { label: 'theme' });
 
+// S3 (ADR-0003 §Stage 7): the repo-root brand contract, emitted from the same
+// source. Committed + drift-gated (gate #8), never hand-edited.
+const designMd = renderDesignMd({ dawnTree, duskTree, nightTree });
+
 mkdirSync(distDir, { recursive: true });
 writeFileSync(join(astroStyles, 'tokens.css'), tokensCss);
 writeFileSync(join(astroStyles, 'tokens.theme.css'), themeCss);
+writeFileSync(join(repoRoot, 'DESIGN.md'), designMd);
 copyFileSync(join(astroStyles, 'tokens.css'), join(distDir, 'tokens.css'));
 copyFileSync(join(astroStyles, 'tokens.theme.css'), join(distDir, 'tokens.theme.css'));
 
 console.log(
-  `PRIME DISpatch token engine: tokens.css (${dawnCss.size} dawn + ${collectByCssName(duskTree).size} dusk + ${collectByCssName(nightTree).size} night + ${collectByCssName(shadcnTree).size} shadcn) + tokens.theme.css (${themeDict.size} slots) emitted → microsite-astro/src/styles + dist/.`,
+  `PRIME DISpatch token engine: tokens.css (${dawnCss.size} dawn + ${collectByCssName(duskTree).size} dusk + ${collectByCssName(nightTree).size} night + ${collectByCssName(shadcnTree).size} shadcn) + tokens.theme.css (${themeDict.size} slots) + DESIGN.md (${designMd.length} bytes) emitted → microsite-astro/src/styles + dist/ + repo root.`,
 );

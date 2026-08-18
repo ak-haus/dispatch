@@ -1,0 +1,33 @@
+name: design
+on: [push, pull_request]
+
+# The S3 contract drift gate (ADR-0003 §Stage 7, gate #8): the committed
+# repo-root DESIGN.md must be exactly what the DTCG source + emit layer
+# compile to. Rebuild → any diff on DESIGN.md = red = do-not-merge,
+# fail-closed — the same discipline as the seven live gates. This is the
+# mechanism that keeps the brand contract generated-from-canon, never
+# hand-held: a hand edit to DESIGN.md, or a source edit whose contract
+# regeneration was not committed, both fail here.
+jobs:
+  design:
+    name: design (contract drift gate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: tracked check — DESIGN.md must be committed (git diff cannot see an untracked file)
+        run: git ls-files --error-unmatch ../DESIGN.md
+      - run: pnpm --fail-if-no-match --filter @prime-dispatch/tokens build
+      - name: drift check — committed DESIGN.md must match the rebuild
+        run: git diff --exit-code -- ../DESIGN.md
