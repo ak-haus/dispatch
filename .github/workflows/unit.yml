@@ -1,10 +1,12 @@
 name: unit
 on: [push, pull_request]
 
-# Vitest unit suites (Golden Board A3): the live wire logic — store
+# Vitest unit suites: the live wire logic (Golden Board A3 — store
 # backoff/visibility discipline, the https content-trust contract guard,
-# and the snapshot script's keep-existing failure modes. Hermetic: fetch is
-# mocked or pointed at throwaway localhost servers; no credentials.
+# the snapshot script's keep-existing failure modes) and the packages/ui
+# component suite (Golden Board A5 — 99 tests, repaired from write-only).
+# Hermetic: fetch is mocked or pointed at throwaway localhost servers; no
+# credentials.
 jobs:
   unit:
     name: unit (vitest)
@@ -24,3 +26,4 @@ jobs:
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter microsite-astro test
+      - run: pnpm --filter @prime-dispatch/ui test

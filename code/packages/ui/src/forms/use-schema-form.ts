@@ -1,4 +1,4 @@
-import { useForm, type DefaultValues, type FieldValues } from "react-hook-form";
+import { useForm, type DefaultValues, type FieldValues, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 
@@ -17,15 +17,27 @@ import type { z } from "zod";
  *   form.register("email"); // typed
  *   form.handleSubmit((values) => { ... }); // values: { email: string; age: number }
  */
-export function useSchemaForm<TSchema extends z.ZodType<FieldValues>>(
+export function useSchemaForm<TSchema extends z.ZodType<FieldValues, FieldValues>>(
   schema: TSchema,
   options?: {
-    defaultValues?: DefaultValues<z.infer<TSchema>>;
+    defaultValues?: DefaultValues<z.input<TSchema>>;
     mode?: "onChange" | "onBlur" | "onSubmit" | "onTouched" | "all";
   },
 ) {
-  const form = useForm<z.infer<TSchema>>({
-    resolver: zodResolver(schema),
+  // Zod 4 schemas carry distinct input/output types (transforms). RHF's
+  // three generics thread them: raw form state is the schema INPUT; the
+  // values handed to a valid submit are the parsed OUTPUT.
+  // Boundary cast: over a GENERIC ZodType, zodResolver's inference collapses
+  // Input to plain FieldValues, which useForm's invariant ResolverOptions
+  // rejects. Concrete schemas at call sites infer exactly; the runtime
+  // contract is pinned by use-schema-form.test.tsx.
+  const resolver = zodResolver(schema) as unknown as Resolver<
+    z.input<TSchema>,
+    unknown,
+    z.output<TSchema>
+  >;
+  const form = useForm<z.input<TSchema>, unknown, z.output<TSchema>>({
+    resolver,
     defaultValues: options?.defaultValues,
     mode: options?.mode ?? "onSubmit",
   });
