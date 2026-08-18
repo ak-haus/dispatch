@@ -47,3 +47,6 @@ storybook-static/
 # Playwright (e2e — Golden Board A2)
 playwright-report/
 test-results/
+
+# Lighthouse CI artifacts (perf ratchet — Golden Board A4)
+.lighthouseci/

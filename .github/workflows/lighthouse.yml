@@ -1,0 +1,34 @@
+name: lighthouse
+on: [push, pull_request]
+
+# Perf budget as a ratchet (Golden Board A4): LCP/CLS/TBT + byte weight per
+# surface, ceilings pinned ~15-25% over the 2026-08-18 baseline so a
+# regression from today's floor fails CI. The known defects (home LCP,
+# article CLS) live on the Golden Board as repair rows — fixing them
+# tightens lighthouserc.cjs. Hermetic: static dist served locally.
+jobs:
+  lighthouse:
+    name: lighthouse (budget ratchet)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:astro
+      - run: pnpm --filter microsite-astro lighthouse
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: lighthouse-results
+          path: code/apps/microsite-astro/.lighthouseci/
+          retention-days: 7

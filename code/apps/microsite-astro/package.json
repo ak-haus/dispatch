@@ -13,6 +13,7 @@
     "preview": "astro preview",
     "typecheck": "astro check",
     "test": "vitest run",
+    "lighthouse": "lhci autorun",
     "astro": "astro",
     "e2e:build": "PUBLIC_WIRE_FEED_URL=https://wire-ledger.test/feed.json astro build",
     "test:e2e": "pnpm e2e:build && playwright test",
@@ -59,6 +60,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.13.0",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.62.1",
     "@types/howler": "^2.2.13",
     "@types/react": "^19.2.18",
