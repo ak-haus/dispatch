@@ -107,6 +107,66 @@ describe('generate-wire-snapshot failure modes', () => {
 		expect(readFileSync(outPath(), 'utf8')).toBe(EXISTING)
 	})
 
+	it('rail serves a non-https entry url → keeps existing (content-trust at the build boundary)', async () => {
+		seedExisting()
+		const entry = {
+			id: '2026-08-01-dev-to-x-deadbeef',
+			ts: '2026-08-01T12:00:00.000Z',
+			platform: 'dev-to',
+			kind: 'publish',
+			title: 'X',
+			url: 'javascript:alert(1)',
+		}
+		const url = await serve((res) => {
+			res.setHeader('content-type', 'application/json')
+			res.end(JSON.stringify({ ...VALID_FEED, entries: [entry] }))
+		})
+		const { stdout } = await run({ PUBLIC_WIRE_FEED_URL: url })
+		expect(stdout).toContain('feed shape invalid')
+		expect(readFileSync(outPath(), 'utf8')).toBe(EXISTING)
+	})
+
+	it('rail serves a non-publish entry kind → keeps existing', async () => {
+		seedExisting()
+		const entry = {
+			id: '2026-08-01-dev-to-x-deadbeef',
+			ts: '2026-08-01T12:00:00.000Z',
+			platform: 'dev-to',
+			kind: 'failure',
+			title: 'X',
+			url: 'https://dev.to/u/x',
+		}
+		const url = await serve((res) => {
+			res.setHeader('content-type', 'application/json')
+			res.end(JSON.stringify({ ...VALID_FEED, entries: [entry] }))
+		})
+		const { stdout } = await run({ PUBLIC_WIRE_FEED_URL: url })
+		expect(stdout).toContain('feed shape invalid')
+		expect(readFileSync(outPath(), 'utf8')).toBe(EXISTING)
+	})
+
+	it('healthy rail with a contract-valid entry → captured, not over-rejected', async () => {
+		seedExisting()
+		const entry = {
+			id: '2026-08-01-dev-to-a-fine-post-deadbeef',
+			ts: '2026-08-01T12:00:00.000Z',
+			platform: 'dev-to',
+			kind: 'publish',
+			title: 'A Fine Post',
+			url: 'https://dev.to/u/post-4242',
+			excerpt: 'The body.',
+			pipeline_run: 'run-abcdef012345',
+		}
+		const live = { ...VALID_FEED, generatedAt: '2026-08-18T15:00:00.000Z', entries: [entry] }
+		const url = await serve((res) => {
+			res.setHeader('content-type', 'application/json')
+			res.end(JSON.stringify(live))
+		})
+		const { stdout } = await run({ PUBLIC_WIRE_FEED_URL: url })
+		expect(stdout).toContain('captured 1 entries')
+		expect(JSON.parse(readFileSync(outPath(), 'utf8'))).toEqual(live)
+	})
+
 	it('rail serves non-JSON → keeps existing, exit 0', async () => {
 		seedExisting()
 		const url = await serve((res) => {

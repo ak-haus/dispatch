@@ -58,12 +58,28 @@ try {
 	const res = await fetch(url, { signal: AbortSignal.timeout(10_000) })
 	if (!res.ok) keepExisting(`feed responded ${res.status}`)
 	const feed = await res.json()
+	// Full contract check (src/lib/wire/contract.ts, mirrored): the snapshot is
+	// PRERENDERED into build HTML, so a bad entry here bypasses the runtime
+	// guard in store.ts — the https rule is a content-trust boundary, not a
+	// type nicety. Reject the feed whole, same posture as the consumer.
+	const isEntry = (e) =>
+		e !== null &&
+		typeof e === 'object' &&
+		typeof e.id === 'string' &&
+		typeof e.ts === 'string' &&
+		typeof e.platform === 'string' &&
+		e.kind === 'publish' &&
+		typeof e.title === 'string' &&
+		typeof e.url === 'string' &&
+		e.url.startsWith('https://') &&
+		(e.excerpt === undefined || typeof e.excerpt === 'string')
 	const valid =
 		feed !== null &&
 		typeof feed === 'object' &&
 		feed.schemaVersion === 1 &&
 		typeof feed.generatedAt === 'string' &&
-		Array.isArray(feed.entries)
+		Array.isArray(feed.entries) &&
+		feed.entries.every(isEntry)
 	if (!valid) keepExisting('feed shape invalid')
 	mkdirSync(dirname(OUT), { recursive: true })
 	writeFileSync(OUT, JSON.stringify(feed, null, 2))
