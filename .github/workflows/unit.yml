@@ -1,0 +1,26 @@
+name: unit
+on: [push, pull_request]
+
+# Vitest unit suites (Golden Board A3): the live wire logic — store
+# backoff/visibility discipline, the https content-trust contract guard,
+# and the snapshot script's keep-existing failure modes. Hermetic: fetch is
+# mocked or pointed at throwaway localhost servers; no credentials.
+jobs:
+  unit:
+    name: unit (vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter microsite-astro test
