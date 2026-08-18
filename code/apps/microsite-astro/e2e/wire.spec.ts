@@ -23,7 +23,7 @@ test('polls the stubbed rail on mount and goes live', async ({ page }) => {
 	await expect(page.getByRole('link', { name: entry.title })).toBeVisible()
 })
 
-test('pause freezes the displayed feed; resume jumps to current', async ({ page }) => {
+test('pause freezes the displayed feed; resume snaps to current with a multi-entry backlog', async ({ page }) => {
 	const first = makeEntry(1, 30)
 	await serveWireFeed(page, makeFeed([first]))
 	await page.goto('/wire')
@@ -34,24 +34,40 @@ test('pause freezes the displayed feed; resume jumps to current', async ({ page 
 	await pauseToggle.click()
 	await expect(pauseToggle).toHaveAttribute('aria-pressed', 'true')
 
-	// A new publish lands on the rail while paused.
-	const fresh = makeEntry(2, 0)
-	await serveWireFeed(page, makeFeed([fresh, first]))
+	// TWO new publishes land on the rail while paused (A13 sharpening: a
+	// single pending entry cannot distinguish snap-to-current from a backlog
+	// drain-replay — both converge to the same end state at n=1).
+	const fresh2 = makeEntry(2, 1)
+	const fresh3 = makeEntry(3, 0)
+	await serveWireFeed(page, makeFeed([fresh3, fresh2, first]))
 
 	// Sit out the store's 5s revalidate throttle, then trigger its focus
 	// revalidation path — deterministic, no 30s poll wait.
 	await page.waitForTimeout(5_100)
 	await page.evaluate(() => window.dispatchEvent(new Event('focus')))
 
-	// The store saw the new entry (pending count on the button) but the
-	// displayed frame is frozen — the fresh title must NOT render yet.
-	await expect(pauseToggle).toContainText('1 new')
-	await expect(page.getByRole('link', { name: fresh.title })).toHaveCount(0)
+	// The store counted BOTH pending entries but the displayed frame is
+	// frozen — neither fresh title may render yet.
+	await expect(pauseToggle).toContainText('2 new')
+	await expect(page.getByRole('link', { name: fresh2.title })).toHaveCount(0)
+	await expect(page.getByRole('link', { name: fresh3.title })).toHaveCount(0)
 
-	// Resume = jump to CURRENT (never a backlog replay).
+	// Resume = jump to CURRENT (never a backlog replay): the whole current
+	// frame renders at once — every entry exactly once (no replay
+	// duplication), feed-order preserved, and the ARIA set describes the
+	// full current frame.
 	await pauseToggle.click()
-	await expect(page.getByRole('link', { name: fresh.title })).toBeVisible()
+	await expect(page.getByRole('link', { name: fresh3.title })).toBeVisible()
+	await expect(page.getByRole('link', { name: fresh2.title })).toBeVisible()
+	await expect(page.getByRole('link', { name: first.title })).toBeVisible()
 	await expect(pauseToggle).toHaveAttribute('aria-pressed', 'false')
+
+	const feedArticles = page.locator('article[aria-posinset]')
+	await expect(feedArticles).toHaveCount(3)
+	const ids = await feedArticles.evaluateAll((els) => els.map((el) => el.id))
+	expect(new Set(ids).size, 'no entry may render twice (replay duplication)').toBe(3)
+	expect(ids, 'current-feed order, newest first').toEqual(['e2e-fixture-3', 'e2e-fixture-2', 'e2e-fixture-1'])
+	await expect(feedArticles.first()).toHaveAttribute('aria-setsize', '3')
 })
 
 test('/wire holds the axe WCAG floor', async ({ page }, testInfo) => {

@@ -257,7 +257,10 @@ function SearchTrigger({
 			type="button"
 			aria-haspopup="dialog"
 			aria-expanded={paletteOpen}
-			aria-controls="dispatch-search-palette"
+			/* aria-controls only while the palette is open: a closed <dialog> is
+			   display:none, so the reference target is unperceivable to AT (and
+			   axe marks the pair undeterminable — A13 incomplete assertion). */
+			aria-controls={paletteOpen ? 'dispatch-search-palette' : undefined}
 			aria-label="Search DISpatch (press Ctrl+K or Cmd+K)"
 			onClick={() => onOpen?.()}
 			className={[
