@@ -38,6 +38,14 @@ jobs:
         run: pnpm --filter storybook exec playwright install chromium --with-deps
       - name: story tests — every story renders + a11y green (addon-vitest)
         run: pnpm --fail-if-no-match --filter storybook test
+      - name: isolation canary — a single story file must pass ALONE
+        # Order-dependence detector: the suite's shared context (isolate:false)
+        # can mask per-file defects that fire when a file runs first — the
+        # 2026-08-19 mid-flight motion-scan failure surfaced exactly this way
+        # (fails alone, passes in the suite). One cold file run keeps the
+        # masking class visible; the settle discipline in vitest.setup.ts is
+        # the cure this canary guards.
+        run: pnpm --fail-if-no-match --filter storybook exec vitest run ../../packages/ui/src/components/custom/AgentTraceCallout/AgentTraceCallout.stories.tsx
       - name: storybook build — the static artifact the S1 story lane consumes
         run: pnpm --fail-if-no-match --filter storybook build
       - name: upload static storybook (S1 story-lane input)
