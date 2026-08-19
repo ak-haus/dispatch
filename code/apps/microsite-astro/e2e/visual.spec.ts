@@ -133,6 +133,15 @@ const FIGURE_CASES = [
  * explicit per-element wait, the same discipline the story rail uses.
  */
 async function settleFigure(page: import('@playwright/test').Page, kase: string) {
+	// The masthead is sticky, and a plate taller than the viewport forces
+	// Playwright to stitch the element capture across scroll positions — so
+	// the chrome band lands INSIDE the component's baseline (observed on the
+	// first CI-linux generation, 2026-08-19). A component lock must isolate
+	// the component: page chrome has its own locks above, and letting it bleed
+	// in here would fail the figure gate on any masthead edit.
+	await page.locator('header').evaluate((el) => {
+		;(el as HTMLElement).style.display = 'none'
+	})
 	const figure = page.locator(`[data-figure-case="${kase}"] .prime-figure`)
 	await figure.scrollIntoViewIfNeeded()
 	await expect(figure).toHaveCSS('opacity', '1')

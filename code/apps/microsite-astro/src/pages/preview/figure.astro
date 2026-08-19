@@ -26,6 +26,12 @@ import { ImageWithCaption } from '@prime-dispatch/ui/custom/ImageWithCaption'
  *
  * Determinism (the flake law): every figure is `loading="eager"` so the pixel
  * capture never races a lazy decode, and no live data touches this page.
+ *
+ * Each case is bounded to the article measure rather than the full page
+ * width. Two reasons: the variants are only comparable at one width, and an
+ * unbounded cartography plate produced a multi-megabyte pixel baseline on the
+ * first CI generation. The bound is page layout — a component never sets its
+ * own measure.
  */
 
 const CARTOGRAPHY = '/cartography/district.webp'
@@ -65,7 +71,7 @@ const provenance = {
 			>. Four variants, distinguished by the caption's voice, never by chrome.
 		</p>
 
-		<div class="mt-16" data-figure-case="default">
+		<div class="mt-16 max-w-[42rem]" data-figure-case="default">
 			<p
 				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
 			>
@@ -80,7 +86,7 @@ const provenance = {
 			/>
 		</div>
 
-		<div class="mt-16" data-figure-case="meta-terminal">
+		<div class="mt-16 max-w-[42rem]" data-figure-case="meta-terminal">
 			<p
 				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
 			>
@@ -96,7 +102,7 @@ const provenance = {
 			/>
 		</div>
 
-		<div class="mt-16" data-figure-case="cartography-frame">
+		<div class="mt-16 max-w-[42rem]" data-figure-case="cartography-frame">
 			<p
 				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
 			>
@@ -112,7 +118,7 @@ const provenance = {
 			/>
 		</div>
 
-		<div class="mt-16" data-figure-case="photograph">
+		<div class="mt-16 max-w-[42rem]" data-figure-case="photograph">
 			<p
 				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
 			>
