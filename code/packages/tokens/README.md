@@ -60,11 +60,13 @@ CSS can never fork.
 label/body-size copper text and label-bearing fills; display copper stays canon
 (#b87333, ≥3:1 large-text). `--platform-on-copper` is the single on-fill text
 role. `--dispatch-text-body-muted-deep` (0.46) covers tinted panels. Dusk/night
-variants alias cycle canon (already AA). Filed, not fixed: dusk/night `faint`
-sits at 3.34/3.52:1 (pre-existing canon, D1-gate decision); the un-valued
-`--chrome-*`/`--surface-*`/`--rail-edge`/`--grid-line` slot names (S5 gap);
-the Body=Inter-vs-Crimson-Pro and Google-Fonts-CDN-vs-self-host canon
-contradictions (typography.json `$description`s).
+variants alias cycle canon (already AA). The S2 filings are now RULED (AK
+2026-08-18 — DESIGN.md §Adjudicated questions): dusk/night `faint` (3.34/3.52:1)
+gains AA cycle variants at the S5 pre-step (OQ-3); the un-valued
+`--chrome-*`/`--surface-*`/`--rail-edge`/`--grid-line` slots ratify as
+provisionally-bound aliases at the S5 pre-step (OQ-4); Body restores to Crimson
+Pro and the OFL families self-host at the fonts restoration build (OQ-1/OQ-2).
+Live values stay transcribed until each execution lands.
 
 Legacy `tokens.toon` / `tokens.tailwind.config.ts` emissions and their W2
 fixtures were retired with the bridge (no consumers existed).

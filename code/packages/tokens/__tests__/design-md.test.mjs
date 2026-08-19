@@ -75,11 +75,13 @@ test('the read-before-generate directive leads the document', () => {
   );
 });
 
-test('the four S2-filed open questions are surfaced, not decided', () => {
+test('the four S2-filed questions carry the AK rulings of 2026-08-18', () => {
+  assert.ok(body.includes('## Adjudicated questions'), 'adjudicated-questions section missing');
   for (const oq of ['### OQ-1', '### OQ-2', '### OQ-3', '### OQ-4']) {
     assert.ok(body.includes(oq), `${oq} missing`);
   }
-  assert.ok(body.includes('surfaced, not decided'), 'open questions must be framed as undecided');
+  const rulings = body.match(/DECIDED \(AK 2026-08-18\)/g) ?? [];
+  assert.equal(rulings.length, 4, `expected 4 rulings, saw ${rulings.length}`);
 });
 
 test('spec sections appear in the Google Labs canonical order', () => {
