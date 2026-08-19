@@ -34,6 +34,36 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
+      # Playwright browsers are CACHED, not re-downloaded every run. The
+      # `playwright install` step hits Playwright's CDN, and that CDN stalls:
+      # three occurrences on record (23min on dispatch#16, 78min at the fonts
+      # build, 3h39m on the S4 e2e lane 2026-08-19) where the step hung with
+      # no output and no timeout, so the only remedy was a human noticing and
+      # cancelling. A cache hit removes the download entirely.
+      #
+      # Keyed on the RESOLVED Playwright version, not the lockfile hash: the
+      # browser build a release pins is what the cache holds, so an unrelated
+      # dependency bump must not evict it.
+      #
+      # `install-deps` still runs on a hit — the browser binaries live in
+      # ~/.cache/ms-playwright and are cached, but the OS-level libraries
+      # `--with-deps` installs come from apt and are not.
+      - name: resolve the pinned Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm --fail-if-no-match --filter microsite-astro exec node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: restore the Playwright browser cache
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+      - name: install chromium (cache miss only)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 10
+        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
+      - name: system libraries for the cached chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        timeout-minutes: 10
+        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
       - name: JS-death detector (hydration smoke)
         run: pnpm --fail-if-no-match --filter microsite-astro smoke:prod
