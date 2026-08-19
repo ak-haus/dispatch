@@ -139,7 +139,7 @@
                 88
               ]
             },
-            "$description": "Faint ink — tertiary whisper register (separators, end-lines, footer chrome). 5.33:1 on sky-low: AA on the vellum substrate. NOTE (filed S2): the dusk (3.34:1) and night (3.52:1) cycle values sit below 4.5:1 at 12px — a pre-existing canon condition recorded for the D1 gate, not silently changed here.",
+            "$description": "Faint ink — tertiary whisper register (separators, end-lines, footer chrome). 5.33:1 on sky-low: AA on the vellum substrate. The dusk/night cycle values are AA cycle variants per OQ-3 (AK 2026-08-18, executed S5): 4.62:1 / 4.72:1 on cycle vellum-25, asserted per-node in __tests__/contrast.test.mjs.",
             "$extensions": {
               "prime": {
                 "tier": "dispatch",

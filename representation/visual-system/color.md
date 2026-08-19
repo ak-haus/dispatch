@@ -1128,6 +1128,39 @@ New platform-tier tokens: `--platform-copper-deep` `#8b5224` + `--platform-accen
 - `representation/visual-system/typography/css/fonts.css` already applies `.wordmark-patch { font-size: 1.08em }` and nav state arc inline.
 - W2-S-F instance work record at `archive/cc-ledger/diffs/W2-S-F/cd2-color-amendment-proposal.md` is now superseded by this Decision 12 canon-promotion; the proposal file vaporizes per Mayor 2026-05-13 furnace discipline (load-bearing content has landed in canon).
 
+### Decision 13 — Semantic slots ratified as provisionally-bound aliases (OQ-4) + faint AA cycle variants (OQ-3)
+
+**Decision (AK 2026-08-18, OQ rulings; executed S5 pre-step).** Two parts, one canon promotion:
+
+**13a — Semantic slot aliases (OQ-4).** The ten forward-declared semantic slot names — `--surface-page`, `--surface-inset`, `--rail-edge`, `--chrome-text`, `--chrome-text-hover`, `--chrome-text-active`, `--chrome-background`, `--chrome-border`, `--chrome-indicator`, `--grid-line` — are RATIFIED as DTCG aliases with **provisional bindings** into the ratified vellum/chrome/ink palette (source: `code/packages/tokens/src/color/ui-slots.json`). Bindings at ratification:
+
+| Slot | Provisional binding | Grounding |
+|---|---|---|
+| `--surface-page` | `vellum-100` | its own canon role: "the page substrate" (§2.2) |
+| `--surface-inset` | `vellum-50` | the one step whose elevation ordinal holds in all three cycles |
+| `--rail-edge` | `vellum-300` | §4.5.1 window-warm: "card edges / footer" register (census 2026-08-18: ×19 across 7 components, hairline borders) |
+| `--chrome-text` | `platform-copper-label` | Decision 12c nav-copper default, F5-size-scoped at label size (register §10) |
+| `--chrome-text-hover` | `platform-copper-deep` | Decision 12c state arc |
+| `--chrome-text-active` | `platform-accent-prime-active` | Decision 12c state arc |
+| `--chrome-background` | `vellum-25` | §4.5.2 sky-high plane, where masthead chrome sits |
+| `--chrome-border` | `vellum-300` | same edge register as rail-edge; census may split |
+| `--chrome-indicator` | `platform-accent-prime` | Decision 12c focus + §4.3 lane-dispatch critical-interaction rings |
+| `--grid-line` | `vellum-200` | reflect stratum — architectural lot-line whisper, one step quieter than the edge register |
+
+**13b — Faint AA cycle variants (OQ-3).** `--dispatch-text-body-faint` dusk/night cycle values are lifted to AA within their ink families (C/H held, lightness only — the mechanical mirror of executed F5): dusk `oklch(0.56 0.014 65)` → `oklch(0.64 0.014 65)` (3.34:1 → 4.62:1 on dusk vellum-25); night `oklch(0.52 0.005 80)` → `oklch(0.59 0.005 80)` (3.52:1 → 4.72:1 on night vellum-25). Emphasis ordinal preserved: faint < muted < strong per cycle.
+
+**Reasoning (AK 2026-08-18 OQ adjudication, cited research pass).** (1) OQ-4: DTCG 2025.10 makes unresolvable references a MUST-error — bare-name ratification is not a legitimate intermediate state; consumers (`var(--rail-edge)` ×19, `var(--chrome-text)`, `var(--surface-page)`, `var(--surface-inset)`) resolved to nothing. Material 3 (`md.ref`→`md.sys`→`md.comp`), Polaris, Spectrum, and SLDS 2 all publish the semantic middle tier as the stable contract; the AI-agent literature shows agents resolve against semantic names and hardcode primitives without them. Provisional-bind-then-census is the tier's own amendment mechanism: a re-point is a one-line alias edit, never a new value. (2) OQ-3: WCAG 1.4.3 AA is 4.5:1 for normal text with no dark-mode discount; the live faint consumers sit at 12px. Material dark-theme emphasis tiers dim from a high-contrast ceiling — halation is managed above AA, never below it. Restricting faint to large-text consumers was rejected (forces the same consumer edits while deleting a token role the light theme already proved).
+
+**Scope rider (standing).** `--chrome-*` stays this small named set; NO per-component token tier until multi-brand pain exists (the over-engineering warnings in the tier literature target the component tier, not semantic). New slot names route through this ledger, never through bridge edits (construction-rules Rule 4 discipline).
+
+**Standing history.** The W2 census forward-declarations (ui-slots.json `$description`, "filed as an S5 gap rather than invented") are superseded by this ratification. The S2-filed faint NOTE lines (dusk.json / night.json / dispatch.json `$description`s) are superseded by the executed variants. The S5 story census amends any provisional binding the rendered evidence disagrees with — each amendment appends its evidence line here.
+
+**Cross-surface signals.**
+- `code/packages/tokens/src/color/ui-slots.json` + `src/cycles/{dusk,night}.json` carry the source edits; `dist/tokens.css` + `DESIGN.md` re-emitted same commit (drift gates #7/#8 hold them byte-exact).
+- `code/packages/tokens/__tests__/contrast.test.mjs` gains the OQ-3 per-node AA assertions (vellum-25/-50/-100 per cycle), the chrome-text slot-chain assertions per cycle, and the faint<muted emphasis-ordinal guard; the former FILED-guard test is deleted (its condition executed).
+- Storybook preview (`apps/storybook/.storybook/preview.tsx`) paints `var(--surface-page)` — honest for the first time with this binding.
+- MANIFEST.yaml `deferred-mayor-adjudication` (cycle canon-promotion to §2.5) is UNCHANGED by 13b: the faint lift amends the shipped bridge truth the same way amend-2 did; full cycle promotion remains deferred.
+
 ---
 
 ## §11 — Done criteria

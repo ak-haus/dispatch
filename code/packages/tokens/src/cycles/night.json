@@ -272,19 +272,19 @@
             "$value": {
               "colorSpace": "oklch",
               "components": [
-                0.52,
+                0.59,
                 0.005,
                 80
               ]
             },
-            "$description": "Whisper register. NOTE (filed S2): 3.52:1 on night vellum-25 — below 4.5:1 at 12px; pre-existing canon condition recorded for the D1 gate.",
+            "$description": "Whisper register — OQ-3 AA cycle variant (mirror of executed F5): C/H held at the amend-2 void family, lightness lifted 0.52→0.59 for 4.72:1 on night vellum-25 (worst surface; 4.94 on -50, 5.05 on -100). Emphasis ordinal preserved: faint 0.59 < muted 0.72 < strong 0.96. Per-node math in __tests__/contrast.test.mjs.",
             "$extensions": {
               "prime": {
                 "tier": "dispatch",
                 "cycle": "night",
                 "cssName": "dispatch-text-body-faint",
-                "css": "oklch(0.52 0.005 80)",
-                "ratified-at": "amend 2 (2026-05-14)"
+                "css": "oklch(0.59 0.005 80)",
+                "ratified-at": "OQ-3 (AK 2026-08-18) — executed S5; supersedes amend 2 (2026-05-14)"
               }
             }
           },

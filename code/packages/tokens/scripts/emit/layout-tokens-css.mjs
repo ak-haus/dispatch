@@ -149,11 +149,7 @@ export const DAWN = `:root {
    * packages/ui component CSS and microsite-next's @theme bridge, undefined
    * since the tiered rename (census 2026-08-18). Aliases resolve to tiered
    * canon so Storybook / ui / next render honestly; the cycle blocks need no
-   * overrides here — the cascade follows the tiered tokens. Deliberately
-   * ABSENT (no defined value exists anywhere in repo or archive history;
-   * filed as an S5 gap rather than invented): --chrome-text(-hover/-active),
-   * --chrome-background, --chrome-border, --chrome-indicator, --surface-page,
-   * --surface-inset, --rail-edge, --grid-line.
+   * overrides here — the cascade follows the tiered tokens.
    * ========================================================================== */
   --accent-prime:        {css};
   --accent-prime-active: {css};
@@ -173,6 +169,26 @@ export const DAWN = `:root {
   --vellum-100:          {css};
   --vellum-200:          {css};
   --vellum-300:          {css};
+
+  /* ==========================================================================
+   * SEMANTIC SLOTS — ratified per OQ-4 (AK 2026-08-18, CD2 §10 Decision 13)
+   * as aliases with PROVISIONAL bindings into the ratified palette (the
+   * Material/Polaris/Spectrum/SLDS middle tier). Formerly forward-declared
+   * with no value anywhere (construction-rules Rules 1+5; the W2 census).
+   * The S5 story census amends any binding the rendered evidence disagrees
+   * with — a one-line re-point per alias in src/color/ui-slots.json, never a
+   * new value. var() chains re-resolve per cycle; no cycle overrides needed.
+   * ========================================================================== */
+  --surface-page:       {css};
+  --surface-inset:      {css};
+  --rail-edge:          {css};
+  --chrome-text:        {css};
+  --chrome-text-hover:  {css};
+  --chrome-text-active: {css};
+  --chrome-background:  {css};
+  --chrome-border:      {css};
+  --chrome-indicator:   {css};
+  --grid-line:          {css};
 
   /* ==========================================================================
    * TYPOGRAPHY SLOTS (root-emitted) — canon slot names consumed directly by
