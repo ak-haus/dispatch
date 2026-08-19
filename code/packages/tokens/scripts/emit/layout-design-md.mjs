@@ -451,8 +451,8 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
 - Runtime font CDNs — canon mandates self-hosted WOFF2: every family's mirror row is marked
   "static asset only" (Vollkorn's adds "NO runtime CDN" — fonts.md), procurement prefers
   official upstream over the Google Fonts CDN (typography/README.md, CD2 §5.3 sovereignty
-  path). The live surface currently violates this — see OQ-2; the canon side is the law until
-  AK rules otherwise.
+  path). The live surface complies — every family self-hosts from \`/fonts/\` (OQ-2, executed
+  at the fonts restoration build).
 
 ## Adjudicated questions — AK rulings, 2026-08-18
 
@@ -460,31 +460,36 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
 > \`$description\`s), surfaced at S3 per ADR-0003 §Stage 7, and **RULED by AK on 2026-08-18**
 > after a cited research pass (peer-publication production CSS · LG München I + Chrome cache
 > partitioning · WCAG 2.2 + Material dark-theme guidance · DTCG 2025.10 +
-> Material/Polaris/Spectrum/SLDS tier practice). OQ-3 and OQ-4 are EXECUTED (S5 pre-step);
-> OQ-1 and OQ-2 execute at the fonts restoration build — until then this contract keeps
-> reporting the SHIPPED truth for them; do not pre-implement ad hoc.
+> Material/Polaris/Spectrum/SLDS tier practice). All four are EXECUTED — OQ-3 and OQ-4 at the
+> S5 pre-step, OQ-1 and OQ-2 at the fonts restoration build. This contract reports the shipped
+> truth for each.
 
-### OQ-1 · Body family — DECIDED (AK 2026-08-18): restore Crimson Pro
+### OQ-1 · Body family — DECIDED (AK 2026-08-18): restore Crimson Pro — EXECUTED (fonts build)
 
 Canon locks Body = **Crimson Pro** (typography/fonts.md §Body, LOCKED V1; CD2 §5.3 + §10
-Decision 7c); the live app ships \`--font-body: 'Inter', …\`. **Ruling:** restore the reading
-serif — self-hosted Crimson Pro variable WOFF2 at the body slot; Inter stays at nav/UI where
-canon places it. Evidence: all five register peers (NYT · New Yorker · Atlantic · Quanta ·
-Stripe Press) ship serif prose with sans confined to UI (production CSS fetched 2026-08-18);
-screen-readability science is neutral, so register convention governs. **Executes at:** the
-fonts restoration build (board opener after S5, before S1 captures visual baselines). The
-frontmatter above carries Inter until that build lands.
+Decision 7c); the live app shipped \`--font-body: 'Inter', …\`. **Ruling:** restore the reading
+serif — self-hosted Crimson Pro at the body slot; Inter stays at nav/UI where canon places it.
+Evidence: all five register peers (NYT · New Yorker · Atlantic · Quanta · Stripe Press) ship
+serif prose with sans confined to UI (production CSS fetched 2026-08-18); screen-readability
+science is neutral, so register convention governs. **Executed at the fonts restoration
+build:** \`--font-body\` re-keyed to \`'Crimson Pro', 'Iowan Old Style', Georgia, 'Times New
+Roman', serif\` (the canon css/fonts.css chain); the five canon body cuts (400/400i/600/700/
+700i) self-host from \`/fonts/body/\` with Regular preloaded as a first-paint critical weight.
+The frontmatter above carries the shipped Crimson Pro stack.
 
-### OQ-2 · Font delivery — DECIDED (AK 2026-08-18): execute self-hosting
+### OQ-2 · Font delivery — DECIDED (AK 2026-08-18): execute self-hosting — EXECUTED (fonts build)
 
 Canon mandates self-hosted WOFF2 (typography/fonts.md; typography/README.md
-\`build/procure.sh\`, CD2 §5.3 sovereignty path); the live app loads the OFL families from the
-Google Fonts CDN at runtime. **Ruling:** execute the self-host wiring — Astro's core Fonts API
-or static WOFF2 in \`public/fonts/\` matching the shipped PP-premium pattern. Evidence: the
-LG München I (2022) GDPR position stands; Chrome 86 cache partitioning removed the CDN's
-performance argument while the render-blocking \`@import\` at \`global.css:1\` adds two extra
-origins; CI is already hermetic-fontless. **Executes at:** the same fonts restoration build as
-OQ-1 — one wiring change lands both.
+\`build/procure.sh\`, CD2 §5.3 sovereignty path); the live app loaded the OFL families from the
+Google Fonts CDN at runtime. **Ruling:** execute the self-host wiring — static WOFF2 in
+\`public/fonts/\` matching the shipped PP-premium pattern. Evidence: the LG München I (2022)
+GDPR position stands; Chrome 86 cache partitioning removed the CDN's performance argument
+while the render-blocking \`@import\` at \`global.css:1\` added two extra origins; CI is
+hermetic-fontless. **Executed at the fonts restoration build:** the \`@import\` is gone; the 13
+checksum-verified canon cuts (typography/subsets/, build/subset-checksums.txt) serve from
+\`/fonts/<surface>/\` beside the PP premium rail, declared via canon-mirrored \`@font-face\`
+(unicode-range + \`font-display: swap\`) with the canon critical-weight preloads (Body + Title
++ Nav + Wordmark) in the shared head. Zero runtime font origins remain.
 
 ### OQ-3 · Dusk/night faint ink — DECIDED (AK 2026-08-18): AA cycle variants — EXECUTED (S5)
 

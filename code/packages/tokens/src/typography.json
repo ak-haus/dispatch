@@ -61,19 +61,20 @@
       "body": {
         "$type": "fontFamily",
         "$value": [
-          "Inter",
-          "system-ui",
-          "-apple-system",
-          "sans-serif"
+          "Crimson Pro",
+          "Iowan Old Style",
+          "Georgia",
+          "Times New Roman",
+          "serif"
         ],
-        "$description": "Body slot — LIVE stack (Inter). CONTRADICTS canon Body=Crimson Pro (Decision 7c) — DECIDED by AK 2026-08-18 (DESIGN.md OQ-1): restore Crimson Pro, self-hosted; executes at the fonts restoration build (after S5, before S1 baselines). Live value stays transcribed here until that build lands.",
+        "$description": "Body slot — Crimson Pro (reading serif, DISpatch-locked). Canon Body=Crimson Pro (Decision 7c) restored per AK ruling 2026-08-18 (DESIGN.md OQ-1), executed at the fonts restoration build: self-hosted WOFF2 cuts (400/400i/600/700/700i) served from /fonts/body/. Fallback chain per canon css/fonts.css --font-body. Inter stays at the nav/UI slots where canon places it.",
         "$extensions": {
           "prime": {
             "tier": "dispatch",
             "cssName": "font-body",
-            "css": "'Inter', system-ui, -apple-system, sans-serif",
+            "css": "'Crimson Pro', 'Iowan Old Style', Georgia, 'Times New Roman', serif",
             "theme": true,
-            "ratified-at": "live stack (global.css @theme) — canon contradiction FILED at S2"
+            "ratified-at": "CD2 §10 Decision 7c (Body=Crimson Pro lock); OQ-1 executed at the fonts restoration build"
           }
         }
       },
@@ -205,6 +206,6 @@
         }
       }
     },
-    "$description": "Typography tokens — DTCG 2025.10. Family slots carry the LIVE shipped stacks (global.css @theme + @font-face, the rendering truth: zero visual change law) for the six live slots, plus the two canon slots (title/code) the packages/ui components consume. The S2-filed contradictions are DECIDED (AK 2026-08-18, DESIGN.md OQ-1/OQ-2): Body restores to Crimson Pro and the OFL families move to self-hosted WOFF2, both executing at the fonts restoration build (after S5, before S1 baselines). The live values stay transcribed here until that build lands — this file never leads the shipped truth."
+    "$description": "Typography tokens — DTCG 2025.10. Family slots carry the LIVE shipped stacks (global.css @theme + @font-face, the rendering truth) for the six live slots, plus the two canon slots (title/code) the packages/ui components consume. The S2-filed contradictions are EXECUTED (fonts restoration build, per AK rulings 2026-08-18, DESIGN.md OQ-1/OQ-2): Body = Crimson Pro and every family self-hosts as WOFF2 subsets from /fonts/ — the canon cuts from representation/visual-system/typography/subsets/. This file never leads the shipped truth."
   }
 }
