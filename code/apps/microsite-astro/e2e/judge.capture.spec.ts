@@ -26,6 +26,28 @@ const VIEWPORTS = [
 	{ label: 'mobile', width: 375, height: 812 },
 ] as const
 
+/**
+ * The cover wordmark animates in letter by letter through Motion, with the
+ * last letter starting at 1.29s and running 0.85s. Those are main-thread rAF
+ * animations, so getAnimations() never sees them and settleMotion returns
+ * long before they finish — which is why every home capture in the evidence
+ * packet so far has shown an EMPTY cover: the hairline rule, the substrate,
+ * and no wordmark at all (found 2026-08-19, reviewing the packet AK judges).
+ * Wait for the letters themselves. No-op on surfaces without a cover.
+ */
+async function settleCoverWordmark(page: import('@playwright/test').Page): Promise<void> {
+	await page.waitForFunction(
+		() => {
+			const letters = Array.from(
+				document.querySelectorAll('h1[aria-label="DISpatch"] span.inline-block'),
+			)
+			return letters.every((s) => Number(getComputedStyle(s).opacity) === 1)
+		},
+		undefined,
+		{ timeout: 10_000 },
+	)
+}
+
 async function capture(
 	page: import('@playwright/test').Page,
 	name: string,
@@ -58,6 +80,7 @@ for (const vp of VIEWPORTS) {
 		test(`home cover + mid-scroll (${vp.label})`, async ({ page }) => {
 			await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
 			await page.goto('/')
+			await settleCoverWordmark(page)
 			await capture(page, `home-cover-${vp.label}`)
 			// Mid-scroll state: the article/DLDS spread region. Native scrollTo —
 			// Lenis syncs from native scroll; settleMotion absorbs the smoothing.
