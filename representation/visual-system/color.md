@@ -1155,6 +1155,19 @@ New platform-tier tokens: `--platform-copper-deep` `#8b5224` + `--platform-accen
 
 **Standing history.** The W2 census forward-declarations (ui-slots.json `$description`, "filed as an S5 gap rather than invented") are superseded by this ratification. The S2-filed faint NOTE lines (dusk.json / night.json / dispatch.json `$description`s) are superseded by the executed variants. The S5 story census amends any provisional binding the rendered evidence disagrees with — each amendment appends its evidence line here.
 
+**Census verdict (S5, 2026-08-18 — the rider Decision 13a mandated).** The 343-story rendered
+evidence (46 story files, story-test rail with axe-as-error) confirms all ten provisional
+bindings; **zero re-points**. Per-slot: `--rail-edge` ×19 hairline consumers across 7 components
+render as the intended paper-weight edge (its two ornament `color:` uses drew no axe finding);
+`--surface-page`/`--surface-inset` hold the elevation ordinal in all three cycles;
+`--chrome-text` (→ copper-label) holds AA on surface-page/surface-inset per cycle
+(gate-asserted) — its failure on the *window-warm tinted panel* is a pre-existing canon gap
+(no AA copper rung exists on vellum-300), FILED as OQ-5 with OQ-6 (dark-cycle wine register vs
+axe's WCAG fallback; the wordmark carries the Decision 4/12 APCA γ exception) for Mayor
+adjudication — a binding re-point could not fix it without crossing the Decision 12c
+copper/wine register boundary. The four not-yet-consumed slots (`--chrome-background`,
+`--chrome-border`, `--chrome-indicator`, `--grid-line`) stand as bound, awaiting first consumers.
+
 **Cross-surface signals.**
 - `code/packages/tokens/src/color/ui-slots.json` + `src/cycles/{dusk,night}.json` carry the source edits; `dist/tokens.css` + `DESIGN.md` re-emitted same commit (drift gates #7/#8 hold them byte-exact).
 - `code/packages/tokens/__tests__/contrast.test.mjs` gains the OQ-3 per-node AA assertions (vellum-25/-50/-100 per cycle), the chrome-text slot-chain assertions per cycle, and the faint<muted emphasis-ordinal guard; the former FILED-guard test is deleted (its condition executed).
