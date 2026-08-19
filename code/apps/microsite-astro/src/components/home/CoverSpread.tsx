@@ -124,16 +124,46 @@ export function CoverSpread({
 						}}
 					/>
 
-					{/* Wordmark + Live ticker — wrapped in inline-flex so the live
-					    ticker's left edge ALIGNS with the wordmark's left edge (the
-					    D). Items-start aligns ticker to the left of the bounding
-					    box; the bounding box width = wordmark width because the
-					    wordmark is the widest child.
-					    Live ticker pushed FAR DOWN (mt-16) so it doesn't crowd. */}
-					<div className="inline-flex flex-col items-start">
+					{/* Wordmark + Live ticker — the ticker's left edge ALIGNS with
+					    the wordmark's left edge (the D), and the wordmark alone
+					    decides the group's width.
+					    Live ticker pushed FAR DOWN (mt-16) so it doesn't crowd.
+
+					    GRID, not inline-flex (2026-08-19): the old comment claimed
+					    "bounding box width = wordmark width because the wordmark is
+					    the widest child" — an assumption the CONTENT breaks. A
+					    featured title longer than the wordmark made the ticker the
+					    widest child, so the centered box grew and the left-aligned
+					    wordmark slid left by half the excess (measured 168px at
+					    1280w, and it drifts further with every longer headline).
+					    The ticker now sits in a `w-0 min-w-full` cell: it fills the
+					    column but contributes nothing to intrinsic width, so the
+					    wordmark is the only thing that sizes this group — which is
+					    what the original comment meant all along. */}
+					<div
+						className="grid justify-items-start"
+						style={{
+							// One source for the wordmark's size, so the optical
+							// offset below scales with the type instead of drifting
+							// away from it at other viewport widths.
+							['--cover-wordmark-size' as string]: 'clamp(3.5rem, 9vw, 11rem)',
+							// OPTICAL CENTERING (AK, 2026-08-19). Centering this group
+							// on the page puts the wordmark's BOUNDING BOX on the
+							// centre line, which is not what the cover wants: the
+							// "in print" hairline above should sit over the black
+							// half of the word, centred on the "a" of patch. Measured
+							// on the shipped type, the "a" sits 301/507 of the way
+							// across the wordmark, so the box must move left by
+							// (0.5 − 301/507) = 0.0937 of its width; the wordmark is
+							// 4.40× its own font-size, giving 0.412em. Expressed
+							// against the size token so it holds at every width — the
+							// e2e cover assertion is what actually guards it.
+							transform: 'translateX(calc(-0.412 * var(--cover-wordmark-size)))',
+						}}
+					>
 						<h1
 							className="dispatch-burnin font-wordmark font-bold leading-[0.86] tracking-[-0.025em] text-body-strong"
-							style={{ fontSize: 'clamp(3.5rem, 9vw, 11rem)' }}
+							style={{ fontSize: 'var(--cover-wordmark-size)' }}
 							aria-label="DISpatch"
 						>
 							<span className="inline-flex" aria-hidden="true">
@@ -185,7 +215,7 @@ export function CoverSpread({
 								initial={{ opacity: 0, y: 6 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ delay: 2.0, duration: 0.7 }}
-								className="mt-16 flex w-full items-baseline gap-3"
+								className="mt-16 flex w-0 min-w-full items-baseline gap-3"
 							>
 								<span
 									className="relative inline-flex size-2 shrink-0 translate-y-[-2px] rounded-full bg-accent-prime-active"
