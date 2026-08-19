@@ -104,5 +104,8 @@ jobs:
       - name: chromatic story lane — upload gate-#9 artifact
         working-directory: code/apps/storybook
         env:
-          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # The dispatch_storybook project (AK-created 2026-08-19, repo-linked).
+          # One Chromatic project per build type; dispatch_playwright carries
+          # the e2e lane. The wire var name is what the CLI reads.
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_STORYBOOK_PROJECT_TOKEN }}
         run: pnpm exec chromatic --storybook-build-dir storybook-static --only-changed --exit-once-uploaded --auto-accept-changes main
