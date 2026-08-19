@@ -123,7 +123,7 @@ export function renderDesignMd({ dawnTree, duskTree, nightTree }) {
   fm.push('  - section: "Elevation & Depth"');
   fm.push('    reason: "no ratified elevation canon; letterpress (emboss/burn-in) is the depth register (see Typography)"');
   fm.push('  - section: "Shapes"');
-  fm.push('    reason: "no ratified radius scale exists in canon (see Open questions, OQ-4 adjacency)"');
+  fm.push('    reason: "no ratified radius scale exists in canon (see Adjudicated questions, OQ-4 adjacency)"');
   fm.push('colors:');
   let tierCursor = '';
   for (const t of canonical) {
@@ -336,7 +336,7 @@ marry at coordinate-handoff points; articles design around columns, never agains
 borders (thesis.md §2 Concept 2, §7 Decision 3). **Components are primary — the cartography grid
 dances and forms around page components**, and articles occupy park-like spaces with no
 distracting cartographic features beneath them (cartography.md §2.6, Mayor verbatim). No ratified
-spacing scale exists in canon (see Open questions, OQ-4 adjacency) — consult per-component specs.
+spacing scale exists in canon (see Adjudicated questions, OQ-4 adjacency) — consult per-component specs.
 
 ### The cartographic substrate
 
@@ -454,47 +454,61 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
   path). The live surface currently violates this — see OQ-2; the canon side is the law until
   AK rules otherwise.
 
-## Open questions — AK adjudication pending (S2-filed; surfaced, not decided)
+## Adjudicated questions — AK rulings, 2026-08-18 (execution scheduled)
 
 > These four contradictions were FILED at S2 (tokens README §F5; typography.json
-> \`$description\`s) and are surfaced here per ADR-0003 §Stage 7. This contract records the live
-> shipped truth and does not resolve canon; each needs a Mayor ruling through the CD2 §10 /
-> canon amendment path.
+> \`$description\`s), surfaced at S3 per ADR-0003 §Stage 7, and **RULED by AK on 2026-08-18**
+> after a cited research pass (peer-publication production CSS · LG München I + Chrome cache
+> partitioning · WCAG 2.2 + Material dark-theme guidance · DTCG 2025.10 +
+> Material/Polaris/Spectrum/SLDS tier practice). Until each execution lands, this contract keeps
+> reporting the SHIPPED truth — the rulings say where each fix executes; do not pre-implement
+> them ad hoc.
 
-### OQ-1 · Body family — Inter (live) vs Crimson Pro (canon)
+### OQ-1 · Body family — DECIDED (AK 2026-08-18): restore Crimson Pro
 
 Canon locks Body = **Crimson Pro** (typography/fonts.md §Body, LOCKED V1; CD2 §5.3 + §10
-Decision 7c). The live app ships \`--font-body: 'Inter', …\` and never loads Crimson Pro; the
-frontmatter above carries the live value (zero-visual-change law at S2). **Decide:** re-fire
-Crimson Pro (restore canon), or supersede Decision 7c via CD2 §10 to lock Inter.
+Decision 7c); the live app ships \`--font-body: 'Inter', …\`. **Ruling:** restore the reading
+serif — self-hosted Crimson Pro variable WOFF2 at the body slot; Inter stays at nav/UI where
+canon places it. Evidence: all five register peers (NYT · New Yorker · Atlantic · Quanta ·
+Stripe Press) ship serif prose with sans confined to UI (production CSS fetched 2026-08-18);
+screen-readability science is neutral, so register convention governs. **Executes at:** the
+fonts restoration build (board opener after S5, before S1 captures visual baselines). The
+frontmatter above carries Inter until that build lands.
 
-### OQ-2 · Font delivery — Google Fonts CDN (live) vs self-host law (canon)
+### OQ-2 · Font delivery — DECIDED (AK 2026-08-18): execute self-hosting
 
-Canon mandates self-hosted WOFF2 subsets — every family's mirror row is marked "static asset
-only" (Vollkorn's adds "NO runtime CDN"; typography/fonts.md), and procurement prefers official
-upstream releases over the Google Fonts CDN (typography/README.md \`build/procure.sh\`, CD2 §5.3
-sovereignty path). The live app loads the OFL families from the Google Fonts CDN at runtime. **Decide:** execute the self-host wiring
-(\`typography/subsets/\` + \`css/fonts.css\` integration), or supersede the sovereignty law.
+Canon mandates self-hosted WOFF2 (typography/fonts.md; typography/README.md
+\`build/procure.sh\`, CD2 §5.3 sovereignty path); the live app loads the OFL families from the
+Google Fonts CDN at runtime. **Ruling:** execute the self-host wiring — Astro's core Fonts API
+or static WOFF2 in \`public/fonts/\` matching the shipped PP-premium pattern. Evidence: the
+LG München I (2022) GDPR position stands; Chrome 86 cache partitioning removed the CDN's
+performance argument while the render-blocking \`@import\` at \`global.css:1\` adds two extra
+origins; CI is already hermetic-fontless. **Executes at:** the same fonts restoration build as
+OQ-1 — one wiring change lands both.
 
-### OQ-3 · Dusk/night faint ink below AA at 12px consumers
+### OQ-3 · Dusk/night faint ink — DECIDED (AK 2026-08-18): AA cycle variants
 
-\`--dispatch-text-body-faint\` measures **3.34:1 (dusk)** and **3.52:1 (night)** against its
-paired substrate, with live consumers at 12px — below the 4.5:1 AA body threshold, and the 3:1
-large-text allowance does not apply at that size (tokens README §F5; contrast.test.mjs). These
-are pre-existing canon cycle values, transcribed unchanged at S2 (F5's executed scope was copper
-+ dawn inks). **Decide at the D1 gate:** darken the cycle faint variants (new cycle tokens), or
-restrict faint to large-text consumers.
+\`--dispatch-text-body-faint\` measures **3.34:1 (dusk)** / **3.52:1 (night)** with live 12px
+consumers — below the 4.5:1 AA normal-text threshold (WCAG 1.4.3; the 3:1 allowance starts at
+~24px / ~18.5px bold). **Ruling:** raise the dusk/night faint values to ≥ 4.5:1 as
+cycle-scoped variants — the mechanical mirror of executed F5 (register §10). Halation is
+managed above AA, never below it (Material dark-theme emphasis tiers). Restricting faint to
+large-text consumers was rejected: live consumers sit at 12px, so it forces the same consumer
+edits while deleting a token role the light theme already proved. **Executes at:** S5 pre-step
+(token-source edit + per-node assertions joining \`contrast.test.mjs\`).
 
-### OQ-4 · Un-valued W2 slot names — \`--chrome-*\` / \`--surface-*\` / \`--rail-edge\` / \`--grid-line\`
+### OQ-4 · Semantic slot names — DECIDED (AK 2026-08-18): ratify as provisionally-bound aliases
 
-Two provenances, one gap. The construction rules direct components at \`--surface-page\`,
-\`--surface-inset\`, and \`--rail-edge\` (construction-rules.md Rules 1 + 5); the W2 packages/ui
-component-CSS census additionally forward-declared \`--chrome-*\` and \`--grid-line\` (recorded in
-\`src/color/ui-slots.json\`; live consumer e.g. Footnote.css \`var(--chrome-text)\`). None of
-these carry **ratified values** in CD2 or the DTCG source (S2 sweep; tokens README §F5) —
-components consuming them today resolve to nothing. **Decide:** ratify values via the CD2 §10
-ledger (S5's story build-out will surface every consumer), or re-point the rules and components
-at existing tokens.
+The construction rules direct components at \`--surface-page\`/\`--surface-inset\`/\`--rail-edge\`
+(construction-rules.md Rules 1 + 5); the W2 packages/ui census forward-declared \`--chrome-*\` +
+\`--grid-line\` (\`src/color/ui-slots.json\`; live consumer Footnote.css \`var(--chrome-text)\`).
+None carry values — consumers resolve to nothing. **Ruling:** ratify the semantic slots as DTCG
+**aliases with provisional bindings** into the ratified vellum/chrome/ink palette — the
+Material/Polaris/Spectrum/SLDS middle tier; DTCG 2025.10 makes unresolvable references a
+MUST-error, so bare-name ratification is not a legitimate intermediate state. S5's consumer
+census then amends bindings (a one-line re-point per alias — the tier's purpose). Scope rider:
+\`--chrome-*\` stays a small named set; no per-component token tier until multi-brand pain
+exists. **Executes at:** S5 pre-step (token source + CD2 §10 ledger entry).
 
 ## Canon reading paths
 

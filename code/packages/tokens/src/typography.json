@@ -66,7 +66,7 @@
           "-apple-system",
           "sans-serif"
         ],
-        "$description": "Body slot — LIVE stack (Inter). CONTRADICTS canon Body=Crimson Pro (Decision 7c) — filed, not silently resolved; see file $description.",
+        "$description": "Body slot — LIVE stack (Inter). CONTRADICTS canon Body=Crimson Pro (Decision 7c) — DECIDED by AK 2026-08-18 (DESIGN.md OQ-1): restore Crimson Pro, self-hosted; executes at the fonts restoration build (after S5, before S1 baselines). Live value stays transcribed here until that build lands.",
         "$extensions": {
           "prime": {
             "tier": "dispatch",
@@ -205,6 +205,6 @@
         }
       }
     },
-    "$description": "Typography tokens — DTCG 2025.10. Family slots carry the LIVE shipped stacks (global.css @theme + @font-face, the rendering truth: zero visual change law) for the six live slots, plus the two canon slots (title/code) the packages/ui components consume. FILED CONTRADICTION (S2, unresolved — AK decision needed): canon locks Body = Crimson Pro (typography.tokens.json; color.md Decision 7c) but the live app ships --font-body = Inter and never loads Crimson Pro; canon mandates self-hosted WOFF2 (fonts.md 'NO runtime CDN') but the live app loads OFL families from the Google Fonts CDN. Neither side is silently 'fixed' here — the live values are transcribed and the conflict is recorded."
+    "$description": "Typography tokens — DTCG 2025.10. Family slots carry the LIVE shipped stacks (global.css @theme + @font-face, the rendering truth: zero visual change law) for the six live slots, plus the two canon slots (title/code) the packages/ui components consume. The S2-filed contradictions are DECIDED (AK 2026-08-18, DESIGN.md OQ-1/OQ-2): Body restores to Crimson Pro and the OFL families move to self-hosted WOFF2, both executing at the fonts restoration build (after S5, before S1 baselines). The live values stay transcribed here until that build lands — this file never leads the shipped truth."
   }
 }
