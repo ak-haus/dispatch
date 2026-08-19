@@ -1,3 +1,10 @@
+/* eslint-disable no-restricted-syntax --
+ * Sanctioned tokens-lint exemption (ADR-0003 §Stage 5 gate): the dossier
+ * cards DEPICT third-party platforms (LinkedIn, Hashnode embeds) in their
+ * own brand palettes — foreign-brand verisimilitude, not Prime canon;
+ * tokenizing them would put non-canon hues into the DTCG source (violates
+ * CD2 §2.1 tier provenance). Prime-canon colors in this file ride tokens
+ * via shared/palette.ts. */
 /**
  * CrossfireSpread — full-viewport stacked dossier deck.
  *

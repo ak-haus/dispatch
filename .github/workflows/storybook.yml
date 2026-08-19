@@ -1,0 +1,39 @@
+name: storybook
+on: [push, pull_request]
+
+# The S5 story gate (ADR-0003 §Stage 5, gate #9): the component-doc surface
+# must BUILD (its static artifact is what the S1 story lane consumes) and
+# every story must PASS its story test — a real headless-Chromium render with
+# addon-a11y violations set to error (preview a11y.test = "error"). This is
+# the ADR's acceptance criterion made machine law: run-story-tests + a11y
+# green, never story existence. Red = do-not-merge, fail-closed.
+jobs:
+  storybook:
+    name: storybook (stories + a11y gate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: install chromium for the vitest browser rail
+        run: pnpm --filter storybook exec playwright install chromium --with-deps
+      - name: story tests — every story renders + a11y green (addon-vitest)
+        run: pnpm --fail-if-no-match --filter storybook test
+      - name: storybook build — the static artifact the S1 story lane consumes
+        run: pnpm --fail-if-no-match --filter storybook build
+      - name: upload static storybook (S1 story-lane input)
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: code/apps/storybook/storybook-static
+          retention-days: 14

@@ -1,0 +1,35 @@
+name: tokens-lint
+on: [push, pull_request]
+
+# The S5 governance gate (ADR-0003 §Stage 5, gate #10): raw color literals
+# are banned in component source — components consume canon via var(--token)
+# only (DESIGN.md §Colors; construction-rules Rule 4). ESLint covers TS/TSX;
+# scripts/lint-tokens-css.mjs covers component CSS (ESLint's parser does not
+# reach it). Honest-scope record (the ADR clause — a lint pointing at
+# incomplete tokens forces exemptions): px literals ratchet in when a spacing
+# scale is ratified; rgba()/hsla() shadows ratchet in with an elevation
+# canon; sanctioned exemptions are file-level disables carrying their
+# justification inline (third-party platform depictions only).
+# Red = do-not-merge, fail-closed.
+jobs:
+  tokens-lint:
+    name: tokens-lint (governance gate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: token governance — TS/TSX component surfaces
+        run: pnpm exec eslint "packages/ui/src/components/**/*.{ts,tsx}" "apps/microsite-astro/src/components/**/*.{ts,tsx}"
+      - name: token governance — component CSS surfaces
+        run: node scripts/lint-tokens-css.mjs

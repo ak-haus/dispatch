@@ -74,13 +74,17 @@ export function MetroMapMarker(props: MetroMapMarkerProps): ReactElement {
         }
       }}
     >
+      {/* Hex fallbacks removed at S5: every name below is defined in the
+          shipped tokens.css since S2 (--text-primary via the W2 alias API;
+          --lane-institutional, --sky-low likewise) — the fallbacks predate
+          the S2 engine and are banned by the tokens-lint gate (Rule 4). */}
       <circle
         cx={x}
         cy={y}
         r={r + 1.5}
         className="prime-metro-marker__outer"
-        fill="var(--sky-low, #f4f0e6)"
-        stroke="var(--lane-institutional, #5a6770)"
+        fill="var(--sky-low)"
+        stroke="var(--lane-institutional)"
         strokeWidth={1.5}
       />
       <circle
@@ -88,7 +92,7 @@ export function MetroMapMarker(props: MetroMapMarkerProps): ReactElement {
         cy={y}
         r={r * 0.45}
         className="prime-metro-marker__core"
-        fill="var(--lane-institutional, #5a6770)"
+        fill="var(--lane-institutional)"
       />
       <text
         x={x + r + 6}
@@ -96,7 +100,7 @@ export function MetroMapMarker(props: MetroMapMarkerProps): ReactElement {
         className="prime-metro-marker__label"
         fontFamily="var(--font-civic, 'IM Fell English', serif)"
         fontSize={12}
-        fill="var(--text-primary, #2a261e)"
+        fill="var(--text-primary)"
       >
         {name}
       </text>
