@@ -79,7 +79,9 @@ export function PlotChart({
         background: "transparent",
         color: "currentColor",
         fontFamily: "JetBrains Mono, monospace",
-        fontSize: "10px",
+        // 12px canon floor (DESIGN.md §Typography rule 2) — axe never audits
+        // SVG text, so the floor holds here by source, not by gate.
+        fontSize: "12px",
       },
       x: { label: xLabel, grid: false },
       y: { label: yLabel, grid: true, domain: yDomain },

@@ -1,0 +1,170 @@
+/* ============================================================================
+ * Shared @font-face surface — the ONE declaration of the shipped faces.
+ * Consumed by BOTH renderers of the design system:
+ *   - the microsite (global.css imports it; URLs resolve against public/)
+ *   - Storybook (.storybook/preview.tsx imports it across the workspace
+ *     boundary; /fonts/** resolves via main.ts staticDirs → the same
+ *     microsite public/ — so stories and the vitest rail render the
+ *     SHIPPED faces, and S1 visual baselines capture canon, not fallback).
+ * Extracted from global.css at S1 (ADR-0003 §Stage 4 pre-step): a baseline
+ * must not enshrine a fallback stack.
+ * ========================================================================== */
+
+/* Pangram Pangram Foundry — licensed 2026-05-12.
+   Product pages display Variable-axis weights (Extrabold = 900), but the
+   actual OS/2 usWeightClass in the static file is 800. Use CSS-standard
+   values so font-extrabold (Tailwind 800) and font-bold (700) resolve
+   without synthetic-weight fallback. */
+@font-face {
+  font-family: 'Pangram Editorial New';
+  src: url('/fonts/PPEditorialNew-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pangram Sans';
+  src: url('/fonts/PPPangramSans-Extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* OFL families — self-hosted WOFF2 subsets (DESIGN.md OQ-1/OQ-2 execution).
+   Binaries are the canon cuts from representation/visual-system/typography/
+   subsets/ (checksums in build/subset-checksums.txt), served from
+   /fonts/<surface>/ per canon css/fonts.css. Unicode-ranges mirror canon;
+   weights outside these cuts resolve by CSS font-matching to the nearest cut
+   (the V1 contract ships exactly these — fonts.md §Total V1 weight inventory). */
+
+/* Vollkorn — Title/narrative slot (OFL-1.1; github.com/Friedrich-Althausen/Vollkorn-Typeface) */
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/title/vollkorn-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/title/vollkorn-400-italic.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/title/vollkorn-700.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+/* Crimson Pro — Body slot (OFL-1.1; github.com/Fonthausen/CrimsonPro) */
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/body/crimson-pro-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/body/crimson-pro-400-italic.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/body/crimson-pro-600.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/body/crimson-pro-700.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/body/crimson-pro-700-italic.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF, U+2010-2027, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2060, U+20A0-20BF, U+2122, U+2190-2199, U+25CA, U+2018-2019, U+201C-201D, U+2026;
+}
+
+/* Inter — Nav-slot graceful fallback behind Pangram Sans (OFL-1.1; github.com/rsms/inter) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/nav/inter-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2026, U+2018-2019, U+201C-201D, U+2190-2199, U+20A0-20BF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/nav/inter-600.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2026, U+2018-2019, U+201C-201D, U+2190-2199, U+20A0-20BF;
+}
+
+/* JetBrains Mono — Code/Meta slot (OFL-1.1; github.com/JetBrains/JetBrainsMono) */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/code/jetbrains-mono-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2500-257F, U+2580-259F, U+2200-22FF, U+2190-2199, U+27F0-27FF;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/code/jetbrains-mono-700.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2500-257F, U+2580-259F, U+2200-22FF, U+2190-2199, U+27F0-27FF;
+}
+
+/* IM Fell English — Civic/Dante slot (OFL-1.1; iginomarini.com/fell) */
+@font-face {
+  font-family: 'IM Fell English';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/civic/im-fell-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+2018-2019, U+201C-201D, U+2026, U+2030;
+}
+
+@font-face {
+  font-family: 'IM Fell English';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/civic/im-fell-400-italic.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-024F, U+2010-2027, U+2018-2019, U+201C-201D, U+2026, U+2030;
+}
