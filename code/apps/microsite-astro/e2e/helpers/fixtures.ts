@@ -11,7 +11,13 @@
  * '@playwright/test' directly.
  */
 
-import { test as base, expect } from '@playwright/test'
+// Chromatic import swap (ADR-0003 §Stage 4 wiring step 1): the base comes
+// from @chromatic-com/playwright, which archives each test's final DOM +
+// resources into test-results/chromatic-archives for the cloud lane. The
+// e2e run itself needs NO Chromatic token — only the upload step does —
+// and archiving is local capture, so the network law below still governs
+// everything that leaves the page.
+import { test as base, expect } from '@chromatic-com/playwright'
 import { WIRE_E2E_FEED_URL } from './wire-fixture'
 
 const FIXTURE_ORIGIN = new URL(WIRE_E2E_FEED_URL).origin

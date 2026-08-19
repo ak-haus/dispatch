@@ -22,7 +22,7 @@ import { expect, type Page, type TestInfo } from '@playwright/test'
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
 
-async function settleMotion(page: Page): Promise<void> {
+export async function settleMotion(page: Page): Promise<void> {
 	// Hydration first: an island that hasn't hydrated yet has not STARTED its
 	// entrance animation, so an animations-only wait passes vacuously and the
 	// scan races the fade (nondeterministic across runs). `astro-island` sheds

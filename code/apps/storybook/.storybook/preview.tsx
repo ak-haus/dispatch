@@ -13,6 +13,12 @@ import React from "react";
  * substrate is page-owned, components stay substrate-agnostic (Rule 1).
  */
 import "@prime-dispatch/tokens/css";
+// Shared @font-face surface (S1 pre-step): the SAME declarations global.css
+// ships, imported across the workspace boundary so stories render the shipped
+// faces — /fonts/** URLs resolve via main.ts staticDirs (microsite public/).
+// It must ride preview.tsx, not a preview-head.html: BOTH the dev/build HTML
+// and the vitest rail read preview annotations; a head file misses the rail.
+import "../../microsite-astro/src/styles/fonts.css";
 import "./preview.css";
 
 const preview: Preview = {

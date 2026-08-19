@@ -1,13 +1,80 @@
 name: e2e
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
-# Playwright journeys + axe over a LOCAL build (Golden Board A2). Phase A
-# rules of law hold by construction: `test:e2e` bakes a reserved-.test-TLD
-# fixture URL into the build and intercepts it in-page — production is never
-# touched and no platform credential exists in this workflow.
+# Playwright journeys + axe + the S1 visual floor over a LOCAL build (Golden
+# Board A2 + ADR-0003 §Stage 4). Phase A rules of law hold by construction:
+# `test:e2e` bakes a reserved-.test-TLD fixture URL into the build and
+# intercepts it in-page — production is never touched and no platform
+# credential exists in the test run.
+#
+# S1 amendments to the old "CI stays hermetic-fontless" posture:
+#   - fetch:fonts hydrates the PP rail before the build (fail-loud). A visual
+#     gate asserts on rendered faces by definition — visual.spec.ts refuses
+#     to capture on fallback stacks, so fontless CI would fail anyway.
+#   - visual.spec.ts compares committed -linux baselines (generated in THIS
+#     runner class via the update-visual-baselines job, never on a Mac).
+#   - the Chromatic upload step ships each test's archive to the cloud lane
+#     (ADR §Stage 4 wiring step 1). It runs on push events only (one upload
+#     per commit) and needs the E2E-project token: Chromatic requires one
+#     project PER build type (docs/combine-stories-e2e), so this lane arms
+#     when CHROMATIC_E2E_PROJECT_TOKEN lands — the skip is loud, not silent.
 jobs:
   e2e:
+    # NOTE: this display name is a ruleset-REQUIRED check context (21012416)
+    # — the visual floor rides inside it; never rename without a ruleset edit.
     name: e2e (playwright + axe)
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    env:
+      CHROMATIC_E2E_PROJECT_TOKEN: ${{ secrets.CHROMATIC_E2E_PROJECT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: Chromatic derives baselines from git ancestry.
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: hydrate the PP font rail — the visual floor asserts on shipped faces
+        run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
+      - run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
+      - run: pnpm --fail-if-no-match --filter microsite-astro test:e2e
+      - name: chromatic e2e lane — upload archives (push only; one project per build type)
+        if: github.event_name == 'push' && env.CHROMATIC_E2E_PROJECT_TOKEN != ''
+        working-directory: code/apps/microsite-astro
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_E2E_PROJECT_TOKEN }}
+        run: pnpm exec chromatic --playwright --exit-once-uploaded --auto-accept-changes main
+      - name: chromatic e2e lane — NOT ARMED (CHROMATIC_E2E_PROJECT_TOKEN absent)
+        if: github.event_name == 'push' && env.CHROMATIC_E2E_PROJECT_TOKEN == ''
+        run: |
+          echo "::notice title=Chromatic e2e lane not armed::Chromatic requires a separate project per build type. AK one-click: create a second project (Playwright type) in the Chromatic UI, then CHROMATIC_E2E_PROJECT_TOKEN -> Doppler + gh secret set. Until then only the Storybook story lane uploads."
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            code/apps/microsite-astro/playwright-report/
+            code/apps/microsite-astro/test-results/
+          retention-days: 7
+
+  # Baseline factory (ADR: baselines must be generated in the CI linux
+  # runner, not the Mac). Manually dispatched; regenerates -linux baselines
+  # and uploads them as an artifact for the session to commit. Never runs on
+  # push/PR — a baseline is a deliberate act, recorded in git by a human-
+  # signed-off commit, not a side effect of CI.
+  update-visual-baselines:
+    name: regenerate visual baselines (manual)
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,11 +90,14 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - name: hydrate the PP font rail
+        run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       - run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
-      - run: pnpm --fail-if-no-match --filter microsite-astro test:e2e
+      - name: regenerate -linux baselines
+        working-directory: code/apps/microsite-astro
+        run: pnpm e2e:build && pnpm exec playwright test visual.spec.ts --update-snapshots
       - uses: actions/upload-artifact@v4
-        if: failure()
         with:
-          name: playwright-report
-          path: code/apps/microsite-astro/playwright-report/
+          name: visual-baselines
+          path: code/apps/microsite-astro/e2e/visual.spec.ts-snapshots/
           retention-days: 7

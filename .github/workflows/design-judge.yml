@@ -1,0 +1,65 @@
+name: design-judge
+on: [pull_request]
+
+# Semantic judge lane (ADR-0003 §Stage 4b, register §8): screenshots of the
+# journey surfaces × 2 viewports → Claude vision (pinned Sonnet-tier) judges
+# against DESIGN.md → structured findings posted on the PR.
+#
+# POSTURE: REPORT-ONLY during the calibration window — armed 2026-08-19,
+# ratchets to BLOCKING 2026-09-02 (join the ruleset then, not before). The
+# job itself may go red on INFRASTRUCTURE failure (missing captures, API
+# error) so a broken judge is visible — but it is not a required check, so
+# red here never blocks a merge during calibration.
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  semantic-review:
+    name: semantic-review (judge, report-only)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: hydrate the PP font rail — the judge must see shipped faces
+        run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
+      - run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
+      - name: capture journey surfaces (same config, judge scope)
+        working-directory: code/apps/microsite-astro
+        run: pnpm e2e:build && pnpm exec playwright test --config playwright.judge.config.ts
+      - name: judge against DESIGN.md (pinned Sonnet-tier, structured findings)
+        working-directory: code/apps/microsite-astro
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/semantic-judge.mjs
+      - name: post the report on the PR (upsert one comment)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BODY_FILE=apps/microsite-astro/test-results/judge-report/report.md
+          MARKER="<!-- semantic-judge-report -->"
+          printf '%s\n\n' "$MARKER" | cat - "$BODY_FILE" > /tmp/judge-comment.md
+          EXISTING=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -1)
+          if [ -n "$EXISTING" ]; then
+            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$EXISTING" -F body=@/tmp/judge-comment.md > /dev/null
+          else
+            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -F body=@/tmp/judge-comment.md > /dev/null
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: judge-report
+          path: |
+            code/apps/microsite-astro/test-results/judge-captures/
+            code/apps/microsite-astro/test-results/judge-report/
+          retention-days: 14

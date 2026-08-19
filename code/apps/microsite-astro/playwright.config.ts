@@ -12,6 +12,9 @@ const PORT = 4321
 
 export default defineConfig({
 	testDir: './e2e',
+	// The judge capture pass is not a test lane — it runs only under
+	// playwright.judge.config.ts (ADR-0003 §Stage 4b).
+	testIgnore: '**/judge.capture.spec.ts',
 	fullyParallel: true,
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 2 : 0,
