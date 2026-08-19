@@ -34,6 +34,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: tokens prebuild — dist/ is built, not committed (load-bearing for every step below)
         run: pnpm --fail-if-no-match --filter @prime-dispatch/tokens build
+      - name: hydrate the PP font rail — S1 story-lane captures assert on shipped faces
+        # The old hermetic-fontless posture ended with S1 (ADR-0003 §Stage 4):
+        # staticDirs copies public/fonts into the storybook-static artifact the
+        # Chromatic story lane captures from — fontless CI would baseline
+        # fallback stacks. fetch-fonts.mjs is fail-loud on a missing binary.
+        run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       - name: install chromium for the vitest browser rail
         run: pnpm --filter storybook exec playwright install chromium --with-deps
       - name: story tests — every story renders + a11y green (addon-vitest)
@@ -47,10 +53,56 @@ jobs:
         # the cure this canary guards.
         run: pnpm --fail-if-no-match --filter storybook exec vitest run ../../packages/ui/src/components/custom/AgentTraceCallout/AgentTraceCallout.stories.tsx
       - name: storybook build — the static artifact the S1 story lane consumes
-        run: pnpm --fail-if-no-match --filter storybook build
+        # --stats-json emits preview-stats.json for TurboSnap (verified on
+        # SB 9.1 + Vite locally 2026-08-19; Chromatic docs confirm native
+        # Vite support in SB 8+ — Storybook's own CLI table is stale here).
+        run: pnpm --fail-if-no-match --filter storybook exec storybook build --stats-json
       - name: upload static storybook (S1 story-lane input)
         uses: actions/upload-artifact@v4
         with:
           name: storybook-static
           path: code/apps/storybook/storybook-static
           retention-days: 14
+
+  # S1 story lane (ADR-0003 §Stage 4 wiring step 3): Chromatic Storybook mode
+  # over gate #9's own artifact — the 343-story component surface. Push events
+  # only: one upload per commit, and TurboSnap is incompatible with the
+  # pull_request trigger's ephemeral merge commits (Chromatic troubleshooting
+  # docs). TurboSnap is LOAD-BEARING here, not an optimization: 343 stories ≈
+  # 14 full builds/mo on the 5,000-snapshot free tier; traced builds restore
+  # the headroom (unlocks after ~10 CI builds). Policy A (register §2): PR
+  # diffs are AK-dispositioned in the Chromatic UI; main auto-accepts so the
+  # baseline follows merged truth.
+  chromatic-stories:
+    name: chromatic (story lane)
+    needs: storybook
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: Chromatic baselines + TurboSnap ancestry need it.
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: storybook-static
+          path: code/apps/storybook/storybook-static
+      - name: TurboSnap guard — a missing stats file silently disables tracing
+        run: test -f apps/storybook/storybook-static/preview-stats.json || { echo "::error title=TurboSnap disarmed::preview-stats.json missing from the storybook-static artifact — Chromatic would silently fall back to full snapshots and burn the free tier"; exit 1; }
+      - name: chromatic story lane — upload gate-#9 artifact
+        working-directory: code/apps/storybook
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: pnpm exec chromatic --storybook-build-dir storybook-static --only-changed --exit-once-uploaded --auto-accept-changes main
