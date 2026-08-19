@@ -21,12 +21,17 @@ export default defineConfig({
   ],
   test: {
     name: "storybook",
-    // Serial file execution: on the 2-core CI runner, parallel per-file
-    // browser contexts saturate the vite server during cold optimize and
-    // every import fails with "Failed to fetch dynamically imported module"
-    // before any test runs (observed on the first gate run, 2026-08-18).
-    // Serial is deterministic on small runners; coverage is identical.
+    // Rail shape for the 2-core CI runner (both observed 2026-08-18):
+    // - fileParallelism false: unbounded per-file browser contexts saturate
+    //   the vite server during cold optimize and every import dies with
+    //   "Failed to fetch dynamically imported module" before any test runs.
+    // - isolate false: with isolation on, EACH file pays a fresh context +
+    //   full module-graph fetch (~28s/file accumulated prepare even locally
+    //   — a 60-min-plus gate in CI). One shared context, files still serial,
+    //   assertions identical; stories unmount between tests and the cycle
+    //   decorator cleans its html attributes in its effect cleanup.
     fileParallelism: false,
+    isolate: false,
     testTimeout: 30_000,
     browser: {
       enabled: true,
