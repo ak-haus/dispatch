@@ -1,14 +1,20 @@
-// Semantic judge (ADR-0003 §Stage 4b): Claude vision judges the captured
-// journey surfaces against DESIGN.md — the brand contract's primary consumer.
-// REPORT-ONLY during the register-§8 calibration window (armed 2026-08-19;
-// ratchets to blocking 2026-09-02). It writes a markdown report + JSON
-// findings; the workflow posts the report on the PR. It never exits non-zero
-// on findings — only on infrastructure failure (missing captures, API error),
-// so a broken judge is visible without blocking a merge.
+// DORMANT — the LLM judge is superseded (ADR-0003 register §8, RULED by AK
+// 2026-08-19): **the judge for this lane is AK**, until he decides otherwise.
+// No workflow invokes this script; CI produces the evidence packet instead
+// (.github/workflows/design-judge.yml) and AK reviews it.
 //
-// Model pin (register §8): Sonnet-tier, pinned — pins the cost. The alias is
-// the stable public ID (no date suffixes exist for it); revisit only via the
-// register, never ad hoc.
+// Kept in-tree, working and unmodified, so re-arming is a register decision
+// rather than a rebuild. To re-arm: restore the judge + report steps in
+// design-judge.yml and fund ANTHROPIC_API_KEY. Do NOT re-arm by CI edit alone.
+//
+// Evidence behind the ruling (wiki 16 / board R1): no VLM is validated for
+// fine-grained design-defect detection (UI-Lens, CVPR 2026 — F1 10–31% across
+// all frontier models), and no shipped product gates CI on an LLM judge.
+//
+// What it does when armed: Claude vision judges the captured journey surfaces
+// against DESIGN.md, writing a markdown report + JSON findings; it never exits
+// non-zero on findings, only on infrastructure failure. Model pin: Sonnet-tier
+// (the register's cost ceiling) — revisit only via the register, never ad hoc.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
