@@ -42,6 +42,14 @@ export function AgentTraceCallout({
 }: AgentTraceCalloutProps) {
   return (
     <motion.aside
+      // axe landmark-unique: <aside> maps to the `complementary` landmark
+      // role, and an article (or the LaneMatrix story) legitimately carries
+      // several trace callouts — landmarks sharing a role must carry distinct
+      // accessible names (WAI-ARIA APG, Landmark Regions: label a
+      // complementary landmark whenever more than one is present). Name each
+      // landmark from the required `agent` prop it discloses; attribute-only
+      // change, DOM structure and visuals identical.
+      aria-label={`Agent trace: ${agent}`}
       initial={{ opacity: 0, x: -12 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "0px 0px -60px 0px" }}

@@ -91,7 +91,22 @@ export function SearchPalette(props: SearchPaletteProps): ReactElement {
               className="prime-search-palette__input"
             />
             <CommandList className="prime-search-palette__list">
-              <CommandEmpty>{emptyMessage}</CommandEmpty>
+              {/* axe aria-required-children: cmdk hardcodes role="listbox" on
+                  the list and role="presentation" on Empty (its own attributes
+                  land after the props spread — see the CommandSeparator note
+                  in ui/command.tsx), so in the empty lifecycle state the
+                  listbox owns no option/group child and cannot be re-roled
+                  via props. Per the WAI-ARIA APG listbox pattern the message
+                  is therefore exposed as a single non-activatable option
+                  (role="option" + aria-disabled), owned by the listbox
+                  through the presentational wrappers. Visible DOM text and
+                  visuals are unchanged; cmdk keyboard nav only walks
+                  [cmdk-item] nodes, so the option is never selectable. */}
+              <CommandEmpty>
+                <div role="option" aria-disabled="true" aria-selected={false}>
+                  {emptyMessage}
+                </div>
+              </CommandEmpty>
               {groups.map((group) => (
                 <CommandGroup
                   key={group.heading}

@@ -186,9 +186,27 @@ export const LaneMatrix: Story = {
 export const DriftLadder: Story = {
   render: (args) => (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <DldsPanel {...args} driftSensitivity="stable" />
-      <DldsPanel {...args} driftSensitivity="monitored" />
-      <DldsPanel {...args} driftSensitivity="drift-detected" />
+      {/* axe landmark-unique: the panel is an <aside> landmark and this
+          ordinal renders three with the SAME lane, so the component's default
+          aria-label collides. Each instance gets a distinct label through the
+          component's existing rest-prop surface (spread lands after the
+          internal aria-label, so the override is part of the shipped prop
+          contract). */}
+      <DldsPanel
+        {...args}
+        driftSensitivity="stable"
+        aria-label="Disclosed lane: Editorial — drift stable"
+      />
+      <DldsPanel
+        {...args}
+        driftSensitivity="monitored"
+        aria-label="Disclosed lane: Editorial — drift monitored"
+      />
+      <DldsPanel
+        {...args}
+        driftSensitivity="drift-detected"
+        aria-label="Disclosed lane: Editorial — drift detected"
+      />
     </div>
   ),
   parameters: {

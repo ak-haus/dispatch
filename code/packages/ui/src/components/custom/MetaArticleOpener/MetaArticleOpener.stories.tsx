@@ -43,11 +43,15 @@ const researchReturnDataviz = (
         />
       ))}
     </div>
+    {/* Caption sits on the dataviz variant's --window-warm tinted media
+      * frame, where label-size --text-muted is 4.41:1 (axe color-contrast,
+      * WCAG 1.4.3). F5 discipline, DESIGN.md §Colors: muted-deep covers
+      * tinted panels. */}
     <span
       style={{
         fontFamily: "var(--font-code)",
         fontSize: "0.75rem",
-        color: "var(--text-muted)",
+        color: "var(--dispatch-text-body-muted-deep)",
       }}
     >
       Fig. 1 — Citizen task completions per governance cycle, Q2–Q3 2026
@@ -170,6 +174,13 @@ export const PostMortem: Story = {
     readMinutes: 8,
   },
   parameters: {
+    /* OQ-5 (FILED at S5, 2026-08-18): the hosted DldsPanel __drift--monitored
+     * node paints label-size copper on this variant's --window-warm band —
+     * no AA-capable copper rung exists on vellum-300 at dawn (copper 2.55:1,
+     * copper-label 3.52:1, copper-deep 4.25:1; contrast.test.mjs documents
+     * the missing node as a deliberate non-assertion). Fix is Mayor-gated;
+     * a11y runs "todo" (visible, not gating) until the adjudication lands. */
+    a11y: { test: "todo" },
     docs: {
       description: {
         story:

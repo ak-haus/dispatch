@@ -13,6 +13,7 @@ import React from "react";
  * substrate is page-owned, components stay substrate-agnostic (Rule 1).
  */
 import "@prime-dispatch/tokens/css";
+import "./preview.css";
 
 const preview: Preview = {
   parameters: {
@@ -34,8 +35,10 @@ const preview: Preview = {
       ],
     },
     a11y: {
-      element: "#storybook-root",
-      manual: false,
+      // No explicit context: the addon's default targets the story root in
+      // BOTH environments — #storybook-root exists only in the Storybook
+      // iframe, not in the vitest browser-mode DOM (axe throws "No elements
+      // found for include" there if pinned to it).
       // Story-test rail (addon-vitest): a11y violations FAIL the story test.
       // "a11y green" is the S5 acceptance criterion, mechanical not aspirational.
       test: "error",
@@ -44,6 +47,14 @@ const preview: Preview = {
     docs: {
       toc: true,
     },
+  },
+  // SB9 portable-stories path (addon-vitest) merges story-level `globals`
+  // over initialGlobals — globalTypes.defaultValue alone is toolbar-only and
+  // leaves story globals unapplied in the test rail (probe 2026-08-18:
+  // DuskCycle rendered the dawn palette without this).
+  initialGlobals: {
+    cycle: "dawn",
+    reducedMotion: "no-preference",
   },
   globalTypes: {
     cycle: {
@@ -93,12 +104,25 @@ const preview: Preview = {
       };
       const cycleKey = cycle ?? (legacy ? (legacyMap[legacy] ?? "dawn") : "dawn");
       const motionKey = reducedMotion ?? "no-preference";
+      // The cycle attribute MUST live on <html>, exactly like the shipped
+      // microsite (tokens.css: "Selectors: html[data-prime-cycle=…]").
+      // Spatial aliases (--window-warm, --surface-page, …) are declared at
+      // :root, so they resolve their var() chains AT the html element and
+      // descendants inherit the RESOLVED value — a wrapper-div attribute can
+      // override the numeric tokens but never re-resolves the aliases
+      // (probe 2026-08-18: dusk ink over a dawn --window-warm band).
+      React.useEffect(() => {
+        const el = document.documentElement;
+        if (cycleKey === "dawn") delete el.dataset.primeCycle;
+        else el.dataset.primeCycle = cycleKey;
+        el.dataset.primeReducedMotion = motionKey;
+        return () => {
+          delete el.dataset.primeCycle;
+          delete el.dataset.primeReducedMotion;
+        };
+      }, [cycleKey, motionKey]);
       return (
         <div
-          // Dawn is the :root default — the attribute is only set for
-          // dusk/night, matching how the microsite drives the cascade.
-          {...(cycleKey === "dawn" ? {} : { "data-prime-cycle": cycleKey })}
-          data-prime-reduced-motion={motionKey}
           style={{
             position: "relative",
             backgroundColor: "var(--surface-page)",

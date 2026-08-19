@@ -1,9 +1,44 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ChapterRail, type ChapterRailItem } from "./ChapterRail";
 
-/* W3-S-A Cycle 2 — chapter labels no longer pre-prefixed with Roman numerals;
- * the ChapterRail component itself generates Roman-numeral markers via the
- * Cinzel typographic marker span. Labels are the chapter title text only. */
+/**
+ * a11y settle discipline (story-test rail): every story mounts the chapter
+ * links through Motion's staggered entrance (motion.li opacity 0 → 1), and
+ * the addon-a11y afterEach otherwise audits MID-FADE ink — axe then reports
+ * blended non-token foregrounds (e.g. #d2cec5 on the vellum page) as
+ * color-contrast failures on colors no token authors. Wait until every
+ * rendered chapter item has settled at opacity exactly 1 so axe audits the
+ * real shipped token colors (ComparisonGrid.stories.tsx precedent). Items
+ * hidden by the collapsed variant (display:none list → offsetParent null)
+ * are excluded by axe's visibility check and treated as settled here.
+ */
+async function settleReveal({
+  canvasElement,
+}: {
+  canvasElement: HTMLElement;
+}): Promise<void> {
+  const deadline = Date.now() + 5000;
+  for (;;) {
+    const items = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>(".prime-chapter-rail__item"),
+    );
+    const settled =
+      items.length > 0 &&
+      items.every(
+        (el) =>
+          el.offsetParent === null ||
+          Number(getComputedStyle(el).opacity) === 1,
+      );
+    if (settled) return;
+    if (Date.now() > deadline) {
+      throw new Error("ChapterRail reveal did not settle within 5s");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
+
+/* Chapter labels are the chapter title text only — no pre-prefixed numbering
+ * in the data; the ChapterRail component owns its own typographic markers. */
 const DEFAULT_CHAPTERS: ChapterRailItem[] = [
   { id: "preamble", label: "Preamble", isVisited: true },
   { id: "field-conditions", label: "Field conditions", isVisited: true },
@@ -15,6 +50,10 @@ const DEFAULT_CHAPTERS: ChapterRailItem[] = [
 const meta: Meta<typeof ChapterRail> = {
   title: "Chrome / ChapterRail",
   component: ChapterRail,
+  tags: ["autodocs"],
+  // Meta-level play: every story in this file carries the same entrance
+  // motion, so every story waits for settle before the a11y afterEach runs.
+  play: settleReveal,
   parameters: {
     layout: "padded",
     docs: {
@@ -83,42 +122,42 @@ export const LongFormWithSectionBreak: Story = {
   },
 };
 
-export const LightTheme: Story = {
-  globals: { theme: "light" },
+export const DawnCycle: Story = {
+  globals: { cycle: "dawn" },
   parameters: {
     docs: {
       description: {
         story:
-          "Drafting-paper register: rail edge is a paper-weight hairline; current chapter copper-dot sits on the rail. Anchor: Sanborn map margin annotations + Tufte sidenote pattern.",
+          "Dawn cycle (DESIGN.md §Cycles): the vellum drafting-paper default — the rail edge is a paper-weight hairline; the current-chapter copper dot sits on the rail. Anchor: Tufte sidenote pattern.",
       },
     },
   },
 };
 
-export const DuskTheme: Story = {
-  globals: { theme: "dusk" },
+export const DuskCycle: Story = {
+  globals: { cycle: "dusk" },
   parameters: {
     docs: {
       description: {
         story:
-          "Dusk / sepia register (Cycle 2 substitution): rail edge in mid-sepia (#5a4a38); double-rule shadow rail at 0.4 opacity; Roman-numeral chapter markers in Cinzel on warm cream. Current-chapter marker reads as candlelight-gilt copper on aged paper.",
+          "Dusk cycle (DESIGN.md §Cycles): the chiaroscuro walnut study — the rail edge recedes into low light; chapter labels set in warm-cream ink; the current-chapter indicator reads as gilded copper against the walnut substrate.",
       },
     },
   },
 };
 
-export const BlackTheme: Story = {
-  globals: { theme: "black" },
+export const NightCycle: Story = {
+  globals: { cycle: "night" },
   parameters: {
     docs: {
       description: {
         story:
-          "Video-game-menu register: rail edge becomes a subtle HUD grid line (#3a3a4a); indicator dot reads as a HUD waypoint marker. Anchor: GTA-5 minimap pattern (restrained, not neon).",
+          "Night cycle (DESIGN.md §Cycles): the true-black void — the rail edge falls to the faintest hairline; the current-chapter indicator carries the ember accent with HUD restraint. Wayfinding, never spectacle.",
       },
     },
   },
 };
 
 export const ReducedMotion: Story = {
-  globals: { theme: "light", reducedMotion: "reduce" },
+  globals: { cycle: "dawn", reducedMotion: "reduce" },
 };

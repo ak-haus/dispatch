@@ -101,7 +101,18 @@
   border-radius: 2px;
 }
 
-/* Back-link — Nav slot per spec Field 7. Simple text link. */
+/* Back-link — Nav slot per spec Field 7. Simple text link.
+ * axe color-contrast: the former `opacity: 0.7` dim blended the copper-label
+ * ink to 2.34:1 on --window-warm — opacity-dimmed text fails computed
+ * contrast; token roles are the canon dimming mechanism (F5 discipline,
+ * DESIGN.md §Colors; InstitutionalFixture.css precedent), so the dim is
+ * removed and the rest state carries --chrome-text (→ --platform-copper-label,
+ * the OQ-4 AA binding on surface-page/inset).
+ * KNOWN CANON GAP (escalated, do not paper over): on the tinted
+ * --window-warm panels (sidebar-popover / mobile-bottom-sheet variants) no
+ * copper role reaches 4.5:1 at dawn (copper-label 3.54:1, copper-deep
+ * 4.26:1) — contrast.test.mjs documents that no copper-on-window-warm node
+ * exists; needs a canon/Mayor decision. Dusk/night pass (8.67:1 / 10.21:1). */
 .prime-footnote__back-link {
   display: inline-block;
   margin-top: 0.5rem;
@@ -111,12 +122,10 @@
   letter-spacing: 0.04em;
   color: var(--chrome-text);
   text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 150ms ease-out, color 150ms ease-out;
+  transition: color 150ms ease-out;
 }
 
 .prime-footnote__back-link:hover {
-  opacity: 1;
   color: var(--copper-deep);
 }
 

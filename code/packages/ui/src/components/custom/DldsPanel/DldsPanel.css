@@ -86,7 +86,12 @@
 }
 
 .prime-dlds-panel__drift--stable { color: var(--text-muted); }
-.prime-dlds-panel__drift--monitored { color: var(--copper); }
+/* axe color-contrast: the drift flag is 11px label-size text, so the
+ * display-scoped --copper (3.36:1 on the vellum page) yields to the AA
+ * label role --platform-copper-label (4.67:1 — F5 size-scoped copper,
+ * DESIGN.md §Colors; SiteNav.css precedent). Dusk/night alias copper-label
+ * back to the cycle copper, so dark cycles are visually unchanged. */
+.prime-dlds-panel__drift--monitored { color: var(--platform-copper-label); }
 .prime-dlds-panel__drift--drift-detected { color: var(--accent-prime); }
 
 .prime-dlds-panel__c2pa {
@@ -120,7 +125,12 @@
 
 .prime-dlds-panel--narrative-restrained {
   font-size: 0.6875rem;
-  opacity: 0.85;
+  /* axe color-contrast: the former `opacity: 0.85` whole-band dim blended
+   * the muted meta ink below AA (4.19:1 computed vs the 4.5:1 small-text
+   * floor). Opacity-dimmed text fails computed contrast; the token text
+   * roles (muted/faint) are the canon dimming mechanism (DESIGN.md §Colors
+   * text roles; InstitutionalFixture.css precedent) — the band's restraint
+   * already lives in its muted-role ink and smaller size. */
 }
 
 .prime-dlds-panel--meta-prominent {

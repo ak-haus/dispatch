@@ -94,6 +94,14 @@ export const CommandSeparator = forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
+    // axe: aria-required-children — an ARIA listbox owns only option/group
+    // children (WAI-ARIA APG Listbox pattern), and cmdk hardcodes
+    // role="separator" on this node inside its role="listbox" list. The rule
+    // between groups is purely decorative (the group structure already
+    // conveys the boundary), so it is removed from the accessibility tree.
+    // DOM and visuals are unchanged; cmdk spreads props before its own
+    // attributes, so aria-hidden passes through while role stays cmdk-owned.
+    aria-hidden="true"
     className={clsx("prime-command__separator", className)}
     {...props}
   />

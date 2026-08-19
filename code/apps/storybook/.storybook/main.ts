@@ -21,6 +21,9 @@ const config: StorybookConfig = {
   stories: [
     "../../../packages/ui/src/components/**/*.stories.@(ts|tsx|mdx)",
   ],
+  // Real shipped assets (no-placeholder-media law): stories reference the
+  // microsite's public/ directly (e.g. /cartography/district.webp).
+  staticDirs: ["../../microsite-astro/public"],
   addons: [
     "@storybook/addon-docs",
     "@storybook/addon-a11y",

@@ -86,6 +86,17 @@ export function PlotChart({
       marks,
     });
 
+    // axe aria-prohibited-attr: Plot hardcodes aria-label on role-less <g>
+    // mark groups ("area" / "line" / "rule") — the label is the mark-class
+    // default (plot src/style.js, applyIndirectStyles) with no public option
+    // to re-role or drop it. aria-label is prohibited on elements without a
+    // naming-capable role (WAI-ARIA 1.2 naming rules), so grant each labeled
+    // group the structural `group` role: the name becomes permitted and stays
+    // exposed to AT. DOM shape and visuals are unchanged (WAI-ARIA APG).
+    chart.querySelectorAll("g[aria-label]").forEach((g) => {
+      if (!g.hasAttribute("role")) g.setAttribute("role", "group");
+    });
+
     ref.current.innerHTML = "";
     ref.current.append(chart);
 

@@ -38,10 +38,48 @@ const defaultItems: ComparisonGridItem[] = [
   },
 ];
 
+/**
+ * a11y settle discipline (story-test rail): the staggered whileInView reveal
+ * animates card opacity 0 → 1, and the addon-a11y afterEach otherwise audits
+ * MID-FADE ink — axe then reports blended non-token foregrounds (e.g. #bebab1
+ * on the vellum page) as color-contrast failures on colors no token authors.
+ * Wait until every in-view card has settled (opacity exactly 1) and none is
+ * in flight, so axe audits the real shipped token colors. Cards that never
+ * enter the test viewport stay at opacity 0 and remain excluded by axe's
+ * visibility check — unchanged from today's behavior.
+ */
+async function settleReveal({
+  canvasElement,
+}: {
+  canvasElement: HTMLElement;
+}): Promise<void> {
+  const deadline = Date.now() + 5000;
+  for (;;) {
+    const cards = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>(".not-prose > *"),
+    );
+    const opacities = cards.map((el) =>
+      Number(getComputedStyle(el).opacity),
+    );
+    const settled =
+      cards.length > 0 &&
+      opacities.some((o) => o === 1) &&
+      !opacities.some((o) => o > 0 && o < 1);
+    if (settled) return;
+    if (Date.now() > deadline) {
+      throw new Error("ComparisonGrid reveal did not settle within 5s");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
+
 const meta: Meta<typeof ComparisonGrid> = {
   title: "Article / ComparisonGrid",
   component: ComparisonGrid,
   tags: ["autodocs"],
+  // Meta-level play: every story in this file carries the same reveal motion,
+  // so every story waits for settle before the a11y afterEach runs.
+  play: settleReveal,
   parameters: {
     layout: "padded",
     docs: {

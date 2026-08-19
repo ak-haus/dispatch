@@ -10,10 +10,50 @@ import { PullQuote } from "./PullQuote";
  * Cycle stories exercise the [data-prime-cycle] cascade only (Rule 5).
  */
 
+/**
+ * a11y settle discipline (story-test rail): the whileInView reveal animates
+ * figure opacity 0 → 1, and the addon-a11y afterEach otherwise audits
+ * MID-FADE ink — axe then reports the blended non-token foreground (e.g.
+ * #cac5bc on the vellum page) as a color-contrast failure on a color no
+ * token authors; the settled ink is text-strong / text-muted on
+ * --surface-page, which is the real shipped contrast surface. Wait until
+ * every in-view figure has settled (opacity exactly 1) and none is in
+ * flight, so axe audits the real token colors. Figures that never enter the
+ * test viewport stay at opacity 0 and remain excluded by axe's visibility
+ * check — unchanged from today's behavior.
+ */
+async function settleReveal({
+  canvasElement,
+}: {
+  canvasElement: HTMLElement;
+}): Promise<void> {
+  const deadline = Date.now() + 5000;
+  for (;;) {
+    const figures = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>("figure.not-prose"),
+    );
+    const opacities = figures.map((el) =>
+      Number(getComputedStyle(el).opacity),
+    );
+    const settled =
+      figures.length > 0 &&
+      opacities.some((o) => o === 1) &&
+      !opacities.some((o) => o > 0 && o < 1);
+    if (settled) return;
+    if (Date.now() > deadline) {
+      throw new Error("PullQuote reveal did not settle within 5s");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
+
 const meta: Meta<typeof PullQuote> = {
   title: "Article / PullQuote",
   component: PullQuote,
   tags: ["autodocs"],
+  // Meta-level play: every story in this file carries the same reveal motion,
+  // so every story waits for settle before the a11y afterEach runs.
+  play: settleReveal,
   parameters: {
     layout: "padded",
     docs: {

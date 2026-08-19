@@ -1,0 +1,19 @@
+/* Page-owned substrate contract, mirrored from the shipped app
+ * (microsite-astro global.css `.prose-dispatch a`): anchors take the strong
+ * ink with an accent-tinted underline. Components deliberately leave
+ * page-scope link ink to the page — in Storybook the preview IS the page,
+ * so without this baseline, unclassed anchors fall to the UA default blue
+ * (#0000ee) and fail axe on dark cycles against reality. Element-level
+ * selector only: any component-classed link rule outranks it, exactly as in
+ * the app's cascade. var() chains keep it cycle-aware. */
+a {
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent-prime) 50%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+a:hover {
+  text-decoration-color: var(--accent-prime);
+}
