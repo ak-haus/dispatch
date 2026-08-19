@@ -139,6 +139,10 @@ async function settleFigure(page: import('@playwright/test').Page, kase: string)
 	// first CI-linux generation, 2026-08-19). A component lock must isolate
 	// the component: page chrome has its own locks above, and letting it bleed
 	// in here would fail the figure gate on any masthead edit.
+	//
+	// This hide is UNDONE by restorePageChrome before the test ends — see the
+	// note there. Anything still mutated at test end is what the Chromatic
+	// archive ships to AK for review.
 	await page.locator('header').evaluate((el) => {
 		;(el as HTMLElement).style.display = 'none'
 	})
@@ -153,6 +157,35 @@ async function settleFigure(page: import('@playwright/test').Page, kase: string)
 	return figure
 }
 
+/**
+ * Undo everything the capture did to the page, because the pixel baseline is
+ * NOT the only artifact these tests produce: fixtures.ts bases the suite on
+ * @chromatic-com/playwright, which archives each test's FINAL DOM and ships it
+ * to the cloud lane for AK to review under register §2 policy A.
+ *
+ * Without this, that archive carried the capture's scaffolding rather than the
+ * page — header hidden, and the masthead frozen mid-hide-on-scroll at
+ * translateY(-110%) because scrollIntoViewIfNeeded had scrolled down. A
+ * reviewer would be judging a masthead state the site never presents at rest
+ * (found 2026-08-19 by reading the archived DOM after AK denied a wordmark
+ * snapshot in build 7).
+ *
+ * Restore chrome, return to top, and wait for the masthead to settle back to
+ * visible before the test ends.
+ */
+async function restorePageChrome(page: import('@playwright/test').Page): Promise<void> {
+	await page.locator('header').evaluate((el) => {
+		;(el as HTMLElement).style.removeProperty('display')
+	})
+	await page.evaluate(() => window.scrollTo(0, 0))
+	await page.waitForFunction(
+		() => document.querySelector('header')?.getAttribute('data-hidden') !== 'true',
+		undefined,
+		{ timeout: 5_000 },
+	)
+	await settleMotion(page)
+}
+
 for (const vp of VIEWPORTS) {
 	test.describe(`ImageWithCaption — ${vp.label}`, () => {
 		test.use({ viewport: { width: vp.width, height: vp.height } })
@@ -164,6 +197,7 @@ for (const vp of VIEWPORTS) {
 				await expectShippedFaces(page)
 				const figure = await settleFigure(page, kase)
 				await expect(figure).toHaveScreenshot(`figure-${kase}-${vp.label}.png`)
+				await restorePageChrome(page)
 			})
 		}
 	})
