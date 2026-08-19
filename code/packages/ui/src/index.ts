@@ -119,4 +119,14 @@ export type { PlotChartProps } from "./components/custom/PlotChart";
 export { ArticleDateline } from "./components/custom/ArticleDateline";
 export type { ArticleDatelineProps } from "./components/custom/ArticleDateline";
 
+// --- CD7 multimedia extensions (S4 design-intent-to-code lane, 2026-08-19) ---
+// #24 ImageWithCaption — the first component built through the Stage-3 lane
+// from the contract alone (DESIGN.md + tokens + CD7 §3.4), no Figma artifact.
+export { ImageWithCaption } from "./components/custom/ImageWithCaption";
+export type {
+  ImageWithCaptionProps,
+  ImageWithCaptionProvenance,
+  ImageWithCaptionVariant,
+} from "./components/custom/ImageWithCaption";
+
 export { LIBRARY_VERSION } from "./version";

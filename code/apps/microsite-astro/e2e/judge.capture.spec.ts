@@ -26,10 +26,18 @@ const VIEWPORTS = [
 	{ label: 'mobile', width: 375, height: 812 },
 ] as const
 
-async function capture(page: import('@playwright/test').Page, name: string): Promise<void> {
+async function capture(
+	page: import('@playwright/test').Page,
+	name: string,
+	{ fullPage = false }: { fullPage?: boolean } = {},
+): Promise<void> {
 	await settleMotion(page)
 	fs.mkdirSync(OUT_DIR, { recursive: true })
-	await page.screenshot({ path: path.join(OUT_DIR, `${name}.png`) })
+	// Journey surfaces capture the VIEWPORT: what the reader sees at a given
+	// route/scroll state is the thing under review. A component proving ground
+	// is the opposite — the evidence IS the variants side by side, and a
+	// viewport crop shows the masthead and one plate. Opt in per capture.
+	await page.screenshot({ path: path.join(OUT_DIR, `${name}.png`), fullPage })
 }
 
 async function firstDispatchPath(request: import('@playwright/test').APIRequestContext): Promise<string> {
@@ -71,6 +79,24 @@ for (const vp of VIEWPORTS) {
 		test(`404 editorial page (${vp.label})`, async ({ page }) => {
 			await page.goto('/this-dispatch-does-not-exist/')
 			await capture(page, `notfound-${vp.label}`)
+		})
+
+		// S4 (design-intent-to-code): the lane's proof artifact enters the
+		// evidence packet, so what AK judges is the component as the astro
+		// compile actually renders it — the same surface the pixel floor
+		// locks, full-page rather than per-element so the variants are
+		// legible side by side. whileInView entrances need the scroll pass
+		// before the capture, or the plates photograph mid-fade.
+		test(`figure proving ground (${vp.label})`, async ({ page }) => {
+			await page.goto('/preview/figure/')
+			for (const kase of ['default', 'meta-terminal', 'cartography-frame', 'photograph']) {
+				await page.locator(`[data-figure-case="${kase}"] .prime-figure`).scrollIntoViewIfNeeded()
+				await expect(
+					page.locator(`[data-figure-case="${kase}"] .prime-figure`),
+				).toHaveCSS('opacity', '1')
+			}
+			await page.evaluate(() => window.scrollTo(0, 0))
+			await capture(page, `figure-proving-ground-${vp.label}`, { fullPage: true })
 		})
 	})
 }

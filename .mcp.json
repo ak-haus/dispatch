@@ -1,0 +1,26 @@
+{
+  "$comment": [
+    "Dispatch MCP servers. ADR-0003 §Stage 3 + AK decision register §4 (option A, decided",
+    "2026-08-18): the Figma inbound lane is DORMANT and READ-ONLY. The entry exists so the",
+    "lane is one OAuth click from usable IF a design artifact ever originates in Figma; it is",
+    "INACTIVE until then, and nothing in the design-intent-to-code lane waits on it.",
+    "",
+    "Activation is AK's one-time click in claude.ai connector settings — never a session's.",
+    "Sessions must not add write-capable Figma tooling here: write-to-canvas is beta and flagged",
+    "to become usage-based paid, and the register decided a $0 read-only posture.",
+    "",
+    "Plan-tiered limits verified on figma.com/pricing 2026-08-18: Professional/Organization 200",
+    "tool calls/day (+10-15/min), Enterprise 600/day; Starter unlisted [unverified]. Re-verify at",
+    "OAuth time. Runbook: docs/runbooks/design-intent-to-code.md."
+  ],
+  "mcpServers": {
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp",
+      "$posture": "dormant-read-only",
+      "$activation": "AK one-time OAuth (claude.ai connector settings); conditional on a design artifact originating in Figma",
+      "$decision": "ADR-0003 register §4 option A, 2026-08-18",
+      "$sanctioned-tools": ["get_design_context", "get_screenshot"]
+    }
+  }
+}

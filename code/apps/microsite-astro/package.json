@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "version": "0.1.0",
-  "description": "Prime DISpatch — Astro 6 editorial surface. Launch build (vellum substrate, dispatch-red, 5-typeface system, content-collection-driven articles).",
+  "description": "Prime DISpatch \u2014 Astro 6 editorial surface. Launch build (vellum substrate, dispatch-red, 5-typeface system, content-collection-driven articles).",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -30,6 +30,7 @@
     "@astrojs/react": "^5.0.7",
     "@astrojs/sitemap": "^3.7.3",
     "@observablehq/plot": "^0.6.17",
+    "@prime-dispatch/ui": "workspace:*",
     "@react-spring/web": "^10.1.2",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^6.4.8",

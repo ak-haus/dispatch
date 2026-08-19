@@ -19,6 +19,14 @@ import "@prime-dispatch/tokens/css";
 // It must ride preview.tsx, not a preview-head.html: BOTH the dev/build HTML
 // and the vitest rail read preview annotations; a head file misses the rail.
 import "../../microsite-astro/src/styles/fonts.css";
+// Page-owned letterpress contract (S4), imported the same way and for the
+// same reason as fonts.css: .dispatch-emboss / .dispatch-burnin pair
+// text-shadow with mix-blend-mode and carry their own dusk/night overrides,
+// so a component may not author them (construction Rule 5). Stories that
+// set editorial type on the cartographic substrate — ImageWithCaption's
+// cartography-frame variant — render flat ink without this import, and the
+// story lane would then capture a treatment the product does not ship.
+import "../../microsite-astro/src/styles/letterpress.css";
 import "./preview.css";
 
 const preview: Preview = {

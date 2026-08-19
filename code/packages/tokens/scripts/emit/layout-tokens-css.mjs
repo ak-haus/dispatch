@@ -191,14 +191,30 @@ export const DAWN = `:root {
   --grid-line:          {css};
 
   /* ==========================================================================
-   * TYPOGRAPHY SLOTS (root-emitted) — canon slot names consumed directly by
-   * packages/ui component CSS (var(--font-title), var(--font-code)), which had
-   * no definition in this compile before S2. The six live Tailwind slots
-   * (--font-wordmark/nav/narrative/body/mono/civic) are emitted into
-   * tokens.theme.css (@theme inline), not here.
+   * TYPOGRAPHY SLOTS (root-emitted) — every canon slot, reachable from plain
+   * CSS. Construction Rule 4 obliges packages/ui component CSS to consume
+   * canon through var(--token); until S4 only --font-title and --font-code
+   * were emitted here, so Footnote/DldsPanel/ChapterRail's var(--font-body),
+   * var(--font-nav) and any var(--font-civic) resolved to NOTHING wherever
+   * Tailwind is not in the compile. Storybook is exactly that surface (it
+   * loads @prime-dispatch/tokens/css, never the @theme file, and runs no
+   * Tailwind) — so the story lane was capturing fallback stacks, the same
+   * defect class visual.spec.ts's shipped-faces assertion exists to prevent.
+   *
+   * The six theme slots stay in tokens.theme.css as well: that block is what
+   * compiles the font-body / font-nav Tailwind utilities. Both surfaces
+   * render the SAME $extensions.prime.css string from the SAME DTCG token,
+   * so there is one source and drift is not expressible.
+   * Guarded by __tests__/font-slots.test.mjs (fail-closed).
    * ========================================================================== */
-  --font-title: {css};
-  --font-code:  {css};
+  --font-wordmark:  {css};
+  --font-nav:       {css};
+  --font-narrative: {css};
+  --font-body:      {css};
+  --font-mono:      {css};
+  --font-civic:     {css};
+  --font-title:     {css};
+  --font-code:      {css};
 }`;
 
 export const DUSK = `/* ============================================================================

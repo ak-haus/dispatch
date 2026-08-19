@@ -5,7 +5,18 @@
  * NEVER on a Mac (documented rendering variance; ADR bake-off row) — and
  * diff PNGs land on disk where agents read them directly.
  *
- * Scope — the masthead/wordmark surfaces, per the ADR:
+ * Scope — two locks:
+ *
+ *   1. the masthead/wordmark surfaces, per the ADR (below);
+ *   2. COMPONENT locks over the /preview/* proving grounds (added at S4, the
+ *      design-intent-to-code lane). The story lane already snapshots
+ *      components from Storybook; this locks them in the real astro compile,
+ *      where global.css, the shipped @font-face rail and the page-owned
+ *      letterpress are all in the cascade — the one place a Storybook-only
+ *      capture could still be lying. Element captures, so page chrome and
+ *      neighbouring cases never bleed into a component's baseline.
+ *
+ * Masthead scope, per the ADR:
  *   - masthead chrome element (Wordmark + SiteNav strip) on the three
  *     journey surfaces where it renders settled at load: article, /wire,
  *     404 — at desktop and mobile widths.
@@ -98,5 +109,96 @@ for (const vp of VIEWPORTS) {
 			await expectShippedFaces(page)
 			await expect(page.locator('header')).toHaveScreenshot(`masthead-404-${vp.label}.png`)
 		})
+	})
+}
+
+/* ── Component locks — ImageWithCaption (CD7 #24), the S4 lane's proof
+ * artifact. Every variant renders on /preview/figure, which is deliberately
+ * static: no live data, every asset eager-loaded, so the only nondeterminism
+ * is the entrance animation the settle helper below absorbs. */
+
+const FIGURE_CASES = [
+	'default',
+	'meta-terminal',
+	'cartography-frame',
+	'photograph',
+] as const
+
+/**
+ * Flake law for whileInView entrances: the figures ship SSR'd at opacity 0 and
+ * the island animates them in only once they intersect the viewport, so a
+ * capture must (a) bring the case into view and (b) wait for the settled
+ * value. settleMotion's own probe covers WAAPI animations and the masthead
+ * spring, not Motion's main-thread rAF on an arbitrary element — hence the
+ * explicit per-element wait, the same discipline the story rail uses.
+ */
+async function settleFigure(page: import('@playwright/test').Page, kase: string) {
+	// The masthead is sticky, and a plate taller than the viewport forces
+	// Playwright to stitch the element capture across scroll positions — so
+	// the chrome band lands INSIDE the component's baseline (observed on the
+	// first CI-linux generation, 2026-08-19). A component lock must isolate
+	// the component: page chrome has its own locks above, and letting it bleed
+	// in here would fail the figure gate on any masthead edit.
+	//
+	// This hide is UNDONE by restorePageChrome before the test ends — see the
+	// note there. Anything still mutated at test end is what the Chromatic
+	// archive ships to AK for review.
+	await page.locator('header').evaluate((el) => {
+		;(el as HTMLElement).style.display = 'none'
+	})
+	const figure = page.locator(`[data-figure-case="${kase}"] .prime-figure`)
+	await figure.scrollIntoViewIfNeeded()
+	await expect(figure).toHaveCSS('opacity', '1')
+	await expect(figure).toHaveCSS('transform', 'none')
+	// The image itself must have decoded, or the plate captures as a gap.
+	await page.locator(`[data-figure-case="${kase}"] .prime-figure__media`).evaluate(
+		(img) => (img as HTMLImageElement).decode().catch(() => undefined),
+	)
+	return figure
+}
+
+/**
+ * Undo everything the capture did to the page, because the pixel baseline is
+ * NOT the only artifact these tests produce: fixtures.ts bases the suite on
+ * @chromatic-com/playwright, which archives each test's FINAL DOM and ships it
+ * to the cloud lane for AK to review under register §2 policy A.
+ *
+ * Without this, that archive carried the capture's scaffolding rather than the
+ * page — header hidden, and the masthead frozen mid-hide-on-scroll at
+ * translateY(-110%) because scrollIntoViewIfNeeded had scrolled down. A
+ * reviewer would be judging a masthead state the site never presents at rest
+ * (found 2026-08-19 by reading the archived DOM after AK denied a wordmark
+ * snapshot in build 7).
+ *
+ * Restore chrome, return to top, and wait for the masthead to settle back to
+ * visible before the test ends.
+ */
+async function restorePageChrome(page: import('@playwright/test').Page): Promise<void> {
+	await page.locator('header').evaluate((el) => {
+		;(el as HTMLElement).style.removeProperty('display')
+	})
+	await page.evaluate(() => window.scrollTo(0, 0))
+	await page.waitForFunction(
+		() => document.querySelector('header')?.getAttribute('data-hidden') !== 'true',
+		undefined,
+		{ timeout: 5_000 },
+	)
+	await settleMotion(page)
+}
+
+for (const vp of VIEWPORTS) {
+	test.describe(`ImageWithCaption — ${vp.label}`, () => {
+		test.use({ viewport: { width: vp.width, height: vp.height } })
+
+		for (const kase of FIGURE_CASES) {
+			test(`${kase} variant holds the pixel lock (${vp.label})`, async ({ page }) => {
+				await page.goto('/preview/figure/')
+				await settleMotion(page)
+				await expectShippedFaces(page)
+				const figure = await settleFigure(page, kase)
+				await expect(figure).toHaveScreenshot(`figure-${kase}-${vp.label}.png`)
+				await restorePageChrome(page)
+			})
+		}
 	})
 }
