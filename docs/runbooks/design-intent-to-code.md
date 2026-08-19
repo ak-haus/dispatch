@@ -113,9 +113,11 @@ a CI edit.
 The lane ships components **inside existing canon**. It makes no new visual decisions.
 
 - A question the four inputs **can** answer → answer it and build.
-- A question they **cannot** answer → file an **OQ** in `DESIGN.md` §Adjudicated questions and build
-  everything that does not depend on the answer. Do not decide it, and do not quietly narrow the
-  component to avoid it.
+- A question they **cannot** answer → file an **OQ** and build everything that does not depend on the
+  answer. Do not decide it, and do not quietly narrow the component to avoid it. OQs surface in
+  `DESIGN.md` §Adjudicated questions — which is generated, so **write the OQ into
+  `code/packages/tokens/scripts/emit/layout-design-md.mjs` and rebuild**, never into the file itself;
+  the contract drift gate rejects a hand-edit. OQ-7 and OQ-8 are the worked examples.
 - A **mechanical defect** with one obviously correct answer (a broken ARIA pair, an unresolvable
   token) → repair it, document the repair inline, and name it in the PR. That is not a decision.
 
