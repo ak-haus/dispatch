@@ -1,21 +1,27 @@
 name: design-judge
 on: [pull_request]
 
-# Semantic judge lane (ADR-0003 §Stage 4b, register §8): screenshots of the
-# journey surfaces × 2 viewports → Claude vision (pinned Sonnet-tier) judges
-# against DESIGN.md → structured findings posted on the PR.
+# Design-review evidence packet (ADR-0003 §Stage 4b, as RULED by AK
+# 2026-08-19): **the judge for this lane is AK** — the LLM judge is
+# superseded until AK decides otherwise. CI's job is to produce the
+# deterministic evidence packet: journey surfaces × 2 viewports, captured
+# under the same Playwright config as the e2e gate, uploaded as an
+# artifact and linked on the PR for the Mayor's review.
 #
-# POSTURE: REPORT-ONLY during the calibration window — armed 2026-08-19,
-# ratchets to BLOCKING 2026-09-02 (join the ruleset then, not before). The
-# job itself may go red on INFRASTRUCTURE failure (missing captures, API
-# error) so a broken judge is visible — but it is not a required check, so
-# red here never blocks a merge during calibration.
+# The model machinery stays in-tree, dormant (scripts/semantic-judge.mjs,
+# pinned claude-sonnet-5). Re-arming is a register decision, never a CI
+# edit alone: restore the judge + report steps here and fund the API key.
+# Evidence basis for the ruling: wiki 16 / board flag R1 (no VLM validated
+# for fine-grained design-defect detection; no shipped LLM-judge-as-gate
+# precedent).
+#
+# Not a required check; red here means the evidence packet itself broke.
 permissions:
   contents: read
   pull-requests: write
 jobs:
-  semantic-review:
-    name: semantic-review (judge, report-only)
+  design-review:
+    name: design-review (evidence packet)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,35 +37,35 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - name: hydrate the PP font rail — the judge must see shipped faces
+      - name: hydrate the PP font rail — the evidence must show shipped faces
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       - run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
       - name: capture journey surfaces (same config, judge scope)
         working-directory: code/apps/microsite-astro
         run: pnpm e2e:build && pnpm exec playwright test --config playwright.judge.config.ts
-      - name: judge against DESIGN.md (pinned Sonnet-tier, structured findings)
-        working-directory: code/apps/microsite-astro
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/semantic-judge.mjs
-      - name: post the report on the PR (upsert one comment)
+      - name: upload the evidence packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: design-review-evidence
+          path: code/apps/microsite-astro/test-results/judge-captures/
+          retention-days: 14
+      - name: link the packet on the PR (upsert one comment)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          BODY_FILE=apps/microsite-astro/test-results/judge-report/report.md
-          MARKER="<!-- semantic-judge-report -->"
-          printf '%s\n\n' "$MARKER" | cat - "$BODY_FILE" > /tmp/judge-comment.md
+          MARKER="<!-- design-review-evidence -->"
+          COUNT=$(ls apps/microsite-astro/test-results/judge-captures/*.png | wc -l | tr -d ' ')
+          {
+            printf '%s\n\n' "$MARKER"
+            echo "## Design-review evidence packet"
+            echo
+            echo "> The judge for this lane is **AK** (register §8 as ruled 2026-08-19; evidence: wiki 16 / board R1)."
+            echo
+            echo "$COUNT captures of the journey surfaces at two viewports, from this PR's build: [download the artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) (\`design-review-evidence\`)."
+          } > /tmp/evidence-comment.md
           EXISTING=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -1)
           if [ -n "$EXISTING" ]; then
-            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$EXISTING" -F body=@/tmp/judge-comment.md > /dev/null
+            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$EXISTING" -F body=@/tmp/evidence-comment.md > /dev/null
           else
-            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -F body=@/tmp/judge-comment.md > /dev/null
+            gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -F body=@/tmp/evidence-comment.md > /dev/null
           fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: judge-report
-          path: |
-            code/apps/microsite-astro/test-results/judge-captures/
-            code/apps/microsite-astro/test-results/judge-report/
-          retention-days: 14
