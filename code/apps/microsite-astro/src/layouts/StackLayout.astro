@@ -19,6 +19,12 @@ interface Props {
 	 *  want hero sections to span the viewport (article pages) without
 	 *  inheriting homepage-only behaviors. */
 	fullWidthMain?: boolean
+	/** noindex — keeps a surface out of search results. For the /preview/*
+	 *  proving grounds, which are internal QA + design-system reference and
+	 *  were never part of the public IA. Pairs with the sitemap filter in
+	 *  astro.config.mjs: the meta tag governs crawlers that arrive by link,
+	 *  the filter stops us advertising the route in the first place. */
+	noindex?: boolean
 }
 
 const {
@@ -29,6 +35,7 @@ const {
 	hideHero = false,
 	fullbleed = false,
 	fullWidthMain = false,
+	noindex = false,
 } = Astro.props
 const unconstrained = fullbleed || fullWidthMain
 
@@ -53,6 +60,7 @@ const searchIndex = await buildSearchIndex()
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>{title} — DISpatch</title>
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
 
 		<!--
 			Critical-weight font preloads (canon typography/css/preload.html):

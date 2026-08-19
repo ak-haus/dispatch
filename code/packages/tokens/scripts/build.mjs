@@ -59,7 +59,12 @@ const [dawnTree, duskTree, nightTree, shadcnTree] = await Promise.all(
 const dawnAll = collectByCssName(dawnTree);
 const themeFontNames = new Set();
 {
-  // theme:true tokens emit into tokens.theme.css, not tokens.css
+  // theme:true marks the slots that ALSO compile into tokens.theme.css's
+  // @theme inline block (the Tailwind `font-body`/`font-nav` utilities).
+  // Since S4 they are no longer withheld from tokens.css: plain CSS consumers
+  // — every packages/ui component stylesheet, under construction Rule 4 —
+  // need the same slot names at :root, on surfaces where no Tailwind compile
+  // exists (Storybook). One token, both emissions, one value.
   const walk = (node) => {
     if (typeof node !== 'object' || node === null) return;
     if (node.$value !== undefined) {
@@ -71,7 +76,7 @@ const themeFontNames = new Set();
   };
   walk(dawnTree);
 }
-const dawnCss = new Map([...dawnAll].filter(([name]) => !themeFontNames.has(name)));
+const dawnCss = dawnAll;
 
 // Tailwind theme dictionary: bridge lines derived from real tokens (fail-closed
 // if a target is missing) + the six live font slots.

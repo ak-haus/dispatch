@@ -23,3 +23,11 @@ storybook-static/
 code/apps/microsite-astro/public/fonts/PP*.woff2
 representation/visual-system/typography/subsets/nav/pangram-sans-800.woff2
 representation/visual-system/typography/subsets/wordmark/editorial-new-700.woff2
+
+# Visual baselines are CI-linux ONLY (ADR-0003 §Stage 4: "Baselines must be
+# generated in the CI linux runner, not the Mac — documented rendering
+# variance"). A local `playwright test visual.spec.ts` run writes -darwin
+# files for any missing snapshot; committing one would enshrine a Mac render
+# as the floor. The e2e `update-visual-baselines` workflow_dispatch is the
+# only sanctioned baseline factory.
+*-chromium-darwin.png

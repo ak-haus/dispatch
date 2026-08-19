@@ -22,7 +22,16 @@ import tailwindcss from '@tailwindcss/vite'
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://dispatchmag.dev',
-	integrations: [react(), mdx(), sitemap()],
+	integrations: [
+		react(),
+		mdx(),
+		// /preview/* are internal QA + design-system reference surfaces (the
+		// token canon and the S4 figure proving ground), never public IA — so
+		// they stay out of the sitemap we hand crawlers. They also carry
+		// noindex via StackLayout. The e2e + judge specs still reach them by
+		// direct path; only article discovery reads the sitemap.
+		sitemap({ filter: (page) => !new URL(page).pathname.startsWith('/preview/') }),
+	],
 	vite: {
 		plugins: [tailwindcss()],
 		resolve: {

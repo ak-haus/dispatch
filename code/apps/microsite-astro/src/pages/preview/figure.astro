@@ -1,0 +1,133 @@
+---
+import StackLayout from '@/layouts/StackLayout.astro'
+// SUBPATH import, never the barrel: @prime-dispatch/ui's index re-exports all
+// 27 components and would drag radix/cmdk/maplibre into this live surface's
+// build graph. The ./custom/* export condition resolves straight to the one
+// component's source, whose only runtime deps (motion, clsx, tailwind-merge)
+// this app already carries. This is the first astro-side consumer of the ui
+// package — the existing surface components are forked local copies, which is
+// the drift the design stack exists to close (board row, not this PR).
+import { ImageWithCaption } from '@prime-dispatch/ui/custom/ImageWithCaption'
+
+/**
+ * Figure proving ground — the S4 design-intent-to-code lane's render surface
+ * (ADR-0003 §Stage 3). Internal QA + design-system reference page, mirroring
+ * /preview/tokens; not part of the public IA (both preview routes are
+ * noindex + sitemap-excluded since S4).
+ *
+ * Why this page exists rather than an article edit: the lane's done-oracle is
+ * the Stage-4 gates, and two of the three — the Playwright pixel floor and the
+ * judge evidence packet — only see components that render on a ROUTE. AK owns
+ * article content (AGENTS.md), so the lane gets its own deterministic surface
+ * instead of a content change. The story lane covers the same component from
+ * Storybook; this covers it in the real astro compile, with global.css, the
+ * shipped @font-face rail and the page-owned letterpress all in the cascade —
+ * the one place a Storybook-only capture could still be lying.
+ *
+ * Determinism (the flake law): every figure is `loading="eager"` so the pixel
+ * capture never races a lazy decode, and no live data touches this page.
+ */
+
+const CARTOGRAPHY = '/cartography/district.webp'
+const BANNER = '/banners/dispatch-02.webp'
+
+const provenance = {
+	lane: 'editorial' as const,
+	authorship: { citizen: 'AK ALMoumen', aiRole: 'human-led-AI-assisted' as const },
+	c2paAttached: true,
+}
+---
+
+<StackLayout
+	title="Figure preview"
+	kicker="Design system · Component canon"
+	description="ImageWithCaption (CD7 #24) in its four canon variants."
+	theme="vellum"
+	hideHero
+	noindex
+>
+	<section class="py-12" data-figure-proving-ground>
+		<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-accent-prime">
+			Design system · Figure preview
+		</p>
+
+		<h1
+			class="mt-6 max-w-3xl font-narrative text-5xl font-bold leading-tight tracking-tight text-body-strong sm:text-6xl"
+		>
+			ImageWithCaption
+		</h1>
+
+		<p class="mt-6 max-w-2xl font-body text-lg leading-relaxed text-body-muted">
+			CD7 #24 — the article figure primitive, built through the S4
+			design-intent-to-code lane from <span class="font-mono text-sm">DESIGN.md</span>,
+			the generated tokens and <span class="font-mono text-sm"
+				>components-multimedia.md §3.4</span
+			>. Four variants, distinguished by the caption's voice, never by chrome.
+		</p>
+
+		<div class="mt-16" data-figure-case="default">
+			<p
+				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
+			>
+				default · Body slot
+			</p>
+			<ImageWithCaption
+				client:load
+				src={BANNER}
+				alt="Dispatch 02 banner illustration"
+				loading="eager"
+				caption="The Editorial District at first light — the cartographic substrate is a live grid layer, not a background image."
+			/>
+		</div>
+
+		<div class="mt-16" data-figure-case="meta-terminal">
+			<p
+				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
+			>
+				meta-terminal · Meta-code slot
+			</p>
+			<ImageWithCaption
+				client:load
+				variant="meta-terminal"
+				src={BANNER}
+				alt="Dispatch 02 banner illustration"
+				loading="eager"
+				caption="$ prime citizens list --lane dispatch → 3 positions filled, 1 open"
+			/>
+		</div>
+
+		<div class="mt-16" data-figure-case="cartography-frame">
+			<p
+				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
+			>
+				cartography-frame · Civic/Dante slot + letterpress
+			</p>
+			<ImageWithCaption
+				client:load
+				variant="cartography-frame"
+				src={CARTOGRAPHY}
+				alt="Editorial District cartographic plate"
+				loading="eager"
+				caption="Plate I — the Editorial District, surveyed at dawn."
+			/>
+		</div>
+
+		<div class="mt-16" data-figure-case="photograph">
+			<p
+				class="mb-4 border-b border-lane-institutional-strong/30 pb-3 font-nav text-[13px] font-extrabold uppercase tracking-[0.08em] text-body-muted"
+			>
+				photograph · Body slot + IPTC credit + DLDS band
+			</p>
+			<ImageWithCaption
+				client:load
+				variant="photograph"
+				src={BANNER}
+				alt="Dispatch 02 banner illustration"
+				loading="eager"
+				caption="The masthead plate, photographed off the press sheet."
+				credit="Prime DISpatch · Editorial"
+				provenance={provenance}
+			/>
+		</div>
+	</section>
+</StackLayout>

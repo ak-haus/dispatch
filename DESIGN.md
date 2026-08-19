@@ -459,7 +459,7 @@ construction-rules.md §Chiseled history, MANIFEST.yaml `chiseled-history`):
   path). The live surface complies — every family self-hosts from `/fonts/` (OQ-2, executed
   at the fonts restoration build).
 
-## Adjudicated questions — AK rulings, 2026-08-18
+## Adjudicated questions — AK rulings (OQ-1–4) + open filings (OQ-7–8)
 
 > These four contradictions were FILED at S2 (tokens README §F5; typography.json
 > `$description`s), surfaced at S3 per ADR-0003 §Stage 7, and **RULED by AK on 2026-08-18**
@@ -524,6 +524,34 @@ census then amends bindings (a one-line re-point per alias — the tier's purpos
 exists. **Executed at S5 pre-step** (CD2 §10 Decision 13): the ten slots ship in the W2 alias
 table above; every binding is PROVISIONAL pending the S5 story census — re-point via
 `src/color/ui-slots.json`, never a new value.
+
+### OQ-7 · Who owns the build-time <Image> call — OPEN (filed S4, 2026-08-19)
+
+CD7 §3.4 names Astro's `<Image>` as ImageWithCaption's in-stack image processor (build-time
+AVIF/WebP negotiation) AND names `/components/custom` — a **React** package — as its
+destination. The two cannot both hold: Astro's `<Image>` is a build-time Astro component and
+cannot execute inside a React component. **Built under the assumption** that the React primitive
+owns structure and typography and exposes a `media` slot, so an Astro surface can hand it a
+build-optimized element; the shipped proving ground passes a plain `<img>`. **The question for
+AK:** should an Astro-native `Figure.astro` wrapper own the `<Image>` call — which splits the
+component across two packages and two idioms — or does the `media` slot stay the seam, leaving
+articles responsible for passing an optimized element? Not decided here: it is an architecture
+call about where the app/library boundary sits, and it governs every later CD7 image component
+(#25 ImageGallery, #31 ComparisonSlider). Cost of deferring: figures render unoptimized source
+assets until it lands.
+
+### OQ-8 · Runtime C2PA read — OPEN (filed S4, 2026-08-19)
+
+CD7 §3.4 specifies the DLDS provenance band as "reading C2PA metadata via `@contentauth/c2pa`
+JS", tied to EU AI Act compliance dated 2026-08-02. **Built** with `c2paAttached` as a
+**declared** flag — the shape DldsPanel already ratified (CD4 spec Field 2, variant
+`c2pa-attached`) — so provenance is disclosed from authored data, not inferred. **The question
+for AK:** does V1 add the `@contentauth/c2pa` runtime dependency to read content credentials
+off the asset in-browser? That is a new client dependency on an editorial surface with a
+Lighthouse budget ratchet, and its compliance value depends on assets actually carrying C2PA —
+which today they do not. A build-time read (extract at publish, emit into frontmatter) is the
+recorded alternative and keeps the client rail at zero. Not decided here: it is a dependency +
+compliance call, not a visual one.
 
 ## Canon reading paths
 

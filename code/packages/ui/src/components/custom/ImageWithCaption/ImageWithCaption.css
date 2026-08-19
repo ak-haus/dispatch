@@ -1,0 +1,101 @@
+/* ImageWithCaption — canon-bound styles (CD7 §2.1 row 24 + §3.4).
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10 — construction Rule 7):
+ *   - No background-color on .prime-figure root. A figure is a PLATE: the
+ *     image carries the surface, the page owns the substrate (Rule 1).
+ *   - No frame, no matte, no rounded corners, no drop-shadow on the image.
+ *     "Photo card" chrome is the archetype-repetition failure Rule 3 names;
+ *     the plate's character is the caption's VOICE SHIFT, not a border.
+ *   - No lane pigment on the caption text or on a decorative rule. The lane
+ *     is disclosed by the composed DldsPanel, which owns lane semantics
+ *     (Rule 2) — restating it as chrome is the "wine became wallpaper"
+ *     failure.
+ *   - No per-cycle blocks here. Cycles emit at bridge level (Rule 5); the
+ *     letterpress used by the cartography variant is the page-owned
+ *     .dispatch-emboss contract, imported by the surface, never re-authored.
+ *   - No caption below 12px (DESIGN.md §Typography universal rule 2 — the
+ *     old 9/10px caps are deprecated).
+ *   - No italic figcaption as a "caption look". Register comes from the slot
+ *     family, not from a slant.
+ */
+
+.prime-figure {
+  /* Substrate-agnostic root (Rule 1) — no background, no border. */
+  display: block;
+  margin: 3rem 0;
+  max-width: 100%;
+}
+
+.prime-figure__media {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.prime-figure__caption {
+  /* Body slot is the default reading register (DESIGN.md §Typography). */
+  display: block;
+  font-family: var(--font-body);
+  /* 12px floor is a hard rule; 0.875rem sits a step above it so the caption
+   * still reads as prose rather than as a label. */
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  max-width: 62ch;
+}
+
+.prime-figure__credit {
+  /* Credit is a LABEL, not prose — nav slot, tracked caps, 12px exactly. */
+  display: block;
+  font-family: var(--font-nav);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.prime-figure__provenance {
+  margin-top: 0.75rem;
+}
+
+/* ── Variant: meta-terminal (CD7 §3.4 "monospace meta-caption for terminal
+ * output") — Meta-code slot. The mono slot is COMPONENT-LOCKED per CD1
+ * Concept 1: legal here precisely because a figcaption inside a component
+ * is not chrome and not article prose. */
+.prime-figure--meta-terminal .prime-figure__caption {
+  font-family: var(--font-code);
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Variant: cartography-frame (CD7 §3.4 "cosmology cartography frame
+ * caption") — Civic/Dante slot, asset-locked to cartography and signage
+ * (IM Fell English, NOT Cinzel — tombstoned 2026-05-10). Editorial type on
+ * the cartographic substrate takes letterpress; the .dispatch-emboss class
+ * is applied by the component and DEFINED by the page (letterpress.css). */
+.prime-figure--cartography-frame .prime-figure__caption {
+  font-family: var(--font-civic);
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  color: var(--text-strong);
+}
+
+/* ── Variant: photograph (CD7 §3.4 "photograph with IPTC 2025.1 metadata")
+ * — reading caption plus the credit line the metadata carries. It is
+ * DELIBERATELY declaration-free: the variant differs by what it renders
+ * (a credit line), not by how it looks, and inventing chrome to make the
+ * variant "look different" is the Rule 6 failure. The class stays as a
+ * targeting hook for consumers and tests. */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Entrance motion is authored in the component (Motion v12) and disabled
+   * there too; this is the belt for surfaces that render the markup without
+   * the island. */
+  .prime-figure {
+    transition: none;
+  }
+}

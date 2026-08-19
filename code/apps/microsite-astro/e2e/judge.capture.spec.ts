@@ -72,5 +72,23 @@ for (const vp of VIEWPORTS) {
 			await page.goto('/this-dispatch-does-not-exist/')
 			await capture(page, `notfound-${vp.label}`)
 		})
+
+		// S4 (design-intent-to-code): the lane's proof artifact enters the
+		// evidence packet, so what AK judges is the component as the astro
+		// compile actually renders it — the same surface the pixel floor
+		// locks, full-page rather than per-element so the variants are
+		// legible side by side. whileInView entrances need the scroll pass
+		// before the capture, or the plates photograph mid-fade.
+		test(`figure proving ground (${vp.label})`, async ({ page }) => {
+			await page.goto('/preview/figure/')
+			for (const kase of ['default', 'meta-terminal', 'cartography-frame', 'photograph']) {
+				await page.locator(`[data-figure-case="${kase}"] .prime-figure`).scrollIntoViewIfNeeded()
+				await expect(
+					page.locator(`[data-figure-case="${kase}"] .prime-figure`),
+				).toHaveCSS('opacity', '1')
+			}
+			await page.evaluate(() => window.scrollTo(0, 0))
+			await capture(page, `figure-proving-ground-${vp.label}`)
+		})
 	})
 }

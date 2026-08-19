@@ -122,7 +122,19 @@ export function DldsPanel(props: DldsPanelProps): ReactElement {
       {!isRestrained && c2paAttached ? (
         <>
           <span className="prime-dlds-panel__sep" aria-hidden="true">·</span>
-          <span className="prime-dlds-panel__c2pa" aria-label="Content credentials available">
+          <span
+            className="prime-dlds-panel__c2pa"
+            // role="img" is load-bearing, not decoration: aria-label is
+            // PROHIBITED on a bare <span> (no role → no naming permitted),
+            // and axe reports the pair as aria-prohibited-attr. The badge
+            // still needs the expanded name the CD4 spec Field 4 prescribes
+            // ("Content credentials available"), so give it a role that
+            // permits naming. Surfaced 2026-08-19 by ImageWithCaption, the
+            // first surface to render the badge; attribute-only, no visual
+            // change.
+            role="img"
+            aria-label="Content credentials available"
+          >
             C2PA
           </span>
         </>

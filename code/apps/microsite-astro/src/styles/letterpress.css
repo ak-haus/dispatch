@@ -1,0 +1,68 @@
+/* ── Letterpress / burned-in text effects ─────────────────────────────────
+ * PAGE-OWNED SUBSTRATE CONTRACT. Extracted from global.css 2026-08-19 (S4)
+ * so surfaces outside the astro compile can import the SAME declarations
+ * instead of mirroring them — the fonts.css precedent. Storybook's
+ * preview.tsx imports this file across the workspace boundary, which is
+ * what lets the story lane capture the shipped letterpress rather than
+ * flat ink (components must not reimplement it: the treatment carries its
+ * own cycle overrides, and construction Rule 5 forbids a component
+ * authoring theme variants).
+ * Editorial type sits ON the cartographic substrate, not floating above it.
+ * Two depth treatments — pick based on type weight.
+ *   .dispatch-emboss  → light press; for caps/labels at 11–14px
+ *   .dispatch-burnin  → heavier press; for display type (wordmark / volume
+ *                       label / dek paragraph) at 16px+
+ * Both pair `text-shadow` with `mix-blend-mode: multiply` so dark ink darkens
+ * naturally where it overlaps the cartographic backdrop, mimicking ink
+ * absorbing into paper. Cycle blocks invert the blend mode for night.
+ * ─────────────────────────────────────────────────────────────────────── */
+.dispatch-emboss {
+  mix-blend-mode: multiply;
+  text-shadow:
+    0 1px 0 color-mix(in oklch, var(--sky-low) 75%, transparent),
+    0 -0.5px 0 color-mix(in oklch, var(--platform-text-body-strong) 18%, transparent);
+}
+
+.dispatch-burnin {
+  mix-blend-mode: multiply;
+  text-shadow:
+    0 1px 1.5px color-mix(in oklch, var(--sky-low) 65%, transparent),
+    0 -1px 0 color-mix(in oklch, var(--platform-text-body-strong) 22%, transparent),
+    0 0 1px color-mix(in oklch, var(--platform-text-body-strong) 10%, transparent);
+}
+
+/* Dark-cycle letterpress (dusk + night).
+ *
+ * Default multiply (above) darkens dark ink into light paper — right for
+ * dawn, wrong for dark substrates. On dark cycles BOTH emboss and burnin
+ * drop the blend mode entirely.
+ *
+ * Why no screen blend: the chrome (emboss small caps + burnin wordmark)
+ * sits over the cartography asset, which contains BRIGHT-RED building
+ * shapes. Screen-blending red text (accent-prime / accent-prime-active /
+ * wordmark-dis) over red backdrop saturates each channel toward 1.0 —
+ * the text reads as washed cream/white wherever it overlaps a red roof.
+ * Multicolor wordmark spans cross-blend independently, compounding it
+ * into a horror-glow look at display size.
+ *
+ * Solution: render colors verbatim, ground type with a soft drop shadow
+ * for press depth. The cartography backdrop is already pre-muted (opacity
+ * 0.55 + brightness 0.93); shadow adds the editorial "weight on paper"
+ * register without interaction artifacts.
+ */
+
+[data-prime-cycle="dusk"] .dispatch-emboss,
+[data-prime-cycle="night"] .dispatch-emboss {
+  mix-blend-mode: normal;
+  text-shadow: 0 1px 3px color-mix(in oklch, black 65%, transparent);
+}
+
+[data-prime-cycle="dusk"] .dispatch-burnin {
+  mix-blend-mode: normal;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+}
+
+[data-prime-cycle="night"] .dispatch-burnin {
+  mix-blend-mode: normal;
+  text-shadow: 0 2px 8px color-mix(in oklch, black 75%, transparent);
+}
