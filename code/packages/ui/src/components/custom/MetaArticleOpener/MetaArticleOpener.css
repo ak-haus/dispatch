@@ -99,6 +99,22 @@
   border-left: 3px solid var(--lane-dispatch);
 }
 
+/* axe color-contrast (WCAG 1.4.3): the change-log/post-mortem variants place
+ * label-size --text-muted text on the --window-warm tinted band, where it
+ * computes 4.41:1 (< 4.5). F5 size-scoped discipline (DESIGN.md §Colors):
+ * "--dispatch-text-body-muted-deep covers tinted panels" — role re-point
+ * only, no value change; dusk/night alias muted-deep back to muted, so dark
+ * cycles are untouched. Covers this component's read-time plus the muted
+ * text of the DldsPanel it hosts on the tinted band. */
+.prime-meta-opener--change-log .prime-meta-opener__read-time,
+.prime-meta-opener--post-mortem .prime-meta-opener__read-time,
+.prime-meta-opener--change-log .prime-dlds-panel__ai-role,
+.prime-meta-opener--post-mortem .prime-dlds-panel__ai-role,
+.prime-meta-opener--change-log .prime-dlds-panel__drift--stable,
+.prime-meta-opener--post-mortem .prime-dlds-panel__drift--stable {
+  color: var(--dispatch-text-body-muted-deep);
+}
+
 .prime-meta-opener--compact {
   gap: 0.625rem;
   padding: 1rem 0 0.75rem;

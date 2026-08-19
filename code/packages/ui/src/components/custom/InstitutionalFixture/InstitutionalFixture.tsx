@@ -48,9 +48,13 @@ export function InstitutionalFixture(props: InstitutionalFixtureProps): ReactEle
   );
 
   return (
+    /* No explicit role: ARIA-in-HTML disallows `contentinfo` on <aside>
+     * (axe aria-allowed-role). The implicit `complementary` landmark is the
+     * spec's own contract — Field 4 announces "Institutional mandate,
+     * complementary" (spec.md §Field 4 screen-reader behavior); contentinfo
+     * belongs to the body-scoped <footer>, which W3 has not ratified. */
     <aside
       className={cls}
-      role="contentinfo"
       aria-label={ariaLabel}
       {...rest}
     >

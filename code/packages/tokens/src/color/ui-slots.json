@@ -326,7 +326,193 @@
           }
         }
       },
-      "$description": "UI short-name slot aliases — the W2-era token API still consumed by packages/ui component CSS and microsite-next's @theme bridge (census 2026-08-18: --copper ×5, --text-muted ×15, --accent-prime ×9, … referenced bare with no definition since the tiered rename). Each alias resolves to its tiered canon token so Storybook/ui/next rendering becomes honest (ADR-0003: S5 depends on S2 for exactly this). Purely additive for microsite-astro: none of these names are referenced there. UNRESOLVABLE names are deliberately ABSENT — --chrome-text(-hover/-active), --chrome-background, --chrome-border, --chrome-indicator, --surface-page, --surface-inset, --rail-edge, --grid-line have no defined value anywhere in repo or archive history (forward-declared only); filed as an S5 gap rather than invented here."
+      "surface-page": {
+        "$value": "{color.dispatch.vellum.100}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): the page substrate a component may reference when its structural role owns a page-level sheet (SiteNav mobile sheet). Bound to vellum-100 — its own canon role: 'The page substrate' (CD2 §2.2). Census rider: S5 story census may re-point (one-line amend).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "surface-page",
+            "css": "var(--dispatch-vellum-100)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — palette→alias→semantic (Material md.sys / Polaris / Spectrum / SLDS 2)",
+              "reference-platforms": [
+                "construction-rules.md Rule 1",
+                "OQ-4 evidence digest 2026-08-18"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "surface-inset": {
+        "$value": "{color.dispatch.vellum.50}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): contained/elevated slots inside a component (Footnote bottom sheet, inline code chips). Bound to vellum-50 — the one step whose elevation ordinal holds in all three cycles (dawn 0.985 vs page 0.96; dusk 0.22 vs 0.18; night 0.12 vs 0.08: always lifted off the page).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "surface-inset",
+            "css": "var(--dispatch-vellum-50)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — elevation-stable contained-slot surface",
+              "reference-platforms": [
+                "construction-rules.md Rule 1",
+                "Footnote.css census 2026-08-18"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "rail-edge": {
+        "$value": "{color.dispatch.vellum.300}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): hairline rails/edges (ChapterRail spine, opener rules, SiteNav underline — census 2026-08-18: ×19 across 7 components). Bound to vellum-300 — its own canon role names 'card edges / footer' (CD2 §4.5.1 window-warm register). Decorative hairlines; not a text role (the two color: consumers are ornament glyphs — census watches them).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "rail-edge",
+            "css": "var(--dispatch-vellum-300)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — boundary-signal hairline register",
+              "reference-platforms": [
+                "construction-rules.md Rules 1+6",
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "chrome-text": {
+        "$value": "{color.platform.copper-label}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): chrome/nav-register text at label size (Footnote back-link 12px — the one live consumer). Bound to copper-label: nav default is copper (CD2 §10 Decision 12c) and label-size copper is F5 size-scoped to the AA variant (register §10) — AA holds in all cycles by the executed F5 math.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "chrome-text",
+            "css": "var(--platform-copper-label)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — chrome text role riding the F5 size-scoped copper",
+              "reference-platforms": [
+                "CD2 §10 Decision 12c",
+                "ADR-0003 register §10"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "chrome-text-hover": {
+        "$value": "{color.platform.copper-deep}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): chrome text hover. Bound to copper-deep — the Decision 12c tonal-stepping hover state.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "chrome-text-hover",
+            "css": "var(--platform-copper-deep)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — Decision 12c state arc (hover)",
+              "reference-platforms": [
+                "CD2 §10 Decision 12c"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "chrome-text-active": {
+        "$value": "{color.platform.accent-prime-active}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): chrome text active/current. Bound to accent-prime-active — the Decision 12c tonal-stepping active state (wine intermediate).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "chrome-text-active",
+            "css": "var(--platform-accent-prime-active)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — Decision 12c state arc (active)",
+              "reference-platforms": [
+                "CD2 §10 Decision 12c"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "chrome-background": {
+        "$value": "{color.dispatch.vellum.25}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): chrome surface where masthead/nav furniture sits. Bound to vellum-25 — the sky-high register: page-top atmospheric plane (CD2 §4.5.2), where the masthead lives.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "chrome-background",
+            "css": "var(--dispatch-vellum-25)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — chrome surface at the sky-high plane",
+              "reference-platforms": [
+                "CD2 §4.5.2 Decision 6"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "chrome-border": {
+        "$value": "{color.dispatch.vellum.300}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): chrome furniture borders. Bound to vellum-300 — the same card-edge register as rail-edge (CD2 §4.5.1); the census may split them if chrome borders prove to need a distinct weight.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "chrome-border",
+            "css": "var(--dispatch-vellum-300)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — boundary-signal register at chrome scope",
+              "reference-platforms": [
+                "CD2 §4.5.1 Decision 6"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "chrome-indicator": {
+        "$value": "{color.platform.accent-prime}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): the chrome active-position indicator (current-page marker, focus-critical ring). Bound to accent-prime — Decision 12c focus state; lane-dispatch deploys for 'focus rings on critical interactions' (CD2 §4.3).",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "chrome-indicator",
+            "css": "var(--platform-accent-prime)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — Decision 12c state arc (focus/indicator)",
+              "reference-platforms": [
+                "CD2 §10 Decision 12c",
+                "CD2 §4.3 Decision 5"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "grid-line": {
+        "$value": "{color.dispatch.vellum.200}",
+        "$description": "Semantic slot (OQ-4, PROVISIONAL binding): architectural background grid lines (lot-line register — the HUD grid under Night). Bound to vellum-200 — the reflect stratum: incident-light whisper beneath content, one step quieter than the rail-edge/chrome-border edge register.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "grid-line",
+            "css": "var(--dispatch-vellum-200)",
+            "concept-citation": {
+              "universal-concept": "Semantic middle tier — architectural-document grid whisper",
+              "reference-platforms": [
+                "CD3 formula.md lot-line register",
+                "CD2 §4.5.2 Decision 6"
+              ]
+            },
+            "ratified-at": "OQ-4 (AK 2026-08-18) — executed S5, binding provisional — census-confirmed 2026-08-18 (343-story rendered evidence, zero re-points)"
+          }
+        }
+      },
+      "$description": "UI short-name slot aliases — the W2-era token API still consumed by packages/ui component CSS and microsite-next's @theme bridge (census 2026-08-18: --copper ×5, --text-muted ×15, --accent-prime ×9, … referenced bare with no definition since the tiered rename). Each alias resolves to its tiered canon token so Storybook/ui/next rendering becomes honest (ADR-0003: S5 depends on S2 for exactly this). Purely additive for microsite-astro: none of these names are referenced there. The formerly-unresolvable semantic slots (--surface-page, --surface-inset, --rail-edge, --chrome-text/-hover/-active, --chrome-background, --chrome-border, --chrome-indicator, --grid-line) are RATIFIED per OQ-4 (AK 2026-08-18) as aliases with PROVISIONAL bindings into the ratified palette — DTCG 2025.10 makes unresolvable references a MUST-error, so bare-name ratification was never a legitimate intermediate state. The S5 story census amends any binding the rendered evidence disagrees with (a one-line re-point per alias); --chrome-* stays this small named set — no per-component tier (CD2 §10 Decision 13)."
     }
   }
 }

@@ -78,6 +78,30 @@ const cases = [
   { cycle: 'night', fg: 'dispatch-text-body-muted', bg: 'dispatch-vellum-25', min: 4.5, node: 'night muted ink' },
   { cycle: 'night', fg: 'dispatch-text-body-muted-deep', bg: 'dispatch-vellum-25', min: 4.5, node: 'night muted-deep (alias → cycle muted)' },
   { cycle: 'night', fg: 'platform-on-copper', bg: 'platform-copper-label', min: 4.5, node: 'night pill: void ink on gilded fill' },
+
+  // ---- OQ-3 (AK 2026-08-18, executed S5): faint AA cycle variants — the
+  // mechanical mirror of F5. Worst surface is cycle vellum-25 (the lightest
+  // dark-cycle plane); -50/-100 asserted so a substrate re-bind can't regress.
+  { cycle: 'dusk', fg: 'dispatch-text-body-faint', bg: 'dispatch-vellum-25', min: 4.5, node: 'dusk faint 12px consumers (separators, end-line, footer) — OQ-3' },
+  { cycle: 'dusk', fg: 'dispatch-text-body-faint', bg: 'dispatch-vellum-50', min: 4.5, node: 'dusk faint on surface-inset (vellum-50 provisional binding) — OQ-3' },
+  { cycle: 'dusk', fg: 'dispatch-text-body-faint', bg: 'dispatch-vellum-100', min: 4.5, node: 'dusk faint on the page substrate — OQ-3' },
+  { cycle: 'night', fg: 'dispatch-text-body-faint', bg: 'dispatch-vellum-25', min: 4.5, node: 'night faint 12px consumers — OQ-3' },
+  { cycle: 'night', fg: 'dispatch-text-body-faint', bg: 'dispatch-vellum-50', min: 4.5, node: 'night faint on surface-inset (vellum-50 provisional binding) — OQ-3' },
+  { cycle: 'night', fg: 'dispatch-text-body-faint', bg: 'dispatch-vellum-100', min: 4.5, node: 'night faint on the page substrate — OQ-3' },
+
+  // ---- OQ-4 (AK 2026-08-18, executed S5): the chrome-text slot is the one
+  // semantic slot bound to a TEXT role (label-size, Footnote back-link 12px) —
+  // prove the provisional binding holds AA on the surfaces it can sit on, in
+  // every cycle. The other slots are surfaces/hairlines: rail-edge/chrome-
+  // border/grid-line are decorative separators (SC 1.4.11 does not bind
+  // decorative hairlines) — deliberately NOT asserted; the S5 census watches
+  // the two ornament-glyph color: consumers instead.
+  { cycle: 'dawn', fg: 'chrome-text', bg: 'surface-page', min: 4.5, node: 'chrome-text on surface-page (slot chain → copper-label on vellum-100) — OQ-4' },
+  { cycle: 'dawn', fg: 'chrome-text', bg: 'surface-inset', min: 4.5, node: 'chrome-text on surface-inset (vellum-50) — OQ-4' },
+  { cycle: 'dusk', fg: 'chrome-text', bg: 'surface-page', min: 4.5, node: 'dusk chrome-text on surface-page — OQ-4' },
+  { cycle: 'dusk', fg: 'chrome-text', bg: 'surface-inset', min: 4.5, node: 'dusk chrome-text on surface-inset — OQ-4' },
+  { cycle: 'night', fg: 'chrome-text', bg: 'surface-page', min: 4.5, node: 'night chrome-text on surface-page — OQ-4' },
+  { cycle: 'night', fg: 'chrome-text', bg: 'surface-inset', min: 4.5, node: 'night chrome-text on surface-inset — OQ-4' },
 ];
 
 for (const c of cases) {
@@ -89,15 +113,21 @@ for (const c of cases) {
   });
 }
 
-// Documented, deliberate NON-assertions (pre-existing canon, filed at S2 for
-// the D1 gate — asserting them would falsely brand S2 as having decided them):
-// dusk/night --dispatch-text-body-faint sits at 3.34:1 / 3.52:1 on cycle
-// vellum-25 (below AA for its 12px consumers); dawn display copper on
-// vellum-300 is 2.56:1 (no display-copper-on-window-warm node exists today).
-test('faint cycle deficiency stays FILED, not silently fixed', () => {
-  const dusk = wcag(resolve('dusk', 'dispatch-text-body-faint'), resolve('dusk', 'dispatch-vellum-25'));
-  const night = wcag(resolve('night', 'dispatch-text-body-faint'), resolve('night', 'dispatch-vellum-25'));
-  // If a future canon decision lifts these past 4.5, delete this guard and
-  // assert AA above instead.
-  assert.ok(dusk >= 3 && night >= 3, 'cycle faint fell below even 3:1 — canon regression');
-});
+// Documented, deliberate NON-assertion (pre-existing canon): dawn display
+// copper on vellum-300 is 2.56:1 (no display-copper-on-window-warm node exists
+// today). The former dusk/night faint FILED-guard is gone — OQ-3 (AK
+// 2026-08-18) executed the AA cycle variants; the assertions above are now
+// the law.
+
+// OQ-3 emphasis ordinal: the faint lift must never invert the dark-cycle
+// emphasis ladder (faint < muted < strong in lightness terms = faint contrast
+// stays below muted contrast on the same surface). Material dark-theme
+// tiering: halation is managed above AA via the ordinal, not by dropping AA.
+for (const cycle of ['dusk', 'night']) {
+  test(`${cycle}: faint stays below muted in the emphasis ladder`, () => {
+    const bg = resolve(cycle, 'dispatch-vellum-25');
+    const faint = wcag(resolve(cycle, 'dispatch-text-body-faint'), bg);
+    const muted = wcag(resolve(cycle, 'dispatch-text-body-muted'), bg);
+    assert.ok(faint < muted, `faint (${faint.toFixed(2)}) must sit below muted (${muted.toFixed(2)})`);
+  });
+}

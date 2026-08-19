@@ -139,10 +139,17 @@ export function LiveRoom(props: LiveRoomProps): ReactElement {
               </li>
             ))}
           </ul>
+          {/*
+            axe aria-allowed-role + listitem: role="log" is not a permitted
+            role on <ol> (W3C ARIA-in-HTML), and overriding the native list
+            role orphaned the <li> children. Canon (spec.md Field 4)
+            prescribes the live-list pattern directly — a native list
+            carrying aria-live="polite" + aria-relevant — so the <ol> keeps
+            its list role and the live-region attributes announce additions.
+          */}
           <ol
             className="prime-live-room__activity"
             aria-label="Recent activity"
-            role="log"
             aria-live="polite"
             aria-relevant="additions"
           >

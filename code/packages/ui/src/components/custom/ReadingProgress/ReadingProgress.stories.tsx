@@ -4,6 +4,7 @@ import { ReadingProgress } from "./ReadingProgress";
 const meta: Meta<typeof ReadingProgress> = {
   title: "Chrome / ReadingProgress",
   component: ReadingProgress,
+  tags: ["autodocs"],
   parameters: {
     layout: "padded",
     docs: {
@@ -51,46 +52,46 @@ export const Hidden: Story = {
   args: { variant: "hidden" },
 };
 
-export const LightTheme: Story = {
-  globals: { theme: "light" },
+export const DawnCycle: Story = {
+  globals: { cycle: "dawn" },
   args: { progress: 60 },
   parameters: {
     docs: {
       description: {
         story:
-          "Drafting-paper register: wine fill reads as cosmology-pigment slice over the page. Anchor: Medium / Substack reading-progress conventions.",
+          "Dawn cycle (DESIGN.md §Cycles): the vellum drafting-paper default — the dispatch-wine fill reads as a pigment slice over the vellum page. Anchor: Medium / Substack reading-progress conventions.",
       },
     },
   },
 };
 
-export const DuskTheme: Story = {
-  globals: { theme: "dusk" },
+export const DuskCycle: Story = {
+  globals: { cycle: "dusk" },
   args: { progress: 60 },
   parameters: {
     docs: {
       description: {
         story:
-          "Dusk / sepia register: dispatch-lane brighter-wine (#c4544f) gradient fill reads as illuminated-pigment slice over aged-paper substrate. Drafting-grid track pattern intentionally restricted to Light theme to avoid texture competition with parchment substrate.",
+          "Dusk cycle (DESIGN.md §Cycles): the chiaroscuro walnut study — the dispatch-lane fill reads as a lit-ember slice over the walnut substrate; the transparent track keeps the chrome receded.",
       },
     },
   },
 };
 
-export const BlackTheme: Story = {
-  globals: { theme: "black" },
+export const NightCycle: Story = {
+  globals: { cycle: "night" },
   args: { progress: 60 },
   parameters: {
     docs: {
       description: {
         story:
-          "Video-game register: dispatch-lane red-glow (#e0556a) fill reads as HUD progress slice over deep near-black.",
+          "Night cycle (DESIGN.md §Cycles): the true-black void — the dispatch-lane fill reads as an ember slice against the void, held to HUD restraint.",
       },
     },
   },
 };
 
 export const ReducedMotion: Story = {
-  globals: { theme: "light", reducedMotion: "reduce" },
+  globals: { cycle: "dawn", reducedMotion: "reduce" },
   args: { progress: 30 },
 };

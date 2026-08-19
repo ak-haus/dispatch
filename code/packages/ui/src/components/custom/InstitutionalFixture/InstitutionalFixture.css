@@ -30,7 +30,13 @@
   font-size: 0.9375rem;
   line-height: 1.55;
   letter-spacing: 0;
-  color: var(--text-muted);
+  /* axe color-contrast: --text-muted is 4.42:1 on --window-warm (vellum-300)
+   * — below the 4.5:1 body floor. F5 discipline (DESIGN.md §Colors):
+   * muted-deep is the AA role covering tinted panels (4.79:1 here; anchored
+   * in code/packages/tokens/__tests__/contrast.test.mjs muted-deep nodes).
+   * Dusk/night alias back to --dispatch-text-body-muted — dark cycles are
+   * visually unchanged. */
+  color: var(--dispatch-text-body-muted-deep);
   margin: 0;
   max-width: 60ch;
 }
@@ -41,15 +47,23 @@
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--copper);
+  /* F5 size-scoped copper (DESIGN.md §Colors; axe color-contrast): 11px bold
+   * is label-size text, so display-scoped --copper yields to the AA label
+   * role --platform-copper-label (SiteNav.css precedent; dusk/night alias
+   * back to the cycle copper — dark cycles unchanged). The former
+   * `opacity: 0.85` dim is removed: opacity-dimmed text fails computed
+   * contrast; faint/muted token roles are the canon dimming mechanism.
+   * KNOWN CANON GAP (escalated, do not paper over): no copper role reaches
+   * 4.5:1 on --window-warm at dawn (copper-label 3.52:1, copper-deep
+   * 4.25:1) — contrast.test.mjs documents that no copper-on-window-warm
+   * node exists; needs a canon/Mayor decision. */
+  color: var(--platform-copper-label);
   text-decoration: none;
   align-self: flex-start;
   transition: color 150ms ease-out;
-  opacity: 0.85;
 }
 
 .prime-institutional-fixture__charter-link:hover {
-  opacity: 1;
   color: var(--copper-deep);
 }
 

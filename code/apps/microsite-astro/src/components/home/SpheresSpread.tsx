@@ -1,3 +1,10 @@
+/* eslint-disable no-restricted-syntax --
+ * Sanctioned tokens-lint exemption (ADR-0003 §Stage 5 gate): this spread
+ * DEPICTS third-party UI — a macOS window (traffic-light chrome) and a
+ * PowerShell-register terminal panel. Those palettes are foreign-brand
+ * verisimilitude, not Prime canon; tokenizing them would put non-canon hues
+ * into the DTCG source (violates CD2 §2.1 tier provenance). Prime-canon
+ * colors in this file DO ride tokens via shared/palette.ts. */
 /**
  * SpheresSpread — "A way forward" + the Prime cosmology.
  *

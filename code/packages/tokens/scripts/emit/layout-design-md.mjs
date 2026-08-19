@@ -454,15 +454,15 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
   path). The live surface currently violates this — see OQ-2; the canon side is the law until
   AK rules otherwise.
 
-## Adjudicated questions — AK rulings, 2026-08-18 (execution scheduled)
+## Adjudicated questions — AK rulings, 2026-08-18
 
 > These four contradictions were FILED at S2 (tokens README §F5; typography.json
 > \`$description\`s), surfaced at S3 per ADR-0003 §Stage 7, and **RULED by AK on 2026-08-18**
 > after a cited research pass (peer-publication production CSS · LG München I + Chrome cache
 > partitioning · WCAG 2.2 + Material dark-theme guidance · DTCG 2025.10 +
-> Material/Polaris/Spectrum/SLDS tier practice). Until each execution lands, this contract keeps
-> reporting the SHIPPED truth — the rulings say where each fix executes; do not pre-implement
-> them ad hoc.
+> Material/Polaris/Spectrum/SLDS tier practice). OQ-3 and OQ-4 are EXECUTED (S5 pre-step);
+> OQ-1 and OQ-2 execute at the fonts restoration build — until then this contract keeps
+> reporting the SHIPPED truth for them; do not pre-implement ad hoc.
 
 ### OQ-1 · Body family — DECIDED (AK 2026-08-18): restore Crimson Pro
 
@@ -486,29 +486,34 @@ performance argument while the render-blocking \`@import\` at \`global.css:1\` a
 origins; CI is already hermetic-fontless. **Executes at:** the same fonts restoration build as
 OQ-1 — one wiring change lands both.
 
-### OQ-3 · Dusk/night faint ink — DECIDED (AK 2026-08-18): AA cycle variants
+### OQ-3 · Dusk/night faint ink — DECIDED (AK 2026-08-18): AA cycle variants — EXECUTED (S5)
 
-\`--dispatch-text-body-faint\` measures **3.34:1 (dusk)** / **3.52:1 (night)** with live 12px
+\`--dispatch-text-body-faint\` measured **3.34:1 (dusk)** / **3.52:1 (night)** with live 12px
 consumers — below the 4.5:1 AA normal-text threshold (WCAG 1.4.3; the 3:1 allowance starts at
 ~24px / ~18.5px bold). **Ruling:** raise the dusk/night faint values to ≥ 4.5:1 as
 cycle-scoped variants — the mechanical mirror of executed F5 (register §10). Halation is
 managed above AA, never below it (Material dark-theme emphasis tiers). Restricting faint to
 large-text consumers was rejected: live consumers sit at 12px, so it forces the same consumer
-edits while deleting a token role the light theme already proved. **Executes at:** S5 pre-step
-(token-source edit + per-node assertions joining \`contrast.test.mjs\`).
+edits while deleting a token role the light theme already proved. **Executed at S5 pre-step:**
+C/H held, lightness lifted — dusk \`oklch(0.64 0.014 65)\` (4.62:1 worst-surface), night
+\`oklch(0.59 0.005 80)\` (4.72:1 worst-surface); emphasis ordinal faint < muted < strong
+preserved; per-node assertions joined \`contrast.test.mjs\` (the cycle table above is the
+shipped truth).
 
-### OQ-4 · Semantic slot names — DECIDED (AK 2026-08-18): ratify as provisionally-bound aliases
+### OQ-4 · Semantic slot names — DECIDED (AK 2026-08-18): ratify as provisionally-bound aliases — EXECUTED (S5)
 
 The construction rules direct components at \`--surface-page\`/\`--surface-inset\`/\`--rail-edge\`
 (construction-rules.md Rules 1 + 5); the W2 packages/ui census forward-declared \`--chrome-*\` +
 \`--grid-line\` (\`src/color/ui-slots.json\`; live consumer Footnote.css \`var(--chrome-text)\`).
-None carry values — consumers resolve to nothing. **Ruling:** ratify the semantic slots as DTCG
-**aliases with provisional bindings** into the ratified vellum/chrome/ink palette — the
+None carried values — consumers resolved to nothing. **Ruling:** ratify the semantic slots as
+DTCG **aliases with provisional bindings** into the ratified vellum/chrome/ink palette — the
 Material/Polaris/Spectrum/SLDS middle tier; DTCG 2025.10 makes unresolvable references a
 MUST-error, so bare-name ratification is not a legitimate intermediate state. S5's consumer
 census then amends bindings (a one-line re-point per alias — the tier's purpose). Scope rider:
 \`--chrome-*\` stays a small named set; no per-component token tier until multi-brand pain
-exists. **Executes at:** S5 pre-step (token source + CD2 §10 ledger entry).
+exists. **Executed at S5 pre-step** (CD2 §10 Decision 13): the ten slots ship in the W2 alias
+table above; every binding is PROVISIONAL pending the S5 story census — re-point via
+\`src/color/ui-slots.json\`, never a new value.
 
 ## Canon reading paths
 

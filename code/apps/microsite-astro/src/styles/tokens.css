@@ -137,11 +137,7 @@
    * packages/ui component CSS and microsite-next's @theme bridge, undefined
    * since the tiered rename (census 2026-08-18). Aliases resolve to tiered
    * canon so Storybook / ui / next render honestly; the cycle blocks need no
-   * overrides here — the cascade follows the tiered tokens. Deliberately
-   * ABSENT (no defined value exists anywhere in repo or archive history;
-   * filed as an S5 gap rather than invented): --chrome-text(-hover/-active),
-   * --chrome-background, --chrome-border, --chrome-indicator, --surface-page,
-   * --surface-inset, --rail-edge, --grid-line.
+   * overrides here — the cascade follows the tiered tokens.
    * ========================================================================== */
   --accent-prime:        var(--platform-accent-prime);
   --accent-prime-active: var(--platform-accent-prime-active);
@@ -161,6 +157,26 @@
   --vellum-100:          var(--dispatch-vellum-100);
   --vellum-200:          var(--dispatch-vellum-200);
   --vellum-300:          var(--dispatch-vellum-300);
+
+  /* ==========================================================================
+   * SEMANTIC SLOTS — ratified per OQ-4 (AK 2026-08-18, CD2 §10 Decision 13)
+   * as aliases with PROVISIONAL bindings into the ratified palette (the
+   * Material/Polaris/Spectrum/SLDS middle tier). Formerly forward-declared
+   * with no value anywhere (construction-rules Rules 1+5; the W2 census).
+   * The S5 story census amends any binding the rendered evidence disagrees
+   * with — a one-line re-point per alias in src/color/ui-slots.json, never a
+   * new value. var() chains re-resolve per cycle; no cycle overrides needed.
+   * ========================================================================== */
+  --surface-page:       var(--dispatch-vellum-100);
+  --surface-inset:      var(--dispatch-vellum-50);
+  --rail-edge:          var(--dispatch-vellum-300);
+  --chrome-text:        var(--platform-copper-label);
+  --chrome-text-hover:  var(--platform-copper-deep);
+  --chrome-text-active: var(--platform-accent-prime-active);
+  --chrome-background:  var(--dispatch-vellum-25);
+  --chrome-border:      var(--dispatch-vellum-300);
+  --chrome-indicator:   var(--platform-accent-prime);
+  --grid-line:          var(--dispatch-vellum-200);
 
   /* ==========================================================================
    * TYPOGRAPHY SLOTS (root-emitted) — canon slot names consumed directly by
@@ -213,7 +229,7 @@
 
   --dispatch-text-body-strong: var(--platform-text-body-strong);
   --dispatch-text-body-muted:  oklch(0.72 0.015 70);
-  --dispatch-text-body-faint:  oklch(0.56 0.014 65);
+  --dispatch-text-body-faint:  oklch(0.64 0.014 65);
   --dispatch-text-body-muted-deep: var(--dispatch-text-body-muted);
 
   --dispatch-vellum-25:  oklch(0.26 0.018 58);
@@ -269,7 +285,7 @@
 
   --dispatch-text-body-strong: var(--platform-text-body-strong);
   --dispatch-text-body-muted:  oklch(0.72 0.006 80);
-  --dispatch-text-body-faint:  oklch(0.52 0.005 80);
+  --dispatch-text-body-faint:  oklch(0.59 0.005 80);
   --dispatch-text-body-muted-deep: var(--dispatch-text-body-muted);
 
   /* True-black Vellum — neutral near-zero chroma, hairline warm bias only.

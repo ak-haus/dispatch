@@ -5,16 +5,15 @@ import React from "react";
  * Prime DISpatch Storybook 9 — preview config.
  *
  * Loads @prime-dispatch/tokens CSS globally so every story renders against the
- * canonical post-amendment CD2 state + three-theme variants (light / dusk /
- * black per Mayor 2026-05-10 articulation + Cycle 2 Sepia substitution per
- * cc-ledger/diffs/W3-S-A/cycle-2/agent-4-blueprint-wine-verdict.md).
- *
- * The decorator PAINTS the page substrate per active theme + LAYERS the
- * atmospheric texture overlay (Cycle 2 Sub-pass 5.1) via `::before` pseudo-
- * element. Texture lives on the HOST substrate, NOT inside components (Rule 1
- * honored).
+ * shipped token truth (S2 engine output — the same tokens.css the microsite
+ * ships). The cycle toolbar speaks the CANON cycle language: Dawn / Dusk /
+ * Night via [data-prime-cycle] (Light/Blueprint/Black naming is tombstoned —
+ * DESIGN.md §Don'ts). The decorator paints the page substrate per active
+ * cycle via --surface-page (OQ-4 semantic slot, CD2 §10 Decision 13) —
+ * substrate is page-owned, components stay substrate-agnostic (Rule 1).
  */
 import "@prime-dispatch/tokens/css";
+import "./preview.css";
 
 const preview: Preview = {
   parameters: {
@@ -25,46 +24,56 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    // Backgrounds remain available as toolbar override for explicit per-story
-    // background testing. Default is `theme` — the active theme paints
-    // --surface-page via the decorator below.
+    // Backgrounds remain available as a toolbar override for explicit
+    // per-story background testing. Default is `cycle` — the active cycle
+    // paints --surface-page via the decorator below.
     backgrounds: {
-      default: "theme",
+      default: "cycle",
       values: [
-        { name: "theme", value: "transparent" },
+        { name: "cycle", value: "transparent" },
         { name: "white", value: "#ffffff" },
-        { name: "drafting-paper", value: "#fafaf7" },
-        { name: "sepia-dusk", value: "#3a2a1c" },
-        { name: "video-game-black", value: "#0c0a08" },
       ],
     },
     a11y: {
-      element: "#storybook-root",
-      manual: false,
+      // No explicit context: the addon's default targets the story root in
+      // BOTH environments — #storybook-root exists only in the Storybook
+      // iframe, not in the vitest browser-mode DOM (axe throws "No elements
+      // found for include" there if pinned to it).
+      // Story-test rail (addon-vitest): a11y violations FAIL the story test.
+      // "a11y green" is the S5 acceptance criterion, mechanical not aspirational.
+      test: "error",
     },
     layout: "centered",
     docs: {
       toc: true,
     },
   },
+  // SB9 portable-stories path (addon-vitest) merges story-level `globals`
+  // over initialGlobals — globalTypes.defaultValue alone is toolbar-only and
+  // leaves story globals unapplied in the test rail (probe 2026-08-18:
+  // DuskCycle rendered the dawn palette without this).
+  initialGlobals: {
+    cycle: "dawn",
+    reducedMotion: "no-preference",
+  },
   globalTypes: {
-    theme: {
+    cycle: {
       description:
-        "Theme variant per Mayor 2026-05-10 three-theme articulation + Cycle 2 Sepia substitution. Light = city-engineer map / drafting paper. Dusk = aged paper / illuminated manuscript (sepia). Black = video-game menu / cosmology HUD.",
-      defaultValue: "light",
+        "Theme cycle per canon (DESIGN.md §Cycles): Dawn = default vellum substrate. Dusk = chiaroscuro walnut study. Night = true-black void, ember accents.",
+      defaultValue: "dawn",
       toolbar: {
-        title: "Theme",
+        title: "Cycle",
         icon: "circlehollow",
         items: [
-          { value: "light", title: "Light (city-engineer)" },
-          { value: "dusk", title: "Dusk (sepia / aged paper)" },
-          { value: "black", title: "Black (video-game)" },
+          { value: "dawn", title: "Dawn (vellum)" },
+          { value: "dusk", title: "Dusk (walnut)" },
+          { value: "night", title: "Night (void)" },
         ],
         dynamicTitle: true,
       },
     },
     reducedMotion: {
-      description: "prefers-reduced-motion media query simulation",
+      description: "prefers-reduced-motion simulation flag",
       defaultValue: "no-preference",
       toolbar: {
         title: "Motion",
@@ -79,17 +88,41 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-      const { theme, reducedMotion } = context.globals as {
-        theme?: string;
+      const { cycle, reducedMotion } = context.globals as {
+        cycle?: string;
         reducedMotion?: string;
       };
-      // Backward-compat: any leftover "blueprint" story-globals resolve to "dusk"
-      const themeKey = theme === "blueprint" ? "dusk" : (theme ?? "light");
+      // Backward-compat: legacy theme globals resolve to canon cycles
+      // (light→dawn, blueprint→dusk, black→night) until every story is
+      // cycle-native; new stories use globals: { cycle } only.
+      const legacy = (context.globals as { theme?: string }).theme;
+      const legacyMap: Record<string, string> = {
+        light: "dawn",
+        blueprint: "dusk",
+        dusk: "dusk",
+        black: "night",
+      };
+      const cycleKey = cycle ?? (legacy ? (legacyMap[legacy] ?? "dawn") : "dawn");
       const motionKey = reducedMotion ?? "no-preference";
+      // The cycle attribute MUST live on <html>, exactly like the shipped
+      // microsite (tokens.css: "Selectors: html[data-prime-cycle=…]").
+      // Spatial aliases (--window-warm, --surface-page, …) are declared at
+      // :root, so they resolve their var() chains AT the html element and
+      // descendants inherit the RESOLVED value — a wrapper-div attribute can
+      // override the numeric tokens but never re-resolves the aliases
+      // (probe 2026-08-18: dusk ink over a dawn --window-warm band).
+      React.useEffect(() => {
+        const el = document.documentElement;
+        if (cycleKey === "dawn") delete el.dataset.primeCycle;
+        else el.dataset.primeCycle = cycleKey;
+        el.dataset.primeReducedMotion = motionKey;
+        return () => {
+          delete el.dataset.primeCycle;
+          delete el.dataset.primeReducedMotion;
+        };
+      }, [cycleKey, motionKey]);
       return (
         <div
-          data-prime-theme={themeKey}
-          data-prime-reduced-motion={motionKey}
           style={{
             position: "relative",
             backgroundColor: "var(--surface-page)",
@@ -97,14 +130,6 @@ const preview: Preview = {
             minHeight: "320px",
             padding: "3rem",
             transition: "background-color 200ms ease-out, color 200ms ease-out",
-            // Texture overlay (Cycle 2 Sub-pass 5.1) — applied via background-image
-            // on the wrapper itself; texture-overlay variable resolves per theme
-            // (paper-grain / parchment / HUD-grid). Sits behind story content
-            // because pseudo-elements + transform-stacking get tricky in
-            // Storybook's iframe; using background-image on the wrapper is the
-            // robust deployment surface.
-            backgroundImage: "var(--texture-overlay)",
-            backgroundBlendMode: "multiply",
           }}
         >
           <Story />
