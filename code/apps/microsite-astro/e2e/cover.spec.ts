@@ -1,18 +1,22 @@
 /**
- * Cover wordmark — the optical-centering contract (AK, 2026-08-19).
+ * Cover composition contract (AK, 2026-08-19).
  *
- * The cover does NOT centre the wordmark's bounding box on the page. The
- * "in print" hairline stays on the page centre line and the wordmark sits
- * SLIGHTLY off it, so the rule lands over the black half of the word,
- * centred on the "a" of patch. That relationship is the design; the
- * translateX in CoverSpread is only its current implementation.
+ * Two rules, and the first one is the one that keeps getting broken:
  *
- * This asserts the relationship, not the implementation, so a type change,
- * a tracking change or a refactor that breaks the intent fails here rather
- * than shipping. It also guards the defect that made the rule necessary:
- * before this, a featured title longer than the wordmark widened the
- * centred group and dragged the left-aligned wordmark 168px off centre —
- * a drift that grew with every longer headline.
+ * 1. THE WORDMARK AND THE LIVE TICKER ARE INDEPENDENT COMPONENTS. They were
+ *    bound together in an early build by an inference error — a wrapper that
+ *    left-aligned the ticker to the D and let whichever was wider size the
+ *    pair — and that coupling is what dragged the wordmark off centre (168px
+ *    at 1280w, worse with every longer headline, because the drift is
+ *    (tickerWidth − wordmarkWidth)/2). What was actually being tuned was
+ *    VERTICAL: enough distance that the cover reads as composed. Proximity,
+ *    not alignment. These tests fail if anything couples them horizontally
+ *    again — including a future agent "helpfully" re-aligning them.
+ *
+ * 2. The wordmark sits SLIGHTLY off the centre line so the "in print"
+ *    hairline lands over the black half of the word, centred on the "a" of
+ *    patch. Asserted as a relationship, not as the 0.412em that implements
+ *    it, so a type or tracking change fails here instead of shipping.
  */
 
 import { expect, test } from './helpers/fixtures'
@@ -24,8 +28,9 @@ const VIEWPORTS = [
 	{ label: 'mobile', width: 375, height: 812 },
 ] as const
 
-/** Letter geometry + the hairline, after the entrance has fully settled. */
 async function coverGeometry(page: import('@playwright/test').Page) {
+	// The letters animate in on the main thread through Motion, so
+	// getAnimations() never sees them and settleMotion returns early.
 	await page.waitForFunction(
 		() =>
 			Array.from(
@@ -36,24 +41,28 @@ async function coverGeometry(page: import('@playwright/test').Page) {
 	)
 	return page.evaluate(() => {
 		const h1 = document.querySelector('h1[aria-label="DISpatch"]') as HTMLElement
-		const rule = h1.closest('div')?.parentElement?.querySelector(
+		const rule = document.querySelector(
 			'div[aria-hidden="true"][class*="h-px"]',
 		) as HTMLElement
-		const centre = (el: Element) => {
+		const ticker = document.querySelector(
+			'h1[aria-label="DISpatch"] ~ div',
+		) as HTMLElement | null
+		const box = (el: Element | null) => {
+			if (!el) return null
 			const r = el.getBoundingClientRect()
-			return r.left + r.width / 2
+			return { left: r.left, right: r.right, centre: r.left + r.width / 2, height: r.height }
 		}
 		const letters = Array.from(
 			h1.querySelectorAll('span.inline-block'),
 		) as HTMLElement[]
-		// "patch" is the second group; its "a" is the anchor.
 		const a = letters.find((el, i) => el.textContent === 'a' && i > 2)!
 		const ruleRect = rule.getBoundingClientRect()
 		return {
-			aCentre: centre(a),
-			ruleCentre: centre(rule),
-			ruleLeft: ruleRect.left,
-			ruleRight: ruleRect.right,
+			pageCentre: window.innerWidth / 2,
+			h1: box(h1)!,
+			rule: box(rule)!,
+			ticker: box(ticker),
+			a: box(a)!,
 			covered: letters
 				.filter((el) => {
 					const r = el.getBoundingClientRect()
@@ -64,54 +73,71 @@ async function coverGeometry(page: import('@playwright/test').Page) {
 	})
 }
 
+async function openCover(page: import('@playwright/test').Page) {
+	await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
+	await page.goto('/')
+	await settleMotion(page)
+}
+
 for (const vp of VIEWPORTS) {
-	test.describe(`cover wordmark — ${vp.label}`, () => {
+	test.describe(`cover composition — ${vp.label}`, () => {
 		test.use({ viewport: { width: vp.width, height: vp.height } })
 
-		test(`the in-print rule is centred on the "a" of patch (${vp.label})`, async ({ page }) => {
-			await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
-			await page.goto('/')
-			await settleMotion(page)
+		test(`the hairline is centred on the "a" of patch (${vp.label})`, async ({ page }) => {
+			await openCover(page)
 			const g = await coverGeometry(page)
-			// One device pixel of tolerance; this is an optical relationship,
-			// not a pixel lock.
 			expect(
-				Math.abs(g.aCentre - g.ruleCentre),
+				Math.abs(g.a.centre - g.rule.centre),
 				'the hairline must sit centred on the "a" of patch',
 			).toBeLessThanOrEqual(1)
 		})
 
-		test(`the rule sits over the black letters, toward the p (${vp.label})`, async ({ page }) => {
-			await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
-			await page.goto('/')
-			await settleMotion(page)
+		test(`the hairline stays over "patch", toward the p (${vp.label})`, async ({ page }) => {
+			await openCover(page)
 			const g = await coverGeometry(page)
-			// It must cover patch letters only — never reach back into the red
-			// DIS, and never run past the end of the word.
-			expect(g.covered.length, 'the rule must overlap some letters').toBeGreaterThan(0)
+			expect(g.covered.length, 'the rule must overlap the word').toBeGreaterThan(0)
 			expect(
 				g.covered.every((c) => 'patch'.includes(c ?? '')),
-				`the rule must stay over "patch"; it covered ${g.covered.join('')}`,
+				`the rule must never reach back into the red DIS; it covered ${g.covered.join('')}`,
 			).toBe(true)
 		})
 
-		test(`a long featured title cannot drag the wordmark off centre (${vp.label})`, async ({ page }) => {
-			// The regression that made this contract necessary: the ticker used
-			// to size the centred group, so a longer headline moved the wordmark.
-			await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
-			await page.goto('/')
-			await settleMotion(page)
-			const short = await coverGeometry(page)
-			await page.evaluate(() => {
-				const p = document.querySelector('h1[aria-label="DISpatch"]')
-					?.closest('div')
-					?.querySelector('p')
-				if (p) p.textContent = 'Live — '.concat('an extremely long featured dispatch headline '.repeat(3))
-			})
-			const long = await coverGeometry(page)
+		test(`the wordmark is only SLIGHTLY off the centre line (${vp.label})`, async ({ page }) => {
+			await openCover(page)
+			const g = await coverGeometry(page)
+			// The optical step is ~0.41 of the type size. Anything approaching
+			// half the wordmark's width means the coupling defect is back.
+			const off = Math.abs(g.h1.centre - g.pageCentre)
+			expect(off, 'the wordmark drifted far off centre').toBeLessThan(
+				(g.h1.right - g.h1.left) * 0.2,
+			)
+		})
+
+		test(`the ticker holds the centre line on its own (${vp.label})`, async ({ page }) => {
+			await openCover(page)
+			const g = await coverGeometry(page)
+			expect(g.ticker, 'the ticker must render').not.toBeNull()
+			// Independent component: it shares the cover's centre line with the
+			// volume label and the hairline, NOT the wordmark's left edge.
 			expect(
-				Math.abs(long.aCentre - short.aCentre),
-				'the featured title must not move the wordmark',
+				Math.abs(g.ticker!.centre - g.pageCentre),
+				'the ticker must sit on the page centre line, not follow the wordmark',
+			).toBeLessThanOrEqual(1)
+		})
+
+		test(`a longer headline moves neither component (${vp.label})`, async ({ page }) => {
+			// The exact regression: when the two were coupled, the ticker sized
+			// the pair, so a longer featured title walked the wordmark left.
+			await openCover(page)
+			const before = await coverGeometry(page)
+			await page.evaluate(() => {
+				const p = document.querySelector('h1[aria-label="DISpatch"] ~ div p')
+				if (p) p.textContent = 'Live — '.concat('a considerably longer featured dispatch headline '.repeat(2))
+			})
+			const after = await coverGeometry(page)
+			expect(
+				Math.abs(after.a.centre - before.a.centre),
+				'the featured title must not move the wordmark — they are independent',
 			).toBeLessThanOrEqual(1)
 		})
 	})

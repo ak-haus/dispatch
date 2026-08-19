@@ -124,48 +124,40 @@ export function CoverSpread({
 						}}
 					/>
 
-					{/* Wordmark + Live ticker — the ticker's left edge ALIGNS with
-					    the wordmark's left edge (the D), and the wordmark alone
-					    decides the group's width.
-					    Live ticker pushed FAR DOWN (mt-16) so it doesn't crowd.
+					{/* The wordmark stands ALONE (AK, 2026-08-19).
+					    It and the LIVE ticker below are independent components.
+					    They were bound together in an early build by an inference
+					    error — a wrapper that left-aligned the ticker to the D and
+					    let whichever was wider size the pair. What was actually
+					    being tuned was VERTICAL: enough distance that the cover
+					    reads as composed rather than broken. Proximity, not
+					    alignment. Nothing here may couple their horizontal
+					    positions again; the vertical gap is the only relationship.
 
-					    GRID, not inline-flex (2026-08-19): the old comment claimed
-					    "bounding box width = wordmark width because the wordmark is
-					    the widest child" — an assumption the CONTENT breaks. A
+					    The coupling also caused the defect this change repairs: a
 					    featured title longer than the wordmark made the ticker the
-					    widest child, so the centered box grew and the left-aligned
-					    wordmark slid left by half the excess (measured 168px at
-					    1280w, and it drifts further with every longer headline).
-					    The ticker now sits in a `w-0 min-w-full` cell: it fills the
-					    column but contributes nothing to intrinsic width, so the
-					    wordmark is the only thing that sizes this group — which is
-					    what the original comment meant all along. */}
-					<div
-						className="grid justify-items-start"
+					    widest child, so the centred pair grew and the left-aligned
+					    wordmark slid left by half the excess — 168px at 1280w, and
+					    worse with every longer headline.
+
+					    OPTICAL CENTRING: the wordmark centres on its own box, then
+					    steps left so the "in print" hairline above lands over the
+					    black half of the word, centred on the "a" of patch. The
+					    "a" sits 301/507 of the way across the wordmark, so the box
+					    moves left by (0.5 − 301/507) = 0.0937 of its width; at
+					    4.40× its own font-size that is 0.412em, which scales with
+					    the type at every width. e2e/cover.spec.ts asserts the
+					    relationship rather than this number. */}
+					<h1
+						className="dispatch-burnin font-wordmark font-bold leading-[0.86] tracking-[-0.025em] text-body-strong"
 						style={{
-							// One source for the wordmark's size, so the optical
-							// offset below scales with the type instead of drifting
-							// away from it at other viewport widths.
-							['--cover-wordmark-size' as string]: 'clamp(3.5rem, 9vw, 11rem)',
-							// OPTICAL CENTERING (AK, 2026-08-19). Centering this group
-							// on the page puts the wordmark's BOUNDING BOX on the
-							// centre line, which is not what the cover wants: the
-							// "in print" hairline above should sit over the black
-							// half of the word, centred on the "a" of patch. Measured
-							// on the shipped type, the "a" sits 301/507 of the way
-							// across the wordmark, so the box must move left by
-							// (0.5 − 301/507) = 0.0937 of its width; the wordmark is
-							// 4.40× its own font-size, giving 0.412em. Expressed
-							// against the size token so it holds at every width — the
-							// e2e cover assertion is what actually guards it.
-							transform: 'translateX(calc(-0.412 * var(--cover-wordmark-size)))',
+							fontSize: 'clamp(3.5rem, 9vw, 11rem)',
+							// em resolves against this element's own font-size, so the
+							// optical step scales with the type automatically.
+							transform: 'translateX(-0.412em)',
 						}}
+						aria-label="DISpatch"
 					>
-						<h1
-							className="dispatch-burnin font-wordmark font-bold leading-[0.86] tracking-[-0.025em] text-body-strong"
-							style={{ fontSize: 'var(--cover-wordmark-size)' }}
-							aria-label="DISpatch"
-						>
 							<span className="inline-flex" aria-hidden="true">
 								{dis.map((c, i) => (
 									<motion.span
@@ -203,37 +195,39 @@ export function CoverSpread({
 										{c}
 									</motion.span>
 								))}
-							</span>
-						</h1>
+						</span>
+					</h1>
 
-						{/* LIVE ticker — left-aligned with the D (via items-start).
-						    mt-16 = 64px of breathing room from the wordmark.
-						    Mirrors Vol. 01 styling above: mono, bold, 0.36em tracking,
-						    letterpress. */}
-						{featuredTitle && (
-							<motion.div
-								initial={{ opacity: 0, y: 6 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ delay: 2.0, duration: 0.7 }}
-								className="mt-16 flex w-0 min-w-full items-baseline gap-3"
+					{/* LIVE ticker — an INDEPENDENT component, not a satellite of
+					    the wordmark. It shares the cover's centre line with the
+					    volume label and the hairline; the only relationship it has
+					    to the wordmark is the vertical gap. mt-16 = 64px, the
+					    distance that makes the composition read as composed.
+					    Mirrors Vol. 01 styling above: mono, bold, 0.36em tracking,
+					    letterpress. */}
+					{featuredTitle && (
+						<motion.div
+							initial={{ opacity: 0, y: 6 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ delay: 2.0, duration: 0.7 }}
+							className="mt-16 flex items-baseline gap-3"
+					>
+							<span
+								className="relative inline-flex size-2 shrink-0 translate-y-[-2px] rounded-full bg-accent-prime-active"
+								aria-hidden="true"
 							>
-								<span
-									className="relative inline-flex size-2 shrink-0 translate-y-[-2px] rounded-full bg-accent-prime-active"
-									aria-hidden="true"
-								>
-									<span className="absolute inset-0 animate-ping rounded-full bg-accent-prime-active opacity-65" />
-								</span>
-								<p
-									className="dispatch-emboss min-w-0 font-mono text-[13px] font-bold uppercase tracking-[0.36em] leading-[1.4] text-body-strong"
-									style={{ textWrap: 'balance' as const }}
-								>
-									<span className="text-accent-prime-active">Live</span>
-									<span aria-hidden="true" className="mx-3 text-body-muted">—</span>
-									<span>{featuredTitle}</span>
-								</p>
-							</motion.div>
-						)}
-					</div>
+								<span className="absolute inset-0 animate-ping rounded-full bg-accent-prime-active opacity-65" />
+							</span>
+							<p
+								className="dispatch-emboss min-w-0 font-mono text-[13px] font-bold uppercase tracking-[0.36em] leading-[1.4] text-body-strong"
+								style={{ textWrap: 'balance' as const }}
+							>
+								<span className="text-accent-prime-active">Live</span>
+								<span aria-hidden="true" className="mx-3 text-body-muted">—</span>
+								<span>{featuredTitle}</span>
+							</p>
+						</motion.div>
+					)}
 				</div>
 
 				{/* Bottom: dek paragraph + Turn the page (grouped together) */}
