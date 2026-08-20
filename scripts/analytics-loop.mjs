@@ -7,7 +7,7 @@
  * and files what it found as a GitHub issue that names the DESIGN.md sections
  * the numbers bear on.
  *
- * THREE LAWS, all structural rather than advisory:
+ * FOUR LAWS, all structural rather than advisory:
  *
  *   1. PROPOSALS ONLY. This script opens an issue. It has no write access to
  *      anything else and never edits a component, a token, or DESIGN.md.
@@ -18,6 +18,10 @@
  *      families), which bill as PostHog AI spend — the stage is costed at $0
  *      and the ADR's $10/mo ceiling returns any spend to AK as a decision.
  *   3. READ-ONLY. A personal API key scoped to Query Read is all it needs.
+ *   4. READER TRAFFIC ONLY. One project key serves dev, preview and
+ *      production, so every query filters on `$host`. Our own development is
+ *      not reader signal, and a finding computed from it would carry the
+ *      authority of a measurement while being an artefact. See HOST_FILTER.
  *
  * ARMING: needs POSTHOG_PERSONAL_API_KEY + POSTHOG_PROJECT_ID, both of which
  * follow AK's one-time signup. Until then the workflow skips loudly — the
@@ -32,6 +36,56 @@ const HOST = process.env.POSTHOG_HOST ?? 'https://eu.posthog.com'
 const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY ?? ''
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID ?? ''
 const WINDOW_DAYS = Number(process.env.POSTHOG_WINDOW_DAYS ?? 7)
+
+/**
+ * THE HOST FILTER — the fourth law, and structural like the other three.
+ *
+ * Every query below counts events by name and `properties.surface` alone, and
+ * that is not enough: ONE PostHog project key (`PUBLIC_POSTHOG_KEY`) is
+ * inlined into every build of this site, so a `localhost:4321` dev session and
+ * a `*.vercel.app` preview deploy emit the SAME editorial events, with the
+ * same surface, into the same project as dispatchmag.dev. Without this filter
+ * the weekly issue reports our own development as reader behaviour — and a
+ * finding computed from our own scrolling is worse than no finding, because it
+ * carries the authority of a measurement.
+ *
+ * Filed as F22 (2026-08-20) with a live instance already in the project: six
+ * `localhost:4321` events from the S6 dev verification (4 `dispatch_scroll_depth`
+ * · 1 `dispatch_read_complete` · 1 `nav_engagement`) match every query here.
+ * PostHog exposes no API to delete individual events, so the contamination is
+ * permanent in the data and must be excluded at query time, forever.
+ *
+ * `$host` is a posthog-js default property on EVERY capture — verified in the
+ * installed vendor bundle (posthog-js 1.418.5, `$host: location.host`), not
+ * from the docs — and nothing in `posture.ts` strips it (no `property_denylist`,
+ * no `sanitize_properties`). It carries the port, so `localhost:4321` and
+ * `dispatchmag.dev` are distinguishable strings. Apex only: `www.` 307-redirects
+ * to the apex before any page script runs, so no capture ever carries it.
+ *
+ * Overridable by env for a deliberate one-off (e.g. reading a preview lane),
+ * never by accident: an empty or malformed list is a hard exit, not a silent
+ * unfiltered run.
+ */
+const READER_HOSTS = (process.env.POSTHOG_READER_HOSTS ?? 'dispatchmag.dev')
+	.split(',')
+	.map((host) => host.trim())
+	.filter(Boolean)
+
+// Hostname (with optional port) only. This is also what makes the string
+// interpolation below safe: no quote can reach the HogQL literal.
+const HOST_PATTERN = /^[a-z0-9.-]+(:\d+)?$/i
+
+if (!READER_HOSTS.length || !READER_HOSTS.every((host) => HOST_PATTERN.test(host))) {
+	console.error(
+		`analytics loop: REFUSING TO RUN — POSTHOG_READER_HOSTS must be a comma-separated list of ` +
+			`hostnames (optional :port). Got: ${JSON.stringify(process.env.POSTHOG_READER_HOSTS ?? '')}. ` +
+			`An unfiltered run would report dev and preview traffic as readers (F22).`,
+	)
+	process.exit(78) // EX_CONFIG, same class as a missing key
+}
+
+/** Dropped verbatim into every query's WHERE clause. */
+const HOST_FILTER = `properties.$host IN (${READER_HOSTS.map((host) => `'${host}'`).join(', ')})`
 
 if (!API_KEY || !PROJECT_ID) {
 	console.error(
@@ -63,6 +117,7 @@ const QUESTIONS = [
 			FROM events
 			WHERE event IN ('dispatch_scroll_depth', 'dispatch_read_complete')
 				AND properties.surface = 'dispatch'
+				AND ${HOST_FILTER}
 				AND timestamp >= now() - INTERVAL ${WINDOW_DAYS} DAY
 			GROUP BY path
 			ORDER BY reached_25 DESC
@@ -80,6 +135,7 @@ const QUESTIONS = [
 			FROM events
 			WHERE event = 'dispatch_scroll_depth'
 				AND properties.surface = 'home'
+				AND ${HOST_FILTER}
 				AND timestamp >= now() - INTERVAL ${WINDOW_DAYS} DAY
 			GROUP BY depth
 			ORDER BY depth ASC
@@ -95,6 +151,7 @@ const QUESTIONS = [
 				count() AS uses
 			FROM events
 			WHERE event = 'wire_engagement'
+				AND ${HOST_FILTER}
 				AND timestamp >= now() - INTERVAL ${WINDOW_DAYS} DAY
 			GROUP BY action
 			ORDER BY uses DESC
@@ -110,6 +167,7 @@ const QUESTIONS = [
 				count() AS clicks
 			FROM events
 			WHERE event = 'nav_engagement'
+				AND ${HOST_FILTER}
 				AND timestamp >= now() - INTERVAL ${WINDOW_DAYS} DAY
 			GROUP BY target
 			ORDER BY clicks DESC
@@ -184,6 +242,9 @@ const body = [
 	'',
 	'> Read these as engagement **shape**, never audience-size truth: cookieless mode re-hashes readers',
 	'> daily, so a returning reader counts more than once. Trends and ratios are the signal; totals are not.',
+	'>',
+	`> Scoped to ${READER_HOSTS.map((host) => `\`${host}\``).join(' · ')} — dev and preview traffic share this`,
+	'> project key and are excluded at query time, so these counts are readers only.',
 	'',
 	...sections,
 	'',
@@ -193,12 +254,15 @@ const body = [
 	'that cites the section — not an edit. The contract is generated from canon; changing it means changing',
 	'the canon and regenerating (see `code/packages/tokens/scripts/emit/layout-design-md.mjs`).',
 	'',
-	`_Filed by \`scripts/analytics-loop.mjs\` · window ${WINDOW_DAYS}d · plain HogQL only, $0 of PostHog AI spend._`,
+	`_Filed by \`scripts/analytics-loop.mjs\` · window ${WINDOW_DAYS}d · hosts ${READER_HOSTS.join(', ')} · plain HogQL only, $0 of PostHog AI spend._`,
 ].join('\n')
 
 // stdout is the workflow's payload: it pipes this into `gh issue create`.
 console.log(body)
 
 if (!anyData) {
-	console.error('analytics loop: every query returned zero rows — the site may have no traffic yet, or the key/project is wrong.')
+	console.error(
+		`analytics loop: every query returned zero rows for ${READER_HOSTS.join(', ')} — the site may have ` +
+			'no traffic yet, the host filter may not match the deployed hostname, or the key/project is wrong.',
+	)
 }
