@@ -97,9 +97,10 @@ implementation:
   components-code:
     path: code/packages/ui/src/components/
     layers:
-      custom: Phase 1 chrome (5 built + post-reconciliation rebuild) + Phase 2 chrome (4 built; 2 pending — LiveTicker, SearchPalette)
-      patterns: Phase 3 business compositions (9 pending — CodeBlockCopyButton, MetroMapMarker, CartographyCanvas, ReceptionHero, EditorialDigest, DistrictMap, CrossPost, VirgilChat, LiveRoom)
-      ui: intentionally-empty (CD4 §7 — Prime register pulls past shadcn defaults)
+      custom: 20 built (Phase 1 chrome + Phase 2 chrome incl. LiveTicker + SearchPalette, the editorial-grade batch, and CD7 ImageWithCaption) — `ls code/packages/ui/src/components/custom/`
+      patterns: 9 Phase 3 business compositions, all built — 8 in components/patterns/ plus CartographyCanvas, which lives at src/cartography/ (F7 substrate) and is re-exported from src/index.ts
+      ui: 19 Radix primitive wrappers, built at F5 — supersedes the earlier intentionally-empty posture (CD4 §7 read as "no shadcn DEFAULTS", not "no primitives"); the Prime register is applied to each
+      verify: every count above is `ls`-checkable at the paths given, and src/index.ts exports the lot — check the filesystem, never this line alone
   storybook:
     path: code/apps/storybook/
     placement: HYBRID (Storybook RFC #22521 + Vercel official starter precedent)
@@ -165,7 +166,3 @@ deferred-mayor-adjudication:
       description: APCA evidence rows for Dusk + Night cycle substrates (Dawn was W2-S-E validated)
     - id: per-component-fidelity-audit
       description: Mayor 2026-05-11 close-out flagged "some components still look bad vs canon"; per-component audit pending
-    - id: phase-2-remainder
-      description: LiveTicker + SearchPalette components not yet built
-    - id: phase-3-patterns
-      description: 9 Phase 3 pattern components pending (CodeBlockCopyButton, MetroMapMarker, CartographyCanvas, ReceptionHero, EditorialDigest, DistrictMap, CrossPost, VirgilChat, LiveRoom)

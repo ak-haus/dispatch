@@ -8,7 +8,12 @@
 > remains a Lane-P tenant of Prime.
 
 ## ⚠ Dispatch is LIVE — the boundary (read this first)
-Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel GitHub App is not installed).
+Live at **dispatchmag.dev** (Vercel). The **Vercel GitHub App is installed** (2026-08-20, F3-a; verified against
+Vercel's API by `repoId`, never the dashboard — the B14 rename makes "linked to the archive repo" the live failure
+mode). So a merge to `main` **can deploy production by itself** — but only when the commit touches `code/`: the
+project's Ignored Build Step (`rootDirectory: code`) cancels any build whose diff is outside it, which is why a
+records-only commit shows `CANCELED` and that is the guard working, not a failure. Manual CLI deploys still work and
+are still the way to force one.
 - **NEVER:** commit secrets (Doppler `prime-city`); ship a **placeholder** (a colored rectangle / registration marks)
   on launch-ready code — real assets live in `code/apps/microsite-astro/public/`; animate **layout** properties
   (`width`/`height`/`top`/`left`/`margin`/`padding`) — use `transform`+`opacity`; resurrect the dead V1 rails
@@ -36,6 +41,12 @@ Live at **dispatchmag.dev** (Vercel). Deploys are **manual CLI** (the Vercel Git
   `UI Tests: dispatch_playwright` · `ideation (provenance law)` — plus a 6h `uptime (prod smoke)` cron and the
   non-blocking `design-review (evidence packet)` AK reads per PR. **Red = do-not-merge.** A new stage ships its gate
   AND registers it; a gate that is not required is decoration.
+- **Name the flag in the PR** (F25 interim rule, adopted 2026-08-20). A PR that closes or changes a tracked flag or
+  board row **names its ID in the title or the body** — `F18`, `R1`, `A6`. The flag ledger lives *outside* this repo,
+  so no gate can bind to it and no query can find a close that was only remembered. Naming the ID makes the close
+  ritual reconcile by `gh pr list --search`, not by recall — which is the failure this rule exists for: the ledger has
+  drifted five times, most sharply when a row still read "held for disposition" for a PR that had merged the day
+  before. The machine-checkable in-repo ledger is a separate, larger piece of work; this line is the zero-cost half.
 
 ## Authoring a dispatch (ADR-0003 §Stage 8 — there is no CMS)
 **AK OWNS CONTENT.** An agent may *draft*; AK signs off. Creating or editing any `.mdx` is an ASK-FIRST action, and

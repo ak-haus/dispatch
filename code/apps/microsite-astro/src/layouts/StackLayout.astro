@@ -102,6 +102,28 @@ const searchIndex = await buildSearchIndex()
 		</script>
 
 		<!--
+			Error tracking (Golden Board A6, error-tracking half; vendor + DSN
+			decided at U6 — Sentry, free tier, org prime-city).
+
+			Sits BEFORE the analytics boot on purpose: this script only attaches
+			two listeners, and attaching them earlier widens the window in which a
+			hydration failure is caught. It does NOT load the Sentry SDK — the
+			vendor chunk is fetched the first time an error actually fires, and the
+			error that triggered it is buffered and reported on arrival. A healthy
+			page view pays for the listeners and nothing else, which is what keeps
+			the A4 byte + TBT ratchet whole.
+
+			With no PUBLIC_SENTRY_DSN the boot returns before attaching anything,
+			so this can sit in the layout ahead of the env var being set — the same
+			arms-on-token posture as the analytics lane next door. What may and may
+			not be collected is asserted in src/lib/observability/posture.test.ts.
+		-->
+		<script>
+			import { bootErrorTracking } from '@/lib/observability/boot'
+			bootErrorTracking()
+		</script>
+
+		<!--
 			Editorial analytics (ADR-0003 §Stage 6, register §9: PostHog EU
 			Cloud, cookieless, no consent banner, replay off).
 

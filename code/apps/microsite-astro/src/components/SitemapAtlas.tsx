@@ -17,6 +17,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence, MotionConfig, useReducedMotion } from 'motion/react'
 import { Compass, Map as MapIcon, FileText, MessageSquareText, Landmark, Newspaper, ArrowRight } from 'lucide-react'
+import { PALETTE } from './home/shared/palette'
 
 /* ── Atlas zone definitions ──────────────────────────────────────────────── */
 
@@ -180,7 +181,7 @@ export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
 						className="relative overflow-hidden rounded-[3px] border border-body-strong/15"
 						style={{
 							aspectRatio: '4 / 3',
-							backgroundColor: 'oklch(0.88 0.022 78)',
+							backgroundColor: PALETTE.cartographyPaper,
 							boxShadow:
 								'0 30px 80px -30px rgba(0,0,0,0.30), 0 8px 20px -8px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.04)',
 						}}

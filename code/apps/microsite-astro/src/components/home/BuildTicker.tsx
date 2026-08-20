@@ -1,3 +1,18 @@
+/* eslint-disable no-restricted-syntax --
+ * Sanctioned tokens-lint exemption (ADR-0003 §Stage 5 gate): this ticker
+ * DEPICTS a terminal — the same idiom, and the same reasoning, as the macOS
+ * window chrome in SpheresSpread. Its palette is a dark terminal register that
+ * holds across all three cycles by design: canon color tokens CYCLE
+ * (--platform-accent-prime is #8e2532 in dawn, oklch(0.63 0.185 25) in dusk),
+ * so re-pointing these at tokens would make the terminal change color with the
+ * page, which is a design change to locked canon (CD1-5), not a governance fix.
+ *
+ * What the exemption is FOR: every value below is named once, in one block, at
+ * the top of the file. Before 2026-08-20 these fifteen literals were scattered
+ * through the JSX, which is what let the astro app drift outside the oklch band
+ * unnoticed (R1). The band now covers this app; a fixed value must be declared
+ * here or in shared/palette.ts, never inline.
+ */
 /**
  * BuildTicker — recent commits as a true horizontal marquee.
  *
@@ -43,10 +58,37 @@ type Commit = {
 	deletions?: number
 }
 
+/**
+ * The terminal register — every fixed color this depiction uses, named once.
+ * See the file-level exemption above for why these are literals and not tokens.
+ */
+const TICKER = {
+	/** Marquee panel ground, and the color the edge fades resolve toward. */
+	panel: 'oklch(0.20 0.02 60)',
+	/** Title bar + status footer — one step darker than the panel. */
+	chrome: 'oklch(0.16 0.02 60)',
+	/** Title-bar status text ("▶ streaming · main · HEAD"). */
+	chromeText: 'oklch(0.65 0.02 60)',
+	/** Status-footer text. */
+	footerText: 'oklch(0.62 0.02 60)',
+	/** Commit scope, the brightest of the muted metadata tiers. */
+	scope: 'oklch(0.70 0.02 60)',
+	/** Commit subject — the one near-white in the register. */
+	subject: 'oklch(0.92 0.02 90)',
+	/** Diff counts and dates. */
+	meta: 'oklch(0.55 0.02 60)',
+	/** The dot between commits in the marquee. */
+	separator: 'oklch(0.42 0.02 60)',
+	/** Red for removal — both the `fix` commit type and deletion counts. */
+	removal: 'oklch(0.58 0.18 28)',
+	/** Muted warm tone for housekeeping commits. */
+	chore: 'oklch(0.55 0.05 60)',
+} as const
+
 const TYPE_COLORS: Record<Commit['type'], string> = {
 	feat: PALETTE.accent,
-	fix: 'oklch(0.58 0.18 28)',
-	chore: 'oklch(0.55 0.05 60)',
+	fix: TICKER.removal,
+	chore: TICKER.chore,
 	docs: PALETTE.copper,
 	refactor: PALETTE.copperDeep,
 	style: PALETTE.wheat,
@@ -154,12 +196,12 @@ export function BuildTicker() {
 					viewport={{ once: true, amount: 0.2 }}
 					transition={{ duration: 0.9 }}
 					className="relative mt-8 overflow-hidden rounded-md border-2 border-body-strong/85 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35),0_8px_16px_-8px_rgba(0,0,0,0.15)]"
-					style={{ backgroundColor: 'oklch(0.20 0.02 60)' }}
+					style={{ backgroundColor: TICKER.panel }}
 				>
 					{/* Window chrome — matches the prior code panel idiom */}
 					<div
 						className="flex items-center justify-between border-b border-white/10 px-5 py-2.5"
-						style={{ backgroundColor: 'oklch(0.16 0.02 60)' }}
+						style={{ backgroundColor: TICKER.chrome }}
 					>
 						<div className="flex items-center gap-2">
 							<span className="block h-2.5 w-2.5 rounded-full bg-white/15" />
@@ -174,7 +216,7 @@ export function BuildTicker() {
 						</div>
 						<span
 							className="hidden font-mono text-[12px] uppercase tracking-[0.22em] sm:inline"
-							style={{ color: 'oklch(0.65 0.02 60)' }}
+							style={{ color: TICKER.chromeText }}
 						>
 							{paused ? '⏸ paused' : '▶ streaming'} · main · HEAD
 						</span>
@@ -194,7 +236,7 @@ export function BuildTicker() {
 							className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16"
 							style={{
 								background:
-									'linear-gradient(to right, oklch(0.20 0.02 60) 0%, transparent 100%)',
+									`linear-gradient(to right, ${TICKER.panel} 0%, transparent 100%)`,
 							}}
 						/>
 						<div
@@ -202,7 +244,7 @@ export function BuildTicker() {
 							className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16"
 							style={{
 								background:
-									'linear-gradient(to left, oklch(0.20 0.02 60) 0%, transparent 100%)',
+									`linear-gradient(to left, ${TICKER.panel} 0%, transparent 100%)`,
 							}}
 						/>
 
@@ -229,8 +271,8 @@ export function BuildTicker() {
 					<div
 						className="flex items-center justify-between border-t border-white/10 px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.22em]"
 						style={{
-							backgroundColor: 'oklch(0.16 0.02 60)',
-							color: 'oklch(0.62 0.02 60)',
+							backgroundColor: TICKER.chrome,
+							color: TICKER.footerText,
 						}}
 					>
 						<span>
@@ -290,25 +332,25 @@ function TickerItem({ commit, duplicate }: { commit: Commit; duplicate: boolean 
 			</span>
 
 			{/* Scope */}
-			<span style={{ color: 'oklch(0.70 0.02 60)' }}>({commit.scope}):</span>
+			<span style={{ color: TICKER.scope }}>({commit.scope}):</span>
 
 			{/* Subject */}
-			<span style={{ color: 'oklch(0.92 0.02 90)' }}>{commit.subject}</span>
+			<span style={{ color: TICKER.subject }}>{commit.subject}</span>
 
 			{/* Diff stats */}
 			{commit.insertions !== undefined && (
 				<span
 					className="text-[12px] tabular-nums"
-					style={{ color: 'oklch(0.55 0.02 60)' }}
+					style={{ color: TICKER.meta }}
 				>
 					<span style={{ color: PALETTE.copperDeep }}>+{commit.insertions}</span>
 					<span className="mx-1">/</span>
-					<span style={{ color: 'oklch(0.58 0.18 28)' }}>-{commit.deletions ?? 0}</span>
+					<span style={{ color: TICKER.removal }}>-{commit.deletions ?? 0}</span>
 				</span>
 			)}
 
 			{/* Date */}
-			<span className="text-[12px] tabular-nums" style={{ color: 'oklch(0.55 0.02 60)' }}>
+			<span className="text-[12px] tabular-nums" style={{ color: TICKER.meta }}>
 				{commit.date}
 			</span>
 
@@ -316,7 +358,7 @@ function TickerItem({ commit, duplicate }: { commit: Commit; duplicate: boolean 
 			<span
 				aria-hidden="true"
 				className="mx-2 inline-block h-1 w-1 rounded-full"
-				style={{ backgroundColor: 'oklch(0.42 0.02 60)' }}
+				style={{ backgroundColor: TICKER.separator }}
 			/>
 		</li>
 	)

@@ -1,3 +1,19 @@
+/* eslint-disable no-restricted-syntax --
+ * Sanctioned tokens-lint exemption (ADR-0003 §Stage 5 gate). THIS FILE IS THE
+ * DECLARED HOME for the surface's cycle-independent values, and that is the
+ * whole reason the exemption sits here rather than on the components.
+ *
+ * Canon tokens CYCLE: --platform-accent-prime resolves to #8e2532 in dawn,
+ * oklch(0.63 0.185 25) in dusk, oklch(0.66 0.210 26) in night. The values
+ * below are deliberately FIXED — they sit on dark editorial chrome that does
+ * not cycle, so re-pointing them at a token would not be a governance fix, it
+ * would be a design change to locked canon (CD1-5).
+ *
+ * The rule the exemption buys: components may carry no raw literal; a fixed
+ * value must be named here, where one diff shows every one of them. Whether
+ * these should become cycle-independent canon tokens is a CANON decision and
+ * therefore AK's — filed, not decided here.
+ */
 /**
  * Color canon for the homepage spreads + article surfaces.
  *
@@ -52,6 +68,21 @@ export const PALETTE = {
 	 *  plates. Text on top of this surface uses `oklch(0.18 0.02 60)`
 	 *  (warm ink) which holds APCA Lc ≥ 60 contrast. */
 	wheat: 'color-mix(in oklch, var(--platform-copper) 80%, var(--sky-low) 20%)',
+
+	// ── Tier 3b: fixed ink on tinted fills ─────────────────────────────
+	/** Warm ink — the text color on `wheat` fills and other copper-tinted
+	 *  plates, holding APCA Lc ≥ 60. Fixed rather than cycling, because the
+	 *  fill it sits on is a tint rather than a substrate. Consolidated here
+	 *  2026-08-20 from five call sites across ArticleSpread, WirePage and
+	 *  ArticlesBrowser, which each carried the literal inline. */
+	warmInk: 'oklch(0.18 0.02 60)',
+	/** Paper white — the lifted highlight used for letterpress text shadows
+	 *  and light-on-dark captions. Also previously inline in two files. */
+	paper: 'oklch(0.99 0.005 75)',
+	/** Cartographic viewport ground — the atlas map plate. Cartographic
+	 *  substrate is locked canon (CD3), so this value is fixed by decision,
+	 *  not by omission. */
+	cartographyPaper: 'oklch(0.88 0.022 78)',
 
 	// ── Tier 4: flourishes (NEVER replace tier 1 or 2) ─────────────────
 	/** Ink-blue accent — flourish only, never first-class. */

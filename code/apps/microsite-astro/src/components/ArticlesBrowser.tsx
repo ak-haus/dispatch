@@ -26,6 +26,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence, MotionConfig } from 'motion/react'
 import { Play, Pause, Image as ImageIcon, Film, Headphones, Filter, Calendar } from 'lucide-react'
+import { PALETTE } from './home/shared/palette'
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 
@@ -538,7 +539,7 @@ function MiniWaveform({ src }: { src: string }) {
 	return (
 		<div
 			className="relative flex h-full w-full flex-col items-center justify-center gap-4 overflow-hidden p-6"
-			style={{ backgroundColor: 'oklch(0.18 0.02 60)' }}
+			style={{ backgroundColor: PALETTE.warmInk }}
 		>
 			<div
 				aria-hidden="true"

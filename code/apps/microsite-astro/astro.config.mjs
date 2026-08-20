@@ -34,6 +34,21 @@ export default defineConfig({
 	],
 	vite: {
 		plugins: [tailwindcss()],
+		// Sentry's tree-shaking levers (Golden Board A6, error-tracking half).
+		// The SDK ships tracing and debug-logging code that error monitoring does
+		// not need; these two globals are the documented way to have the bundler
+		// drop them. A6 is the ERROR row — field performance is not in scope, and
+		// the lab floor is A4's Lighthouse ratchet — so tracing goes.
+		//
+		// This is also the seam that makes `client.ts` deliberately NOT pass the
+		// `tracesSampleRate` the observability primitive computes: with tracing
+		// shaken out, passing it would be dead config reading as a live decision.
+		// Turning field tracing on later means undefining this AND passing that
+		// field — one line each, in that order.
+		define: {
+			__SENTRY_DEBUG__: 'false',
+			__SENTRY_TRACING__: 'false',
+		},
 		resolve: {
 			dedupe: ['react', 'react-dom'],
 		},
