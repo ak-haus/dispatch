@@ -1,5 +1,16 @@
 [
 	{
+		"hash": "d45936c",
+		"type": "chore",
+		"scope": "repo",
+		"subject": "checkpoint(clearance): A6 error-tracking half wired; F18, R1 mechanical, F25 burned (#30)",
+		"date": "2026-08-20",
+		"author": "AKALMoumen",
+		"filesChanged": 21,
+		"insertions": 940,
+		"deletions": 94
+	},
+	{
 		"hash": "74177ef",
 		"type": "chore",
 		"scope": "repo",
@@ -72,17 +83,6 @@
 		"subject": "Merge pull request #25 from ak-haus/session-close-2026-08-20",
 		"date": "2026-08-20",
 		"author": "AKALMoumen",
-		"filesChanged": 2,
-		"insertions": 104,
-		"deletions": 1
-	},
-	{
-		"hash": "a9a1078",
-		"type": "docs",
-		"scope": "lifecycle",
-		"subject": "close record for the 2026-08-20 design-stack release session",
-		"date": "2026-08-20",
-		"author": "AK ALMoumen",
 		"filesChanged": 2,
 		"insertions": 104,
 		"deletions": 1
