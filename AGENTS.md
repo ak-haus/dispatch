@@ -14,6 +14,11 @@ mode). So a merge to `main` **can deploy production by itself** — but only whe
 project's Ignored Build Step (`rootDirectory: code`) cancels any build whose diff is outside it, which is why a
 records-only commit shows `CANCELED` and that is the guard working, not a failure. Manual CLI deploys still work and
 are still the way to force one.
+- **Licensed fonts ride a Blob rail, not the site.** The PP wordmark/nav binaries are gitignored (B14 EULA cut), so a
+  **git-sourced** build has none unless it hydrates them — `vercel.json`'s `buildCommand` runs `fetch:fonts` first for
+  exactly that reason. The source is a credential-free Vercel Blob URL (`scripts/fetch-fonts.mjs`), deliberately **not**
+  `dispatchmag.dev`: sourcing fonts from production was circular the moment production started being built from git, and
+  it shipped a fallback-font wordmark to prod on 2026-08-20 before anyone noticed. Never point it back at the site.
 - **NEVER:** commit secrets (Doppler `prime-city`); ship a **placeholder** (a colored rectangle / registration marks)
   on launch-ready code — real assets live in `code/apps/microsite-astro/public/`; animate **layout** properties
   (`width`/`height`/`top`/`left`/`margin`/`padding`) — use `transform`+`opacity`; resurrect the dead V1 rails

@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter microsite-astro build",
+  "buildCommand": "pnpm --filter microsite-astro fetch:fonts && pnpm --filter microsite-astro build",
   "outputDirectory": "apps/microsite-astro/dist",
   "cleanUrls": true,
   "trailingSlash": false,
