@@ -19,6 +19,10 @@
       "types": "./src/f5-primitives.ts",
       "import": "./src/f5-primitives.ts"
     },
+    "./observability": {
+      "types": "./src/observability/index.ts",
+      "import": "./src/observability/index.ts"
+    },
     "./custom/*": {
       "types": "./src/components/custom/*/index.ts",
       "import": "./src/components/custom/*/index.ts"

@@ -9,7 +9,12 @@ on: [push, pull_request]
 # incomplete tokens forces exemptions): px literals ratchet in when a spacing
 # scale is ratified; rgba()/hsla() shadows ratchet in with an elevation
 # canon; sanctioned exemptions are file-level disables carrying their
-# justification inline (third-party platform depictions only).
+# justification inline, in two classes — third-party platform depictions, and
+# cycle-independent registers whose values must not follow dawn/dusk/night.
+# The oklch band covers BOTH globs below as of 2026-08-20 (R1): it previously
+# applied to packages/ui only, while this workflow already invoked eslint over
+# the astro app too, so 47 literals there were linted by a config that had no
+# oklch rule for them.
 # Red = do-not-merge, fail-closed.
 jobs:
   tokens-lint:

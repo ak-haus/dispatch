@@ -22,10 +22,17 @@
  *       component source today (verified 2026-08-18).
  *
  * Sanctioned exemptions are file-level eslint-disable banners WITH the
- * justification inline (the Rule 2 pattern) — today: third-party platform
- * depictions whose palettes are foreign brands, not Prime canon
- * (SpheresSpread macOS window chrome; CrossfireSpread LinkedIn/Hashnode
- * embeds).
+ * justification inline (the Rule 2 pattern) — today, four files, in two
+ * classes:
+ *   · foreign-brand depictions, whose palettes are not Prime canon —
+ *     SpheresSpread (macOS window chrome) and CrossfireSpread
+ *     (LinkedIn/Hashnode embeds);
+ *   · cycle-independent registers, whose values must NOT follow
+ *     dawn/dusk/night — BuildTicker (a terminal depiction) and
+ *     apps/microsite-astro/src/components/home/shared/palette.ts, the declared
+ *     home for such values so components carry none inline.
+ * OPEN, and AK's to decide: whether the cycle-independent registers should
+ * become canon tokens of their own. That is a canon question, not a lint one.
  */
 import tsParser from "@typescript-eslint/parser";
 
@@ -76,11 +83,28 @@ export default [
     rules: bannedColorLiterals(),
   },
   {
-    // packages/ui holds the canon register — oklch literals are additionally
-    // banned there (values live in the DTCG source, nowhere else). The astro
-    // app is exempt from this stricter band only where no literal exists to
-    // ban today; the hex rules above still apply.
-    files: ["packages/ui/src/components/**/*.{ts,tsx}"],
+    // The oklch band. packages/ui holds the canon register (values live in the
+    // DTCG source, nowhere else), and as of 2026-08-20 the astro app is inside
+    // the band too.
+    //
+    // IT WAS NOT, AND THE STATED REASON WAS FALSE. This block previously read
+    // "the astro app is exempt from this stricter band only where no literal
+    // exists to ban today" — measured that day, the app carried 47 raw oklch()
+    // across 8 component files, 15 of them in one file (BuildTicker). A lint
+    // whose scope rests on an unverified premise bans nothing and reports that
+    // it does, which is worse than an honest gap (Golden Board R1).
+    //
+    // Grandfathering is deliberate and NAMED, not blanket. Four files carry a
+    // file-level eslint-disable with its justification inline (the Rule 2
+    // pattern); every one of them holds values that are fixed BY DESIGN because
+    // canon color tokens cycle dawn/dusk/night and these surfaces must not.
+    // The other four files' literals were consolidated into shared/palette.ts
+    // and now resolve through it. What the band buys from here: a NEW literal
+    // in the astro app fails CI unless someone writes down why.
+    files: [
+      "packages/ui/src/components/**/*.{ts,tsx}",
+      "apps/microsite-astro/src/components/**/*.{ts,tsx}",
+    ],
     ignores: ["**/*.test.*", "**/__tests__/**"],
     languageOptions: {
       parser: tsParser,

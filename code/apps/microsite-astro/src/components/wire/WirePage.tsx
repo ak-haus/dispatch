@@ -199,7 +199,7 @@ export function WirePage() {
 								window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
 							}}
 							className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full border border-body-strong/40 px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.22em] shadow-lg backdrop-blur"
-							style={{ backgroundColor: PALETTE.wheat, color: 'oklch(0.18 0.02 60)' }}
+							style={{ backgroundColor: PALETTE.wheat, color: PALETTE.warmInk }}
 						>
 							{toastCount} new {toastCount === 1 ? 'publish' : 'publishes'} ↑
 						</motion.button>

@@ -156,8 +156,8 @@ export function ArticleSpread({
 							<p
 								className="font-mono text-[12px] font-bold uppercase tracking-[0.36em]"
 								style={{
-									color: 'oklch(0.18 0.02 60)',
-									textShadow: '0 1px 0 color-mix(in oklch, oklch(0.99 0.005 75) 60%, transparent)',
+									color: PALETTE.warmInk,
+									textShadow: `0 1px 0 color-mix(in oklch, ${PALETTE.paper} 60%, transparent)`,
 								}}
 							>
 								From the dispatch
@@ -166,10 +166,10 @@ export function ArticleSpread({
 								className="mt-4 font-narrative italic leading-[1.18] tracking-[-0.012em]"
 								style={{
 									fontSize: 'clamp(1.375rem, 2.4vw, 1.875rem)',
-									color: 'oklch(0.18 0.02 60)',
+									color: PALETTE.warmInk,
 								}}
 							>
-								“<span className="text-wordmark-dis font-bold not-italic">DIS</span><span className="not-italic" style={{ color: 'oklch(0.18 0.02 60)' }}>patch</span> publishes as a magazine, reads as a notebook, and behaves as a website.”
+								“<span className="text-wordmark-dis font-bold not-italic">DIS</span><span className="not-italic" style={{ color: PALETTE.warmInk }}>patch</span> publishes as a magazine, reads as a notebook, and behaves as a website.”
 							</p>
 						</div>
 
