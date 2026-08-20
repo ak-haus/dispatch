@@ -19,6 +19,7 @@
     "astro": "astro",
     "e2e:build": "PUBLIC_WIRE_FEED_URL=https://wire-ledger.test/feed.json astro build",
     "test:e2e": "pnpm e2e:build && playwright test",
+    "check:archive-coverage": "node scripts/check-archive-coverage.mjs",
     "commits:generate": "node scripts/generate-commits.mjs",
     "wire:snapshot": "node scripts/generate-wire-snapshot.mjs",
     "cartography:segment": "node scripts/segment-cartography.mjs",

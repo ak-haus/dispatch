@@ -57,7 +57,8 @@ export function WireTicker() {
 						{state.status === 'reconnecting' && (
 							<span className="dispatch-emboss" role="status">reconnecting</span>
 						)}
-						{freshness && <span suppressHydrationWarning>{freshness}</span>}
+						{/* data-live: wall-clock text — see WireCard. */}
+					{freshness && <span data-live="timestamp" suppressHydrationWarning>{freshness}</span>}
 						<button
 							type="button"
 							aria-pressed={paused}

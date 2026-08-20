@@ -247,7 +247,9 @@ function NextEditionCard({ slot }: { slot: number }) {
 
 					{/* Centered "NEXT EDITION" pill — the visual cue that this
 					    isn't a published article. */}
+					{/* data-live: infinite pulse — see CoverSpread. */}
 					<motion.div
+						data-live="pulse"
 						className="relative z-10 flex flex-col items-center gap-2"
 						animate={{ y: [0, -2, 0] }}
 						transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}

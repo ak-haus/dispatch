@@ -9,6 +9,7 @@
 
 import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
+import { archiveSnapshot } from './helpers/archive'
 import { makeEntry, makeFeed, serveWireFeed } from './helpers/wire-fixture'
 
 test('polls the stubbed rail on mount and goes live', async ({ page }) => {
@@ -75,4 +76,10 @@ test('/wire holds the axe WCAG floor', async ({ page }, testInfo) => {
 	await page.goto('/wire')
 	await expect(page.getByText('updated just now')).toBeVisible()
 	await expectNoAxeViolations(page, testInfo)
+	// Chromatic archive lane. /wire is the surface with genuinely live regions
+	// — the entry timestamps and the freshness line move with the wall clock
+	// on every run. They carry data-live, so the lane ignores them and diffs
+	// the rail around them (the two behavioural tests above are NOT archived:
+	// both end on a deliberately mutated feed).
+	await archiveSnapshot(page, 'wire', testInfo)
 })

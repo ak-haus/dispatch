@@ -13,11 +13,14 @@ on: [push, pull_request, workflow_dispatch]
 #     to capture on fallback stacks, so fontless CI would fail anyway.
 #   - visual.spec.ts compares committed -linux baselines (generated in THIS
 #     runner class via the update-visual-baselines job, never on a Mac).
-#   - the Chromatic upload step ships each test's archive to the cloud lane
+#   - the Chromatic upload step ships the CHOSEN archives to the cloud lane
 #     (ADR §Stage 4 wiring step 1). It runs on push events only (one upload
 #     per commit) and needs the E2E-project token: Chromatic requires one
 #     project PER build type (docs/combine-stories-e2e), so this lane arms
 #     when CHROMATIC_E2E_PROJECT_TOKEN lands — the skip is loud, not silent.
+#     "Chosen" is load-bearing (F19, repaired 2026-08-19): auto-archiving is
+#     off, and a surface reaches the lane only through archiveSnapshot() in
+#     e2e/helpers/archive.ts, which refuses to capture a page still in motion.
 jobs:
   e2e:
     # NOTE: this display name is a ruleset-REQUIRED check context (21012416)
@@ -78,6 +81,15 @@ jobs:
         timeout-minutes: 10
         run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
       - run: pnpm --fail-if-no-match --filter microsite-astro test:e2e
+      # The archive lane's coverage contract (F19). Auto-archiving is off, so
+      # what reaches Chromatic is exactly the archiveSnapshot() calls in the
+      # specs — this asserts that list has neither shrunk (a surface silently
+      # dropped out of AK's review lane) nor ballooned back to all 39 (the
+      # wolf, restored). Runs before the upload so drift fails the job rather
+      # than reaching the cloud.
+      - name: archive coverage contract — the lane ships what it says it ships
+        working-directory: code/apps/microsite-astro
+        run: pnpm check:archive-coverage
       - name: chromatic e2e lane — upload archives (push only; one project per build type)
         if: github.event_name == 'push' && env.CHROMATIC_E2E_PROJECT_TOKEN != ''
         working-directory: code/apps/microsite-astro
