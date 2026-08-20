@@ -15,4 +15,4 @@ last_amended: 2026-08-20
 ## Children
 
 - [fixtures](fixtures/index.md) — component fixtures (ChapterRail · Footnote · MastheadWordmark · ReadingProgress · SiteNav)
-- [checkpoints](checkpoints/) — session close records; each carries its discoveries with a phase assignment (ADR-0002 Decision 4)
+- [checkpoints](checkpoints/) — session close records; each carries its discoveries with a phase assignment (ADR-0002 Decision 4). Latest: [2026-08-20 ledger burn](checkpoints/2026-08-20-ledger.md) — F22 closed, F3 reframed and ruled, the ledger-cadence root cause filed as F25
