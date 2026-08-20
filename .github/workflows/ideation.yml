@@ -1,0 +1,25 @@
+name: ideation
+# The provenance law as mechanism (ADR-0003 §Stage 1, board S7).
+#
+# The ideation stage's one load-bearing rule is commit-with-provenance or
+# discard — without it the stage manufactures orphan mocks, which under the
+# kickoff principle makes the stage itself the blocker. A README cannot hold
+# that; this gate can. It also enforces the quarantine: shipped code may never
+# reference design/ideation/, so promoting a plate stays a deliberate act under
+# AK's content review.
+#
+# No API key, no network, no spend — the gate reads committed files only.
+on: [push, pull_request]
+jobs:
+  provenance:
+    name: ideation (provenance law)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # git grep drives the quarantine scan; it needs a real work tree.
+          fetch-depth: 1
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun scripts/check-ideation-provenance.ts
