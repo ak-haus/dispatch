@@ -1,5 +1,18 @@
 name: e2e
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which manual job to run'
+        type: choice
+        options: [baselines, stability]
+        default: baselines
+      repeats:
+        description: 'stability only — how many times to run the visual suite'
+        type: string
+        default: '10'
 
 # Playwright journeys + axe + the S1 visual floor over a LOCAL build (Golden
 # Board A2 + ADR-0003 §Stage 4). Phase A rules of law hold by construction:
@@ -109,6 +122,62 @@ jobs:
             code/apps/microsite-astro/test-results/
           retention-days: 7
 
+  # Visual stability probe (F20, 2026-08-20). The pixel floor's flakes only
+  # ever surfaced by randomly reddening someone's PR — there was no way to ASK
+  # whether the floor is stable. This runs the visual suite N times in one job
+  # and fails if ANY repeat disagrees, which is exactly the shape F20 has:
+  # three retries of one commit produced 265/265/227 differing pixels, so the
+  # captures disagreed with each other WITHIN a job.
+  #
+  # Manual only, never on push/PR — it is a diagnostic, not a gate.
+  visual-stability:
+    name: visual stability probe (manual)
+    if: github.event_name == 'workflow_dispatch' && inputs.job == 'stability'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: hydrate the PP font rail
+        run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
+      - name: resolve the pinned Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm --fail-if-no-match --filter microsite-astro exec node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: restore the Playwright browser cache
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+      - name: install chromium (cache miss only)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 10
+        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
+      - name: system libraries for the cached chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        timeout-minutes: 10
+        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
+      - name: run the pixel floor ${{ inputs.repeats }}x — any disagreement fails
+        working-directory: code/apps/microsite-astro
+        # retries 0: a retry would MASK the very nondeterminism being measured.
+        run: pnpm e2e:build && pnpm exec playwright test visual.spec.ts --repeat-each=${{ inputs.repeats }} --retries=0
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-stability-report
+          path: code/apps/microsite-astro/test-results/
+          retention-days: 7
+
   # Baseline factory (ADR: baselines must be generated in the CI linux
   # runner, not the Mac). Manually dispatched; regenerates -linux baselines
   # and uploads them as an artifact for the session to commit. Never runs on
@@ -116,7 +185,7 @@ jobs:
   # signed-off commit, not a side effect of CI.
   update-visual-baselines:
     name: regenerate visual baselines (manual)
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.job == 'baselines'
     runs-on: ubuntu-latest
     defaults:
       run:
