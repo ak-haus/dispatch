@@ -64,6 +64,22 @@ for (const file of listA) {
 	}
 	const a = [...walk(JSON.parse(fs.readFileSync(path.join(dirA, 'archive', file), 'utf8')).snapshot)]
 	const b = [...walk(JSON.parse(fs.readFileSync(other, 'utf8')).snapshot)]
+	// Structural guard. The walk is compared BY INDEX, which is only meaningful
+	// when both archives have the same DOM shape — i.e. the same commit, run
+	// twice, which is the one question this script answers. Point it at two
+	// different commits and a single inserted node (S6 adding one <script> to
+	// the layout, say) shifts every subsequent index, so node N is compared
+	// against N+1 and the output is thousands of bogus "differences".
+	// Refuse rather than mislead: the author of this script fell into exactly
+	// that trap on 2026-08-19.
+	if (a.length !== b.length) {
+		console.error(
+			`\n${file.split('.w')[0]}: ${a.length} nodes vs ${b.length} — the two archives are STRUCTURALLY different, ` +
+				'so an index comparison is meaningless. This script measures run-to-run determinism of ONE commit; ' +
+				'for a cross-commit visual comparison, use the Chromatic build.',
+		)
+		process.exit(2)
+	}
 	const diffs = a.filter(([, , v], i) => b[i] && v !== b[i][2])
 	if (diffs.length === 0) continue
 	flaky++

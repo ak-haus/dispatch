@@ -11,7 +11,21 @@
     "",
     "Plan-tiered limits verified on figma.com/pricing 2026-08-18: Professional/Organization 200",
     "tool calls/day (+10-15/min), Enterprise 600/day; Starter unlisted [unverified]. Re-verify at",
-    "OAuth time. Runbook: docs/runbooks/design-intent-to-code.md."
+    "OAuth time. Runbook: docs/runbooks/design-intent-to-code.md.",
+    "",
+    "PostHog (ADR-0003 Stage 6 + register 9, decided 2026-08-18): the analytics read lane. Hosted",
+    "HTTP MCP at https://mcp.posthog.com/mcp; the server proxies to the region of the account that",
+    "signs in, so EU Cloud needs no separate endpoint (verified posthog.com/docs 2026-08-19). HTTP",
+    "transport deliberately, NOT the documented `npx mcp-remote` stdio wrapper: the house rail is",
+    "bun/bunx, never npm/npx, and a remote HTTP server needs no local process at all.",
+    "",
+    "COST LAW: connecting and calling tools is free, but PostHog's AI-powered tools (the llma-* and",
+    "AI-observability families) bill as PostHog AI spend. The stage is costed at $0, so sessions and",
+    "the weekly loop stay on PLAIN HogQL — `query-sql` and the read tools. Anything that would incur",
+    "AI spend returns to AK as a decision under the ADR's $10/mo ceiling.",
+    "",
+    "READ-ONLY BY POSTURE: this lane exists to ask questions of the data. It never writes to the",
+    "product, and it never authors a design change — findings are proposals under AK sign-off."
   ],
   "mcpServers": {
     "figma": {
@@ -21,6 +35,15 @@
       "$activation": "AK one-time OAuth (claude.ai connector settings); conditional on a design artifact originating in Figma",
       "$decision": "ADR-0003 register §4 option A, 2026-08-18",
       "$sanctioned-tools": ["get_design_context", "get_screenshot"]
+    },
+    "posthog": {
+      "type": "http",
+      "url": "https://mcp.posthog.com/mcp",
+      "$posture": "dormant-read-only",
+      "$activation": "AK one-time PostHog signup + OAuth; the account's region routes the proxy (EU Cloud)",
+      "$decision": "ADR-0003 register §9 option A, 2026-08-18",
+      "$sanctioned-tools": ["query-sql"],
+      "$cost-law": "plain HogQL only — the llma-*/AI-observability tools bill as PostHog AI spend; the stage is costed at $0"
     }
   }
 }

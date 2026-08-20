@@ -124,6 +124,7 @@ export function WirePage() {
 					<span className="mx-1 hidden text-body-faint md:inline" aria-hidden="true">·</span>
 					<button
 						type="button"
+						data-analytics="wire:pause-toggle"
 						aria-pressed={paused}
 						onClick={togglePause}
 						className="min-h-6 rounded-sm border border-body-strong/30 px-3 py-1 font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted transition-colors hover:border-body-strong/60"
@@ -213,6 +214,7 @@ function FilterPill({ label, active, onClick }: { label: string; active: boolean
 	return (
 		<button
 			type="button"
+			data-analytics="wire:filter"
 			aria-pressed={active}
 			onClick={onClick}
 			className="min-h-6 rounded-full border px-3 py-1 font-mono text-[12px] uppercase tracking-[0.18em] transition-colors"

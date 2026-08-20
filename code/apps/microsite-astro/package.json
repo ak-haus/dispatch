@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "version": "0.1.0",
-  "description": "Prime DISpatch \u2014 Astro 6 editorial surface. Launch build (vellum substrate, dispatch-red, 5-typeface system, content-collection-driven articles).",
+  "description": "Prime DISpatch — Astro 6 editorial surface. Launch build (vellum substrate, dispatch-red, 5-typeface system, content-collection-driven articles).",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -47,6 +47,7 @@
     "maplibre-gl": "^5.24.0",
     "motion": "^12.43.0",
     "photoswipe": "^5.4.4",
+    "posthog-js": "^1.418.5",
     "radix-ui": "^1.6.7",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

@@ -203,6 +203,7 @@ function MobileNav({
 							<li key={p.href} role="listitem">
 								<a
 									href={p.href}
+									data-analytics={`nav:${p.href}`}
 									aria-current={isActive ? 'page' : undefined}
 									onClick={onNavigate}
 									className={[
@@ -441,6 +442,11 @@ function MagneticNavLink({
 		<motion.a
 			ref={m.ref}
 			href={href}
+			/* data-analytics: declares this as an engagement point for the
+			   editorial instrumentation (src/lib/analytics/boot.ts). Declared
+			   in the markup rather than matched by selector, so restyling the
+			   nav cannot silently stop the metric. */
+			data-analytics={`nav:${href}`}
 			aria-current={isActive ? 'page' : undefined}
 			onMouseEnter={() => onPreview(true)}
 			onMouseMove={m.onMouseMove}
