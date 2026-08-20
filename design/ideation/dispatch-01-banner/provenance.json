@@ -1,0 +1,52 @@
+{
+	"run": "dispatch-01-banner",
+	"need": "F13 — dispatch-01 ships the banner placeholder to production (filed S4, 2026-08-19)",
+	"generated": "2026-08-20",
+	"model": "gemini-3-pro-image",
+	"modelLabel": "Nano Banana Pro",
+	"imageSize": "2K",
+	"aspectRatio": "4:3",
+	"cycle": "dawn",
+	"costUsdPerImage": 0.134,
+	"costUsdTotal": 0.402,
+	"contract": {
+		"file": "DESIGN.md",
+		"sha256": "4871022f1e9bf66e6c613d6a665a3d232e552a77859728d7501d880eebe21e58"
+	},
+	"brief": "The DISpatch building — the first published Building in Prime City's Editorial District.\n\nA modest civic press house, three or four storeys, drawn complete and in full detail: printing floor,\nloading bay, a reading room, stacked paper, a small courtyard. It stands finished and inhabited.\n\nAround it, the rest of the district is still being drafted. Neighbouring blocks fade outward from\nfully rendered, to line-only elevations, to bare lot lines and surveyor's marks on empty paper — a\ncity caught mid-construction, one building at a time. Scaffolding and a crane at the far edge.\nStreet grid and block boundaries run underneath everything as fine ruled lines.\n\nAxonometric, viewed from above and slightly to one side, the way a drafting office would present a\ncompleted parcel to a city record. The finished building is the visual anchor; the unbuilt district\naround it is quiet and sparse.",
+	"prompt": "You are illustrating a plate for PRIME DISpatch, an editorial scrollytelling magazine\ndocumenting the construction of Prime City. Produce ONE finished editorial illustration.\n\nTHE BRIEF\nThe DISpatch building — the first published Building in Prime City's Editorial District.\n\nA modest civic press house, three or four storeys, drawn complete and in full detail: printing floor,\nloading bay, a reading room, stacked paper, a small courtyard. It stands finished and inhabited.\n\nAround it, the rest of the district is still being drafted. Neighbouring blocks fade outward from\nfully rendered, to line-only elevations, to bare lot lines and surveyor's marks on empty paper — a\ncity caught mid-construction, one building at a time. Scaffolding and a crane at the far edge.\nStreet grid and block boundaries run underneath everything as fine ruled lines.\n\nAxonometric, viewed from above and slightly to one side, the way a drafting office would present a\ncompleted parcel to a city record. The finished building is the visual anchor; the unbuilt district\naround it is quiet and sparse.\n\nTHE HOUSE REGISTER (read off the shipped banner corpus — match it)\nEditorial illustration in the register of a hand-drawn architectural plate — the kind of\ndrawing a small press would print on good paper.\n\n  - Medium: ink line work. Pen, technical drafting pen, or fine brush. Visible hatching and\n    stipple for tone. The paper grain and the warmth of the stock are part of the image.\n  - View: axonometric, isometric, or straight top-down plan. A drafted view, never a\n    photographic one — the drawing knows it is a drawing.\n  - Subject: architecture and the city. Buildings in section or cut-away, rooftops, street\n    grids, lot lines, scaffolding and cranes, surveyor's marks, the machinery of construction.\n  - Density: rich and patient. Small incidental detail rewards a second look — the drawing\n    should hold up when the reader stops scrolling and looks properly.\n  - Colour: the paper ground plus one or two accent pigments, used sparingly as marks,\n    annotations, and network lines. Never a wash, never a gradient, never a field of colour.\n  - Figures: if present, small, silhouetted, incidental to the architecture. No portraits.\n  - Temperature: warm, quiet, restrained, precise. Civic-archive, not science fiction.\n\nTHE PALETTE — use these values and essentially nothing else (dawn cycle)\n  - #f6f1e7  — the paper ground — everything sits on this\n  - #ded3bb  — the deepest paper tone, for shadow and weight\n  - #14110c  — the ink — line work and hatching\n  - #8e2532  — wine — dispatch-precious, a rare small accent, NEVER a wash or gradient\n  - #bb4812  — terracotta — the editorial lane accent\n  - #3b4b62  — graphite-blue — the institutional lane accent\n  - #b87333  — copper — wayfinding marks and fine annotation\n  Ground: warm pale vellum paper — the default published surface.\n  The palette is deliberately narrow and low-chroma. Chrome is never vivid. Wine is\n  precious: at most a few small marks, never a field, never a gradient, never a wash.\n\nCOMPOSITION\n  - Aspect ratio 4:3. The plate is cropped with object-fit: cover inside a tall\n    column on desktop and a wide strip on mobile, so keep the subject centred and leave the\n    outer eighth of every edge free of anything load-bearing.\n  - Flat or axonometric. Architectural, drafted, top-down or elevated — never a street-level\n    eye-line, never a first-person view.\n\nHARD CONSTRAINTS — a plate violating any of these is discarded\n  - NO lettering of any kind. No words, no captions, no signage, no numerals, no logos, no\n    wordmark. The publication sets its own type over this plate in Vollkorn, Crimson Pro, Pangram Sans, JetBrains Mono — a\n    drawn word would collide with it, and a drawn \"DISpatch\" would break the wordmark split\n    rule that governs every rendering of that word without exception. Leave the type quiet\n    room; do not draw the type.\n  - NO photorealism, no 3D render, no glossy or cinematic lighting, no lens flare, no bokeh.\n    This is ink and printed paper.\n  - NO neon, no cyberpunk teal-and-magenta, no glow, no chrome gradients.\n  - NO UI mockups, no dashboards, no browser windows, no device frames.\n  - NO human faces in focus. Figures, if any, are small, silhouetted, and incidental.\n  - Canon tombstone: Street-view cartography, literal cosmology labeling (\"this is the Governance Pillar\"), or substrate animation at scroll cadence\n\nThe result should read as a hand-drawn plate from a small editorial press — an architectural\ndocument that happens to be beautiful. Restrained, warm, quiet, and precise.",
+	"artifacts": [
+		{
+			"file": "dispatch-01-banner-01.webp",
+			"sha256": "2e2e25ab133c6881f34df2dc0ec5f793c335e37edb0d14ba8ee26abe48906e03",
+			"bytes": 796818,
+			"encoding": "cwebp -q 86 -m 6, re-encoded from the API's image/jpeg response (2K plates cost ~3.7 MB each in permanent git history; the rail now defaults to 1K, which prices the same and does not need this step)",
+			"sourceSha256": "4280d0552ed1666bb4bcb0a8a04aef22b22c165417e3185ee1a121c30ea8390d",
+			"sourceBytes": 3897505,
+			"audit": "KEPT with a noted defect — two legible drafting glyphs (\"A\", \"R\") in wine on the section callouts, inside the frame rather than in the croppable margin. Violates the prompt's no-lettering constraint, minor but real."
+		},
+		{
+			"file": "dispatch-01-banner-03.webp",
+			"sha256": "b249ed4b7e54ff2ce7092e7704346b0f141681ce38043e9c2d53641c03f31b07",
+			"bytes": 655158,
+			"encoding": "cwebp -q 86 -m 6, re-encoded from the API's image/jpeg response (2K plates cost ~3.7 MB each in permanent git history; the rail now defaults to 1K, which prices the same and does not need this step)",
+			"sourceSha256": "f5a31c1b599cb92b88466a6c549a214b6e77805de71d433e955abbb65df48ac3",
+			"sourceBytes": 3671915,
+			"audit": "KEPT, clean — the only marginalia are illegible drafting ticks, and they sit in the outer eighth that object-cover crops away. Best contract fidelity of the three."
+		}
+	],
+	"status": "candidate",
+	"promotedTo": null,
+	"rejected": [
+		{
+			"file": "dispatch-01-banner-02.jpg",
+			"sha256": "e931724113cb1337e744c0b512a0431991e0dab0fd1f5c04ee4e761b7f4f2bed",
+			"reason": "DISQUALIFIED on contract, not on taste: the plate draws a rooftop pennant reading \"DISpatch\" in fully legible ink, rendering the wordmark as flat black. DESIGN.md §Universal type rules 1 admits no exception — DIS is always red, and the split only exists in code — so no plate carrying the drawn wordmark can ship. This is the same failure the house register records in the shipped dispatch-06. Bytes discarded; the record is the tombstone."
+		}
+	],
+	"audit": {
+		"by": "S7 build session, 2026-08-19",
+		"method": "every plate viewed at full size, then the suspect regions cropped and upscaled before judging",
+		"verdict": "2 kept, 1 discarded on a canon violation. The kept plates are CANDIDATES — the judge for this lane is AK (ADR-0003 register §8). Promotion into public/banners/dispatch-01.webp is content review and AK's call; nothing here is wired to the site."
+	}
+}
