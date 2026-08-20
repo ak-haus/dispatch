@@ -1,0 +1,47 @@
+name: content
+on: [push, pull_request]
+
+# The S8 authoring contract as mechanism (ADR-0003 §Stage 8, board S8, gate #15).
+#
+# There is no CMS. The zod schema in
+# code/apps/microsite-astro/src/content.config.ts IS the editorial contract, and
+# this gate is its enforcement — a content PR that violates it goes red here in
+# seconds, before the build, the typecheck, and the four multi-minute lanes have
+# anything to say. Formalization only: the contract already held (the astro build
+# has always refused a schema violation); S8 makes the refusal fast and legible.
+#
+# Why `astro sync` and not `astro check`:
+#   - `astro check` runs sync first, then adds TS/template diagnostics — and
+#     microsite-astro's own `typecheck` script IS `astro check`, already required
+#     as `typecheck (tsc)`. A second full check here would be decoration.
+#   - `sync` is the content-validating core: it runs the real glob loader against
+#     the real zod schema, so there is no second source of truth to drift.
+#
+# Scope, stated honestly (measured 2026-08-19, astro 6.4.8):
+#   - malformed YAML frontmatter → caught here (exit 1)
+#   - zod schema violation       → caught here (exit 1), named field + message
+#   - MDX compile/import error   → NOT caught here; `build (astro)` owns it
+# The two gates layer; neither replaces the other.
+#
+# No tokens build, no generate-commits, no wire snapshot, no network — sync was
+# verified to pass with packages/tokens/dist absent. One install, one command.
+jobs:
+  content:
+    name: content (schema gate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: schema gate — every dispatch must satisfy the editorial contract
+        run: pnpm --fail-if-no-match --filter microsite-astro exec astro sync
