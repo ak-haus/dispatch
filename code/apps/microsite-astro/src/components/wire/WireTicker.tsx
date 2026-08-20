@@ -61,6 +61,7 @@ export function WireTicker() {
 					{freshness && <span data-live="timestamp" suppressHydrationWarning>{freshness}</span>}
 						<button
 							type="button"
+							data-analytics="wire:pause-toggle"
 							aria-pressed={paused}
 							onClick={togglePause}
 							className="min-h-6 rounded-sm border border-body-strong/30 px-3 py-1 uppercase tracking-[0.22em] transition-colors hover:border-body-strong/60"

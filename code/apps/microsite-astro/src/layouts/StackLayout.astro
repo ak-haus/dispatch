@@ -100,6 +100,30 @@ const searchIndex = await buildSearchIndex()
 				}
 			})()
 		</script>
+
+		<!--
+			Editorial analytics (ADR-0003 §Stage 6, register §9: PostHog EU
+			Cloud, cookieless, no consent banner, replay off).
+
+			A module script, not `is:inline`: it must be bundled so the guard on
+			PUBLIC_POSTHOG_KEY resolves at build time. With no key the boot
+			returns before its dynamic import, so no request is made and no
+			listener is attached — which is why this can sit in the layout
+			before AK's one-time signup. Precisely: rollup still EMITS the
+			posthog-js chunk into dist/ (~247KB), but nothing preloads it and
+			the guard means the browser never fetches it. Armed, it is a lazy
+			fetch after first paint, never render-blocking.
+
+			No consent banner is required BECAUSE of the posture, not in spite
+			of it: cookieless server-hash mode stores nothing on the device and
+			`person_profiles: 'never'` creates no profile. Weakening either one
+			would change that answer — src/lib/analytics/posture.test.ts is what
+			makes weakening it fail.
+		-->
+		<script>
+			import { bootAnalytics } from '@/lib/analytics/boot'
+			void bootAnalytics()
+		</script>
 	</head>
 	<body
 		class:list={[

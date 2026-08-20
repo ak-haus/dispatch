@@ -1,0 +1,64 @@
+name: analytics loop
+on:
+  schedule:
+    # Weekly — the cadence AK decided (ADR-0003 register §9). Deliberately not
+    # daily: a design question needs a week of readers behind it, and a
+    # findings issue that arrives every morning is noise nobody opens. Monday
+    # 13:00 UTC ≈ 08:00 America/Chicago, so the week opens with the signal.
+    - cron: '0 13 * * 1'
+  workflow_dispatch:
+
+# The loop half of Stage 6. Reads the editorial events with plain HogQL and
+# files what it found as an issue that names the DESIGN.md sections the
+# numbers bear on.
+#
+# NOT A GATE. This never blocks a merge and is not a required context — it is
+# a weekly question, and the answer is AK's. `issues: write` is the only
+# permission it holds: it can propose, and it cannot change the design.
+#
+# COST: $0. Plain HogQL through the Query API; PostHog's AI-powered tools bill
+# as PostHog AI spend and are never called (ADR §Cost ceilings — anything over
+# $10/mo returns to AK as a decision).
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  loop:
+    name: analytics loop (weekly findings)
+    runs-on: ubuntu-latest
+    env:
+      POSTHOG_PERSONAL_API_KEY: ${{ secrets.POSTHOG_PERSONAL_API_KEY }}
+      POSTHOG_PROJECT_ID: ${{ secrets.POSTHOG_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The skip is LOUD, never silent: an analytics loop that quietly reports
+      # nothing is indistinguishable from a site nobody reads.
+      - name: analytics loop — NOT ARMED (PostHog secrets absent)
+        if: env.POSTHOG_PERSONAL_API_KEY == '' || env.POSTHOG_PROJECT_ID == ''
+        run: |
+          echo "::notice title=Analytics loop not armed::AK one-click: create the PostHog EU Cloud project (free tier, register §9), then set POSTHOG_PROJECT_ID and a Query-Read-scoped POSTHOG_PERSONAL_API_KEY -> Doppler + gh secret set. Until then the site ships uninstrumented (PUBLIC_POSTHOG_KEY absent = no vendor script, no requests) and this loop files nothing."
+
+      - name: query the week with plain HogQL
+        if: env.POSTHOG_PERSONAL_API_KEY != '' && env.POSTHOG_PROJECT_ID != ''
+        run: node scripts/analytics-loop.mjs > findings.md
+
+      - name: file the findings as a proposal
+        if: env.POSTHOG_PERSONAL_API_KEY != '' && env.POSTHOG_PROJECT_ID != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Ensure the label before using it: `gh issue create --label` fails
+          # on an unknown label, and the first armed run would otherwise lose
+          # a week of findings to repo setup.
+          gh label create analytics-loop \
+            --description "Weekly Stage-6 findings — proposals under AK sign-off, never changes" \
+            --color BFA37A 2>/dev/null || true
+          gh issue create \
+            --title "Analytics loop — week of $(date -u +%Y-%m-%d)" \
+            --body-file findings.md \
+            --label analytics-loop

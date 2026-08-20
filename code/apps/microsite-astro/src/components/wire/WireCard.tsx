@@ -67,6 +67,7 @@ export function WireCard({
 			<p id={titleId} className="mt-1.5 font-narrative text-[clamp(1.05rem,2vw,1.35rem)] leading-snug text-body-strong">
 				<a
 					href={entry.url}
+					data-analytics="wire:entry_open"
 					rel="noopener"
 					target="_blank"
 					className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current"
