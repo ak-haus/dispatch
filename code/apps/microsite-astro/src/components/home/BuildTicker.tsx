@@ -206,8 +206,12 @@ export function BuildTicker() {
 							}}
 						/>
 
+						{/* data-live: a continuous GSAP marquee — it is never at rest by
+						    design, so the visual archive neither waits for it nor
+						    diffs it (e2e/helpers/archive.ts). */}
 						<ul
 							ref={trackRef}
+							data-live="marquee"
 							className="flex items-center gap-0 whitespace-nowrap py-4"
 							style={{ willChange: 'transform' }}
 						>

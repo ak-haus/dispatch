@@ -13,6 +13,7 @@
 
 import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations, settleMotion } from './helpers/axe'
+import { archiveSnapshot } from './helpers/archive'
 
 const PATH = '/preview/figure/'
 
@@ -84,4 +85,8 @@ test('the proving ground holds the axe WCAG floor', async ({ page }, testInfo) =
 	await page.goto(PATH)
 	await settleMotion(page)
 	await expectNoAxeViolations(page, testInfo)
+	// Chromatic archive lane: the S4 lane's proof surface as a whole page. The
+	// pixel floor locks each variant as an isolated ELEMENT; what has no
+	// in-repo lock is the page they sit on.
+	await archiveSnapshot(page, 'figure-proving-ground', testInfo)
 })

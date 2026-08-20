@@ -250,7 +250,11 @@ export function CoverSpread({
 						<p className="dispatch-emboss font-mono text-[12px] font-bold uppercase tracking-[0.36em] text-body-strong">
 							Turn the page
 						</p>
+						{/* data-live: an infinite pulse never comes to rest, so the
+						    visual archive neither waits for it nor diffs it
+						    (e2e/helpers/archive.ts). */}
 						<motion.div
+							data-live="pulse"
 							animate={
 								reducedMotion ? undefined : { y: [0, 8, 0], opacity: [0.55, 1, 0.55] }
 							}

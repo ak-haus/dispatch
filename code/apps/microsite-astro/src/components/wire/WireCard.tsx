@@ -83,7 +83,10 @@ export function WireCard({
 			)}
 
 			<p id={metaId} className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[12px] tracking-[0.08em] text-body-muted">
-				<time dateTime={entry.ts} title={absoluteTime(entry.ts)} suppressHydrationWarning className="tabular-nums">
+				{/* data-live: this text re-renders against the wall clock, so it is
+				    excluded from the visual archive's settle probe and diff
+				    (e2e/helpers/archive.ts). */}
+				<time data-live="timestamp" dateTime={entry.ts} title={absoluteTime(entry.ts)} suppressHydrationWarning className="tabular-nums">
 					{relativeTime(entry.ts, now)}
 				</time>
 				<span aria-hidden="true" className="text-body-faint">·</span>

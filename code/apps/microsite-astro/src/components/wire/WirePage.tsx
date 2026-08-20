@@ -106,7 +106,8 @@ export function WirePage() {
 				>
 					<span style={{ color: PALETTE.copperLabel }}>Crossfire publish wire</span>
 					{state.status === 'reconnecting' && <span role="status">reconnecting</span>}
-					{freshness ? <span>{freshness}</span> : <span>build snapshot</span>}
+					{/* data-live: wall-clock text — see WireCard. */}
+					{freshness ? <span data-live="timestamp">{freshness}</span> : <span>build snapshot</span>}
 				</p>
 
 				{/* Controls: filter pills + pause */}

@@ -8,6 +8,7 @@
 
 import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
+import { archiveSnapshot } from './helpers/archive'
 
 async function firstDispatchPath(request: import('@playwright/test').APIRequestContext): Promise<string> {
 	const res = await request.get('/sitemap-0.xml')
@@ -39,4 +40,8 @@ test('an article holds the axe WCAG floor', async ({ page, request }, testInfo) 
 	await page.goto(path)
 	await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
 	await expectNoAxeViolations(page, testInfo)
+	// Chromatic archive lane: the article surface as a whole page. The pixel
+	// floor locks only the masthead ELEMENT here (visual.spec.ts), so the
+	// editorial body below it has no in-repo lock — this is its coverage.
+	await archiveSnapshot(page, 'article', testInfo)
 })

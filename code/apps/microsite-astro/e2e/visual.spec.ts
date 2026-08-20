@@ -158,17 +158,17 @@ async function settleFigure(page: import('@playwright/test').Page, kase: string)
 }
 
 /**
- * Undo everything the capture did to the page, because the pixel baseline is
- * NOT the only artifact these tests produce: fixtures.ts bases the suite on
- * @chromatic-com/playwright, which archives each test's FINAL DOM and ships it
- * to the cloud lane for AK to review under register §2 policy A.
+ * Undo everything the capture did to the page: hiding the masthead and
+ * scrolling down are scaffolding for the element capture, not page states, and
+ * a test that ends inside its own scaffolding leaves a trap for whatever reads
+ * the page next — the trace, the error context, a future assertion.
  *
- * Without this, that archive carried the capture's scaffolding rather than the
- * page — header hidden, and the masthead frozen mid-hide-on-scroll at
- * translateY(-110%) because scrollIntoViewIfNeeded had scrolled down. A
- * reviewer would be judging a masthead state the site never presents at rest
- * (found 2026-08-19 by reading the archived DOM after AK denied a wordmark
- * snapshot in build 7).
+ * This spec no longer feeds the Chromatic archive lane (F19: auto-archiving is
+ * off; the lane's surfaces opt in by name via helpers/archive.ts, and these
+ * component locks are already the strongest coverage in the repo). The restore
+ * stays because capture hygiene is worth keeping on its own — it is what made
+ * the archive defect visible in the first place, found 2026-08-19 by reading
+ * the archived DOM after AK denied a wordmark snapshot in build 7.
  *
  * Restore chrome, return to top, and wait for the masthead to settle back to
  * visible before the test ends.

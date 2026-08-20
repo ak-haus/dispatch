@@ -21,6 +21,7 @@
 
 import { expect, test } from './helpers/fixtures'
 import { settleMotion } from './helpers/axe'
+import { archiveSnapshot } from './helpers/archive'
 import { makeEntry, makeFeed, serveWireFeed } from './helpers/wire-fixture'
 
 const VIEWPORTS = [
@@ -83,13 +84,32 @@ for (const vp of VIEWPORTS) {
 	test.describe(`cover composition — ${vp.label}`, () => {
 		test.use({ viewport: { width: vp.width, height: vp.height } })
 
-		test(`the hairline is centred on the "a" of patch (${vp.label})`, async ({ page }) => {
+		test(`the hairline is centred on the "a" of patch (${vp.label})`, async ({ page }, testInfo) => {
 			await openCover(page)
 			const g = await coverGeometry(page)
 			expect(
 				Math.abs(g.a.centre - g.rule.centre),
 				'the hairline must sit centred on the "a" of patch',
 			).toBeLessThanOrEqual(1)
+
+			// Chromatic archive lane — HOME lives here, and only here.
+			//
+			// The ADR assigns home to this lane precisely because the pixel floor
+			// excludes it (visual.spec.ts header note), and this file is the only
+			// place the cover provably reaches rest: coverGeometry waits on the
+			// letter-by-letter wordmark, which Motion drives on the main thread
+			// where getAnimations() cannot see it.
+			//
+			// One snapshot per viewport, from THIS test only — the other four
+			// cover tests end on the same page (and one deliberately rewrites the
+			// ticker copy), so archiving them would buy five near-identical
+			// snapshots and one corrupted page.
+			//
+			// Scope, stated rather than implied: this captures the cover at
+			// scroll-top. The spreads below it are SSR'd at opacity 0 until they
+			// scroll into view, so they archive blank — the deep page is the judge
+			// packet's job, not this lane's.
+			await archiveSnapshot(page, 'home-cover', testInfo)
 		})
 
 		test(`the hairline stays over "patch", toward the p (${vp.label})`, async ({ page }) => {
