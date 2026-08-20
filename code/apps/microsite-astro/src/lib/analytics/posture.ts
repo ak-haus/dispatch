@@ -40,6 +40,14 @@ export const POSTHOG_UI_HOST = 'https://eu.posthog.com'
  *   question and burns the 1M/mo free tier.
  * - `capture_pageview: true` — the one automatic event kept. Every editorial
  *   question ("did they read it?") is a ratio whose denominator is a pageview.
+ *   VERIFYING THIS: posthog-js captures the initial pageview only while
+ *   `document.visibilityState === 'visible'`; if the page is hidden at init it
+ *   registers a `visibilitychange` listener and fires later (posthog-js
+ *   `Ho()`). Headless and embedded browsers can report `hidden` permanently —
+ *   the Claude Code Browser pane does — so a check there sees custom events
+ *   arrive and NO `$pageview`, which looks exactly like a bug and is not one.
+ *   Confirmed 2026-08-20 by spoofing visibility and dispatching the event: the
+ *   deferred pageview fired and ingested immediately.
  * - `capture_pageleave: false` — dwell is carried explicitly by
  *   `dispatch_read_complete`, which answers the editorial question directly;
  *   $pageleave would duplicate it at the cost of an event per view.
