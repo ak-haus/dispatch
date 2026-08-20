@@ -42,9 +42,11 @@ jobs:
           node-version: 22
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
-      # Filtered install: the gate needs microsite-astro and its workspace deps,
-      # not the Next dashboard or Storybook. --frozen-lockfile still fails
-      # closed on lockfile drift.
-      - run: pnpm install --frozen-lockfile --filter microsite-astro...
+      # Plain workspace install, same as every other pnpm gate. A filtered
+      # install (--filter microsite-astro...) was measured on this branch and
+      # bought nothing — the pnpm store is cached, so install cost is dominated
+      # by linking and runner variance, not by workspace breadth. Not worth a
+      # divergence from the house pattern.
+      - run: pnpm install --frozen-lockfile
       - name: schema gate — every dispatch must satisfy the editorial contract
         run: pnpm --fail-if-no-match --filter microsite-astro exec astro sync
