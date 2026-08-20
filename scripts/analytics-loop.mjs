@@ -125,12 +125,26 @@ async function runHogQL(query) {
 			Authorization: `Bearer ${API_KEY}`,
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ query: { kind: 'HogQLQuery', query: query.trim() } }),
+		// `refresh: force_blocking` is LOAD-BEARING, not a tuning knob. PostHog's
+		// query API serves cached results by default, keyed on the query text —
+		// and this script sends the SAME four queries every week. Without this,
+		// a weekly run can file findings computed from a stale (or empty) cache
+		// and present them as this week's signal. Found the hard way on
+		// 2026-08-19: repeated identical queries kept returning zero rows while
+		// the project's own `ingested_event` flag was already true.
+		body: JSON.stringify({
+			refresh: 'force_blocking',
+			query: { kind: 'HogQLQuery', query: query.trim() },
+		}),
 	})
 	if (!res.ok) {
 		throw new Error(`PostHog query failed (${res.status}): ${(await res.text()).slice(0, 400)}`)
 	}
-	return res.json()
+	const body = await res.json()
+	// Loud if the cache ever wins anyway — a findings issue must never quietly
+	// report last week's numbers as this week's.
+	if (body.is_cached) console.error(`analytics loop: WARNING — cached result returned despite force_blocking`)
+	return body
 }
 
 function asTable(columns, results) {
