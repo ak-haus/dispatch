@@ -4,6 +4,28 @@ import react from '@astrojs/react'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
+
+// Source-map upload for A6's error tracking. ARMS ON THE TOKEN and on nothing
+// else: `SENTRY_AUTH_TOKEN` is set on the Vercel project for PRODUCTION only, so
+// preview builds and every CI gate run with it absent — the plugin is `disable`d,
+// no map is emitted, and CI stays hermetic (no network, no credentials, byte
+// output unchanged). Same arms-on-token posture as the DSN, PostHog and Chromatic.
+//
+// Without uploaded maps Sentry still reports every error; the frames just read
+// `t is not a function at chunk-abc.js:1:4823`. With them, the trace names the
+// source line.
+//
+// ONE HONEST CONSEQUENCE, measured 2026-08-20. The plugin stamps a debug ID into
+// every emitted chunk, so a production build is slightly heavier than the one CI
+// measures: +2,504 bytes gzipped across all 30 chunks, ~83 bytes each, +0.74%.
+// A page fetches a handful of chunks, not all 30, so the real per-page cost is a
+// few hundred bytes against budgets of 3MB / 600KB / 1MB. It is noise — but it
+// does mean `lighthouse (budget ratchet)` measures a build marginally lighter
+// than the one readers get. The floor stays STABLE (every CI run is tokenless,
+// so the offset is constant), which is what a ratchet needs; it is simply
+// optimistic by a known 0.74%.
+const SENTRY_UPLOAD = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
 // Prime DISpatch — Astro 6 editorial surface.
 // Lives at code/apps/microsite-astro (pnpm workspace member).
@@ -33,7 +55,34 @@ export default defineConfig({
 		sitemap({ filter: (page) => !new URL(page).pathname.startsWith('/preview/') }),
 	],
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			tailwindcss(),
+			// LAST in the list on purpose — the plugin has to see the final bundle
+			// to stamp its debug IDs into it.
+			sentryVitePlugin({
+				org: 'prime-city',
+				// Verified against the Sentry API at wiring rather than assumed: with
+				// this token's `project:releases` scope, `javascript-astro` answers 200
+				// and `dispatch`/`prime-dispatch`/`dispatchmag` all 404. It is Sentry's
+				// default name from project creation; renaming it is AK's click and
+				// would need this string changed with it.
+				project: 'javascript-astro',
+				authToken: process.env.SENTRY_AUTH_TOKEN,
+				disable: !SENTRY_UPLOAD,
+				// No build-time telemetry to the vendor. The stage is costed at $0 and
+				// nothing here needs to phone home about our CI.
+				telemetry: false,
+				sourcemaps: {
+					// Upload, then DELETE. The maps exist for the length of the build and
+					// never reach the CDN, so the deploy carries no extra weight and the
+					// A4 byte ratchet is untouched. Sentry matches events to maps by the
+					// debug IDs stamped into both — not by URL — so nothing needs the
+					// files to remain reachable, and no `release` has to be threaded
+					// through the runtime for the trace to resolve.
+					filesToDeleteAfterUpload: ['./dist/**/*.map'],
+				},
+			}),
+		],
 		// Sentry's tree-shaking levers (Golden Board A6, error-tracking half).
 		// The SDK ships tracing and debug-logging code that error monitoring does
 		// not need; these two globals are the documented way to have the bundler
@@ -48,6 +97,14 @@ export default defineConfig({
 		define: {
 			__SENTRY_DEBUG__: 'false',
 			__SENTRY_TRACING__: 'false',
+		},
+		build: {
+			// 'hidden' emits the maps but omits the `//# sourceMappingURL=` comment,
+			// so no browser ever asks for them — the upload is the only consumer, and
+			// it deletes them afterwards. Gated on the token so a build without one
+			// (every CI gate, every preview) emits byte-identical output to before
+			// this plugin existed.
+			sourcemap: SENTRY_UPLOAD ? 'hidden' : false,
 		},
 		resolve: {
 			dedupe: ['react', 'react-dom'],
