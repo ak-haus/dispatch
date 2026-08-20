@@ -3,7 +3,7 @@ title: lifecycle — machine-readable index
 origin: prime-authored
 status: active
 load_bearing: false
-last_amended: 2026-08-18
+last_amended: 2026-08-20
 ---
 
 # lifecycle index
@@ -15,3 +15,4 @@ last_amended: 2026-08-18
 ## Children
 
 - [fixtures](fixtures/index.md) — component fixtures (ChapterRail · Footnote · MastheadWordmark · ReadingProgress · SiteNav)
+- [checkpoints](checkpoints/) — session close records; each carries its discoveries with a phase assignment (ADR-0002 Decision 4)
