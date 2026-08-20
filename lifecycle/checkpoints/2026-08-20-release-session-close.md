@@ -94,3 +94,49 @@ The six rows above are a **handoff list for AK**, which is the established mecha
 the 2026-08-20 checkpoint used in its own "New flags for the Golden Board" section. The board is
 operator-held; it is not machine-writable from a session and never has been. This record is the carrier,
 by design, not by failure.
+
+## How this session actually went — recorded, not smoothed
+
+The column shipped. The rest of the session did not go as planned, and the record is more useful
+with that in it than without.
+
+**What went right.** The release: 68 commits deployed and verified against the mandatory header
+oracle, uptime, the Lighthouse ratchet, and real editorial events confirmed arriving from
+dispatchmag.dev. Both carried items closed correctly — F20's lever was void on arrival, `$pageview`
+was already right.
+
+**What went wrong.**
+
+1. **F20 consumed most of the session and shipped nothing.** When the brief's lever turned out
+   already disproved, the correct move was to file that and stop. Instead the session opened a fresh
+   diagnostic campaign: five CI runs, a fix, a regression measured at **3× worse** (10/140 vs 3/140),
+   a revert. Net repo change: **zero**. Net knowledge: real — two levers retired and the flake
+   reframed as a class — but that was checkpoint work, taken by a build session.
+2. **A blocker was invented.** The first version of this record claimed the Golden Board was
+   "unreachable" and prescribed a `gh auth refresh` remedy. The board is operator-held and never was
+   machine-writable; the previous checkpoint handed its rows over exactly the same way. Chasing that
+   phantom cost a detour through Linear and Notion — systems this build does not use.
+3. **The failure mode was named, agreed to, and then repeated within two exchanges.** AK's term for
+   it is Limbo: fixing random things at random sizes, breaking others, looping on the repairs instead
+   of finishing the column and delegating. The routing rule below exists because of this session, and
+   its first real test is whether the next one honours it.
+
+**Residue check (run at close, all clean).** The F20 work touched a shipped component and created
+branches; none of it survived:
+
+| Check | Result |
+|---|---|
+| `Masthead.tsx` vs session start (`af49bea`) | **identical** — revert complete |
+| Diagnostic spec files left in `e2e/` | **none** |
+| Visual baselines modified | **none** |
+| Total code changed on `main` this session | **zero** — 3 docs files, 156 insertions |
+
+## What the next session should verify before starting
+
+1. `git diff af49bea origin/main` — expect docs only, no code.
+2. Production still healthy: `curl -sI https://dispatchmag.dev/ | grep HTTP` → `200`, and `/wire` → `200`.
+3. The weekly analytics loop has not yet run with unfiltered hosts (F21's clock, ~2026-08-27).
+4. Stale remote branches still present, deliberately untouched: `checkpoint/2026-08-20`,
+   `chromatic-storybook-project`, `judge-is-ak`, `s1-visual-gates`.
+5. **Phase B's definition in ADR-0002 has NOT been read.** The phase labels on the six routed rows
+   above are the session's paraphrase, not grounded in it. Ground them before acting on them.
