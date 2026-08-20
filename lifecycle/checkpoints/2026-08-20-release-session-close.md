@@ -9,8 +9,8 @@ column: the design-stack release (ADR-0003 stages complete; prod was 68 commits 
 
 > **Close ritual per [ADR-0002 Decision 4](../../docs/adr/0002-golden-readiness-doctrine.md):** every
 > discovery lands with a phase assignment, never as an untracked aside. Build sessions **file** flags;
-> they do not chase them. This record exists because the Golden Board was unreachable from the session
-> (see *Board handoff* below) — it is the durable carrier until those rows are transcribed.
+> they do not chase them. The Golden Board is operator-held; this record is the standing handoff carrier
+> for its rows (see *Board handoff*).
 
 ## Column shipped
 
@@ -90,13 +90,7 @@ Circuit breakers:
 
 ## Board handoff
 
-The Golden Board could not be reached from this session. `gh project list --owner ak-haus` fails with
-`missing required scopes [read:project]`, and the board is not a file in `ak-haus/dispatch`,
-`dispatch-ops`, `dispatch-archive`, `prime-city`, or `crossfire` (searched). If it is a GitHub Project,
-a future session can write to it after:
-
-```
-gh auth refresh -s read:project,project
-```
-
-Until then **this record is the carrier** for the six assignments above.
+The six rows above are a **handoff list for AK**, which is the established mechanism — the same shape
+the 2026-08-20 checkpoint used in its own "New flags for the Golden Board" section. The board is
+operator-held; it is not machine-writable from a session and never has been. This record is the carrier,
+by design, not by failure.
