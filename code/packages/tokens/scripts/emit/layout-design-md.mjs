@@ -312,9 +312,25 @@ fonts.md — slot × family × weight × source × license, subsetting, preload 
    \`<span class="text-wordmark-dis font-bold">DIS</span><span class="text-wordmark-patch">patch</span>\`
    (add \`not-italic\` to both in italic prose — italics on the patch are tombstoned, Mayor
    2026-05-10). The patch half carries \`font-size: 1.08em\` optical balance (color.md §10
-   Decision 12b). No exception.
-2. **Smallest legible text is 12px** (WCAG/industry, May 2026); the old 9/10px caps are
-   deprecated.
+   Decision 12b). **Scope (R1b — AK 2026-08-21):** this governs component-rendered **chrome the
+   design system owns**. It does NOT reach accessible-name attributes (\`aria-label\` is
+   string-valued and cannot carry markup — and the split is name-neutral regardless, since the
+   accessible-name algorithm concatenates descendant text nodes into one flat string, so SC 2.5.3
+   Label in Name stays satisfied), code comments, or \`.mdx\` editorial prose. Editorial copy is
+   the Mayor's and no build gate adjudicates it; terminology in prose, if ever enforced, belongs
+   to a prose linter over \`.mdx\` (Vale/textlint class — markup-aware by design), never to eslint.
+2. **Type must scale; there is no fixed pixel floor** (R1a — AK 2026-08-21). This SUPERSEDES
+   the former "smallest legible text is 12px (WCAG/industry)" rule, retired under the standing
+   mandate that a house rule carry a founding principle: **WCAG specifies no minimum font size**,
+   and neither does Section 508, so the old rule cited an authority that does not say it. The
+   founded requirement is **angular** and therefore cannot be written as a px literal —
+   **ISO 9241-303** sets minimum Latin character height at 16 arc minutes (20–22 available), and
+   **EN 301 549** requires text scalable to a 0.7° cap-height view angle. In CSS: size type in
+   **relative units** so it answers the reader's preference, and keep WCAG **SC 1.4.4 Resize
+   Text** (200% without loss of content or functionality) as the mechanical check. A depiction of
+   third-party UI sets its own root in \`rem\` and its internal type in \`em\`, so the depiction
+   scales as a unit with its proportions intact — no exemption is needed, because there is no
+   floor to except it from.
 3. **Editorial type on the cartographic substrate uses letterpress** — \`.dispatch-emboss\`
    (light: caps/labels) or \`.dispatch-burnin\` (heavy: display 16px+); both pair \`text-shadow\`
    + \`mix-blend-mode: multiply\`. District typography renders in the burned-in street-sign
@@ -454,15 +470,23 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
   path). The live surface complies — every family self-hosts from \`/fonts/\` (OQ-2, executed
   at the fonts restoration build).
 
-## Adjudicated questions — AK rulings (OQ-1–4) + open filings (OQ-7–8)
+## Adjudicated questions — AK rulings (OQ-1–8, all ruled)
 
-> These four contradictions were FILED at S2 (tokens README §F5; typography.json
-> \`$description\`s), surfaced at S3 per ADR-0003 §Stage 7, and **RULED by AK on 2026-08-18**
-> after a cited research pass (peer-publication production CSS · LG München I + Chrome cache
-> partitioning · WCAG 2.2 + Material dark-theme guidance · DTCG 2025.10 +
-> Material/Polaris/Spectrum/SLDS tier practice). All four are EXECUTED — OQ-3 and OQ-4 at the
-> S5 pre-step, OQ-1 and OQ-2 at the fonts restoration build. This contract reports the shipped
-> truth for each.
+> **Sitting 1 (2026-08-18) — OQ-1–4.** FILED at S2 (tokens README §F5; typography.json
+> \`$description\`s), surfaced at S3 per ADR-0003 §Stage 7, RULED after a cited research pass
+> (peer-publication production CSS · LG München I + Chrome cache partitioning · WCAG 2.2 +
+> Material dark-theme guidance · DTCG 2025.10 + Material/Polaris/Spectrum/SLDS tier practice).
+> All four EXECUTED — OQ-3/OQ-4 at the S5 pre-step, OQ-1/OQ-2 at the fonts restoration build.
+>
+> **Sitting 2 (2026-08-21) — OQ-5–8.** The pre-Phase-B adjudication sitting. Ruled after a
+> research pass read first-hand from the installed packages and the standards themselves
+> (\`@astrojs/react\` server + client entrypoints · Astro prop serialization · npm registry
+> metadata · W3C WCAG 2.2 · W3C accname · EU AI Act Art. 50 · ISO 9241-303 · EN 301 549 ·
+> SEI ATAM · Adobe Spectrum static-color tier). Two filings were found to rest on false premises
+> and are corrected in place rather than answered as posed. Rulings are recorded here; token and
+> component EXECUTIONS ride later builds, per the OQ-3/OQ-4 precedent.
+>
+> This contract reports the shipped truth for each.
 
 ### OQ-1 · Body family — DECIDED (AK 2026-08-18): restore Crimson Pro — EXECUTED (fonts build)
 
@@ -520,33 +544,98 @@ exists. **Executed at S5 pre-step** (CD2 §10 Decision 13): the ten slots ship i
 table above; every binding is PROVISIONAL pending the S5 story census — re-point via
 \`src/color/ui-slots.json\`, never a new value.
 
-### OQ-7 · Who owns the build-time <Image> call — OPEN (filed S4, 2026-08-19)
+### OQ-5 · Copper on window-warm — DECIDED (AK 2026-08-21): add an AA rung
 
-CD7 §3.4 names Astro's \`<Image>\` as ImageWithCaption's in-stack image processor (build-time
-AVIF/WebP negotiation) AND names \`/components/custom\` — a **React** package — as its
-destination. The two cannot both hold: Astro's \`<Image>\` is a build-time Astro component and
-cannot execute inside a React component. **Built under the assumption** that the React primitive
-owns structure and typography and exposes a \`media\` slot, so an Astro surface can hand it a
-build-optimized element; the shipped proving ground passes a plain \`<img>\`. **The question for
-AK:** should an Astro-native \`Figure.astro\` wrapper own the \`<Image>\` call — which splits the
-component across two packages and two idioms — or does the \`media\` slot stay the seam, leaving
-articles responsible for passing an optimized element? Not decided here: it is an architecture
-call about where the app/library boundary sits, and it governs every later CD7 image component
-(#25 ImageGallery, #31 ComparisonSlider). Cost of deferring: figures render unoptimized source
-assets until it lands.
+Label-size copper has **no AA-capable rung on \`--window-warm\`** (vellum-300) at dawn: copper
+2.55:1, copper-label 3.52:1 (its 4.66:1 rating holds on sky-low, not vellum-300), copper-deep
+4.25:1 — all under the 4.5:1 WCAG 1.4.3 AA threshold, with live consumers at 12px so the
+large-text 3:1 allowance does not apply. Dusk/night pass outright (8.7–10.2:1). Consumers:
+Footnote back-link, InstitutionalFixture charter link, MetaArticleOpener drift node. **Ruling:**
+add an AA-capable copper rung for tinted panels — chroma and hue held, lightness lifted, the
+mechanical mirror of executed F5 and OQ-3. Re-pointing the slot off copper was rejected: it
+crosses the Decision 12c copper/wine register boundary, which is what keeps Prime's metal and
+DISpatch's pigment from competing. Moving the text off window-warm was rejected as a design
+change made to satisfy a lint. **Execution rides a token build** (CD2 §10 Decision 1 addition
+gate); the three components' a11y \`todo\`s re-arm to error when it lands.
 
-### OQ-8 · Runtime C2PA read — OPEN (filed S4, 2026-08-19)
+### OQ-6 · Dark-cycle wine register — DECIDED (AK 2026-08-21): it is two questions, ruled apart
 
-CD7 §3.4 specifies the DLDS provenance band as "reading C2PA metadata via \`@contentauth/c2pa\`
-JS", tied to EU AI Act compliance dated 2026-08-02. **Built** with \`c2paAttached\` as a
-**declared** flag — the shape DldsPanel already ratified (CD4 spec Field 2, variant
-\`c2pa-attached\`) — so provenance is disclosed from authored data, not inferred. **The question
-for AK:** does V1 add the \`@contentauth/c2pa\` runtime dependency to read content credentials
-off the asset in-browser? That is a new client dependency on an editorial surface with a
-Lighthouse budget ratchet, and its compliance value depends on assets actually carrying C2PA —
-which today they do not. A build-time read (extract at publish, emit into frontmatter) is the
-recorded alternative and keeps the client rail at zero. Not decided here: it is a dependency +
-compliance call, not a visual one.
+Filed as canon's APCA metric disagreeing with axe's WCAG fallback. **That premise is false**, and
+the correction splits the flag:
+
+**6a — the wordmark is exempt, by WCAG's own text.** SC 1.4.3 exception 3 reads: *"Logotypes:
+Text that is part of a logo or brand name has no contrast requirement."* The masthead wordmark is
+a brand name, so WCAG imposes **no threshold** on it — dusk DIS 2.22:1 and night DIS 2.90:1 are
+not failures. There was never a metric conflict; axe flags it because axe cannot know the element
+is a logotype. Canon's APCA γ rule (Decision 4/12) remains what it always was — a **design**
+control, not a conformance claim. Recorded permanently exempt, on the logotype exception.
+
+**6b — the active nav link is a real failure.** At 17px/800 it is 12.75pt bold, **below** WCAG's
+large-scale threshold (18pt, or 14pt bold), so 4.5:1 applies with no exception available: dusk
+\`--platform-accent-prime-active\` 3.14:1, night 3.90:1 on cycle vellum-25. **Ruling:** lift the
+dusk/night values to AA with chroma and hue held — OQ-3's move a third time. Decision 12c's
+tonal-stepped state arc survives; the active state stays wine, one step brighter in the dark
+cycles. **Execution rides the same token build as OQ-5.**
+
+Metric note for the record: WCAG 2.2 AA is the operative conformance benchmark and the one the CI
+gate implements. WCAG 3.0 remains a Working Draft (March 2026) with APCA exploratory and
+non-normative; Recommendation is not expected before ~2028–2030. APCA governs canon's design
+intent; WCAG governs the conformance claim.
+
+### OQ-7 · Who owns the build-time <Image> call — DECIDED (AK 2026-08-21): the \`media\` slot, provisionally
+
+CD7 §3.4 named Astro's \`<Image>\` as ImageWithCaption's image processor AND \`/components/custom\`
+— a **React** package — as its destination, which cannot both hold. **The filing's premise was
+wrong in our favour.** The \`media\` seam works, and it is not a workaround: it is Astro's
+documented first-party interop API. The framework-components guide states that for React, Preact
+and Solid *"these slots will be converted to a top-level prop"*, and names the \`<slot />\` pattern
+as the way to *"pass static content generated by Astro components as children to your framework
+components inside an \`.astro\` component."* Verified first-hand in the installed integration:
+\`@astrojs/react/dist/server.js\` merges \`slots[slotName(key)]\` into props, and \`client.js\` does
+the same on hydration. The one hard constraint is that it must be filled as a **named slot**,
+never a prop attribute — \`astro/dist/runtime/server/serialize.js\` applies
+\`JSON.stringify\` to every hydrated island's props, which silently drops a React element.
+
+**Ruling:** the \`media\` slot stays the seam; no \`Figure.astro\` wrapper. One component, one
+package, one idiom, and every later CD7 image component (#25 ImageGallery, #31 ComparisonSlider)
+inherits one pattern rather than a split across two.
+
+**Status — PROVISIONAL, not locked.** Nothing in-tree demonstrates the invocation (the proving
+ground passes a plain \`src\`). It locks when a build proves, end-to-end and at parity with what a
+\`Figure.astro\` would emit: (1) \`<Image>\`'s \`srcset\`/\`width\`/\`height\`/\`decoding\` survive the
+slot round-trip; (2) no hydration mismatch across the \`StaticHtml\` boundary; (3) the
+\`<astro-slot>\` wrapper — an unknown element, \`display: inline\` by default — does not break
+\`.prime-figure__media\` sizing; (4) AVIF/WebP variants emit to \`_astro/\` at build; (5) output
+parity with the wrapper alternative. Until then figures render unoptimized source assets.
+
+### OQ-8 · Runtime C2PA read — DECIDED (AK 2026-08-21): declared flag, with a machine-initiated upgrade
+
+CD7 §3.4 specified reading C2PA metadata via \`@contentauth/c2pa\`, tied to EU AI Act compliance.
+**Both premises are false.** The package does not exist — the npm registry returns not-found; its
+ancestor \`c2pa\` is deprecated in its own metadata (*"no longer being actively developed. Please
+use @contentauth/c2pa-web instead"*), and the live successor \`@contentauth/c2pa-web\` ships
+\`dist/resources/c2pa_bg.wasm\` at **7.81 MB** (or \`dist/inline.js\` at 10.42 MB) against this
+surface's Lighthouse \`total-byte-weight\` ceiling of **1,048,576 bytes**. And the obligation is
+misattributed: AI Act **Art. 50(2)** machine-readable marking binds *providers* of the generating
+system, not publishers. Dispatch is a **deployer** under **Art. 50(4)** — a duty to *disclose*,
+which the declared flag already discharges, and which carries an explicit exemption where content
+*"has undergone a process of human review or editorial control and where a natural or legal
+person holds editorial responsibility for the publication."* Dispatch is edited and the Mayor
+holds editorial responsibility.
+
+**Ruling:** V1 does not add a runtime C2PA reader. \`c2paAttached\` stays a **declared** flag —
+not a deferral, but the correct end state for a publication that holds editorial responsibility.
+The canon's package name is corrected as a record defect.
+
+**The upgrade path is a fitness function, not a note.** Build-time extraction (read credentials at
+publish, emit into frontmatter) becomes correct the day assets actually carry them — so the
+trigger is mechanical rather than remembered: a CI check tests the condition (does any published
+asset carry a C2PA manifest?) and fails on first detection, pointing at this ruling. Until then it
+passes silently at near-zero cost. This is the *architecture fitness function* pattern (Ford,
+Parsons & Kua) — "objective automated checks… that verify decisions are being maintained" — chosen
+over the ADR "revisit if" clause precisely because a clause is only read by whoever happens to
+open the file. Filed as a board row; whether it earns a ruleset seat or rides an existing gate is
+a build-time call.
 
 ## Canon reading paths
 
