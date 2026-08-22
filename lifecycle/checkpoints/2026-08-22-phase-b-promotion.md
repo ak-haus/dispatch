@@ -29,14 +29,14 @@ column: promote the homeless hardening flags, or lose them
 
 | Flag | Filing held? | Disposition |
 |---|---|---|
-| F12 | **Confirmed, but understated** — 8 named, 19 affected | **Split recommended: A14 (instrument) + B15 (code). AK rules the phase.** |
+| F12 | **Confirmed, but understated** — 8 named, 19 affected | **RULED by AK 2026-08-22: Phase A, split as recommended.** → **A14** (instrument, Phase A) + **B15** (code, Phase B, gated on A14) |
 | F14 | **Confirmed, with two corrections** — 5 named, 3 real forks | **B16** — sized, not started |
 | F23 | **Confirmed exactly as filed**, file:line | **B17** — conditional row, do-not-execute-yet |
 | F24 | **Confirmed, plus one precision the flag lacked** | **Folded into B4** — no row of its own |
 
 ---
 
-## F12 — the phase is contested, and the flag undercounts
+## F12 — the phase was contested; AK ruled it Phase A
 
 ### What was measured
 
@@ -71,7 +71,10 @@ Three things follow that the filing does not say:
 
 ### Arguing the phase, honestly
 
-The board asked for the argument before the assignment. Both readings are real.
+> **RULED by AK, 2026-08-22: Phase A, split as recommended.** The argument below is preserved as the
+> record of *why*, not as an open question. A14 is a Phase A row; B15 is Phase B, gated on A14.
+
+The board asked for the argument before the assignment. Both readings were real.
 
 **For Phase A.** Chromatic is a standing instrument in the CI ruleset (gate #11, added at S1), as is
 Storybook (gate #9, S5). ADR-0002 Decision 1 sorts work by *kind*: standing instruments are Phase A, "the
@@ -90,10 +93,11 @@ itself says it is "not a defect in the components" but an idiom mismatch, which 
 cleanup — B5/B6-shaped. And if any instrument imperfection can reopen Phase A, Phase A never closes, which
 is the same weakened-DoD failure ADR-0002 legislates against, just wearing the other jersey.
 
-**Recommendation — split it, because the halves are different kinds of work.** The fused flag is what makes
-the phase look ambiguous; separated, each half sorts cleanly.
+**Recommendation — split it, because the halves are different kinds of work.** The fused flag is what made
+the phase look ambiguous; separated, each half sorts cleanly. **AK ruled for the split on 2026-08-22**, which
+puts the instrument half in Phase A and leaves the code sweep in B.
 
-### A14 — Phase A, instrument repair *(PROPOSED — AK rules the phase)*
+### A14 — Phase A, instrument repair *(RULED 2026-08-22 — pending execution)*
 
 - **Scope.** Give Storybook a Tailwind compile so the story lane renders what the microsite renders:
   `@tailwindcss/vite` in `.storybook/main.ts`, a Tailwind entry in `preview.tsx`, and an `@source` covering
@@ -252,9 +256,16 @@ argument written out rather than assumed.
 
 ## Next opener
 
-**Build 16 — B4**, the post-deploy oracle upgrade plus the `AGENTS.md:11` amendment, now carrying F24's
-fold-in. It was already unblocked by F3-a and AK already ruled its substance on 2026-08-20.
+**Build 16 — A14**, the story-lane Tailwind compile plus one declared Chromatic baseline reset.
 
-**Optional alternative, if AK rules F12 into Phase A first:** **A14** is the cheaper session and it unblocks
-B15 and de-risks B16's production-surface coupling. Either is a legitimate opener; B4 is the default because
-it was unblocked first.
+The ruling changed the answer. Before it, B4 was the default because it was unblocked first. Now there is an
+**open Phase A row**, and ADR-0002 Decision 1 puts standing instruments first — they are "the only compounding
+option," and the doctrine's whole sequencing argument is that instruments precede the phases that rely on
+them. Running a Phase B row while a Phase A row sits open inverts that. A14 is also the cheaper session, it
+unblocks B15, and its `@source` work de-risks B16's production-surface coupling.
+
+**B4 queues immediately behind it** — still unblocked, substance still ruled (2026-08-20), still carrying
+F24's fold-in. Nothing about it changed except its position.
+
+If AK prefers B4 first, that is a legitimate call and costs nothing structural: A14's cost compounds slowly
+(one more session of baselines on a bare floor), and B4 is genuinely independent of it.
