@@ -1,5 +1,27 @@
 [
 	{
+		"hash": "bad6bda",
+		"type": "feat",
+		"scope": "a6",
+		"subject": "arm Sentry in production — DSN set, source-map upload wired (A6) (#31)",
+		"date": "2026-08-20",
+		"author": "AKALMoumen",
+		"filesChanged": 3,
+		"insertions": 225,
+		"deletions": 1
+	},
+	{
+		"hash": "7061481",
+		"type": "fix",
+		"scope": "deploy",
+		"subject": "hydrate licensed fonts from a Blob rail, not from production (#32)",
+		"date": "2026-08-20",
+		"author": "AKALMoumen",
+		"filesChanged": 4,
+		"insertions": 51,
+		"deletions": 17
+	},
+	{
 		"hash": "d45936c",
 		"type": "chore",
 		"scope": "repo",
@@ -64,27 +86,5 @@
 		"filesChanged": 1,
 		"insertions": 46,
 		"deletions": 0
-	},
-	{
-		"hash": "a3b7732",
-		"type": "docs",
-		"scope": "lifecycle",
-		"subject": "the board handoff is the mechanism, not a failure",
-		"date": "2026-08-20",
-		"author": "AK ALMoumen",
-		"filesChanged": 1,
-		"insertions": 6,
-		"deletions": 12
-	},
-	{
-		"hash": "1af0014",
-		"type": "chore",
-		"scope": "repo",
-		"subject": "Merge pull request #25 from ak-haus/session-close-2026-08-20",
-		"date": "2026-08-20",
-		"author": "AKALMoumen",
-		"filesChanged": 2,
-		"insertions": 104,
-		"deletions": 1
 	}
 ]
