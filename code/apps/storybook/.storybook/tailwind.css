@@ -1,0 +1,109 @@
+/* ============================================================================
+ * Story-lane Tailwind compile (A14 — flag F12, the instrument half).
+ *
+ * WHY THIS FILE EXISTS. Until A14 the story lane ran NO Tailwind compile:
+ * main.ts declared no Tailwind plugin and preview.tsx imported four
+ * stylesheets, none of them a Tailwind entry. Every component styled with
+ * raw utilities therefore rendered BARE in Storybook — and Chromatic
+ * baselined that bare render as truth. Re-verified 2026-08-23: 18 of the 47
+ * story-bearing components (137 stories) are affected. The story lane is a
+ * standing instrument (CI gate #11); an instrument that baselines a render
+ * the product never ships is not measuring what it claims to.
+ *
+ * WHY IT MIRRORS global.css RATHER THAN IMPORTING IT. The shipped entry
+ * (microsite-astro/src/styles/global.css) carries page-scope furniture the
+ * story lane must NOT inherit: the masthead !important block, the
+ * body.dispatch-hero cascade, maplibre chrome, and the shadcn sitemap shim.
+ * Importing it wholesale would style the preview iframe as if it were the
+ * homepage. What we replicate is the part that defines the UTILITY
+ * VOCABULARY, and nothing else:
+ *
+ *   1. `tailwindcss`            — the engine + the `theme/base/components/
+ *                                 utilities` layer order.
+ *   2. `tw-animate-css`         — LOAD-BEARING, not cosmetic: hover-card.tsx
+ *                                 and Footnote.tsx both use `animate-in` /
+ *                                 `fade-in-0` under data-[state] variants.
+ *                                 Without it those classes compile to
+ *                                 nothing and the popovers baseline unanimated.
+ *   3. `@prime-dispatch/tokens/theme` — the GENERATED @theme inline block
+ *                                 (ADR-0003 §Stage 2, drift-gated). This is
+ *                                 what makes the token utilities —
+ *                                 `font-nav`, `text-accent-prime`,
+ *                                 `bg-lane-editorial-strong` et al. — exist
+ *                                 at all. Consumed by package subpath, never
+ *                                 by a relative reach across the app
+ *                                 boundary, and never hand-copied — a copy
+ *                                 would silently escape the drift gate.
+ *
+ * MEASURED RESIDUAL, FILED NOT FIXED. With the compile in place, 146 of the
+ * 169 distinct utilities the affected components use now resolve. The other
+ * 23 are `group` (a marker class Tailwind correctly emits no rule for) plus
+ * 22 that name token slots the generated theme does NOT register —
+ * `text-text-strong`, `text-text-muted`, `bg-surface-page`, `border-rail-edge`,
+ * `bg-lane-editorial` (the theme registers `-strong` variants),
+ * `font-title` and `font-code` (the theme registers `--font-narrative` /
+ * `--font-civic` / `--font-mono`). These are dead on BOTH surfaces: verified
+ * against a real microsite build, none of the 22 appear in its production
+ * CSS either, and the microsite's own sources use the registered names. So
+ * this is a library-side naming defect against the token contract, not
+ * something A14 introduced or could fix without touching components (B15) or
+ * the token emitter (a governance decision that is AK's, not an agent's).
+ * The story lane now renders exactly what the shipped surface renders,
+ * which is the acceptance A14 was scoped to — and the reset makes this
+ * residual visible instead of invisible.
+ *
+ * The runtime var() targets (--platform-*, --dispatch-*) come from
+ * `@prime-dispatch/tokens/css`, which preview.tsx already imports. Every
+ * @theme inline value here is a var() chain, never a literal, so the
+ * [data-prime-cycle] runtime cascade reaches each compiled utility and the
+ * Dusk/Night stories stay cycle-correct.
+ *
+ * CASCADE NOTE. Tailwind's output is layered; co-located component CSS and
+ * tokens.css are UNLAYERED and therefore outrank it. That is the same
+ * relationship global.css establishes on the shipped surface, so the three
+ * hybrid components (ChapterRail · Footnote · ReadingProgress) resolve here
+ * exactly as they resolve in production: their own stylesheet wins, and the
+ * utilities fill the gaps it leaves.
+ * ========================================================================== */
+
+@import "tailwindcss" source(none);
+@import "tw-animate-css";
+@import "@prime-dispatch/tokens/theme";
+
+/* Explicit, and the ONLY scanned source.
+ *
+ * `source(none)` above disables Tailwind v4's automatic filesystem
+ * detection, for two reasons that both matter to a visual instrument:
+ *
+ *   - Auto-detection roots at this file and walks UP, which would sweep
+ *     `storybook-static/` — a build output that exists on a warm tree and
+ *     not on a cold one. The compiled utility set would then depend on
+ *     whether the last build was cleaned, making the Chromatic floor a
+ *     function of the runner's disk state rather than of the source.
+ *   - Auto-detection excludes node_modules, and `@prime-dispatch/ui` is a
+ *     workspace package reached THROUGH node_modules. The library would be
+ *     skipped by default — which is precisely the F12 defect, re-created.
+ *
+ * Naming the library path explicitly makes the story lane's utility set a
+ * pure function of packages/ui/src. Story files live beside their
+ * components under the same root, so their utilities are covered too.
+ *
+ * B16 WATCH — now CONFIRMED BY MEASUREMENT, and deliberately NOT fixed here
+ * (the microsite is B16's surface, not A14's). The promotion checkpoint could
+ * only infer this, having no node_modules to test against. Measured this
+ * session, against a real `pnpm build:astro`:
+ *
+ *   global.css:1 is a bare `@import "tailwindcss"` and there is still no
+ *   @source anywhere in the repo outside this file. 32 theme-backed
+ *   utilities are used ONLY by packages/ui and by no microsite source —
+ *   and ZERO of the 32 appear in the microsite's built CSS. Tailwind
+ *   therefore does not scan the library from the shipped entry, exactly as
+ *   predicted: packages/ui reaches the app as a symlink under
+ *   apps/microsite-astro/node_modules, and v4 auto-detection excludes
+ *   node_modules.
+ *
+ * Nothing bites TODAY because every library component the microsite
+ * consumes is CSS-only. The moment B16 moves a utility-styled component onto
+ * the live surface it renders bare in PRODUCTION — the same defect A14 just
+ * removed from the story lane, on the surface readers actually see. */
+@source "../../../packages/ui/src";

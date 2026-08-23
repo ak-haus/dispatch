@@ -12,6 +12,14 @@ import React from "react";
  * cycle via --surface-page (OQ-4 semantic slot, CD2 §10 Decision 13) —
  * substrate is page-owned, components stay substrate-agnostic (Rule 1).
  */
+// Story-lane Tailwind compile (A14 — flag F12). FIRST, deliberately: it
+// mirrors global.css, where `@import "tailwindcss"` precedes the token and
+// page stylesheets. Tailwind's output is LAYERED and the imports below are
+// unlayered, so the unlayered rules outrank the utilities — exactly the
+// cascade the shipped surface establishes. Reordering this line would give
+// the story lane a precedence the microsite does not have, which is a
+// subtler version of the defect A14 exists to remove.
+import "./tailwind.css";
 import "@prime-dispatch/tokens/css";
 // Shared @font-face surface (S1 pre-step): the SAME declarations global.css
 // ships, imported across the workspace boundary so stories render the shipped
