@@ -11,7 +11,8 @@ cited with a verification date. Everything else that checkpoint left standing (t
 contradictions, `feed-export.ts` untested, `config.ts` comment split, `STATE.html` in-tree, the four
 one-clicks) is unchanged as of this sweep.
 
-**Verdict:** 1 register delta, 2 record-drift findings (new), 3 new flags for the Golden Board.
+**Verdict:** 1 register delta, 2 record-drift findings (new), 4 new flags for the Golden Board — the
+fourth found by this run's own CI, an instrument defect in the Chromatic e2e lane (see New flags §4).
 
 ## Register deltas
 
@@ -89,6 +90,31 @@ one-clicks) is unchanged as of this sweep.
    build-session close.
 3. `crossfire/src/config.ts:43-48` — delete or rewrite the schema-block comment; it still describes a
    borrowed-Dante fallback that `config.ts:112-116` and `ISA.md:110-117` say was removed 2026-06-12.
+
+4. **The Chromatic e2e lane diffs on the calendar date, so it cries wolf once per day.** This PR is
+   records-only and still drew "3 changes must be accepted as baselines" on `UI Tests:
+   dispatch_playwright` — reproduced identically on two independent runs (Chromatic builds #68 and #69),
+   so not a flake. Root cause, read first-hand: `pages/index.astro:28-33` bakes `heroDateLabel` from
+   `new Date()` at build time, and `components/EditorialDistrictMapHero.tsx:74-84` re-swaps it to the
+   client wall-clock date on mount. That label renders in four places on the archived cover surface —
+   `Marginalia` (`EditorialDistrictMapHero.tsx:159`), `CoverSpread` (`:162`), `ArticleSpread` (`:167`),
+   `Colophon` (`:189`) — and **none of them is declared `data-live`**, so unlike the wire timestamps
+   (`WireCard.tsx:87-90`, `WireTicker.tsx:60-61`, `WirePage.tsx:109-110`) it is not excluded by
+   `ignoreSelectors` (`playwright.config.ts:35-37`). `cover.spec.ts:112` archives `home-cover` at
+   scroll-top, per viewport. Any capture on a different calendar day than the baseline therefore diffs
+   on text alone.
+   - **Why it matters.** This is the exact failure F19 was ruled to fix (`e2e/helpers/archive.ts:14-40`:
+     "the lane's red carried no information"). The settle law closed the mid-motion half; the
+     wall-clock half survives in this one label. A gate that reddens daily regardless of the diff
+     trains its reader to accept baselines unread, which is worse than no gate.
+   - **Not fixed here, deliberately.** The repair is a `data-live` attribute on those four call sites —
+     application code, outside a records auditor's scope — and accepting the standing baselines is AK's
+     call under register §8. Reads as Phase B, and it should be sized against B4's oracle work rather
+     than run beside it.
+   - **Caveat, stated rather than implied.** Two of the three changes are accounted for by
+     `home-cover` at its two viewports. The third is not identified: Chromatic's dashboard is
+     unreachable from this container (egress policy blocks `chromatic.com`), so the per-snapshot list
+     could not be read. The mechanism above is confirmed by source; the third snapshot's cause is not.
 
 Standing flags 1–6 from the 2026-08-20 checkpoint (the 5 doc contradictions + `STATE.html` removal) remain
 open and unchanged; not re-filed here to avoid duplication.
