@@ -92,6 +92,12 @@ jobs:
         with:
           # Full history: Chromatic derives baselines from git ancestry.
           fetch-depth: 0
+      # In a container job the workspace bind mount is owned by the runner
+      # UID while steps run as root, and checkout writes its safe.directory
+      # entry under a temporary HOME — so any LATER git invocation (Chromatic
+      # reads ancestry) dies on "dubious ownership" without this.
+      - name: mark the workspace safe for git inside the container
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: F24 drift gate — the pin must be exact, asserted inside the REQUIRED context
         run: node apps/microsite-astro/scripts/playwright-container-image.mjs > /dev/null
       - uses: pnpm/action-setup@v4
