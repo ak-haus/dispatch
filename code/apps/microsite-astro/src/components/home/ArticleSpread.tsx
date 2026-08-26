@@ -74,7 +74,8 @@ export function ArticleSpread({
 						</span>
 					</div>
 					<span className="hidden font-mono text-[12px] uppercase tracking-[0.32em] text-body-faint md:inline">
-						Opened · {dateLabel}
+						{/* data-live wraps ONLY the wall-clock date — see WireCard. */}
+						Opened · <span data-live="timestamp">{dateLabel}</span>
 					</span>
 				</motion.div>
 

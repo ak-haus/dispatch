@@ -23,13 +23,16 @@ are still the way to force one.
   on launch-ready code — real assets live in `code/apps/microsite-astro/public/`; animate **layout** properties
   (`width`/`height`/`top`/`left`/`margin`/`padding`) — use `transform`+`opacity`; resurrect the dead V1 rails
   (superseded 2026-08-17 by the standalone Crossfire product; their records live in the private ops archive).
-- **ASK FIRST (confirm before):** a **Vercel deploy** — and after it the **mandatory** post-deploy check
-  `curl -sI https://dispatchmag.dev/ | grep HTTP` (must be `200`: Astro 6 + Vite can report READY with **zero**
-  rendered HTML); touching the **locked visual canon** (CD1–5 — palette/typography/cartography/lanes); editing
-  content (`.mdx` — **AK owns content**).
+- **ASK FIRST (confirm before):** a **Vercel deploy** — and after any production deploy the **mandatory** post-deploy
+  gate is the **E2E smoke**, `uptime (prod smoke)`: it fires itself on the deployment (`deployment_status`), and the
+  sanctioned on-demand path is dispatching that workflow — a session container may be unable to reach the live site at
+  all (egress policy, measured 2026-08-23), and the curl header oracle is blind to JS death anyway (a 200 shell with
+  dead islands passes it), so `curl -sI https://dispatchmag.dev/ | grep HTTP` survives only as the smoke's fast-fail
+  first step (B4, 2026-08-26); touching the **locked visual canon** (CD1–5 — palette/typography/cartography/lanes);
+  editing content (`.mdx` — **AK owns content**).
 - **ALWAYS:** read `DESIGN.md` (repo root — the generated brand contract) before generating or editing any UI;
-  verify before claiming done — `tsc --noEmit` clean + a Tailwind cache-reset + the post-deploy `curl`
-  200; keep secrets in Doppler; stay in the scope you were asked. *(House style, enforced in `.claude/CLAUDE.md`,
+  verify before claiming done — `tsc --noEmit` clean + a Tailwind cache-reset + a green post-deploy
+  smoke; keep secrets in Doppler; stay in the scope you were asked. *(House style, enforced in `.claude/CLAUDE.md`,
   not a safety control: motion/JS over static — the visual product is the JS; split the `DISpatch` wordmark, `DIS` red.)*
 
 ## Commands (the real ones — pnpm monorepo; run from `code/` unless noted)
@@ -37,13 +40,20 @@ are still the way to force one.
 - Build: `cd code && pnpm build` (or `build:astro` / `build:next`). Type-check: `cd code && pnpm typecheck`.
 - Tokens (Style Dictionary): `cd code/packages/tokens && pnpm build`. Content collections: `pnpm astro sync`.
 - After CSS / `@theme inline` edits: `rm -rf .astro node_modules/.vite` then restart `pnpm dev` (Tailwind v4 caches inlined values).
-- Deploy verify: `curl -sI https://dispatchmag.dev/ | grep HTTP`. CI = **fifteen required contexts** on every push/PR
+- E2E: `pnpm --filter microsite-astro test:e2e` runs **inside the pinned Playwright Linux container** on every host
+  (F24/B4 — the same image CI uses, derived from the exact-pinned `@playwright/test`; no `-darwin` baseline can exist;
+  needs Docker on any host not already inside that image — macOS and plain Linux alike). Baselines regenerate only
+  via the `update-visual-baselines` dispatch job, never locally.
+- Deploy verify: dispatch **`uptime (prod smoke)`** and read its result (it also auto-runs on every production
+  `deployment_status`); a human on an unrestricted machine may run `pnpm --filter microsite-astro smoke:prod`
+  directly. CI = **fifteen required contexts** on every push/PR
   (ruleset `21012416`; the count is machine law, not prose — read it with
   `gh api repos/ak-haus/dispatch/rulesets/21012416`): `build (astro)` · `content (schema gate)` ·
   `e2e (playwright + axe)` · `lighthouse (budget ratchet)` · `naming convention (ls-lint)` · `typecheck (tsc)` ·
   `unit (vitest)` · `tokens (drift gate)` · `tokens-lint (governance gate)` · `design (contract drift gate)` ·
   `storybook (stories + a11y gate)` · `chromatic (story lane)` · `UI Tests: dispatch_storybook` ·
-  `UI Tests: dispatch_playwright` · `ideation (provenance law)` — plus a 6h `uptime (prod smoke)` cron and the
+  `UI Tests: dispatch_playwright` · `ideation (provenance law)` — plus `uptime (prod smoke)` (the post-deploy gate +
+  a 6h cron) and the
   non-blocking `design-review (evidence packet)` AK reads per PR. **Red = do-not-merge.** A new stage ships its gate
   AND registers it; a gate that is not required is decoration.
 - **Name the flag in the PR** (F25 interim rule, adopted 2026-08-20). A PR that closes or changes a tracked flag or

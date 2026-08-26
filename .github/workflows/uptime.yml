@@ -7,20 +7,71 @@ on:
     # covered by deploy-time gates + this synthetic; a tighter cadence or a
     # dedicated uptime vendor is an AK option on the Golden Board (A6).
     - cron: '0 */6 * * *'
+  # B4 (2026-08-26): the MANDATORY post-deploy gate. The Vercel GitHub App
+  # deploys production on any main merge touching code/ (the Ignored Build
+  # Step cancels the rest), and this event fires the smoke against exactly
+  # the deployed commit — GITHUB_SHA is the deployment SHA on
+  # deployment_status runs. The E2E smoke, not the curl, is the gate: a 200
+  # shell with dead islands passes every header check. Failure notifies via
+  # GitHub's failed-run email.
+  deployment_status:
+  # Also the sanctioned ON-DEMAND check: an agent session's container may be
+  # unable to reach dispatchmag.dev at all (egress policy — measured
+  # 2026-08-23, A14 close), so "verify production" for a session means
+  # dispatching THIS workflow and reading its result, never a local curl.
   workflow_dispatch:
 
-# Production uptime synthetic (Golden Board A6). READ-ONLY page visits with
-# a real browser: the curl header oracle is blind to JS death — a 200 shell
-# with dead islands passed every check we had. No credentials; nothing is
-# ever written or published. Failure notifies via GitHub's failed-run email.
+# Production smoke (Golden Board A6; post-deploy gate per B4). READ-ONLY page
+# visits with a real browser: the curl header oracle is blind to JS death —
+# a 200 shell with dead islands passed every check we had, so curl survives
+# only as this job's fast-fail first step. No credentials; nothing is ever
+# written or published.
 jobs:
+  playwright-image:
+    # Same derivation as e2e.yml: the image tag is a function of the
+    # exact-pinned @playwright/test (F24) — never typed into this file.
+    # Preview deployment_status events are filtered here; only a SUCCESSFUL
+    # Production deployment runs the gate.
+    name: derive the pinned Playwright image
+    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && startsWith(github.event.deployment.environment, 'Production'))
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.derive.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: derive
+        # Two statements, not `echo "$(…)"`: a command substitution's failure
+        # inside an argument is discarded under bash -e, which would green
+        # this gate on the exact drift it exists to catch.
+        run: |
+          image="$(node code/apps/microsite-astro/scripts/playwright-container-image.mjs)"
+          [ -n "$image" ]
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
   uptime:
     name: uptime (prod smoke)
+    # !cancelled(): the mandatory post-deploy gate must never be silently
+    # skipped by a playwright-image failure — a gate that can skip is not a
+    # gate. The event filter is therefore repeated here (with !cancelled(),
+    # a needs-skip no longer propagates, so preview deploys must be filtered
+    # in this job too).
+    if: ${{ !cancelled() && (github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && startsWith(github.event.deployment.environment, 'Production'))) }}
+    needs: playwright-image
     runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.playwright-image.outputs.image }}
+      # Chromium wants more shared memory than a job container's 64MB default.
+      options: --ipc=host
     defaults:
       run:
         working-directory: code
     steps:
+      - name: refuse to smoke without the pinned browsers — red with the real reason
+        if: needs.playwright-image.outputs.image == ''
+        working-directory: .
+        run: |
+          echo "::error title=uptime gate cannot run::the playwright-image derive job failed, so this job has no container and no browsers. Read that job's log — the smoke did NOT run."
+          exit 1
       - uses: actions/checkout@v4
       - name: Header oracle (fast fail)
         working-directory: .
@@ -34,36 +85,8 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      # Playwright browsers are CACHED, not re-downloaded every run. The
-      # `playwright install` step hits Playwright's CDN, and that CDN stalls:
-      # three occurrences on record (23min on dispatch#16, 78min at the fonts
-      # build, 3h39m on the S4 e2e lane 2026-08-19) where the step hung with
-      # no output and no timeout, so the only remedy was a human noticing and
-      # cancelling. A cache hit removes the download entirely.
-      #
-      # Keyed on the RESOLVED Playwright version, not the lockfile hash: the
-      # browser build a release pins is what the cache holds, so an unrelated
-      # dependency bump must not evict it.
-      #
-      # `install-deps` still runs on a hit — the browser binaries live in
-      # ~/.cache/ms-playwright and are cached, but the OS-level libraries
-      # `--with-deps` installs come from apt and are not.
-      - name: resolve the pinned Playwright version
-        id: playwright-version
-        run: echo "version=$(pnpm --fail-if-no-match --filter microsite-astro exec node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: restore the Playwright browser cache
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-      - name: install chromium (cache miss only)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
-      - name: system libraries for the cached chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
-      - name: JS-death detector (hydration smoke)
+      # No browser install: the container bakes the chromium matching the
+      # @playwright/test pin (F24) — the F15 CDN-stall class has no step left
+      # to stall in.
+      - name: E2E smoke — the gate (hydration proof, not just headers)
         run: pnpm --fail-if-no-match --filter microsite-astro smoke:prod
