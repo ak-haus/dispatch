@@ -328,7 +328,8 @@ export function CrossfireSpread({
 						<span>/</span>
 						<span>{String(slots.length).padStart(2, '0')}</span>
 						<span>·</span>
-						<span>{dateLabel ?? story.dateLabel}</span>
+						{/* data-live: the hero passes a wall-clock dateLabel — see WireCard. */}
+						<span data-live="timestamp">{dateLabel ?? story.dateLabel}</span>
 					</span>
 				</div>
 			</motion.div>

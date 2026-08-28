@@ -24,8 +24,9 @@ on:
 #   - fetch:fonts hydrates the PP rail before the build (fail-loud). A visual
 #     gate asserts on rendered faces by definition — visual.spec.ts refuses
 #     to capture on fallback stacks, so fontless CI would fail anyway.
-#   - visual.spec.ts compares committed -linux baselines (generated in THIS
-#     runner class via the update-visual-baselines job, never on a Mac).
+#   - visual.spec.ts compares committed -linux baselines (generated in the
+#     SAME container class via the update-visual-baselines job, never on a
+#     Mac).
 #   - the Chromatic upload step ships the CHOSEN archives to the cloud lane
 #     (ADR §Stage 4 wiring step 1). It runs on push events only (one upload
 #     per commit) and needs the E2E-project token: Chromatic requires one
@@ -34,13 +35,53 @@ on:
 #     "Chosen" is load-bearing (F19, repaired 2026-08-19): auto-archiving is
 #     off, and a surface reaches the lane only through archiveSnapshot() in
 #     e2e/helpers/archive.ts, which refuses to capture a page still in motion.
+#
+# F24 (rides B4, 2026-08-26): every job that executes the suite runs INSIDE
+# the pinned Playwright container, derived from the exact-pinned
+# @playwright/test by scripts/playwright-container-image.mjs — the same image
+# `pnpm test:e2e` docker-runs on any host not already inside it, so the
+# command means the same thing everywhere and a `-darwin` baseline cannot
+# exist. The browsers are baked into the image, which also retires this
+# workflow's browser download entirely — the F15 CDN-stall class (five
+# occurrences, 23min–3h39m) has no step left to stall in.
 jobs:
+  playwright-image:
+    # The image tag is a FUNCTION of the @playwright/test pin — never typed
+    # into this file, or the two drift apart (the F24 precision). The derive
+    # script fails on a range, so un-pinning the dependency reds this job —
+    # and the required e2e context too, via its own in-job validation below.
+    name: derive the pinned Playwright image
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.derive.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: derive
+        # Two statements, not `echo "$(…)"`: a command substitution's failure
+        # inside an argument is discarded under bash -e, which would green
+        # this gate on the exact drift it exists to catch.
+        run: |
+          image="$(node code/apps/microsite-astro/scripts/playwright-container-image.mjs)"
+          [ -n "$image" ]
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
   e2e:
     # NOTE: this display name is a ruleset-REQUIRED check context (21012416)
     # — the visual floor rides inside it; never rename without a ruleset edit.
     name: e2e (playwright + axe)
-    if: github.event_name != 'workflow_dispatch'
+    # !cancelled(): a skipped REQUIRED check counts as passing on GitHub, so
+    # this job must never be skippable by a playwright-image failure. If the
+    # derive job fails, this runs with an empty container.image (= no
+    # container) and test:e2e's own dispatcher docker-runs the image it
+    # re-derives itself — slower, same environment, and a broken pin still
+    # reds THIS context rather than auto-passing it.
+    if: ${{ !cancelled() && github.event_name != 'workflow_dispatch' }}
+    needs: playwright-image
     runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.playwright-image.outputs.image }}
+      # Chromium wants more shared memory than a job container's 64MB default.
+      options: --ipc=host
     defaults:
       run:
         working-directory: code
@@ -51,6 +92,14 @@ jobs:
         with:
           # Full history: Chromatic derives baselines from git ancestry.
           fetch-depth: 0
+      # In a container job the workspace bind mount is owned by the runner
+      # UID while steps run as root, and checkout writes its safe.directory
+      # entry under a temporary HOME — so any LATER git invocation (Chromatic
+      # reads ancestry) dies on "dubious ownership" without this.
+      - name: mark the workspace safe for git inside the container
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: F24 drift gate — the pin must be exact, asserted inside the REQUIRED context
+        run: node apps/microsite-astro/scripts/playwright-container-image.mjs > /dev/null
       - uses: pnpm/action-setup@v4
         with:
           version: 10.33.0
@@ -62,37 +111,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail — the visual floor asserts on shipped faces
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
-      # Playwright browsers are CACHED, not re-downloaded every run. The
-      # `playwright install` step hits Playwright's CDN, and that CDN stalls:
-      # three occurrences on record (23min on dispatch#16, 78min at the fonts
-      # build, 3h39m on the S4 e2e lane 2026-08-19) where the step hung with
-      # no output and no timeout, so the only remedy was a human noticing and
-      # cancelling. A cache hit removes the download entirely.
-      #
-      # Keyed on the RESOLVED Playwright version, not the lockfile hash: the
-      # browser build a release pins is what the cache holds, so an unrelated
-      # dependency bump must not evict it.
-      #
-      # `install-deps` still runs on a hit — the browser binaries live in
-      # ~/.cache/ms-playwright and are cached, but the OS-level libraries
-      # `--with-deps` installs come from apt and are not.
-      - name: resolve the pinned Playwright version
-        id: playwright-version
-        run: echo "version=$(pnpm --fail-if-no-match --filter microsite-astro exec node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: restore the Playwright browser cache
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-      - name: install chromium (cache miss only)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
-      - name: system libraries for the cached chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
+      # No browser install: the container bakes the chromium matching the
+      # @playwright/test pin at /ms-playwright, so there is nothing to
+      # download and nothing for Playwright's CDN to stall (F15 retired here).
       - run: pnpm --fail-if-no-match --filter microsite-astro test:e2e
       # The archive lane's coverage contract (F19). Auto-archiving is off, so
       # what reaches Chromatic is exactly the archiveSnapshot() calls in the
@@ -129,11 +150,17 @@ jobs:
   # three retries of one commit produced 265/265/227 differing pixels, so the
   # captures disagreed with each other WITHIN a job.
   #
-  # Manual only, never on push/PR — it is a diagnostic, not a gate.
+  # Manual only, never on push/PR — it is a diagnostic, not a gate. It runs in
+  # the same pinned container as the e2e job: a probe in a different render
+  # environment would measure the wrong floor.
   visual-stability:
     name: visual stability probe (manual)
     if: github.event_name == 'workflow_dispatch' && inputs.job == 'stability'
+    needs: playwright-image
     runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.playwright-image.outputs.image }}
+      options: --ipc=host
     defaults:
       run:
         working-directory: code
@@ -150,23 +177,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
-      - name: resolve the pinned Playwright version
-        id: playwright-version
-        run: echo "version=$(pnpm --fail-if-no-match --filter microsite-astro exec node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: restore the Playwright browser cache
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-      - name: install chromium (cache miss only)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
-      - name: system libraries for the cached chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
       - name: run the pixel floor ${{ inputs.repeats }}x — any disagreement fails
         working-directory: code/apps/microsite-astro
         # retries 0: a retry would MASK the very nondeterminism being measured.
@@ -179,14 +189,19 @@ jobs:
           retention-days: 7
 
   # Baseline factory (ADR: baselines must be generated in the CI linux
-  # runner, not the Mac). Manually dispatched; regenerates -linux baselines
+  # environment, not the Mac — and since F24, in the SAME pinned container the
+  # e2e job compares in). Manually dispatched; regenerates -linux baselines
   # and uploads them as an artifact for the session to commit. Never runs on
   # push/PR — a baseline is a deliberate act, recorded in git by a human-
   # signed-off commit, not a side effect of CI.
   update-visual-baselines:
     name: regenerate visual baselines (manual)
     if: github.event_name == 'workflow_dispatch' && inputs.job == 'baselines'
+    needs: playwright-image
     runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.playwright-image.outputs.image }}
+      options: --ipc=host
     defaults:
       run:
         working-directory: code
@@ -203,37 +218,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
-      # Playwright browsers are CACHED, not re-downloaded every run. The
-      # `playwright install` step hits Playwright's CDN, and that CDN stalls:
-      # three occurrences on record (23min on dispatch#16, 78min at the fonts
-      # build, 3h39m on the S4 e2e lane 2026-08-19) where the step hung with
-      # no output and no timeout, so the only remedy was a human noticing and
-      # cancelling. A cache hit removes the download entirely.
-      #
-      # Keyed on the RESOLVED Playwright version, not the lockfile hash: the
-      # browser build a release pins is what the cache holds, so an unrelated
-      # dependency bump must not evict it.
-      #
-      # `install-deps` still runs on a hit — the browser binaries live in
-      # ~/.cache/ms-playwright and are cached, but the OS-level libraries
-      # `--with-deps` installs come from apt and are not.
-      - name: resolve the pinned Playwright version
-        id: playwright-version
-        run: echo "version=$(pnpm --fail-if-no-match --filter microsite-astro exec node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: restore the Playwright browser cache
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-      - name: install chromium (cache miss only)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install --with-deps chromium
-      - name: system libraries for the cached chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        timeout-minutes: 10
-        run: pnpm --fail-if-no-match --filter microsite-astro exec playwright install-deps chromium
       - name: regenerate -linux baselines
         working-directory: code/apps/microsite-astro
         run: pnpm e2e:build && pnpm exec playwright test visual.spec.ts --update-snapshots

@@ -67,8 +67,11 @@ cd code/apps/microsite-astro && pnpm exec astro check
 cd code/apps/microsite-astro && pnpm test:e2e
 ```
 
-`visual.spec.ts` will fail locally on a Mac — that is correct, not a defect. Baselines are
-CI-linux only.
+`test:e2e` runs inside the pinned Playwright **Linux** container on every host (F24/B4,
+2026-08-26 — the image is derived from the exact-pinned `@playwright/test`; Docker required on
+any host not already inside that image, macOS and plain Linux alike), so `visual.spec.ts`
+compares the committed `-linux` baselines everywhere and a `-darwin` file can no longer be
+generated at all.
 
 ---
 
@@ -88,8 +91,10 @@ Plus the always-on gates the change will touch: `typecheck`, `unit`, `build (ast
 
 ### Baselines — the only sanctioned procedure
 
-Baselines are generated in the CI linux runner, **never on a Mac** (documented rendering variance),
-and a `*-chromium-darwin.png` is gitignored so a local run cannot enshrine a Mac render.
+Baselines are generated in CI inside the pinned Playwright container — the same image the e2e gate
+compares in — **never on a Mac** (documented rendering variance); a `*-chromium-darwin.png` is
+gitignored, and since F24 a local `--update-snapshots` writes only into the container work volume,
+so a local run cannot enshrine a baseline at all.
 
 ```bash
 gh workflow run e2e.yml --ref <your-branch>

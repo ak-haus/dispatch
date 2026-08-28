@@ -109,7 +109,9 @@ export function Marginalia({
 						'0 1px 0 color-mix(in oklch, var(--sky-low) 75%, transparent), 0 -1px 0 color-mix(in oklch, var(--platform-text-body-strong) 8%, transparent)',
 				}}
 			>
-				DISpatch · {issueLabel} · {dateLabel}
+				{/* data-live wraps ONLY the wall-clock date (see WireCard) — the
+				    wordmark + issue label stay in the Chromatic diff. */}
+				DISpatch · {issueLabel} · <span data-live="timestamp">{dateLabel}</span>
 			</p>
 		</aside>
 	)

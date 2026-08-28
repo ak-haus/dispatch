@@ -65,7 +65,10 @@ pnpm typecheck          # typecheck all workspaces
 **Vercel project:** `dispatch` (project IDs live in the Vercel dashboard, not this repo) | production branch: `main`  
 **Deploy config:** `code/vercel.json` (the single authoritative file) — source of truth; dashboard overrides are drift.
 
-**Post-deploy mandatory check:** after every production deploy, verify `HTTP 200` on the root route before declaring success. A Vercel `READY` status does NOT guarantee pages were built — the Astro/Vite trap (below) produces `READY` with zero rendered HTML.
+**Post-deploy mandatory gate (B4, 2026-08-26):** the `uptime (prod smoke)` workflow — it auto-runs on every
+production `deployment_status` and is dispatchable on demand. It proves a `200` **and** island hydration with a real
+browser; a Vercel `READY` status does NOT guarantee pages were built — the Astro/Vite trap (below) produces `READY`
+with zero rendered HTML, and a header check alone cannot see JS death either.
 
 ### Astro 6.3.x + Vite version trap
 
@@ -77,11 +80,12 @@ pnpm typecheck          # typecheck all workspaces
 
 **Guard:** never add `pnpm.overrides.vite` pinning below `7` to the root `package.json`. If a dep requires Vite 6, isolate it in its own workspace package so the Astro surface stays on Vite 7+.
 
-**Verification command:**
+**Verification:**
 ```bash
-# After a production deploy, run:
+# After a production deploy the uptime (prod smoke) workflow runs the real gate
+# (header oracle + hydration proof). For a quick first look at a preview URL:
 curl -sI https://<deployment-url>/ | grep "HTTP"
-# Must return HTTP/2 200 — anything else means the Astro surface did not build
+# HTTP/2 200 is necessary but NOT sufficient — it cannot see JS death
 ```
 
 See `2-paradiso/3-cadence-sphere/departments/vercel/cap-policy.standard.md` for deploy caps and `2-paradiso/3-cadence-sphere/departments/vercel/project-registry.standard.md` for the full project registry.

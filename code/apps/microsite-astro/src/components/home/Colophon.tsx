@@ -44,7 +44,10 @@ export function Colophon({
 						<dt className="text-body-faint">Issue</dt>
 						<dd className="text-body-strong">{issueLabel}</dd>
 						<dt className="text-body-faint">Date</dt>
-						<dd className="text-body-strong">{dateLabel}</dd>
+						{/* data-live: dateLabel is wall-clock text — see WireCard. */}
+						<dd data-live="timestamp" className="text-body-strong">
+							{dateLabel}
+						</dd>
 						<dt className="text-body-faint">District</dt>
 						<dd className="text-body-strong">Editorial · Recto</dd>
 						<dt className="text-body-faint">Building</dt>

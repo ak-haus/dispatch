@@ -91,7 +91,9 @@ export function CoverSpread({
 						Editorial District · Recto
 					</span>
 					<span className="font-mono text-[12px] font-semibold uppercase tracking-[0.26em] text-body-strong">
-						{issueLabel} · {dateLabel}
+						{/* data-live wraps ONLY the wall-clock date (see WireCard) —
+						    the issue label stays in the Chromatic diff. */}
+						{issueLabel} · <span data-live="timestamp">{dateLabel}</span>
 					</span>
 				</div>
 			</motion.div>
