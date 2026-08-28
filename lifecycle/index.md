@@ -3,7 +3,7 @@ title: lifecycle — machine-readable index
 origin: prime-authored
 status: active
 load_bearing: false
-last_amended: 2026-08-22
+last_amended: 2026-08-28
 ---
 
 # lifecycle index
@@ -15,4 +15,4 @@ last_amended: 2026-08-22
 ## Children
 
 - [fixtures](fixtures/index.md) — component fixtures (ChapterRail · Footnote · MastheadWordmark · ReadingProgress · SiteNav)
-- [checkpoints](checkpoints/) — session close records; each carries its discoveries with a phase assignment (ADR-0002 Decision 4). Latest: [2026-08-22 Phase B register promotion](checkpoints/2026-08-22-phase-b-promotion.md) — the promote-or-lose pass: F12 (RULED Phase A by AK — split into A14 instrument + B15 code) · F14 → B16 (three real forks, not five) · F23 → B17 (conditional) · F24 folded into B4. Prior: [2026-08-20 ledger burn](checkpoints/2026-08-20-ledger.md) — F22 closed, F3 reframed and ruled, the ledger-cadence root cause filed as F25
+- [checkpoints](checkpoints/) — session close records; each carries its discoveries with a phase assignment (ADR-0002 Decision 4). Latest: [2026-08-26 B4 build session close](checkpoints/2026-08-26-b4-post-deploy-oracle.md) — the post-deploy oracle swap (E2E smoke on `deployment_status`) + F24 closed-executed (exact pin, derived container, one `test:e2e` on every host); the pixel floor held under the container with zero regeneration. Prior: [2026-08-23 A14 story-lane Tailwind compile](checkpoints/2026-08-23-a14-story-lane-tailwind.md) — the F12 instrument half, 335-baseline declared reset · [2026-08-22 Phase B register promotion](checkpoints/2026-08-22-phase-b-promotion.md) — the promote-or-lose pass: F12 (RULED Phase A — A14 + B15) · F14 → B16 · F23 → B17 (conditional) · F24 folded into B4
