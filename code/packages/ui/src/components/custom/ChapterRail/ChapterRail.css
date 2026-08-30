@@ -19,6 +19,26 @@
  *   - Cinzel display "What's inside" heading
  *   - Text-shadow halo on current marker
  *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): the raw utilities that
+ * rode alongside these hooks are folded in below — ONLY the cascade winners
+ * (layered utilities lose to this unlayered file, so most were inert).
+ * Folded winners: link `uppercase` · toggle `mt-4` · list `space-y-2`
+ * (which stacked 0.5rem margins ON TOP of this file's 0.875rem gap — odd,
+ * but shipped, and preserved as shipped).
+ *
+ * DROPPED AT CONVERSION — dead token slots (never rendered; F28):
+ *   `text-text-muted` (title/link/toggle) · `hover:text-text-strong`
+ *   (link/toggle).
+ * DROPPED — cascade losers (authored but this file always won):
+ *   `text-[0.625rem]`/`tracking-[0.18em]` on the title ·
+ *   `flex`/`items-center`/`gap-2`/`py-1`/`text-xs`/`tracking-[0.12em]`/
+ *   `transition-colors` on the link · **`text-accent-prime` on the current
+ *   link** (this file's --text-strong has always won — the wine current
+ *   state never shipped) · `mt-3` on the list · `block`/`h-px`/`bg-current`
+ *   on the indicator (the 6px ring below is what renders; the 1px-line
+ *   idiom is pre-CSS archaeology) · `text-[0.625rem]`/`tracking-[0.14em]`
+ *   on the toggle · `group` (marker with no group-* consumer).
+ *
  * INTENTIONAL ANTI-PATTERNS:
  *   - No background on root (Rule 1; substrate is --sky-low host-owned).
  *   - No accent-prime on default chapter indicators (wine = focus + critical
@@ -56,6 +76,12 @@
   gap: 0.875rem;
 }
 
+/* space-y-2 fold (see header): zero-specificity to mirror the utility's
+ * :where() form exactly. */
+:where(.prime-chapter-rail__list > :not(:last-child)) {
+  margin-block-end: 0.5rem;
+}
+
 .prime-chapter-rail__item {
   position: relative;
 }
@@ -68,6 +94,7 @@
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: -0.005em;
+  text-transform: uppercase; /* utility fold — this file never declared it */
   color: var(--text-muted);
   text-decoration: none;
   padding: 0.125rem 0;
@@ -132,6 +159,7 @@
 
 /* Collapse toggle */
 .prime-chapter-rail__toggle {
+  margin-top: 1rem; /* mt-4 (utility fold) */
   font-family: inherit;
   font-size: 0.75rem;
   font-weight: 700;
