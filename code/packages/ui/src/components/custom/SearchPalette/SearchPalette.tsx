@@ -14,6 +14,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "../../ui";
+import "./SearchPalette.css";
 
 /**
  * SearchPalette — site-wide cmd-K palette (search as civic infrastructure).

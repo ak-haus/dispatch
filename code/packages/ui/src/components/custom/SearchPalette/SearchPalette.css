@@ -1,0 +1,54 @@
+/* SearchPalette — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/SearchPalette/spec.md
+ *  + CD4 §3.1 #18 + CD1 Concept 3 page furniture as civic wayfinding.
+ *
+ * AUTHORED AT B15 (idiom convergence, 2026-08-30). This component shipped
+ * class hooks defined in NO stylesheet anywhere in the repo — the bucket-C
+ * defect the sweep closes. This file is the canon-correct home for those
+ * hooks, and it deliberately declares NOTHING visual yet.
+ *
+ * B16 LANDING ZONE — read before styling. The microsite carries a 384-LOC
+ * fork of this component (vs 147 here) whose divergence is substantially
+ * deliberate and load-bearing; B16's method is diff → classify → port the
+ * deliberate parts INTO the library. The styled reality of SearchPalette
+ * lives in that fork today. When B16 runs its SearchPalette session (the
+ * cheapest fork entry, per the register), the ported styling lands under
+ * the hook inventory below rather than inventing a parallel structure.
+ * Styling authored here ahead of that diff would prejudge the port.
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No visual declarations ahead of the B16 port (see above)
+ *   - No re-styling of Dialog/Command internals — these hooks roof-style
+ *     the headless primitives from above, which is the sanctioned direction
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+/* Modal shell (Dialog roof-hooks) */
+.prime-search-palette__overlay {
+}
+.prime-search-palette__dialog {
+}
+.prime-search-palette__title {
+}
+.prime-search-palette__description {
+}
+
+/* Command surface (cmdk roof-hooks) */
+.prime-search-palette__command {
+}
+.prime-search-palette__input {
+}
+.prime-search-palette__list {
+}
+.prime-search-palette__group {
+}
+.prime-search-palette__item {
+}
+.prime-search-palette__icon {
+}
+.prime-search-palette__label {
+}
+.prime-search-palette__description-text {
+}
