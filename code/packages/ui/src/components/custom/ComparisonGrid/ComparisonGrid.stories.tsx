@@ -56,7 +56,7 @@ async function settleReveal({
   const deadline = Date.now() + 5000;
   for (;;) {
     const cards = Array.from(
-      canvasElement.querySelectorAll<HTMLElement>(".not-prose > *"),
+      canvasElement.querySelectorAll<HTMLElement>(".prime-comparison-grid > *"),
     );
     const opacities = cards.map((el) =>
       Number(getComputedStyle(el).opacity),

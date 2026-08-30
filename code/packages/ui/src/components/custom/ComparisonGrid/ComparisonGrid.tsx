@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { type ReactNode } from "react";
+import { clsx } from "clsx";
 import {
   Card,
   CardContent,
@@ -10,14 +11,17 @@ import {
   CardTitle,
 } from "../../ui/card";
 import { Badge } from "../../ui/badge";
-import { cn } from "../../../utils/cn";
+
+import "./ComparisonGrid.css";
 
 /**
  * ComparisonGrid — 3-up (or N-up) editorial card grid for stating shape.
  *
  * Default usage: KEEP / RETIRE / REPLACE topology inventories in
  * infrastructure dispatches. Each card carries a lane-color top-bar
- * (variant prop) and renders a small content area.
+ * (variant prop) and renders a small content area. (The top-bar's paint
+ * reached for unregistered token slots and has never rendered — restoring
+ * it is F28; the bar's variant modifier classes are the declared seam.)
  *
  * Motion: staggered reveal on viewport intersection.
  */
@@ -37,22 +41,9 @@ export interface ComparisonGridProps {
   className?: string;
 }
 
-const LANE_BAR: Record<NonNullable<ComparisonGridItem["variant"]>, string> = {
-  editorial: "bg-lane-editorial",
-  institutional: "bg-lane-institutional",
-  dispatch: "bg-lane-dispatch",
-  default: "bg-text-strong",
-  muted: "bg-rail-edge",
-};
-
 export function ComparisonGrid({ items, className }: ComparisonGridProps) {
   return (
-    <div
-      className={cn(
-        "not-prose my-16 md:my-20 grid grid-cols-1 gap-6 md:grid-cols-3",
-        className,
-      )}
-    >
+    <div className={clsx("prime-comparison-grid", className)}>
       {items.map((item, i) => (
         <motion.div
           key={item.id}
@@ -65,16 +56,20 @@ export function ComparisonGrid({ items, className }: ComparisonGridProps) {
             ease: [0.22, 1, 0.36, 1],
           }}
         >
-          <Card className="h-full">
+          <Card className="prime-comparison-grid__card">
             <div
               aria-hidden="true"
-              className={cn(
-                "h-1 w-full",
-                LANE_BAR[item.variant ?? "default"],
+              className={clsx(
+                "prime-comparison-grid__bar",
+                `prime-comparison-grid__bar--${item.variant ?? "default"}`,
               )}
             />
             <CardHeader>
-              <Badge variant={item.variant ?? "default"} size="sm" className="w-fit mb-2">
+              <Badge
+                variant={item.variant ?? "default"}
+                size="sm"
+                className="prime-comparison-grid__verb-badge"
+              >
                 {item.verb}
               </Badge>
               <CardTitle>{item.title}</CardTitle>
