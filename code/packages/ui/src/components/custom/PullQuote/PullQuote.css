@@ -1,0 +1,79 @@
+/* PullQuote — token-bound styles.
+ *
+ * Canon source: Vollkorn Display oversized editorial quote, lane em-rule;
+ * NO quote marks (Pentagram type-specimen restraint).
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): declarations are the
+ * story-lane compiler's emitted equivalents of the utilities they replace
+ * (Tailwind theme vars resolved concrete; token stacks re-pointed at their
+ * canon var() slots).
+ *
+ * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
+ * re-authoring is F28, a Mayor governance call):
+ *   - `font-title` on the quote (intent: Vollkorn Display; inherits Body today)
+ *   - `text-text-strong` on the quote / `text-text-muted` on the attribution
+ *   - `bg-lane-{editorial,institutional,dispatch}` on the em-rule — THE LANE
+ *     RULE HAS NEVER PAINTED; the `.prime-pull-quote--<lane>` modifiers below
+ *     are kept as the declared seam and deliberately style nothing until F28
+ *     rules the lane slots into the token contract
+ *   - `not-prose` (no-op here: no typography plugin in the repo, and the
+ *     microsite's .prose-dispatch scopes by child combinator)
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No quote-mark glyphs or ornaments (editorial-register restraint)
+ *   - No background on root (substrate is host-owned; Rule 1 + Rule 6)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-pull-quote {
+  margin-block: 4rem; /* my-16 */
+  max-width: 55ch;
+}
+
+@media (width >= 48rem) {
+  .prime-pull-quote {
+    margin-block: 5rem; /* md:my-20 */
+  }
+}
+
+/* Lane seam (see header) — declares nothing pending F28. */
+.prime-pull-quote--editorial,
+.prime-pull-quote--institutional,
+.prime-pull-quote--dispatch {
+}
+
+.prime-pull-quote__rule {
+  display: block;
+  margin-bottom: 1.25rem; /* mb-5 */
+  height: 2px;
+  width: 3rem; /* w-12 */
+}
+
+.prime-pull-quote__quote {
+  font-weight: 700;
+  font-size: 1.5rem; /* text-2xl */
+  line-height: 1.2; /* leading-[1.2] */
+  letter-spacing: -0.025em; /* tracking-tight */
+}
+
+@media (width >= 48rem) {
+  .prime-pull-quote__quote {
+    font-size: 1.875rem; /* md:text-3xl */
+  }
+}
+
+@media (width >= 64rem) {
+  .prime-pull-quote__quote {
+    font-size: 2.25rem; /* lg:text-4xl */
+  }
+}
+
+.prime-pull-quote__attribution {
+  margin-top: 1rem; /* mt-4 */
+  font-family: var(--font-nav);
+  font-size: 0.75rem; /* text-xs */
+  line-height: calc(1 / 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
