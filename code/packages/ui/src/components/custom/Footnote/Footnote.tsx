@@ -73,7 +73,7 @@ export function Footnote(props: FootnoteProps): ReactElement {
         <PopoverTrigger asChild>
           <button
             type="button"
-            className="prime-footnote-marker inline-flex font-code text-[0.65em] text-accent-prime hover:text-copper-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-1 focus-visible:ring-offset-surface-page"
+            className="prime-footnote-marker prime-footnote-marker--trigger"
             role="doc-noteref"
             id={`footnote-ref-${markerNumber}`}
             aria-describedby={`footnote-${markerNumber}`}
@@ -85,23 +85,16 @@ export function Footnote(props: FootnoteProps): ReactElement {
           side="top"
           align="center"
           sideOffset={6}
-          className={clsx(
-            "z-50 w-80 border border-rail-edge bg-surface-page p-4 text-text-strong outline-none",
-            "data-[state=open]:animate-in data-[state=closed]:animate-out",
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-            className,
-          )}
+          className={clsx("prime-footnote__popover", className)}
           id={`footnote-${markerNumber}`}
           role="doc-footnote"
           {...rest}
         >
-          <div className="flex items-baseline gap-2">
-            <span className="font-code text-[0.625rem] text-text-muted">
+          <div className="prime-footnote__popover-body">
+            <span className="prime-footnote__popover-label">
               {String(markerNumber).padStart(2, "0")}
             </span>
-            <div className="font-body text-sm leading-relaxed text-text-strong">
-              {children}
-            </div>
+            <div className="prime-footnote__popover-prose">{children}</div>
           </div>
         </PopoverContent>
       </Popover>
@@ -130,16 +123,11 @@ export function Footnote(props: FootnoteProps): ReactElement {
           aria-labelledby={`footnote-ref-${markerNumber}`}
           {...(rest as HTMLMotionProps<"aside">)}
         >
-          <span className="prime-footnote__label font-code text-[0.625rem] text-text-muted">
+          <span className="prime-footnote__label">
             {String(markerNumber).padStart(2, "0")}
           </span>
-          <div className="prime-footnote__prose font-body text-sm leading-relaxed text-text-strong">
-            {children}
-          </div>
-          <a
-            className="prime-footnote__back-link font-nav text-[0.625rem] uppercase tracking-[0.14em] text-text-muted hover:text-accent-prime"
-            href={hash}
-          >
+          <div className="prime-footnote__prose">{children}</div>
+          <a className="prime-footnote__back-link" href={hash}>
             {backLinkLabel}
           </a>
         </motion.aside>
@@ -168,10 +156,7 @@ export function FootnoteMarker(props: FootnoteMarkerProps): ReactElement {
   const { markerNumber, open = false, onClick, className } = props;
   return (
     <a
-      className={clsx(
-        "prime-footnote-marker inline-flex font-code text-[0.65em] text-accent-prime hover:text-copper-deep",
-        className,
-      )}
+      className={clsx("prime-footnote-marker", className)}
       href={`#footnote-${markerNumber}`}
       role="doc-noteref"
       id={`footnote-ref-${markerNumber}`}
