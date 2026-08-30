@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
+import { clsx } from "clsx";
 import { AspectRatio } from "../../ui/aspect-ratio";
 import { Badge } from "../../ui/badge";
-import { cn } from "../../../utils/cn";
+
+import "./CartographyStrip.css";
 
 /**
  * CartographyStrip — atmospheric editorial divider rendered as a wide
@@ -41,25 +43,29 @@ export function CartographyStrip({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "0px 0px -80px 0px" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className={cn("my-0 relative", className)}
+      className={clsx("prime-cartography-strip", className)}
     >
-      <AspectRatio ratio={ratio} className="overflow-hidden bg-surface-inset">
+      <AspectRatio ratio={ratio} className="prime-cartography-strip__frame">
         <img
           src={imageUrl}
           alt={alt}
-          className="h-full w-full object-cover grayscale-[20%] contrast-[1.05]"
+          className="prime-cartography-strip__image"
           loading="lazy"
         />
         {district ? (
-          <div className="absolute top-4 left-4 md:top-6 md:left-8">
-            <Badge variant="outline" size="sm" className="bg-surface-page/85 backdrop-blur-sm font-civic">
+          <div className="prime-cartography-strip__district">
+            <Badge
+              variant="outline"
+              size="sm"
+              className="prime-cartography-strip__district-badge"
+            >
               {district}
             </Badge>
           </div>
         ) : null}
       </AspectRatio>
       {caption ? (
-        <figcaption className="mt-3 px-4 md:px-12 font-nav text-xs uppercase tracking-[0.18em] text-text-muted">
+        <figcaption className="prime-cartography-strip__caption">
           {caption}
         </figcaption>
       ) : null}
