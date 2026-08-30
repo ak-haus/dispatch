@@ -9,12 +9,12 @@
  * the className seam.
  *
  * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
- * re-authoring is F28, a Mayor governance call):
+ * re-authoring is F29, a Mayor governance call):
  *   - the entire lane-bar palette: `bg-lane-{editorial,institutional,
  *     dispatch}`, `bg-text-strong` (default), `bg-rail-edge` (muted) — THE
  *     CARD TOP-BAR HAS NEVER PAINTED; its box (height/width) still renders
  *     and is kept, and the `.prime-comparison-grid__bar--<variant>`
- *     modifiers are the declared F28 seam
+ *     modifiers are the declared F29 seam
  *   - `not-prose` (no-op here: no typography plugin in the repo)
  *
  * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
@@ -47,7 +47,7 @@
   width: 100%;
 }
 
-/* Variant seam (see header) — declares nothing pending F28. */
+/* Variant seam (see header) — declares nothing pending F29. */
 .prime-comparison-grid__bar--editorial,
 .prime-comparison-grid__bar--institutional,
 .prime-comparison-grid__bar--dispatch,

@@ -9,7 +9,7 @@ import "./ArticleDateline.css";
  * Format: [lane-dot] TYPE · AUTHOR · DATE
  * No box, no chrome. Sits on top of the headline like a magazine dateline.
  * (The lane dot's paint reached for the unregistered lane slots and has
- * never rendered — restoring it is F28; the lane modifier class is the
+ * never rendered — restoring it is F29; the lane modifier class is the
  * declared seam.)
  *
  * The full DLDS provenance (AI role, drift sensitivity, C2PA, multi-author

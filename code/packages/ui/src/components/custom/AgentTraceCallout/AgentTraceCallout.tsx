@@ -16,7 +16,7 @@ import "./AgentTraceCallout.css";
  * CD1 Concept 1 marriage made structural. (That register reached for
  * unregistered token slots and has never rendered — the block ships
  * transparent in page ink, left rule in currentColor. Restoring the
- * authored register is F28; the lane modifier classes are the seam.)
+ * authored register is F29; the lane modifier classes are the seam.)
  * Used for: a model called this tool with this prompt; an agent surfaced
  * this decision; the system observed this state.
  *

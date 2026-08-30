@@ -9,12 +9,12 @@
  * canon var() slots).
  *
  * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
- * re-authoring is F28, a Mayor governance call):
+ * re-authoring is F29, a Mayor governance call):
  *   - `font-title` on the quote (intent: Vollkorn Display; inherits Body today)
  *   - `text-text-strong` on the quote / `text-text-muted` on the attribution
  *   - `bg-lane-{editorial,institutional,dispatch}` on the em-rule — THE LANE
  *     RULE HAS NEVER PAINTED; the `.prime-pull-quote--<lane>` modifiers below
- *     are kept as the declared seam and deliberately style nothing until F28
+ *     are kept as the declared seam and deliberately style nothing until F29
  *     rules the lane slots into the token contract
  *   - `not-prose` (no-op here: no typography plugin in the repo, and the
  *     microsite's .prose-dispatch scopes by child combinator)
@@ -37,7 +37,7 @@
   }
 }
 
-/* Lane seam (see header) — declares nothing pending F28. */
+/* Lane seam (see header) — declares nothing pending F29. */
 .prime-pull-quote--editorial,
 .prime-pull-quote--institutional,
 .prime-pull-quote--dispatch {

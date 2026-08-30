@@ -14,7 +14,7 @@ import "./PullQuote.css";
  * editorial; switch to institutional / dispatch when the surrounding
  * article warrants. (The lane paint and the Vollkorn Display quote face
  * reached for unregistered token slots and have never rendered — restoring
- * them is F28; the lane modifier classes below are the declared seam.)
+ * them is F29; the lane modifier classes below are the declared seam.)
  *
  * Motion: reveals in on viewport intersection with a subtle y-offset.
  */

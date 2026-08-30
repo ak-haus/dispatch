@@ -29,7 +29,7 @@
  * modifier overrides them — but they were the computed values and are kept
  * exact).
  *
- * DROPPED AT CONVERSION — dead token slots (never rendered; F28):
+ * DROPPED AT CONVERSION — dead token slots (never rendered; F29):
  *   `bg-lane-dispatch` on the fill (the authored lane fill never painted —
  *   this file's --window-warm is what ships) · `font-code`/`text-text-muted`
  *   on the label (the typographic modifier's declarations are what render).

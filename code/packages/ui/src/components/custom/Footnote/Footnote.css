@@ -33,7 +33,7 @@
  * keyframes renamed to avoid the global enter/exit pair hover-card still
  * uses).
  *
- * DROPPED AT CONVERSION — dead token slots (never rendered; F28):
+ * DROPPED AT CONVERSION — dead token slots (never rendered; F29):
  *   `font-code` on popover label (inherits page face today) ·
  *   `bg-surface-page` on the popover panel (TRANSPARENT panel today) ·
  *   `border-rail-edge` (panel border paints currentColor) ·

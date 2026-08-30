@@ -11,7 +11,7 @@ import "./DropCap.css";
  * register commitment: applies to the opening paragraph of every
  * NarrativeArticleOpener. (The Vollkorn Display first-letter face named at
  * authorship reached for the unregistered `--font-title` slot and has never
- * rendered — restoring it is F28, a token-contract call.)
+ * rendered — restoring it is F29, a token-contract call.)
  *
  * Pure CSS — no hooks; safe in server components.
  */

@@ -26,7 +26,7 @@
  * (which stacked 0.5rem margins ON TOP of this file's 0.875rem gap — odd,
  * but shipped, and preserved as shipped).
  *
- * DROPPED AT CONVERSION — dead token slots (never rendered; F28):
+ * DROPPED AT CONVERSION — dead token slots (never rendered; F29):
  *   `text-text-muted` (title/link/toggle) · `hover:text-text-strong`
  *   (link/toggle).
  * DROPPED — cascade losers (authored but this file always won):

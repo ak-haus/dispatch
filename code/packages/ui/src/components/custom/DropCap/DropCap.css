@@ -9,7 +9,7 @@
  * token stacks re-pointed at their canon var() slots.
  *
  * DROPPED AT CONVERSION (dead token slots — the generated theme registers
- * neither; both rendered nothing on any surface; re-authoring them is F28,
+ * neither; both rendered nothing on any surface; re-authoring them is F29,
  * a Mayor governance call, never a silent port):
  *   - `text-text-strong` on the root (intent: strong body ink; inherits today)
  *   - `[&::first-letter]:font-title` (intent: Vollkorn Display first letter;

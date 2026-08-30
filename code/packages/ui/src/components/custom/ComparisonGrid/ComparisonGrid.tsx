@@ -21,7 +21,7 @@ import "./ComparisonGrid.css";
  * infrastructure dispatches. Each card carries a lane-color top-bar
  * (variant prop) and renders a small content area. (The top-bar's paint
  * reached for unregistered token slots and has never rendered — restoring
- * it is F28; the bar's variant modifier classes are the declared seam.)
+ * it is F29; the bar's variant modifier classes are the declared seam.)
  *
  * Motion: staggered reveal on viewport intersection.
  */
