@@ -21,6 +21,26 @@
  *   - Typographic small-caps "PROGRESS · 47%" with middot — Cycle 2 elevation;
  *     spec says simple percentage rendering in Meta-code slot.
  *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): the raw utilities that
+ * rode alongside these hooks are folded in below — ONLY the cascade winners
+ * (layered utilities lose to this unlayered file, so most were inert).
+ * Folded winners: label `top-2`/`right-3`/`text-[0.625rem]` (inert in both
+ * visible states — the base label is clip-hidden and the typographic
+ * modifier overrides them — but they were the computed values and are kept
+ * exact).
+ *
+ * DROPPED AT CONVERSION — dead token slots (never rendered; F28):
+ *   `bg-lane-dispatch` on the fill (the authored lane fill never painted —
+ *   this file's --window-warm is what ships) · `font-code`/`text-text-muted`
+ *   on the label (the typographic modifier's declarations are what render).
+ * DROPPED — cascade losers (authored but this file always won):
+ *   `z-[60]` on the root (this file's z-index: 50 has always won) ·
+ *   `transition-[width]`/`duration-150`/`ease-out` on the fill (this file's
+ *   80ms linear wins) · `fixed`/`top-0`/`inset-x-0`/`h-[3px]`/
+ *   `bg-transparent`/`pointer-events-none` (duplicates of this file) ·
+ *   `block`/`h-full` on the fill (duplicates) · `absolute` on the label
+ *   (duplicate).
+ *
  * INTENTIONAL ANTI-PATTERNS:
  *   - No background on root (Rule 1: substrate is --sky-low host-owned).
  *   - No wine fill — wine is reserved for dispatch lane + focus rings; reading-
@@ -62,6 +82,9 @@
 
 .prime-reading-progress__label {
   position: absolute;
+  top: 0.5rem; /* top-2 (utility fold; clip-hidden here, static in variant) */
+  right: 0.75rem; /* right-3 */
+  font-size: 0.625rem; /* text-[0.625rem] */
   width: 1px;
   height: 1px;
   padding: 0;
