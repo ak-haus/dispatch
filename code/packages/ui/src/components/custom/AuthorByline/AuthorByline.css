@@ -1,0 +1,121 @@
+/* AuthorByline — token-bound styles.
+ *
+ * Canon source: citizen/agent attribution with HoverCard preview — the
+ * DLDS co-authored editorial commitment made visible per contributor.
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): declarations are the
+ * story-lane compiler's emitted equivalents of the utilities they replace.
+ * Every class below is FLAT (no descendant coupling through the root)
+ * because HoverCardContent renders in a Radix portal outside this tree.
+ * The avatar rules ROOF-STYLE the composed ui/ primitive via className.
+ *
+ * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
+ * re-authoring is F28, a Mayor governance call):
+ *   - `text-text-strong` (trigger name, card name) / `text-text-muted`
+ *     (role, bio, model, separator) — all render inherited page ink today
+ *   - `font-title` on the card name (intent: Vollkorn Display; inherits)
+ *   - `font-code` on the model attribution (intent: mono; inherits)
+ *   - `focus-visible:ring-offset-surface-page` — the ring offset has always
+ *     painted Tailwind's DEFAULT offset color (white), dark cycles included;
+ *     the flattened box-shadow below preserves that shipped value exactly
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No re-styling of Avatar/Badge/HoverCard internals beyond the roof
+ *     seams below (Rule 5)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-author-byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.prime-author-byline__author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.prime-author-byline__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  outline-style: none; /* outline-none */
+}
+
+.prime-author-byline__trigger:focus-visible {
+  /* ring-2 + ring-accent-prime + ring-offset-1, flattened; offset color is
+   * the shipped Tailwind default (see header). */
+  box-shadow:
+    0 0 0 1px white,
+    0 0 0 3px var(--platform-accent-prime);
+}
+
+.prime-author-byline__avatar {
+  height: 1.5rem; /* h-6 */
+  width: 1.5rem; /* w-6 */
+}
+
+.prime-author-byline__name {
+  font-family: var(--font-nav);
+  font-size: 0.75rem; /* text-xs */
+  line-height: calc(1 / 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+@media (hover: hover) {
+  .prime-author-byline__name:hover {
+    color: var(--platform-accent-prime);
+  }
+}
+
+.prime-author-byline__card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.prime-author-byline__card-avatar {
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+}
+
+.prime-author-byline__card-identity {
+  flex: 1;
+}
+
+.prime-author-byline__card-name {
+  font-size: 1rem; /* text-base */
+  line-height: 1.25; /* leading-tight */
+  font-weight: 700;
+}
+
+.prime-author-byline__card-role {
+  margin-top: 0.125rem; /* mt-0.5 */
+  font-family: var(--font-nav);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.prime-author-byline__card-bio {
+  margin-top: 0.75rem; /* mt-3 */
+  font-family: var(--font-body);
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.625; /* leading-relaxed */
+}
+
+.prime-author-byline__card-footer {
+  margin-top: 0.75rem; /* mt-3 */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.prime-author-byline__model {
+  font-size: 0.625rem;
+}

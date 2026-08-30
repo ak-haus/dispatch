@@ -1,5 +1,6 @@
 "use client";
 
+import { clsx } from "clsx";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Badge } from "../../ui/badge";
 import {
@@ -7,7 +8,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
-import { cn } from "../../../utils/cn";
+
+import "./AuthorByline.css";
 
 /**
  * AuthorByline — citizen/agent attribution with HoverCard preview.
@@ -50,65 +52,54 @@ function initials(name: string): string {
 
 export function AuthorByline({ authors, className }: AuthorBylineProps) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-3", className)}>
+    <div className={clsx("prime-author-byline", className)}>
       {authors.map((author, i) => (
-        <div key={author.id} className="flex items-center gap-2">
+        <div key={author.id} className="prime-author-byline__author">
           <HoverCard>
             <HoverCardTrigger asChild>
-              <button
-                type="button"
-                className="flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-1 focus-visible:ring-offset-surface-page"
-              >
-                <Avatar className="h-6 w-6">
+              <button type="button" className="prime-author-byline__trigger">
+                <Avatar className="prime-author-byline__avatar">
                   {author.avatarSrc ? (
                     <AvatarImage src={author.avatarSrc} alt={author.name} />
                   ) : null}
                   <AvatarFallback>{initials(author.name)}</AvatarFallback>
                 </Avatar>
-                <span className="font-nav text-xs uppercase tracking-[0.12em] text-text-strong hover:text-accent-prime">
-                  {author.name}
-                </span>
+                <span className="prime-author-byline__name">{author.name}</span>
               </button>
             </HoverCardTrigger>
             <HoverCardContent>
-              <div className="flex items-start gap-3">
-                <Avatar className="h-10 w-10">
+              <div className="prime-author-byline__card-header">
+                <Avatar className="prime-author-byline__card-avatar">
                   {author.avatarSrc ? (
                     <AvatarImage src={author.avatarSrc} alt={author.name} />
                   ) : null}
                   <AvatarFallback>{initials(author.name)}</AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <p className="font-title text-base font-bold leading-tight text-text-strong">
+                <div className="prime-author-byline__card-identity">
+                  <p className="prime-author-byline__card-name">
                     {author.name}
                   </p>
-                  <p className="mt-0.5 font-nav text-[0.625rem] uppercase tracking-[0.14em] text-text-muted">
+                  <p className="prime-author-byline__card-role">
                     {author.role}
                   </p>
                 </div>
               </div>
               {author.bio ? (
-                <p className="mt-3 font-body text-sm leading-relaxed text-text-muted">
-                  {author.bio}
-                </p>
+                <p className="prime-author-byline__card-bio">{author.bio}</p>
               ) : null}
-              <div className="mt-3 flex items-center gap-2">
+              <div className="prime-author-byline__card-footer">
                 <Badge variant={author.lane} size="sm">
                   {author.lane}
                 </Badge>
                 {author.modelAttribution ? (
-                  <span className="font-code text-[0.625rem] text-text-muted">
+                  <span className="prime-author-byline__model">
                     {author.modelAttribution}
                   </span>
                 ) : null}
               </div>
             </HoverCardContent>
           </HoverCard>
-          {i < authors.length - 1 ? (
-            <span aria-hidden="true" className="text-text-muted">
-              ·
-            </span>
-          ) : null}
+          {i < authors.length - 1 ? <span aria-hidden="true">·</span> : null}
         </div>
       ))}
     </div>
