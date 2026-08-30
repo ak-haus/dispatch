@@ -1,0 +1,57 @@
+/* LiveTicker — token-bound styles.
+ *
+ * Canon source: representation/visual-system/components/LiveTicker/spec.md
+ *  + CD4 §3.1 #15 + CD1 Concept 7 reception ↔ offices ↔ missives.
+ *
+ * AUTHORED AT B15 (idiom convergence, 2026-08-30). This component shipped
+ * class hooks defined in NO stylesheet anywhere in the repo — the bucket-C
+ * defect the sweep closes. This file is the canon-correct home for those
+ * hooks. It deliberately declares NOTHING visual: the hooks have never been
+ * styled on any surface, so any declaration here would be new design, which
+ * is a Mayor call, not a convergence sweep's. Per AK's B15 ruling
+ * (2026-08-30) the visual build-out of roof-styled/unstyled hook sets goes
+ * to the follow-up design sprints; this inventory is that work's seam.
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No visual declarations ahead of the design build-out (see above)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+/* Root + variants */
+.prime-live-ticker {
+}
+.prime-live-ticker--compact {
+}
+.prime-live-ticker--expanded {
+}
+.prime-live-ticker--marquee {
+}
+
+/* Entry list */
+.prime-live-ticker__list {
+}
+.prime-live-ticker__item {
+}
+.prime-live-ticker__link {
+}
+
+/* META kind label + per-kind modifiers */
+.prime-live-ticker__kind {
+}
+.prime-live-ticker__kind--commit {
+}
+.prime-live-ticker__kind--deploy {
+}
+.prime-live-ticker__kind--dispatch {
+}
+.prime-live-ticker__kind--signal {
+}
+.prime-live-ticker__kind--agent {
+}
+
+/* Entry body */
+.prime-live-ticker__text {
+}
+.prime-live-ticker__time {
+}

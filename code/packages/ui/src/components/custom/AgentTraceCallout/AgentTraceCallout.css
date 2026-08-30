@@ -1,0 +1,80 @@
+/* AgentTraceCallout — token-bound styles.
+ *
+ * Canon source: META-register inline block disclosing agentic authorship —
+ * the "peer behind the curtain" CD1 Concept 1 marriage made structural.
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): declarations are the
+ * story-lane compiler's emitted equivalents of the utilities they replace.
+ *
+ * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
+ * re-authoring is F29, a Mayor governance call). This component carries the
+ * largest dead-intent record in the sweep — its authored visual register
+ * (dark inverse surface, mono voice) has NEVER shipped:
+ *   - `bg-text-strong` root surface + `text-surface-page` root/content ink
+ *     (intent: dark inverse block; renders transparent in page ink today)
+ *   - `font-code` on header spans + content (intent: JetBrains Mono voice;
+ *     inherits today)
+ *   - `border-lane-{editorial,institutional,dispatch}` on the left rule —
+ *     the rule paints CURRENTCOLOR today (initial border color), which the
+ *     border-left shorthand below preserves exactly; the
+ *     `.prime-agent-trace--<lane>` modifiers are the declared F29 seam
+ *   - `[&_code]:bg-surface-page/15` inline-code wash (never painted)
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - Do not author the dark surface here ahead of F29 — a like-for-like
+ *     conversion ships what renders, not what was meant
+ *   - No re-styling of Badge internals (Rule 5 — composition only)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-agent-trace {
+  margin-block: 3rem; /* my-12 */
+  border-left: 4px solid; /* border-l-4; color stays currentColor */
+  padding: 1.5rem; /* p-6 */
+  max-width: 80ch;
+}
+
+@media (width >= 48rem) {
+  .prime-agent-trace {
+    margin-block: 4rem; /* md:my-16 */
+    padding: 2rem; /* md:p-8 */
+  }
+}
+
+/* Lane seam (see header) — declares nothing pending F29. */
+.prime-agent-trace--editorial,
+.prime-agent-trace--institutional,
+.prime-agent-trace--dispatch {
+}
+
+.prime-agent-trace__header {
+  margin-bottom: 0.75rem; /* mb-3 */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.prime-agent-trace__model {
+  font-size: 0.625rem;
+  color: var(--window-warm);
+}
+
+.prime-agent-trace__invocation {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em; /* tracking-wider */
+  color: var(--window-warm);
+}
+
+.prime-agent-trace__content {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.625; /* leading-relaxed */
+}
+
+.prime-agent-trace__content code {
+  padding-inline: 0.25rem; /* px-1 */
+  padding-block: 0.125rem; /* py-0.5 */
+  border-radius: 0.25rem; /* rounded-sm */
+}

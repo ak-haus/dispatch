@@ -1,11 +1,16 @@
 import { format, parseISO } from "date-fns";
-import { cn } from "../../../utils/cn";
+import { clsx } from "clsx";
+
+import "./ArticleDateline.css";
 
 /**
  * ArticleDateline — minimal editorial dateline above the article title.
  *
  * Format: [lane-dot] TYPE · AUTHOR · DATE
  * No box, no chrome. Sits on top of the headline like a magazine dateline.
+ * (The lane dot's paint reached for the unregistered lane slots and has
+ * never rendered — restoring it is F29; the lane modifier class is the
+ * declared seam.)
  *
  * The full DLDS provenance (AI role, drift sensitivity, C2PA, multi-author
  * credits) lives separately in the AuthorByline below the standfirst and
@@ -26,12 +31,6 @@ const LANE_LABEL = {
   dispatch: "Dispatch",
 } as const;
 
-const LANE_DOT = {
-  editorial: "bg-lane-editorial",
-  institutional: "bg-lane-institutional",
-  dispatch: "bg-lane-dispatch",
-} as const;
-
 export function ArticleDateline({
   lane,
   author,
@@ -46,25 +45,17 @@ export function ArticleDateline({
 
   return (
     <p
-      className={cn(
-        "flex flex-wrap items-center gap-x-3 gap-y-1 font-nav text-xs uppercase tracking-[0.18em] text-text-muted",
+      className={clsx(
+        "prime-article-dateline",
+        `prime-article-dateline--${lane}`,
         className,
       )}
     >
-      <span
-        aria-hidden="true"
-        className={cn("inline-block h-1.5 w-1.5", LANE_DOT[lane])}
-      />
-      <span className="font-extrabold text-text-strong">
-        {LANE_LABEL[lane]}
-      </span>
-      <span aria-hidden="true" className="text-rail-edge">
-        ·
-      </span>
-      <span className="text-text-strong">{author}</span>
-      <span aria-hidden="true" className="text-rail-edge">
-        ·
-      </span>
+      <span aria-hidden="true" className="prime-article-dateline__dot" />
+      <span className="prime-article-dateline__type">{LANE_LABEL[lane]}</span>
+      <span aria-hidden="true">·</span>
+      <span>{author}</span>
+      <span aria-hidden="true">·</span>
       <span>{formatted}</span>
     </p>
   );

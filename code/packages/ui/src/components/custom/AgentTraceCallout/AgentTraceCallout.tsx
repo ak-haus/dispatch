@@ -2,17 +2,23 @@
 
 import { motion } from "motion/react";
 import { type ReactNode } from "react";
+import { clsx } from "clsx";
 import { Badge } from "../../ui/badge";
-import { cn } from "../../../utils/cn";
+
+import "./AgentTraceCallout.css";
 
 /**
  * AgentTraceCallout — META-register inline block disclosing agentic
  * authorship at a specific moment in the article.
  *
- * Visual register: dark surface (inverse of NARRATIVE paper-warm) with
- * JetBrains Mono content — the "peer behind the curtain" CD1 Concept 1
- * marriage made structural. Used for: a model called this tool with this
- * prompt; an agent surfaced this decision; the system observed this state.
+ * Visual register as authored: dark surface (inverse of NARRATIVE
+ * paper-warm) with JetBrains Mono content — the "peer behind the curtain"
+ * CD1 Concept 1 marriage made structural. (That register reached for
+ * unregistered token slots and has never rendered — the block ships
+ * transparent in page ink, left rule in currentColor. Restoring the
+ * authored register is F29; the lane modifier classes are the seam.)
+ * Used for: a model called this tool with this prompt; an agent surfaced
+ * this decision; the system observed this state.
  *
  * Motion: enters with a small slide+fade so it reads as "system speaking"
  * rather than paragraph flow.
@@ -54,32 +60,24 @@ export function AgentTraceCallout({
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "0px 0px -60px 0px" }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "not-prose my-12 md:my-16 border-l-4 bg-text-strong text-surface-page p-6 md:p-8 max-w-[80ch]",
-        lane === "editorial" && "border-lane-editorial",
-        lane === "institutional" && "border-lane-institutional",
-        lane === "dispatch" && "border-lane-dispatch",
+      className={clsx(
+        "prime-agent-trace",
+        `prime-agent-trace--${lane}`,
         className,
       )}
     >
-      <header className="mb-3 flex flex-wrap items-center gap-2">
+      <header className="prime-agent-trace__header">
         <Badge variant={lane} size="sm">
           {agent}
         </Badge>
         {model ? (
-          <span className="font-code text-[0.625rem] text-window-warm">
-            {model}
-          </span>
+          <span className="prime-agent-trace__model">{model}</span>
         ) : null}
         {invocation ? (
-          <span className="font-code text-[0.625rem] uppercase tracking-wider text-window-warm">
-            · {invocation}
-          </span>
+          <span className="prime-agent-trace__invocation">· {invocation}</span>
         ) : null}
       </header>
-      <div className="font-code text-sm leading-relaxed text-surface-page [&_code]:bg-surface-page/15 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded-sm">
-        {children}
-      </div>
+      <div className="prime-agent-trace__content">{children}</div>
     </motion.aside>
   );
 }

@@ -22,6 +22,29 @@
  *   - Small-caps swash back-link with leading ⟵ bracket ornament — Cycle 2
  *     invention; spec says simple Nav-slot back-link.
  *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): the raw utilities that
+ * rode alongside these hooks are folded in below — but ONLY the ones that
+ * actually won the cascade (layered utilities lose to this unlayered file,
+ * so most were already inert). Folded winners: marker `inline-flex` ·
+ * trigger focus ring (as --trigger modifier; offset color is the shipped
+ * Tailwind default, white — `ring-offset-surface-page` was a dead slot) ·
+ * back-link `uppercase` · flow-prose `text-sm`/`leading-relaxed` · the
+ * whole popover panel + its fade animation (flattened from tw-animate-css;
+ * keyframes renamed to avoid the global enter/exit pair hover-card still
+ * uses).
+ *
+ * DROPPED AT CONVERSION — dead token slots (never rendered; F29):
+ *   `font-code` on popover label (inherits page face today) ·
+ *   `bg-surface-page` on the popover panel (TRANSPARENT panel today) ·
+ *   `border-rail-edge` (panel border paints currentColor) ·
+ *   `text-text-strong` / `text-text-muted` (inherited ink) ·
+ *   `focus-visible:ring-offset-surface-page` (white offset ships).
+ * DROPPED — cascade losers (authored but this file always won):
+ *   `text-[0.65em]` + `text-accent-prime` + `hover:text-copper-deep` +
+ *   `focus-visible:outline-none` on the marker · `text-[0.625rem]` on the
+ *   flow label · `text-[0.625rem]`/`tracking-[0.14em]`/
+ *   `hover:text-accent-prime` on the back-link.
+ *
  * INTENTIONAL ANTI-PATTERNS:
  *   - No background on root (substrate is --sky-low host-owned for inline-
  *     aside variant; contained variants paint --window-warm per spec Field 7).
@@ -83,6 +106,8 @@
   font-family: var(--font-body);
   display: inline;
   color: inherit;
+  font-size: 0.875rem; /* text-sm (utility fold — beat the root's 0.9375rem) */
+  line-height: 1.625; /* leading-relaxed */
 }
 
 .prime-footnote__prose p {
@@ -120,6 +145,7 @@
   font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
+  text-transform: uppercase; /* utility fold — this file never declared it */
   color: var(--chrome-text);
   text-decoration: none;
   transition: color 150ms ease-out;
@@ -141,6 +167,7 @@
  * ──────────────────────────────────────────────────────────────────────── */
 
 .prime-footnote-marker {
+  display: inline-flex; /* utility fold — both marker consumers carried it */
   font-family: var(--font-code);
   font-size: 0.75em;
   font-weight: 600;
@@ -152,6 +179,16 @@
   cursor: pointer;
   line-height: 1;
   transition: color 150ms ease-out;
+}
+
+/* Popover-trigger modifier: the trigger button additionally carried the
+ * focus ring utilities, so it renders BOTH the outline and this ring today
+ * (the anchor-only FootnoteMarker never did). Shipped double treatment,
+ * preserved as shipped. */
+.prime-footnote-marker--trigger:focus-visible {
+  box-shadow:
+    0 0 0 1px white,
+    0 0 0 3px var(--platform-accent-prime);
 }
 
 .prime-footnote-marker sup {
@@ -171,6 +208,57 @@
 
 .prime-footnote-marker[aria-expanded="true"] {
   color: var(--accent-prime-active);
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+ * Popover variant panel — Radix PopoverContent (portal). Converted verbatim
+ * from the utility set the panel carried; the fade pair is the flattened
+ * tw-animate-css animate-in/out + fade-in/out-0 (only opacity was driven,
+ * so the transform/filter identity terms are omitted).
+ * ──────────────────────────────────────────────────────────────────────── */
+
+.prime-footnote__popover {
+  z-index: 50;
+  width: 20rem; /* w-80 */
+  border: 1px solid; /* border; color stays currentColor (see header) */
+  padding: 1rem; /* p-4 */
+  outline-style: none;
+}
+
+.prime-footnote__popover[data-state="open"] {
+  animation: prime-footnote-pop-in 0.15s ease;
+}
+
+.prime-footnote__popover[data-state="closed"] {
+  animation: prime-footnote-pop-out 0.15s ease;
+}
+
+@keyframes prime-footnote-pop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes prime-footnote-pop-out {
+  to {
+    opacity: 0;
+  }
+}
+
+.prime-footnote__popover-body {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.prime-footnote__popover-label {
+  font-size: 0.625rem;
+}
+
+.prime-footnote__popover-prose {
+  font-family: var(--font-body);
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.625; /* leading-relaxed */
 }
 
 @media (prefers-reduced-motion: reduce) {

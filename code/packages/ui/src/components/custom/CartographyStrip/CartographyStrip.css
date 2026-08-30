@@ -1,0 +1,79 @@
+/* CartographyStrip — token-bound styles.
+ *
+ * Canon source: dispatch-brief.md aesthetic rule — cartography breathes
+ * underneath editorial content; narrow horizontal slice of a wider
+ * cartographic render as a section divider.
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): declarations are the
+ * story-lane compiler's emitted equivalents of the utilities they replace.
+ * The frame and district-badge rules ROOF-STYLE the composed ui/ primitives
+ * (AspectRatio, Badge) via the className seam — the sanctioned direction:
+ * chrome styles the primitive from above, never the reverse.
+ *
+ * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
+ * re-authoring is F29, a Mayor governance call):
+ *   - `bg-surface-inset` on the frame (intent: inset placeholder ground
+ *     behind the lazy-loading image; transparent today)
+ *   - `bg-surface-page/85` on the district badge (intent: 85% page-ink wash
+ *     under the backdrop blur; the blur ships, the wash never has)
+ *   - `text-text-muted` on the caption (inherited page ink today)
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No borders or frames around the strip (the cartography IS the chrome;
+ *     Rule 6)
+ *   - No re-styling of Badge internals beyond the roof seam below (Rule 5 —
+ *     compose ratified components, never re-author their concerns)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-cartography-strip {
+  position: relative;
+  margin-block: 0; /* my-0 */
+}
+
+.prime-cartography-strip__frame {
+  overflow: hidden;
+}
+
+.prime-cartography-strip__image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  filter: grayscale(20%) contrast(1.05);
+}
+
+.prime-cartography-strip__district {
+  position: absolute;
+  top: 1rem; /* top-4 */
+  left: 1rem; /* left-4 */
+}
+
+@media (width >= 48rem) {
+  .prime-cartography-strip__district {
+    top: 1.5rem; /* md:top-6 */
+    left: 2rem; /* md:left-8 */
+  }
+}
+
+.prime-cartography-strip__district-badge {
+  font-family: var(--font-civic);
+  -webkit-backdrop-filter: blur(8px); /* backdrop-blur-sm */
+  backdrop-filter: blur(8px);
+}
+
+.prime-cartography-strip__caption {
+  margin-top: 0.75rem; /* mt-3 */
+  padding-inline: 1rem; /* px-4 */
+  font-family: var(--font-nav);
+  font-size: 0.75rem; /* text-xs */
+  line-height: calc(1 / 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+@media (width >= 48rem) {
+  .prime-cartography-strip__caption {
+    padding-inline: 3rem; /* md:px-12 */
+  }
+}

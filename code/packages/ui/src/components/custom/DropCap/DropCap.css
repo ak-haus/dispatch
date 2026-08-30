@@ -1,0 +1,40 @@
+/* DropCap — token-bound styles.
+ *
+ * Canon source: editorial-register first-letter flourish; applies to the
+ * opening paragraph of every NarrativeArticleOpener.
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): every declaration is the
+ * story-lane compiler's emitted equivalent of the utility it replaces, with
+ * Tailwind-default theme vars resolved to their concrete values and inlined
+ * token stacks re-pointed at their canon var() slots.
+ *
+ * DROPPED AT CONVERSION (dead token slots — the generated theme registers
+ * neither; both rendered nothing on any surface; re-authoring them is F29,
+ * a Mayor governance call, never a silent port):
+ *   - `text-text-strong` on the root (intent: strong body ink; inherits today)
+ *   - `[&::first-letter]:font-title` (intent: Vollkorn Display first letter;
+ *     falls through to the Body face today)
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No background on .prime-drop-cap (substrate is host-owned; Rule 1 +
+ *     Rule 6 — a paragraph flourish ships transparent)
+ *   - No letterpress re-authorship (page-owned; Rule 5)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-drop-cap {
+  font-family: var(--font-body);
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.625; /* leading-relaxed */
+}
+
+.prime-drop-cap::first-letter {
+  float: left;
+  font-weight: 700;
+  font-size: 5.5rem;
+  line-height: 0.85;
+  margin-top: 0.25rem;
+  margin-right: 0.75rem;
+  color: var(--platform-accent-prime);
+}

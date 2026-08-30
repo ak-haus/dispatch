@@ -107,16 +107,14 @@ export function ChapterRail(props: ChapterRailProps): ReactElement {
       {...rest}
     >
       {resolvedTitle ? (
-        <p className="prime-chapter-rail__title font-nav text-[0.625rem] uppercase tracking-[0.18em] text-text-muted">
-          {resolvedTitle}
-        </p>
+        <p className="prime-chapter-rail__title">{resolvedTitle}</p>
       ) : null}
 
       {isCollapsed && current ? (
         <p className="prime-chapter-rail__current-only">{current.label}</p>
       ) : null}
 
-      <ol ref={listRef} className="prime-chapter-rail__list space-y-2 mt-3">
+      <ol ref={listRef} className="prime-chapter-rail__list">
         {chapters.map((ch, i) => {
           const isCurrent = ch.id === effectiveCurrent;
           return (
@@ -134,15 +132,12 @@ export function ChapterRail(props: ChapterRailProps): ReactElement {
                 href={`#${ch.id}`}
                 className={clsx(
                   "prime-chapter-rail__link",
-                  "group flex items-center gap-2 py-1 font-nav text-xs uppercase tracking-[0.12em] transition-colors",
-                  isCurrent
-                    ? "is-current text-accent-prime"
-                    : "text-text-muted hover:text-text-strong",
+                  isCurrent && "is-current",
                 )}
                 aria-current={isCurrent ? "location" : undefined}
               >
                 <motion.span
-                  className="prime-chapter-rail__indicator block h-px bg-current"
+                  className="prime-chapter-rail__indicator"
                   animate={{ width: isCurrent ? 24 : 12 }}
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   aria-hidden="true"
@@ -157,7 +152,7 @@ export function ChapterRail(props: ChapterRailProps): ReactElement {
       {(isCollapsed || variant === "article-default") && onToggleCollapse ? (
         <button
           type="button"
-          className="prime-chapter-rail__toggle mt-4 font-nav text-[0.625rem] uppercase tracking-[0.14em] text-text-muted hover:text-text-strong"
+          className="prime-chapter-rail__toggle"
           aria-expanded={!isCollapsed}
           onClick={onToggleCollapse}
         >

@@ -30,7 +30,7 @@ async function settleReveal({
   const deadline = Date.now() + 5000;
   for (;;) {
     const figures = Array.from(
-      canvasElement.querySelectorAll<HTMLElement>("figure.not-prose"),
+      canvasElement.querySelectorAll<HTMLElement>("figure.prime-pull-quote"),
     );
     const opacities = figures.map((el) =>
       Number(getComputedStyle(el).opacity),

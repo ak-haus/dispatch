@@ -1,0 +1,53 @@
+/* PlotChart — token-bound styles.
+ *
+ * Canon source: Observable Plot inline chart for editorial data; the SVG
+ * internals are styled by Plot's own style prop in PlotChart.tsx (12px canon
+ * floor held at source — axe never audits SVG text).
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): declarations are the
+ * story-lane compiler's emitted equivalents of the utilities they replace.
+ *
+ * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
+ * re-authoring is F29, a Mayor governance call):
+ *   - `bg-surface-inset` on the frame (intent: inset chart ground;
+ *     transparent today)
+ *   - `border-rail-edge` — the 1px frame border has always painted
+ *     CURRENTCOLOR (initial border color), which the border shorthand below
+ *     preserves exactly
+ *   - `text-text-strong` on the frame (the chart draws in currentColor, so
+ *     the intent was strong-ink plots; inherited page ink today) /
+ *     `text-text-muted` on the caption
+ *   - `not-prose` (no-op here: no typography plugin in the repo)
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No styling of Plot's SVG internals from this file (the component owns
+ *     them via Plot's style option — one owner)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-plot-chart {
+  margin-block: 4rem; /* my-16 */
+  max-width: 80ch;
+}
+
+@media (width >= 48rem) {
+  .prime-plot-chart {
+    margin-block: 5rem; /* md:my-20 */
+  }
+}
+
+.prime-plot-chart__frame {
+  border: 1px solid; /* border; color stays currentColor */
+  padding: 1rem; /* p-4 */
+  overflow-x: auto;
+}
+
+.prime-plot-chart__caption {
+  margin-top: 0.5rem; /* mt-2 */
+  font-family: var(--font-nav);
+  font-size: 0.75rem; /* text-xs */
+  line-height: calc(1 / 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}

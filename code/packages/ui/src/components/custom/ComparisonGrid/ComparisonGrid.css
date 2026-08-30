@@ -1,0 +1,61 @@
+/* ComparisonGrid — token-bound styles.
+ *
+ * Canon source: 3-up (or N-up) editorial card grid for stating shape —
+ * KEEP / RETIRE / REPLACE topology inventories in infrastructure dispatches.
+ *
+ * CONVERTED AT B15 (idiom convergence, 2026-08-30): declarations are the
+ * story-lane compiler's emitted equivalents of the utilities they replace.
+ * The card and verb-badge rules ROOF-STYLE the composed ui/ primitives via
+ * the className seam.
+ *
+ * DROPPED AT CONVERSION (dead token slots — never rendered on any surface;
+ * re-authoring is F29, a Mayor governance call):
+ *   - the entire lane-bar palette: `bg-lane-{editorial,institutional,
+ *     dispatch}`, `bg-text-strong` (default), `bg-rail-edge` (muted) — THE
+ *     CARD TOP-BAR HAS NEVER PAINTED; its box (height/width) still renders
+ *     and is kept, and the `.prime-comparison-grid__bar--<variant>`
+ *     modifiers are the declared F29 seam
+ *   - `not-prose` (no-op here: no typography plugin in the repo)
+ *
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No re-styling of Card/Badge internals beyond the roof seams below
+ *     (Rule 5 — compose ratified components, never re-author their concerns)
+ *   - No per-cycle variants in this file (bridge-level cascade only)
+ */
+
+.prime-comparison-grid {
+  margin-block: 4rem; /* my-16 */
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem; /* gap-6 */
+}
+
+@media (width >= 48rem) {
+  .prime-comparison-grid {
+    margin-block: 5rem; /* md:my-20 */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.prime-comparison-grid__card {
+  height: 100%;
+}
+
+.prime-comparison-grid__bar {
+  height: 0.25rem; /* h-1 */
+  width: 100%;
+}
+
+/* Variant seam (see header) — declares nothing pending F29. */
+.prime-comparison-grid__bar--editorial,
+.prime-comparison-grid__bar--institutional,
+.prime-comparison-grid__bar--dispatch,
+.prime-comparison-grid__bar--default,
+.prime-comparison-grid__bar--muted {
+}
+
+.prime-comparison-grid__verb-badge {
+  width: fit-content;
+  margin-bottom: 0.5rem; /* mb-2 */
+}

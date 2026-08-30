@@ -90,7 +90,6 @@ export function ReadingProgress(props: ReadingProgressProps): ReactElement | nul
     "prime-reading-progress",
     variant === "typographic-percentage" && "prime-reading-progress--typographic",
     inline && "prime-reading-progress--inline",
-    "fixed top-0 inset-x-0 z-[60] h-[3px] bg-transparent pointer-events-none",
     className,
   );
 
@@ -106,13 +105,11 @@ export function ReadingProgress(props: ReadingProgressProps): ReactElement | nul
       {...rest}
     >
       <span
-        className="prime-reading-progress__fill block h-full bg-lane-dispatch transition-[width] duration-150 ease-out"
+        className="prime-reading-progress__fill"
         style={{ width: `${clamped}%` }}
       />
       {variant === "typographic-percentage" ? (
-        <span className="prime-reading-progress__label font-code text-[0.625rem] absolute top-2 right-3 text-text-muted">
-          {clamped}%
-        </span>
+        <span className="prime-reading-progress__label">{clamped}%</span>
       ) : null}
     </div>
   );
