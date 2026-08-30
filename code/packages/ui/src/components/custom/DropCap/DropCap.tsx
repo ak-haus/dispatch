@@ -1,12 +1,17 @@
 import { type ReactNode } from "react";
-import { cn } from "../../../utils/cn";
+import { clsx } from "clsx";
+
+import "./DropCap.css";
 
 /**
  * DropCap — first-letter editorial flourish for article openers.
  *
- * The first character renders in Vollkorn Display, ~5 lines tall, floated
- * left. The remainder of the paragraph wraps around it. Editorial-register
- * commitment: applies to the opening paragraph of every NarrativeArticleOpener.
+ * The first character renders ~5 lines tall, floated left, in the platform
+ * accent ink; the remainder of the paragraph wraps around it. Editorial-
+ * register commitment: applies to the opening paragraph of every
+ * NarrativeArticleOpener. (The Vollkorn Display first-letter face named at
+ * authorship reached for the unregistered `--font-title` slot and has never
+ * rendered — restoring it is F28, a token-contract call.)
  *
  * Pure CSS — no hooks; safe in server components.
  */
@@ -17,18 +22,5 @@ export interface DropCapProps {
 }
 
 export function DropCap({ children, className }: DropCapProps) {
-  return (
-    <p
-      className={cn(
-        "font-body text-lg leading-relaxed text-text-strong",
-        "[&::first-letter]:font-title [&::first-letter]:font-bold",
-        "[&::first-letter]:float-left [&::first-letter]:text-[5.5rem]",
-        "[&::first-letter]:leading-[0.85] [&::first-letter]:mr-3 [&::first-letter]:mt-1",
-        "[&::first-letter]:text-accent-prime",
-        className,
-      )}
-    >
-      {children}
-    </p>
-  );
+  return <p className={clsx("prime-drop-cap", className)}>{children}</p>;
 }
