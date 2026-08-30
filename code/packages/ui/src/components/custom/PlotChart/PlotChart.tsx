@@ -2,7 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import * as Plot from "@observablehq/plot";
-import { cn } from "../../../utils/cn";
+import { clsx } from "clsx";
+
+import "./PlotChart.css";
 
 /**
  * PlotChart — Observable Plot inline chart for editorial data.
@@ -112,15 +114,10 @@ export function PlotChart({
   }, [data, kind, thresholdY, xLabel, yLabel, yDomain]);
 
   return (
-    <figure className={cn("not-prose my-16 md:my-20 max-w-[80ch]", className)}>
-      <div
-        ref={ref}
-        className="bg-surface-inset p-4 border border-rail-edge text-text-strong overflow-x-auto"
-      />
+    <figure className={clsx("prime-plot-chart", className)}>
+      <div ref={ref} className="prime-plot-chart__frame" />
       {caption ? (
-        <figcaption className="mt-2 font-nav text-xs uppercase tracking-[0.18em] text-text-muted">
-          {caption}
-        </figcaption>
+        <figcaption className="prime-plot-chart__caption">{caption}</figcaption>
       ) : null}
     </figure>
   );
