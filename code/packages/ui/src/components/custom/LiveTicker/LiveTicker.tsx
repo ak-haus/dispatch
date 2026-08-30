@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import type { HTMLAttributes, ReactElement } from "react";
 import { usePrimeAutoAnimate } from "../../../motion";
 import { formatRelative } from "../../../utils";
+import "./LiveTicker.css";
 
 /**
  * LiveTicker — reception offices-window for live updates.
