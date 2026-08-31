@@ -17,8 +17,11 @@ import { Dialog } from 'radix-ui'
 import { useCallback, useEffect, useState } from 'react'
 import { Wordmark } from './Wordmark'
 import { SiteNav, type SiteNavVariant } from './SiteNav'
-import { SearchPalette } from './SearchPalette'
-import type { SearchRecord } from '@/lib/search'
+// SUBPATH import, never the barrel (B16 fork retirement — the library owns
+// the palette; the barrel would drag the whole component graph into the
+// island chunk).
+import { SearchPalette } from '@prime-dispatch/ui/custom/SearchPalette'
+import type { SearchRecord } from '@prime-dispatch/ui/custom/SearchPalette'
 import { useMagnetic } from '@/lib/useMagnetic'
 
 interface Props {

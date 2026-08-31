@@ -8,13 +8,19 @@
  * MUST NOT be imported from React islands — `astro:content` is server-only
  * and Vite will crash the client bundle if this module sneaks in.
  *
- * Client-side pure types + query helpers live in `./search.ts`.
+ * The pure types + query helpers live WITH the palette in the library
+ * (B16 fork retirement): @prime-dispatch/ui/custom/SearchPalette, imported
+ * by subpath, never the barrel.
  */
 
 import { getCollection } from 'astro:content'
-import type { SearchRecord } from './search'
+import type { SearchRecord } from '@prime-dispatch/ui/custom/SearchPalette'
 
-export type { SearchRecord, SearchRecordType, DldsLane } from './search'
+export type {
+	SearchRecord,
+	SearchRecordType,
+	SearchRecordLane,
+} from '@prime-dispatch/ui/custom/SearchPalette'
 
 export async function buildSearchIndex(): Promise<SearchRecord[]> {
 	const dispatches = await getCollection('dispatch')

@@ -88,22 +88,10 @@
  * pure function of packages/ui/src. Story files live beside their
  * components under the same root, so their utilities are covered too.
  *
- * B16 WATCH — now CONFIRMED BY MEASUREMENT, and deliberately NOT fixed here
- * (the microsite is B16's surface, not A14's). The promotion checkpoint could
- * only infer this, having no node_modules to test against. Measured this
- * session, against a real `pnpm build:astro`:
- *
- *   global.css:1 is a bare `@import "tailwindcss"` and there is still no
- *   @source anywhere in the repo outside this file. 32 theme-backed
- *   utilities are used ONLY by packages/ui and by no microsite source —
- *   and ZERO of the 32 appear in the microsite's built CSS. Tailwind
- *   therefore does not scan the library from the shipped entry, exactly as
- *   predicted: packages/ui reaches the app as a symlink under
- *   apps/microsite-astro/node_modules, and v4 auto-detection excludes
- *   node_modules.
- *
- * Nothing bites TODAY because every library component the microsite
- * consumes is CSS-only. The moment B16 moves a utility-styled component onto
- * the live surface it renders bare in PRODUCTION — the same defect A14 just
- * removed from the story lane, on the surface readers actually see. */
+ * B16 CLOSED THE PRODUCTION HALF (2026-08-31): global.css now declares its
+ * own `@source "../../../../packages/ui/src"` (stories and tests subtracted
+ * — they never render there), proven against a real `pnpm build:astro`
+ * before the first fork migration switched an import. This file remains the
+ * story lane's own entry; the two scans are deliberate siblings, one per
+ * surface, same mechanism and path arithmetic. */
 @source "../../../packages/ui/src";
