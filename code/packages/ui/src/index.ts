@@ -12,8 +12,13 @@
 // --- Phase 1 (W3-S-A 2026-05-10): chrome components ---
 export { MastheadWordmark } from "./components/custom/MastheadWordmark";
 export type { MastheadWordmarkProps } from "./components/custom/MastheadWordmark";
-export { SiteNav } from "./components/custom/SiteNav";
-export type { SiteNavLink, SiteNavProps } from "./components/custom/SiteNav";
+export { SiteNav, navPages, useMagnetic } from "./components/custom/SiteNav";
+export type {
+  SiteNavLink,
+  SiteNavProps,
+  SiteNavVariant,
+  UseMagneticOptions,
+} from "./components/custom/SiteNav";
 export { ChapterRail } from "./components/custom/ChapterRail";
 export type {
   ChapterRailItem,
