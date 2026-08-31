@@ -26,6 +26,8 @@ colors:
   dispatch-text-body-muted: "oklch(0.48 0.010 88)"
   dispatch-text-body-faint: "oklch(0.50 0.010 88)"
   dispatch-text-body-muted-deep: "oklch(0.46 0.010 88)"
+  dispatch-text-meta: "oklch(0.40 0.010 88)"
+  dispatch-text-meta-faint: "oklch(0.44 0.010 88)"
   dispatch-vellum-25: "oklch(0.99  0.012 88)"
   dispatch-vellum-50: "oklch(0.985 0.010 88)"
   dispatch-vellum-100: "oklch(0.96  0.015 88)"
@@ -177,6 +179,8 @@ named failure mode** — every accent placement carries an inline CSS-comment ju
 | `--dispatch-text-body-muted` | `oklch(0.48 0.010 88)` | dispatch |
 | `--dispatch-text-body-faint` | `oklch(0.50 0.010 88)` | dispatch |
 | `--dispatch-text-body-muted-deep` | `oklch(0.46 0.010 88)` | dispatch |
+| `--dispatch-text-meta` | `oklch(0.40 0.010 88)` | dispatch |
+| `--dispatch-text-meta-faint` | `oklch(0.44 0.010 88)` | dispatch |
 | `--dispatch-vellum-25` | `oklch(0.99  0.012 88)` | dispatch |
 | `--dispatch-vellum-50` | `oklch(0.985 0.010 88)` | dispatch |
 | `--dispatch-vellum-100` | `oklch(0.96  0.015 88)` | dispatch |
@@ -252,6 +256,8 @@ against the cycle's values at runtime.
 | `--dispatch-text-body-muted` | `oklch(0.72 0.015 70)` | `oklch(0.72 0.006 80)` |
 | `--dispatch-text-body-faint` | `oklch(0.64 0.014 65)` | `oklch(0.59 0.005 80)` |
 | `--dispatch-text-body-muted-deep` | `var(--dispatch-text-body-muted)` | `var(--dispatch-text-body-muted)` |
+| `--dispatch-text-meta` | `var(--dispatch-text-body-muted)` | `var(--dispatch-text-body-muted)` |
+| `--dispatch-text-meta-faint` | `var(--dispatch-text-body-faint)` | `var(--dispatch-text-body-faint)` |
 | `--dispatch-vellum-25` | `oklch(0.26 0.018 58)` | `oklch(0.16 0.005 70)` |
 | `--dispatch-vellum-50` | `oklch(0.22 0.022 55)` | `oklch(0.12 0.004 70)` |
 | `--dispatch-vellum-100` | `oklch(0.18 0.025 50)` | `oklch(0.08 0.003 70)` |
