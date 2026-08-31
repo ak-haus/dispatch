@@ -1,65 +1,43 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChapterRail, type ChapterRailItem } from "./ChapterRail";
+import type { ComponentType } from "react";
+import { ChapterRail, type Chapter } from "./ChapterRail";
 
 /**
- * a11y settle discipline (story-test rail): every story mounts the chapter
- * links through Motion's staggered entrance (motion.li opacity 0 → 1), and
- * the addon-a11y afterEach otherwise audits MID-FADE ink — axe then reports
- * blended non-token foregrounds (e.g. #d2cec5 on the vellum page) as
- * color-contrast failures on colors no token authors. Wait until every
- * rendered chapter item has settled at opacity exactly 1 so axe audits the
- * real shipped token colors (ComparisonGrid.stories.tsx precedent). Items
- * hidden by the collapsed variant (display:none list → offsetParent null)
- * are excluded by axe's visibility check and treated as settled here.
+ * ChapterRail stories — thread-with-dots chapter wayfinding (B16 port,
+ * 2026-08-31).
+ *
+ * Every story pins `currentChapter` (and `progress` where the fill should
+ * show), so scroll detection never runs and every state renders
+ * deterministically on first paint — no play functions, no interaction
+ * timing in any captured frame (F19/F20 law). The prior twin's settleReveal
+ * play existed for its staggered entrance; that entrance retired with the
+ * twin's composition, so the play goes with it. The active dot's ping ring
+ * is a CSS animation (frozen by the story lane's capture discipline).
+ *
+ * The grid cell, page substrate, #dispatch-article region and Lenis loop
+ * are HOST-owned; the ArticleDefault decorator stands in for the host's
+ * rail column (sticky context with the article's height) the way the
+ * SiteNav Mobile story scaffolds its sheet.
  */
-async function settleReveal({
-  canvasElement,
-}: {
-  canvasElement: HTMLElement;
-}): Promise<void> {
-  const deadline = Date.now() + 5000;
-  for (;;) {
-    const items = Array.from(
-      canvasElement.querySelectorAll<HTMLElement>(".prime-chapter-rail__item"),
-    );
-    const settled =
-      items.length > 0 &&
-      items.every(
-        (el) =>
-          el.offsetParent === null ||
-          Number(getComputedStyle(el).opacity) === 1,
-      );
-    if (settled) return;
-    if (Date.now() > deadline) {
-      throw new Error("ChapterRail reveal did not settle within 5s");
-    }
-    await new Promise((resolve) => setTimeout(resolve, 50));
-  }
-}
 
-/* Chapter labels are the chapter title text only — no pre-prefixed numbering
- * in the data; the ChapterRail component owns its own typographic markers. */
-const DEFAULT_CHAPTERS: ChapterRailItem[] = [
-  { id: "preamble", label: "Preamble", isVisited: true },
-  { id: "field-conditions", label: "Field conditions", isVisited: true },
-  { id: "the-method", label: "The method", isCurrent: true },
-  { id: "limits", label: "Limits & failure modes" },
-  { id: "coda", label: "Coda" },
+const DEFAULT_CHAPTERS: Chapter[] = [
+  { slug: "preamble", text: "Preamble", depth: 2 },
+  { slug: "field-conditions", text: "Field conditions", depth: 2 },
+  { slug: "the-method", text: "The method", depth: 2 },
+  { slug: "limits", text: "Limits & failure modes", depth: 2 },
+  { slug: "coda", text: "Coda", depth: 2 },
 ];
 
 const meta: Meta<typeof ChapterRail> = {
   title: "Chrome / ChapterRail",
   component: ChapterRail,
   tags: ["autodocs"],
-  // Meta-level play: every story in this file carries the same entrance
-  // motion, so every story waits for settle before the a11y afterEach runs.
-  play: settleReveal,
   parameters: {
     layout: "padded",
     docs: {
       description: {
         component:
-          "Vertical RAIL navigation — thin structural line carrying chapter indicator dots. Anchor reference: Stripe Press / Edward Tufte sidenote pattern (https://edwardtufte.github.io/tufte-css/). Substrate-agnostic root per Rule 1.",
+          "Per-article chapter navigation (spec.md; CD1 Concept 3 page furniture as civic wayfinding). Thread-with-dots rail locked by AK 2026-05-14: a 1px thread carries one dot per chapter and a copper reading-progress fill — the bronze progress indicator realized in-component (spec Field 10 coupling, one scroll listener). The rail rides the host's Lenis loop when present and expands 32px → 280px on hover/focus. Mobile is a chip + native <dialog> bottom sheet (@starting-style + allow-discrete). Reception mirror per Concept 7 porous gradient. Substrate-agnostic root per Rule 1.",
       },
     },
   },
@@ -73,91 +51,153 @@ const meta: Meta<typeof ChapterRail> = {
         "reception-condensed",
       ],
     },
+    currentChapter: { control: { type: "number" } },
+    progress: { control: { type: "range", min: 0, max: 1, step: 0.05 } },
   },
   args: {
     chapters: DEFAULT_CHAPTERS,
     variant: "article-default",
+    currentChapter: 2,
+    progress: 0.45,
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof ChapterRail>;
 
-export const ArticleDefault: Story = {};
+/* Host-rail scaffold: the microsite mounts article-default in a 56px grid
+ * column beside the article body; the rail is sticky with height
+ * min(70vh, 520px). The scaffold supplies the column and a tall page so
+ * the sticky geometry renders honestly without importing the host. */
+const railColumn = (Story: ComponentType) => (
+  <div style={{ display: "flex", minHeight: "560px" }}>
+    <div style={{ width: "56px" }}>
+      <Story />
+    </div>
+  </div>
+);
 
-export const ArticleCollapsed: Story = {
-  args: { variant: "article-collapsed" },
-};
-
-export const ArticleMobileBottomSheet: Story = {
-  args: { variant: "article-mobile-bottom-sheet" },
-};
-
-export const ReceptionCondensed: Story = {
-  args: { variant: "reception-condensed" },
-};
-
-/* Cycle 2 — story that triggers the pilcrow section-break ornament at the
- * 6th chapter (every 5th chapter break per Cycle 2 elevation Agent 4 softening). */
-export const LongFormWithSectionBreak: Story = {
-  args: {
-    chapters: [
-      { id: "preamble", label: "Preamble", isVisited: true },
-      { id: "field-conditions", label: "Field conditions", isVisited: true },
-      { id: "the-method", label: "The method", isVisited: true },
-      { id: "limits", label: "Limits & failure modes", isVisited: true },
-      { id: "case-study", label: "Case study: dispatch-week-3", isCurrent: true },
-      { id: "interlude", label: "Interlude" },
-      { id: "second-pass", label: "The second pass" },
-      { id: "coda", label: "Coda" },
-    ],
-  },
+export const ArticleDefault: Story = {
+  decorators: [railColumn],
   parameters: {
     docs: {
       description: {
         story:
-          "Eight-chapter rail demonstrates pilcrow (¶) section-break ornament at the 6th chapter — every 5 chapters per Cycle 2 elevation Agent 4 softening (NYT Magazine section-end ornaments softened to editorial pilcrow per Anthropic register).",
+          "The locked thread-with-dots design at rest: copper dots on the 1px thread, the wine-intermediate active label always visible beside its enlarged dot (ping ring pulsing), the copper progress fill at the controlled reading position. Hovering the rail widens it to 280px and reveals every label — interaction states live outside the captured frame.",
+      },
+    },
+  },
+};
+
+export const ArticleCollapsed: Story = {
+  args: { variant: "article-collapsed" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Collapsed affordance: the current chapter's name on the sky-low pill with the expand caret. The expanded panel is click-driven (AnimatePresence height) and so lives outside the captured frame.",
+      },
+    },
+  },
+};
+
+export const MobileBottomSheet: Story = {
+  args: { variant: "article-mobile-bottom-sheet" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Standalone mobile pair at rest: the fixed bottom-right chip names the current chapter (aria-haspopup + aria-controls on the sheet's id); the sheet itself is closed.",
+      },
+    },
+  },
+};
+
+export const SheetOpen: Story = {
+  args: { variant: "article-mobile-bottom-sheet", initialSheetOpen: true },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The native <dialog> bottom sheet open on first paint (initialSheetOpen — the SearchPalette initialQuery precedent): showModal() supplies focus trap, aria-modal, backdrop and Escape-cancel; the narrative-voice chapter list carries aria-current and the mono 01/02 markers.",
+      },
+    },
+  },
+};
+
+export const ReceptionCondensed: Story = {
+  args: { variant: "reception-condensed", articleHref: "/article" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The Concept 7 porous-gradient mirror: a copper-label \"Contents\" preview whose links carry the articleHref prefix cross-page. No scroll tracking, no progress coupling (spec Field 2).",
       },
     },
   },
 };
 
 export const DawnCycle: Story = {
+  decorators: [railColumn],
   globals: { cycle: "dawn" },
   parameters: {
     docs: {
       description: {
         story:
-          "Dawn cycle (DESIGN.md §Cycles): the vellum drafting-paper default — the rail edge is a paper-weight hairline; the current-chapter copper dot sits on the rail. Anchor: Tufte sidenote pattern.",
+          "Dawn cycle (DESIGN.md §Cycles): the vellum drafting-paper default — copper dots and thread on vellum, the active chapter in wine-intermediate ink with the gilded progress fill.",
       },
     },
   },
 };
 
+/* OQ-6 (FILED at S5, 2026-08-18) — the dark-cycle wine register: the ACTIVE
+ * chapter label's tonal-stepped wine fails AA on the dark cycles
+ * (accent-prime-active on cycle vellum-25: dusk 3.14:1, night 3.9:1 —
+ * amend-2 ratified values, no APCA exception on record; the rail's active
+ * label runs 12px/800, under the large-text threshold, so 4.5:1 governs —
+ * the same register the B16 SiteNav port carries). Needs the Mayor's
+ * metric/value adjudication; a11y runs "todo" (visible, not gating) on the
+ * dark-cycle stories until it lands. Idle copper dots are aria-hidden
+ * geometry; hover labels sit at opacity 0 in the captured frame. */
+const darkWineRegisterCanonGap = { a11y: { test: "todo" as const } };
+
 export const DuskCycle: Story = {
+  decorators: [railColumn],
   globals: { cycle: "dusk" },
   parameters: {
+    ...darkWineRegisterCanonGap,
     docs: {
       description: {
         story:
-          "Dusk cycle (DESIGN.md §Cycles): the chiaroscuro walnut study — the rail edge recedes into low light; chapter labels set in warm-cream ink; the current-chapter indicator reads as gilded copper against the walnut substrate.",
+          "Dusk cycle (DESIGN.md §Cycles): the chiaroscuro walnut study — the thread recedes into low light, dots read as gilded copper, the active wine warms against the walnut substrate.",
       },
     },
   },
 };
 
 export const NightCycle: Story = {
+  decorators: [railColumn],
   globals: { cycle: "night" },
   parameters: {
+    ...darkWineRegisterCanonGap,
     docs: {
       description: {
         story:
-          "Night cycle (DESIGN.md §Cycles): the true-black void — the rail edge falls to the faintest hairline; the current-chapter indicator carries the ember accent with HUD restraint. Wayfinding, never spectacle.",
+          "Night cycle (DESIGN.md §Cycles): the true-black void — the faintest thread, ember dots with HUD restraint. Wayfinding, never spectacle.",
       },
     },
   },
 };
 
 export const ReducedMotion: Story = {
+  decorators: [railColumn],
   globals: { cycle: "dawn", reducedMotion: "reduce" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Reduced-motion contract (spec Field 4): MotionConfig reducedMotion=\"user\" damps the dot/label/fill springs, chapter jumps fall back to instant scroll, and the sheet's slide collapses to an appearance toggle. The settled frame is identical to ArticleDefault.",
+      },
+    },
+  },
 };

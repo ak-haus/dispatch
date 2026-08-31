@@ -21,8 +21,9 @@ export type {
 } from "./components/custom/SiteNav";
 export { ChapterRail } from "./components/custom/ChapterRail";
 export type {
-  ChapterRailItem,
+  Chapter,
   ChapterRailProps,
+  ChapterRailVariant,
 } from "./components/custom/ChapterRail";
 export { ReadingProgress } from "./components/custom/ReadingProgress";
 export type { ReadingProgressProps } from "./components/custom/ReadingProgress";

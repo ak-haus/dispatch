@@ -1,245 +1,819 @@
 /* ChapterRail — token-bound styles.
  *
  * Canon source: representation/visual-system/components/ChapterRail/spec.md
- * Color source: CD2 §4.5 atmospheric chrome tokens + chrome.indicator =
- *               --window-warm (atmospheric register per ReadingProgress spec;
- *               same atmospheric warmth applied to current-chapter indicator
- *               per ChapterRail spec Field 7).
- * Typography source: --font-nav (Pangram Sans / Inter; spec Field 7
- *               tokens.type.nav.500 for chapter-link text).
+ * Color source: CD2 atmospheric chrome tokens — copper thread/dots with the
+ *               wine-intermediate active state (chrome.text.active) and the
+ *               copper reading-progress fill (AK 2026-05-14: the fill IS the
+ *               bronze reading-progress indicator).
+ * Typography source: the nav slot for rail/chip/title type, the mono slot
+ *               for the 01/02 markers and the sheet hint, the narrative slot
+ *               for the sheet/collapsed chapter list (spec Field 7).
  *
- * Visual archetype (spec Field 1): vertical RAIL — thin structural line on
- * the left edge with chapter links stepping down. The rail IS the visual
- * character (NOT a card; NOT a box).
+ * PORTED AT B16 (fork retirement, 2026-08-31 — last of three). The microsite
+ * fork authored its styling as Tailwind utilities riding global.css, plus one
+ * authored dialog block in global.css @layer components; a library stylesheet
+ * is outside that compile, so every declaration below is either
+ *   (a) the COMPILER'S OUTPUT for the fork's exact utility set, transplanted
+ *       into the `prime-chapter-rail__*` hook inventory (the SiteNav.css
+ *       discipline, resolved against the shipped build), or
+ *   (b) the global.css `.chapter-rail-sheet` block carried VERBATIM under the
+ *       `__sheet` hook (the SearchPalette.css discipline — authored CSS moves
+ *       unchanged).
+ * Resolutions recorded (all read from the real pre-change production build):
+ *   - the --spacing scale resolved at .25rem; --radius (shadcn bridge, a
+ *     microsite-only var) resolved at its shipped value — rounded-md =
+ *     calc(.625rem - 2px), rounded-sm = calc(.625rem - 4px) — so the story
+ *     lane renders without the bridge.
+ *   - font-weight utilities resolved (bold 700 / extrabold 800 / medium 500);
+ *     leading-snug resolved at 1.375; ease-out resolved at
+ *     cubic-bezier(0, 0, .2, 1); the default transition timing function at
+ *     cubic-bezier(.4, 0, .2, 1) with duration-200 = .2s.
+ *   - animate-ping resolved to its full shipped value —
+ *     ping 1s cubic-bezier(0, 0, .2, 1) infinite — with the keyframes carried
+ *     below: the theme's animate-ping variable is a utility-driven emission,
+ *     so a reference to it would resolve to NOTHING in the story lane (and
+ *     on the astro surface the emission survives only as long as other
+ *     components use the utility). Identical keyframes still ship in the
+ *     astro bundle (CoverSpread/CrossfireSpread/DLDSSpread) — same name,
+ *     same body, duplicate-harmless.
+ *   - Tailwind ring shadows resolved to their concrete two-layer box-shadow
+ *     (sky-low offset under the accent-prime ring; the reception links ship
+ *     the 1px-offset variant).
+ *   - translate utilities resolved (-translate-y-1/2 = translate: 0 -50%).
+ *   - Opacity-modified colors carry the compiler's color-mix(in oklab, …)
+ *     forms verbatim, INCLUDING its two-layer emission: the full-opacity
+ *     var() fallback first, then the color-mix override inside the
+ *     compiler's own @supports (color: color-mix(in lab, red, red)) gate.
+ *   - hover rules keep the compiler's @media (hover: hover) gate; the
+ *     rail-hover label reveal transplants the compiled group-hover /
+ *     group-focus-within pair per its gating (hover gated, focus-within not).
+ *   - transition-property lists are the compiler's transition-colors output
+ *     verbatim, --tw-gradient-* entries included (inert without the
+ *     registrations; kept for computed-value fidelity).
+ *   - shadow-sm resolved to Tailwind's upstream authored form
+ *     (rgb(0 0 0 / 0.1) layers — the minified bundle's #0000001a,
+ *     minifier-equivalence class); the sheet backdrop's rgb(0 0 0 / 35%) is
+ *     the global.css block's own authored literal, carried verbatim (the
+ *     elevation/shadow register has no canon tokens — eslint band defers
+ *     rgb there for the same reason).
+ * Defensive-only additions (computed-identical under the governed surfaces'
+ * shared preflight, authored for non-preflight hosts): text-decoration: none
+ * on links, list resets on the three list hooks, button resets on the three
+ * button hooks, margin resets on the three <p> hooks.
  *
- * REBUILD 2026-05-10 — Cycle 2 motifs TOMBSTONED:
- *   - Roman-numeral typographic markers in Cinzel
- *   - Double-rule rail (::before shadow rail 4px outside)
- *   - Pilcrow ¶ section-break ornament every 5 chapters
- *   - Cinzel display "What's inside" heading
- *   - Text-shadow halo on current marker
+ * The prior twin's declarations (border-left rail edge, scrollama flat list,
+ * 0.9375rem/500 links with the 6px indicator ring, is-visited dimming, the
+ * text collapse toggle) described the pre-lock composition and are
+ * superseded by this port — the shipped design is thread-with-dots
+ * (AK 2026-05-14). Its REBUILD 2026-05-10 tombstones remain binding as
+ * anti-patterns below; its B15 cascade-loser records described its own
+ * retired composition and live on in git.
  *
- * CONVERTED AT B15 (idiom convergence, 2026-08-30): the raw utilities that
- * rode alongside these hooks are folded in below — ONLY the cascade winners
- * (layered utilities lose to this unlayered file, so most were inert).
- * Folded winners: link `uppercase` · toggle `mt-4` · list `space-y-2`
- * (which stacked 0.5rem margins ON TOP of this file's 0.875rem gap — odd,
- * but shipped, and preserved as shipped).
+ * CASCADE NOTE. In the microsite the utility declarations lived in
+ * `@layer utilities` and the sheet block in `@layer components`; here the
+ * file is UNLAYERED like every co-located component stylesheet (B15
+ * discipline), so it outranks layered rules. Verified at port: no unlayered
+ * global.css rule targets the rail's elements (the tag rules are
+ * .prose-dispatch-scoped or body.dispatch-hero header-scoped, and the rail
+ * renders outside both), so the layer move changes no rendering.
  *
- * DROPPED AT CONVERSION — dead token slots (never rendered; F29):
- *   `text-text-muted` (title/link/toggle) · `hover:text-text-strong`
- *   (link/toggle).
- * DROPPED — cascade losers (authored but this file always won):
- *   `text-[0.625rem]`/`tracking-[0.18em]` on the title ·
- *   `flex`/`items-center`/`gap-2`/`py-1`/`text-xs`/`tracking-[0.12em]`/
- *   `transition-colors` on the link · **`text-accent-prime` on the current
- *   link** (this file's --text-strong has always won — the wine current
- *   state never shipped) · `mt-3` on the list · `block`/`h-px`/`bg-current`
- *   on the indicator (the 6px ring below is what renders; the 1px-line
- *   idiom is pre-CSS archaeology) · `text-[0.625rem]`/`tracking-[0.14em]`
- *   on the toggle · `group` (marker with no group-* consumer).
- *
- * INTENTIONAL ANTI-PATTERNS:
- *   - No background on root (Rule 1; substrate is --sky-low host-owned).
- *   - No accent-prime on default chapter indicators (wine = focus + critical
- *     interaction only).
- *   - No Cinzel; no IM Fell on chapter labels (Nav slot per spec Field 7).
- *   - No double-rule, no pilcrow, no Roman numerals.
- *   - No card chrome; the rail IS the chrome.
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
+ * via CD2 §10):
+ *   - No background and no border on the rail root (Rule 1: substrate is
+ *     host-owned; the rail IS the chrome, not a card).
+ *   - No wine on idle dots or idle labels (wine = focus ring + active
+ *     chapter only; wayfinding-not-alarm).
+ *   - No Roman-numeral markers in Cinzel, no double-rule rail, no pilcrow ¶
+ *     section-break ornament, no Cinzel display heading, no text-shadow halo
+ *     on the current marker (Cycle 2 motifs; tombstoned 2026-05-10).
+ *   - No literal colors beyond the recorded shadow/backdrop carries above:
+ *     var()/color-mix over canon slots only.
+ *   - No cursor:pointer additions — the shipped fork rides the preflight
+ *     default cursor.
  */
 
+/* ── Rail root (article-default) — desktop chrome at the lg breakpoint;
+ * 32px collapsed, 280px on hover/focus-within (the host's centered article
+ * column absorbs the expansion) */
+
 .prime-chapter-rail {
-  position: relative;
-  border-left: 1px solid var(--rail-edge);
-  padding: 0.25rem 0 0.25rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  font-family: var(--font-nav);
+  display: none;
+  position: sticky;
+  top: 6rem;
+  height: min(70vh, 520px);
+  width: 32px;
+  transition-property: width;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-duration: 0.3s;
 }
 
-.prime-chapter-rail__title {
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin: 0 0 0.5rem 0;
+@media (min-width: 64rem) {
+  .prime-chapter-rail {
+    display: block;
+  }
 }
+
+@media (hover: hover) {
+  .prime-chapter-rail:hover {
+    width: 280px;
+  }
+}
+
+.prime-chapter-rail:focus-within {
+  width: 280px;
+}
+
+/* ── Thread — 1px hairline running the full rail height */
+
+.prime-chapter-rail__thread {
+  position: absolute;
+  left: 15px;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: var(--platform-text-body-strong);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-chapter-rail__thread {
+    background-color: color-mix(
+      in oklab,
+      var(--platform-text-body-strong) 15%,
+      transparent
+    );
+  }
+}
+
+/* ── Copper progress fill — geometry only; the gradient + glow ride the
+ * markup (Motion animates the height) */
+
+.prime-chapter-rail__progress {
+  position: absolute;
+  left: 15px;
+  top: 0;
+  width: 1px;
+}
+
+/* ── Chapter slices */
 
 .prime-chapter-rail__list {
   list-style: none;
   margin: 0;
   padding: 0;
+  position: relative;
   display: flex;
+  height: 100%;
   flex-direction: column;
-  gap: 0.875rem;
-}
-
-/* space-y-2 fold (see header): zero-specificity to mirror the utility's
- * :where() form exactly. */
-:where(.prime-chapter-rail__list > :not(:last-child)) {
-  margin-block-end: 0.5rem;
 }
 
 .prime-chapter-rail__item {
   position: relative;
+  flex: 1;
 }
 
 .prime-chapter-rail__link {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: -0.005em;
-  text-transform: uppercase; /* utility fold — this file never declared it */
-  color: var(--text-muted);
+  border-radius: calc(0.625rem - 4px);
+  padding-right: 0.5rem;
+  padding-block: 0.25rem;
   text-decoration: none;
-  padding: 0.125rem 0;
-  transition: color 150ms ease-out;
-}
-
-/* Quiet structural indicator dot — sits on the rail line per spec Field 7
- * (current-chapter indicator stroke). Default: hollow rail-edge ring; current:
- * warm window-warm fill (atmospheric register; wayfinding-not-alarm). */
-.prime-chapter-rail__indicator {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: transparent;
-  border: 1px solid var(--rail-edge);
-  flex-shrink: 0;
-  /* Position the dot on the rail line: pull left by the rail's padding-left
-   * minus half the dot width plus border accommodation. */
-  margin-left: calc(-1.5rem - 4px);
-  transition: background-color 150ms ease-out, border-color 150ms ease-out;
-}
-
-.prime-chapter-rail__label {
-  display: inline-block;
-}
-
-.prime-chapter-rail__link:hover {
-  color: var(--text-strong);
-}
-
-.prime-chapter-rail__link:hover .prime-chapter-rail__indicator {
-  border-color: var(--text-strong);
+  outline-style: none;
 }
 
 .prime-chapter-rail__link:focus-visible {
-  outline: 2px solid var(--accent-prime);
-  outline-offset: 2px;
-  border-radius: 2px;
+  /* Resolved Tailwind ring: 2px sky-low offset under the 4px accent-prime
+   * ring — wine focus discipline. */
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
 }
 
-/* Current chapter — gilded wayfinding (copper). Spec Field 7 chrome.indicator
- * atmospheric register; current-chapter elevates to copper for wayfinding-
- * not-alarm gilded register. */
-.prime-chapter-rail__link[aria-current="location"],
-.prime-chapter-rail__link.is-current {
-  color: var(--text-strong);
-  font-weight: 700;
-}
+/* ── Dot — size/fill/glow are Motion-animated inline; the ping ring is the
+ * active pulse */
 
-.prime-chapter-rail__link[aria-current="location"] .prime-chapter-rail__indicator,
-.prime-chapter-rail__link.is-current .prime-chapter-rail__indicator {
-  background: var(--copper);
-  border-color: var(--copper);
-}
-
-/* Visited chapters: indicator dims to rail-edge */
-.prime-chapter-rail__item.is-visited .prime-chapter-rail__indicator {
-  background: var(--rail-edge);
-  border-color: var(--rail-edge);
-}
-
-/* Collapse toggle */
-.prime-chapter-rail__toggle {
-  margin-top: 1rem; /* mt-4 (utility fold) */
-  font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  background: transparent;
-  border: 0;
-  padding: 0.25rem 0;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: color 150ms ease-out;
-}
-
-.prime-chapter-rail__toggle:hover { color: var(--text-strong); }
-
-.prime-chapter-rail__toggle:focus-visible {
-  outline: 2px solid var(--accent-prime);
-  outline-offset: 2px;
-}
-
-/* Collapsed variant — current chapter + expand toggle only */
-.prime-chapter-rail--collapsed .prime-chapter-rail__list {
-  display: none;
-}
-
-.prime-chapter-rail--collapsed .prime-chapter-rail__current-only {
+.prime-chapter-rail__dot {
+  position: relative;
   display: block;
+  flex-shrink: 0;
+  border-radius: calc(infinity * 1px);
 }
 
-.prime-chapter-rail__current-only {
-  display: none;
-  font-size: 0.9375rem;
+.prime-chapter-rail__ping {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--platform-accent-prime);
+  opacity: 0.5;
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+/* ── Active label — always visible (Motion drives color/opacity/x) */
+
+.prime-chapter-rail__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-family: var(--font-nav);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+
+.prime-chapter-rail__num {
+  font-family: var(--font-mono);
   font-weight: 700;
-  color: var(--text-strong);
-  margin: 0.25rem 0;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Reception-condensed variant — homepage feature-story preview */
-.prime-chapter-rail--reception-condensed {
-  padding-left: 1.25rem;
+.prime-chapter-rail__strong {
+  font-weight: 800;
+}
+
+/* ── Hover label — non-active chapters, revealed on rail hover/focus.
+ * Transplanted group-hover/group-focus-within pair: the hover half keeps
+ * the compiler's @media (hover: hover) gate; focus-within ships ungated. */
+
+.prime-chapter-rail__hover-label {
+  pointer-events: none;
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  translate: 0 -50%;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-family: var(--font-nav);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  color: var(--dispatch-text-body-muted);
+  opacity: 0;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-chapter-rail:hover .prime-chapter-rail__hover-label {
+    opacity: 1;
+  }
+}
+
+.prime-chapter-rail:focus-within .prime-chapter-rail__hover-label {
+  opacity: 1;
+}
+
+.prime-chapter-rail__hover-num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--dispatch-text-body-faint);
+}
+
+.prime-chapter-rail__hover-sep {
+  color: var(--dispatch-text-body-faint);
+}
+
+.prime-chapter-rail__hover-text {
+  font-weight: 500;
+}
+
+/* ── Mobile pair inside article-default — hidden at lg+ (the standalone
+ * article-mobile-bottom-sheet variant renders unwrapped) */
+
+@media (min-width: 64rem) {
+  .prime-chapter-rail__mobile {
+    display: none;
+  }
+}
+
+/* ── Shared chapter list (collapsed panel + mobile sheet) */
+
+.prime-chapter-rail__chapters {
+  list-style: none;
+  margin: 0 0 0 1.5rem;
+  padding: 0;
+}
+
+/* space-y-2 fold: zero-specificity to mirror the utility's :where() form
+ * exactly (B15 precedent). */
+:where(.prime-chapter-rail__chapters > :not(:last-child)) {
+  margin-block-end: 0.5rem;
+}
+
+.prime-chapter-rail__chapters-link {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  border-radius: calc(0.625rem - 4px);
+  padding-block: 0.5rem;
+  padding-right: 0.5rem;
+  text-decoration: none;
+  outline-style: none;
+  font-family: var(--font-narrative);
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--dispatch-text-body-muted);
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-chapter-rail__chapters-link:not(.is-active):hover {
+    color: var(--platform-text-body-strong);
+    translate: 0.25rem 0;
+  }
+}
+
+.prime-chapter-rail__chapters-link.is-active {
+  color: var(--platform-accent-prime-active);
+  font-weight: 700;
+}
+
+.prime-chapter-rail__chapters-link:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-chapter-rail__chapters-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  flex-shrink: 0;
+  color: var(--dispatch-text-body-faint);
+}
+
+.prime-chapter-rail__chapters-num.is-active {
+  color: var(--platform-accent-prime);
+}
+
+.prime-chapter-rail__chapters-text {
+  font-size: 0.9375rem;
+  text-wrap: wrap;
+  white-space: normal;
+}
+
+/* ── Collapsed variant — current chapter + expand toggle */
+
+.prime-chapter-rail__collapsed {
+  width: 100%;
+}
+
+.prime-chapter-rail__collapsed-toggle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-radius: calc(0.625rem - 2px);
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--dispatch-lane-institutional-strong);
+  background-color: var(--sky-low);
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  outline-style: none;
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-chapter-rail__collapsed-toggle {
+    border-color: color-mix(
+      in oklab,
+      var(--dispatch-lane-institutional-strong) 10%,
+      transparent
+    );
+  }
+}
+
+.prime-chapter-rail__collapsed-toggle:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-chapter-rail__collapsed-current {
+  display: flex;
+  min-width: 0;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.prime-chapter-rail--reception-condensed .prime-chapter-rail__link {
-  font-size: 0.8125rem;
+.prime-chapter-rail__collapsed-dot {
+  display: block;
+  height: 0.375rem;
+  width: 0.375rem;
+  flex-shrink: 0;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--platform-accent-prime-active);
 }
 
-.prime-chapter-rail--reception-condensed .prime-chapter-rail__indicator {
-  width: 4px;
-  height: 4px;
-  margin-left: calc(-1.25rem - 3px);
+.prime-chapter-rail__collapsed-label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--platform-accent-prime-active);
 }
 
-/* Mobile bottom-sheet variant — no rail edge; full-width list */
-.prime-chapter-rail--mobile-bottom-sheet {
-  border-left: 0;
-  padding-left: 0;
+.prime-chapter-rail__collapsed-caret {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--dispatch-text-body-faint);
 }
 
-.prime-chapter-rail--mobile-bottom-sheet .prime-chapter-rail__indicator {
-  display: none;
+.prime-chapter-rail__collapsed-panel {
+  margin-top: 0.25rem;
+  border-radius: calc(0.625rem - 2px);
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--dispatch-lane-institutional-strong);
+  background-color: var(--sky-low);
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
 }
 
-.prime-chapter-rail--mobile-bottom-sheet .prime-chapter-rail__link {
-  font-size: 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--rail-edge);
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-chapter-rail__collapsed-panel {
+    border-color: color-mix(
+      in oklab,
+      var(--dispatch-lane-institutional-strong) 10%,
+      transparent
+    );
+  }
+}
+
+/* ── Mobile chip — fixed bottom-right pill */
+
+.prime-chapter-rail__chip-wrap {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1rem;
+  z-index: 40;
+}
+
+.prime-chapter-rail__chip {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: calc(infinity * 1px);
+  padding-inline: 1rem;
+  padding-block: 0.625rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--dispatch-lane-institutional-strong);
+  background-color: var(--sky-low);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--platform-accent-prime-active);
+  outline-style: none;
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-chapter-rail__chip {
+    border-color: color-mix(
+      in oklab,
+      var(--dispatch-lane-institutional-strong) 15%,
+      transparent
+    );
+  }
+}
+
+@media (hover: hover) {
+  .prime-chapter-rail__chip:hover {
+    border-color: var(--dispatch-lane-institutional-strong);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .prime-chapter-rail__chip:hover {
+      border-color: color-mix(
+        in oklab,
+        var(--dispatch-lane-institutional-strong) 25%,
+        transparent
+      );
+    }
+  }
+}
+
+.prime-chapter-rail__chip:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime),
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.prime-chapter-rail__chip-dot {
+  display: block;
+  height: 0.375rem;
+  width: 0.375rem;
+  flex-shrink: 0;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--platform-accent-prime-active);
+}
+
+.prime-chapter-rail__chip-label {
+  max-width: 18ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.prime-chapter-rail__chip-caret {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--dispatch-text-body-faint);
+}
+
+/* ── Mobile bottom-sheet dialog — the global.css @layer components block,
+ * carried VERBATIM under the __sheet hook (B16 port; per spec Fields 5-7:
+ * sky-low substrate, slide-up on open via @starting-style +
+ * transition-behavior: allow-discrete, instant under reduced motion). */
+
+.prime-chapter-rail__sheet {
+  position: fixed;
+  inset: auto 0 0;
+  margin: 0;
+  width: 100%;
+  max-height: 75dvh;
+  border-radius: 1rem 1rem 0 0;
+  border: none;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--sky-low);
+  color: var(--platform-text-body-strong);
+
+  /* Closed state (start and end of transition) */
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform 200ms ease-out,
+    opacity 200ms ease-out,
+    overlay 200ms ease-out allow-discrete,
+    display 200ms ease-out allow-discrete;
+}
+
+.prime-chapter-rail__sheet[open] {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@starting-style {
+  .prime-chapter-rail__sheet[open] {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.prime-chapter-rail__sheet::backdrop {
+  background-color: rgb(0 0 0 / 35%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transition:
+    opacity 200ms ease-out,
+    overlay 200ms ease-out allow-discrete,
+    display 200ms ease-out allow-discrete;
+}
+
+.prime-chapter-rail__sheet[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .prime-chapter-rail__sheet[open]::backdrop {
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .prime-chapter-rail__link,
-  .prime-chapter-rail__indicator,
-  .prime-chapter-rail__toggle {
+  .prime-chapter-rail__sheet,
+  .prime-chapter-rail__sheet[open],
+  .prime-chapter-rail__sheet::backdrop,
+  .prime-chapter-rail__sheet[open]::backdrop {
     transition: none;
   }
 }
 
-[data-prime-reduced-motion="reduce"] .prime-chapter-rail__link,
-[data-prime-reduced-motion="reduce"] .prime-chapter-rail__indicator,
-[data-prime-reduced-motion="reduce"] .prime-chapter-rail__toggle {
-  transition: none;
+/* ── Sheet contents */
+
+.prime-chapter-rail__sheet-body {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 1.5rem;
+  padding-bottom: 2rem;
+  padding-top: 1.25rem;
+}
+
+.prime-chapter-rail__sheet-head {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prime-chapter-rail__sheet-title {
+  margin: 0;
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dispatch-text-body-faint);
+}
+
+.prime-chapter-rail__sheet-close {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  display: flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(0.625rem - 2px);
+  color: var(--dispatch-text-body-faint);
+  outline-style: none;
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-chapter-rail__sheet-close:hover {
+    color: var(--dispatch-text-body-muted);
+  }
+}
+
+.prime-chapter-rail__sheet-close:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-chapter-rail__sheet-close-glyph {
+  width: 1rem;
+  height: 1rem;
+}
+
+.prime-chapter-rail__sheet-hint {
+  margin: 1.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--dispatch-text-body-faint);
+}
+
+.prime-chapter-rail__sheet-kbd {
+  border-radius: 0.25rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--dispatch-lane-institutional-strong);
+  padding-inline: 0.25rem;
+  padding-block: 0.125rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-chapter-rail__sheet-kbd {
+    border-color: color-mix(
+      in oklab,
+      var(--dispatch-lane-institutional-strong) 20%,
+      transparent
+    );
+  }
+}
+
+/* ── Reception-condensed — the Concept 7 homepage mirror */
+
+.prime-chapter-rail__reception {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.prime-chapter-rail__reception-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dispatch-text-body-faint);
+}
+
+.prime-chapter-rail__reception-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.prime-chapter-rail__reception-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: calc(0.625rem - 4px);
+  padding-block: 0.25rem;
+  text-decoration: none;
+  outline-style: none;
+  font-family: var(--font-nav);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--platform-copper-label);
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-chapter-rail__reception-link:hover {
+    color: var(--platform-copper-deep);
+  }
+}
+
+.prime-chapter-rail__reception-link:focus-visible {
+  /* ring-offset-1 variant: 1px sky-low offset under the 2px ring. */
+  box-shadow:
+    0 0 0 1px var(--sky-low),
+    0 0 0 3px var(--platform-accent-prime);
+}
+
+.prime-chapter-rail__reception-dot {
+  display: block;
+  height: 0.25rem;
+  width: 0.25rem;
+  flex-shrink: 0;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--platform-copper);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-chapter-rail__reception-dot {
+    background-color: color-mix(in oklab, var(--platform-copper) 40%, transparent);
+  }
+}
+
+.prime-chapter-rail__reception-text {
+  line-height: 1.375;
 }

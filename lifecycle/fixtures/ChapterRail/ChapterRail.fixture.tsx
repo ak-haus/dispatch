@@ -1,22 +1,30 @@
-import { ChapterRail, type ChapterRailItem } from "@prime-dispatch/ui";
+import { ChapterRail, type Chapter } from "@prime-dispatch/ui";
 
-/* W3-S-A Cycle 2 — chapter labels no longer pre-prefixed with Roman numerals;
- * the ChapterRail component itself generates Roman-numeral markers via the
- * Cinzel typographic marker span (Agent 1 §3.1 elevation). */
-const CHAPTERS: ChapterRailItem[] = [
-  { id: "preamble", label: "Preamble", isVisited: true },
-  { id: "field-conditions", label: "Field conditions", isCurrent: true },
-  { id: "the-method", label: "The method" },
-  { id: "limits", label: "Limits & failure modes" },
+/* B16 port — the ported API: chapters are the host's h2 heading shape
+ * ({slug,text,depth}); the active chapter is scroll-derived on the live
+ * surface, pinned here via currentChapter for a deterministic fixture. */
+const CHAPTERS: Chapter[] = [
+  { slug: "preamble", text: "Preamble", depth: 2 },
+  { slug: "field-conditions", text: "Field conditions", depth: 2 },
+  { slug: "the-method", text: "The method", depth: 2 },
+  { slug: "limits", text: "Limits & failure modes", depth: 2 },
 ];
 
 export const ChapterRailFixtures = {
-  ArticleDefault: () => <ChapterRail chapters={CHAPTERS} />,
-  Collapsed: () => <ChapterRail variant="article-collapsed" chapters={CHAPTERS} />,
+  ArticleDefault: () => (
+    <ChapterRail chapters={CHAPTERS} currentChapter={1} progress={0.35} />
+  ),
+  Collapsed: () => (
+    <ChapterRail variant="article-collapsed" chapters={CHAPTERS} currentChapter={1} />
+  ),
   ReceptionCondensed: () => (
     <ChapterRail variant="reception-condensed" chapters={CHAPTERS} />
   ),
   MobileBottomSheet: () => (
-    <ChapterRail variant="article-mobile-bottom-sheet" chapters={CHAPTERS} />
+    <ChapterRail
+      variant="article-mobile-bottom-sheet"
+      chapters={CHAPTERS}
+      currentChapter={1}
+    />
   ),
 };
