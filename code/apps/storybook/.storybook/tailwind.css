@@ -60,10 +60,11 @@
  *
  * CASCADE NOTE. Tailwind's output is layered; co-located component CSS and
  * tokens.css are UNLAYERED and therefore outrank it. That is the same
- * relationship global.css establishes on the shipped surface, so the three
- * hybrid components (ChapterRail · Footnote · ReadingProgress) resolve here
- * exactly as they resolve in production: their own stylesheet wins, and the
- * utilities fill the gaps it leaves.
+ * relationship global.css establishes on the shipped surface, so the two
+ * hybrid components (Footnote · ReadingProgress) resolve here exactly as
+ * they resolve in production: their own stylesheet wins, and the utilities
+ * fill the gaps it leaves. (ChapterRail left the hybrid set at the B16
+ * port — its markup carries zero utilities; ChapterRail.css owns it all.)
  * ========================================================================== */
 
 @import "tailwindcss" source(none);

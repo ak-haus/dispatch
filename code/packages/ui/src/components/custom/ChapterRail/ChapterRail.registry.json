@@ -3,9 +3,9 @@
   "name": "chapter-rail",
   "type": "registry:component",
   "title": "ChapterRail",
-  "description": "Per-article chapter navigation rail. Renders article's chapter structure with current-chapter indicator (aria-current='location'); porous-gradient mode-crosser between article surfaces (primary) and reception (condensed feature-story preview).",
+  "description": "Per-article chapter navigation. Thread-with-dots rail (AK 2026-05-14) with the copper reading-progress fill, scroll-coupled active chapter (aria-current='location'), mobile chip + native <dialog> bottom sheet, and the porous-gradient reception mirror (condensed feature-story preview).",
   "categories": ["custom", "chrome", "navigation", "wayfinding"],
-  "dependencies": ["clsx"],
+  "dependencies": ["motion"],
   "registryDependencies": [],
   "files": [
     {
@@ -38,6 +38,6 @@
       "scope": "prime-platform-wide"
     },
     "primeMode": "porous-gradient-mode-crosser",
-    "primeForwardPointer": "Progress coupling to ReadingProgress + district-edge tint per cartography wire at W5+ when ReadingProgress ships and CD3 ratifies cartography district fills."
+    "primeForwardPointer": "Progress coupling realized in-component at the B16 port (the copper fill is the bronze reading-progress indicator, AK 2026-05-14 — one scroll listener, spec Field 10). District-edge tint per cartography wire still pends CD3 ratifying cartography district fills."
   }
 }
