@@ -3,10 +3,10 @@
   "name": "site-nav",
   "type": "registry:component",
   "title": "SiteNav",
-  "description": "Top-level navigation chrome. Composes MastheadWordmark + primary nav-links + affordances cluster (search trigger + theme-cycler). Cross-surface with per-mode variant: reception shows full search, article hides search per CD1 Concept 7 sanctuary, compact-mobile uses hamburger.",
+  "description": "The masthead's nav cluster: primary nav-links + affordances (SearchPalette trigger + theme-cycler). The host owns the band, wordmark and mobile sheet; SiteNav is the cluster inside it. Cross-surface with per-mode variant: reception shows the full set, article hides search per CD1 Concept 7 sanctuary, mobile renders the host sheet's contents. Magnetic nav links + layoutId active-page indicator (motion).",
   "categories": ["custom", "chrome", "navigation"],
-  "dependencies": ["clsx"],
-  "registryDependencies": ["masthead-wordmark"],
+  "dependencies": ["motion"],
+  "registryDependencies": [],
   "files": [
     {
       "path": "components/custom/SiteNav/SiteNav.tsx",
@@ -17,6 +17,11 @@
       "path": "components/custom/SiteNav/SiteNav.css",
       "type": "registry:component",
       "target": "components/custom/SiteNav/SiteNav.css"
+    },
+    {
+      "path": "components/custom/SiteNav/useMagnetic.ts",
+      "type": "registry:hook",
+      "target": "components/custom/SiteNav/useMagnetic.ts"
     },
     {
       "path": "components/custom/SiteNav/index.ts",
@@ -34,6 +39,6 @@
       "scope": "prime-platform-wide"
     },
     "primeMode": "cross-surface-chrome-per-mode-variant",
-    "primeForwardPointer": "Registry manifest forward-pointer authored at W3-S-A; full file content inlining + MCP server registration land at W5+. SearchPalette + theme-cycler dependencies wire when those components ship (Phase 2 + future)."
+    "primeForwardPointer": "B16 port (2026-08-31): the microsite fork's architecture became the library component — host-owned band, motion-driven links, hosted theme-cycler (spec Field 6), A13 conditional aria-controls on the SearchPalette trigger seam. MastheadWordmark registryDependency removed with the band; full file content inlining + MCP server registration land at W5+."
   }
 }

@@ -9,55 +9,95 @@
  *               AA label role --platform-copper-label is the canon binding.
  * Typography source: --font-nav (Pangram Sans Extrabold → Inter fallback).
  *
- * Visual archetype (Field 1 spec): horizontal page-furniture band with three
- * slots (left wordmark / center primary-links / right affordances).
- * Substrate-agnostic root (Rule 1: --sky-low host-owned).
+ * PORTED AT B16 (fork retirement, 2026-08-31 — second of three). The
+ * microsite fork authored its styling as Tailwind utilities riding
+ * global.css; a library stylesheet is outside that compile, so every
+ * declaration below is the COMPILER'S OUTPUT for the fork's exact utility
+ * set, transplanted into the library's `prime-site-nav__*` hook inventory
+ * (B15 discipline: compiler-transplanted declarations only, resolved
+ * against the shipped build):
+ *   - the --spacing scale resolved at .25rem; --radius (shadcn bridge, a
+ *     microsite-only var) resolved at its shipped value — rounded-md =
+ *     calc(.625rem - 2px) — so the story lane renders it without the
+ *     bridge.
+ *   - Tailwind ring shadows resolved to their concrete two-layer
+ *     box-shadow (offset sky-low under the accent-prime ring).
+ *   - Opacity-modified colors carry the compiler's color-mix(in oklab, …)
+ *     forms verbatim (NOT oklch — the fork's pixels are oklab mixes),
+ *     INCLUDING its two-layer emission: the full-opacity var() fallback
+ *     first, then the color-mix override inside the compiler's own
+ *     @supports (color: color-mix(in lab, red, red)) gate.
+ *   - hover rules keep the compiler's @media (hover: hover) gate.
+ *   - the article root carries the --article modifier; its one rule
+ *     unsets the reception gap on the shared __nav hook (the fork's
+ *     article nav had no gap utility — invisible with one child, held
+ *     exact anyway).
+ *   - -webkit-backdrop-filter authored explicitly: the fork rode
+ *     global.css through Tailwind's Lightning pass, which added the
+ *     prefix; a library stylesheet skips that pass (SearchPalette.css
+ *     precedent).
+ *   - transition-property lists are the compiler's transition-colors
+ *     output verbatim, --tw-gradient-* entries included (inert without
+ *     the registrations; kept for computed-value fidelity).
+ * Defensive-only additions (computed-identical under the governed
+ * surfaces' shared preflight, authored for non-preflight hosts):
+ * text-decoration: none on links, list resets on the two <ul> hooks,
+ * button resets on the three button hooks.
  *
- * REBUILD 2026-05-10 — Cycle 2 motifs TOMBSTONED per Mayor:
- *   - Wine 2px upper rule (::before NYT-Magazine double-rule) — wine wallpaper,
- *     not in canon; Mayor: "copper getting eaten alive by red, site lost
- *     elegant red accent."
- *   - Middot · separators between nav-links — not in canon spec.
- *   - Small-caps SEARCH + hairline magnifier glyph treatment — typographic
- *     elevation not in canon; reverting to plain Search button.
+ * The prior twin's band declarations (17px center-aligned links, band
+ * padding, border-bottom hairline, 720px hamburger menu) described the
+ * retired self-owned band and are superseded by this port — the band is
+ * the HOST's (see SiteNav.tsx header). Its REBUILD 2026-05-10 tombstones
+ * remain binding as anti-patterns below.
  *
- * INTENTIONAL ANTI-PATTERNS:
- *   - No background on root (Rule 1).
- *   - No wine on idle/hover states (wine = focus ring + active state only;
- *     precious accent, not wallpaper).
- *   - No middot · separators (Cycle 2 invention; tombstoned).
- *   - No upper-rule ::before (Cycle 2 invention; tombstoned).
- *   - No card chrome, no box-shadow.
- *   - All color via canon tokens; no hardcoded hex.
+ * CASCADE NOTE. In the microsite these declarations lived in
+ * `@layer utilities`; here the file is UNLAYERED like every co-located
+ * component stylesheet (B15 discipline), so it outranks utility rules.
+ * Verified at port: no unlayered global.css rule targets the cluster's
+ * elements (the tag rules in global.css are .prose-dispatch-scoped or
+ * body.dispatch-hero header-scoped — Masthead's element, not this
+ * cluster), so the layer move changes no rendering.
  *
- * BACKLOG (Mayor 2026-05-10): nav-link cluster currently center-aligned;
- * should be right-aligned (justify-content shift). Deferred to end of
- * Phase 1 per Mayor.
+ * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor
+ * canon-promotion via CD2 §10):
+ *   - No background and no border on the root (Rule 1: the band and its
+ *     hairline are host-owned; substrate is page-surface owned).
+ *   - No wine on idle/hover states (wine = focus ring + active state
+ *     only; precious accent, not wallpaper).
+ *   - No middot · separators, no upper-rule ::before, no small-caps
+ *     SEARCH treatment (Cycle 2 inventions; tombstoned 2026-05-10).
+ *   - No card chrome, no box-shadow (outside the focus ring).
+ *   - No literal colors: var()/color-mix over canon slots only.
+ *   - No cursor:pointer additions — the shipped fork rides the
+ *     preflight default cursor.
  */
 
+/* ── Reception / article root — the cluster is desktop chrome; the host's
+ * sheet owns mobile (md = 48rem, the shipped breakpoint) */
+
 .prime-site-nav {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 1.125rem 1.5rem;
-  border-bottom: 1px solid var(--rail-edge);
-  width: 100%;
-  box-sizing: border-box;
+  display: none;
+  align-items: baseline;
+  column-gap: 1.5rem;
 }
 
-.prime-site-nav__left,
-.prime-site-nav__center,
-.prime-site-nav__right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
+@media (min-width: 48rem) {
+  .prime-site-nav {
+    display: flex;
+  }
 }
 
-.prime-site-nav__center {
-  flex: 1 1 auto;
-  justify-content: center;
+.prime-site-nav__nav {
+  display: flex;
+  align-items: baseline;
+  column-gap: 2rem;
+}
+
+.prime-site-nav--article .prime-site-nav__nav {
+  /* The fork's article nav carried no gap utility. One flex child today,
+   * so this renders nothing either way — held exact because the hook is
+   * shared with reception. */
+  column-gap: normal;
 }
 
 .prime-site-nav__list {
@@ -65,155 +105,347 @@
   margin: 0;
   padding: 0;
   display: flex;
-  align-items: center;
-  gap: 1.75rem;
+  align-items: baseline;
+  column-gap: 2rem;
 }
+
+/* ── Nav link — Decision 8 tonal-stepping arc, 13px/800 Pangram Sans */
 
 .prime-site-nav__link {
-  font-family: var(--font-nav);
-  font-weight: 800;
-  font-style: normal;
-  letter-spacing: -0.005em;
-  font-size: 1.0625rem;
-  text-decoration: none;
-  /* axe color-contrast (SC 1.4.3): 17px/800 is below the WCAG large-text
-   * threshold, so display-scoped --copper (2.74:1 on vellum) fails AA here.
-   * F5 size-scoped copper discipline (DESIGN.md §Colors): label/body-size
-   * copper text carries --platform-copper-label (>=4.5:1 per cycle, enforced
-   * in tokens contrast.test.mjs). The opacity idle-dim goes with it —
-   * opacity-dimmed text defeats computed contrast; token roles are the canon
-   * dimming mechanism. */
-  color: var(--platform-copper-label);
-  transition: color 150ms ease-out;
   position: relative;
-  padding: 0.25em 0;
+  display: inline-block;
+  font-family: var(--font-nav);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  outline-style: none;
+  padding-bottom: 0.25rem;
+  color: var(--platform-copper-label);
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 0.2s;
 }
 
-.prime-site-nav__link:hover {
-  color: var(--copper-deep);
+@media (hover: hover) {
+  .prime-site-nav__link:not([aria-current="page"]):hover {
+    color: var(--platform-copper-deep);
+  }
+}
+
+.prime-site-nav__link[aria-current="page"] {
+  /* Wine-intermediate active state per W2-S-F Decision 8 tonal-stepping
+   * arc. Active = sits chromatically between copper and wordmark-red. */
+  color: var(--platform-accent-prime-active);
 }
 
 .prime-site-nav__link:focus-visible {
-  /* Wine focus ring — the ONE place wine appears in nav. Critical-interaction
-   * accent per CD2 §5.1 + Rule 3 lane-semantic deployment. */
-  outline: 2px solid var(--accent-prime);
-  outline-offset: 4px;
-  border-radius: 2px;
+  /* Wine focus ring — the ONE place wine appears in nav (CD2 §5.1 +
+   * Rule 3). Resolved Tailwind ring: 2px sky-low offset under the 4px
+   * accent-prime ring. */
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
 }
 
-.prime-site-nav__link[aria-current="page"],
-.prime-site-nav__link.is-active {
-  /* Wine-intermediate active state per W2-S-F Decision 8 tonal-stepping arc.
-   * Active = sits chromatically between copper and wordmark-red. */
-  color: var(--accent-prime-active);
+.prime-site-nav__link:active {
+  opacity: 0.75;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 75ms;
 }
 
-.prime-site-nav__link[aria-current="page"]::after,
-.prime-site-nav__link.is-active::after {
-  content: "";
+/* ── Active-page indicator — travels with the magnetic link (layoutId);
+ * wine at rest on the active page, copper-deep while previewing */
+
+.prime-site-nav__indicator {
   position: absolute;
+  bottom: -1px;
   left: 0;
   right: 0;
-  bottom: -0.25em;
   height: 2px;
-  background: currentColor;
+  background-color: var(--platform-accent-prime-active);
 }
 
-.prime-site-nav__link[aria-disabled="true"],
-.prime-site-nav__link.is-disabled {
-  opacity: 0.35;
-  pointer-events: none;
+.prime-site-nav__indicator--preview {
+  background-color: var(--platform-copper-deep);
 }
 
-/* Search affordance — typographic button per spec Field 4 (aria-haspopup
- * dialog). No chip border; no small-caps treatment. */
-.prime-site-nav__affordance {
+/* ── Affordances cluster (search trigger + theme-cycler) */
+
+.prime-site-nav__affordances {
+  display: flex;
+  align-items: baseline;
+  column-gap: 0.25rem;
+}
+
+/* ── Article variant back-link — sanctuary register, no search */
+
+.prime-site-nav__back {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-nav);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  outline-style: none;
+  color: var(--platform-copper-label);
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-site-nav__back:hover {
+    color: var(--platform-copper-deep);
+  }
+}
+
+.prime-site-nav__back:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-site-nav__back-glyph {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* ── SearchPalette trigger — icon button (A13 aria-controls seam lives in
+ * the markup) */
+
+.prime-site-nav__search {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(0.625rem - 2px);
+  outline-style: none;
+  color: var(--platform-copper);
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-site-nav__search:hover {
+    color: var(--platform-copper-deep);
+    background-color: var(--dispatch-lane-institutional-strong);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .prime-site-nav__search:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--dispatch-lane-institutional-strong) 8%,
+        transparent
+      );
+    }
+  }
+}
+
+.prime-site-nav__search:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-site-nav__search-glyph {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Theme-cycler — segmented three-way control on the window-warm wash */
+
+.prime-site-nav__cycler {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 1px;
+  border: 1px solid var(--dispatch-lane-institutional-strong);
+  border-radius: calc(infinity * 1px);
+  background-color: var(--window-warm);
+  padding: 0.125rem;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-site-nav__cycler {
+    border-color: color-mix(
+      in oklab,
+      var(--dispatch-lane-institutional-strong) 20%,
+      transparent
+    );
+    background-color: color-mix(in oklab, var(--window-warm) 40%, transparent);
+  }
+}
+
+.prime-site-nav__cycle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  display: inline-flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(infinity * 1px);
+  outline-style: none;
+  color: var(--platform-copper);
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+@media (hover: hover) {
+  .prime-site-nav__cycle[aria-pressed="false"]:hover {
+    color: var(--platform-copper-deep);
+    background-color: var(--dispatch-lane-institutional-strong);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .prime-site-nav__cycle[aria-pressed="false"]:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--dispatch-lane-institutional-strong) 8%,
+        transparent
+      );
+    }
+  }
+}
+
+.prime-site-nav__cycle[aria-pressed="true"] {
+  background-color: var(--platform-accent-prime);
+  color: var(--platform-accent-prime-active);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-site-nav__cycle[aria-pressed="true"] {
+    background-color: color-mix(
+      in oklab,
+      var(--platform-accent-prime) 12%,
+      transparent
+    );
+  }
+}
+
+.prime-site-nav__cycle:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-site-nav__cycle-glyph {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Mobile variant — the host sheet's contents */
+
+.prime-site-nav__mobile-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-inline: 0.5rem;
+  padding-block: 1rem;
+}
+
+.prime-site-nav__mobile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.prime-site-nav__mobile-link {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-inline: 1rem;
+  padding-block: 1rem;
   font-family: var(--font-nav);
-  font-weight: 700;
-  font-size: 0.875rem;
-  background: transparent;
-  border: 0;
-  /* axe color-contrast (SC 1.4.3): the 0.85 opacity idle-dim blended muted
-   * to 4.19:1 on the vellum substrate at 14px/700 — under AA. Muted at full
-   * opacity meets AA on chrome substrates (tokens contrast.test.mjs), so the
-   * dim is removed and the muted role stays; faint/muted token roles are the
-   * canon dimming mechanism (DESIGN.md text roles), never opacity. */
-  color: var(--text-muted);
-  padding: 0.375rem 0.5rem;
-  cursor: pointer;
-  transition: color 150ms ease-out;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  outline-style: none;
+  color: var(--platform-copper-label);
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via,
+    --tw-gradient-to;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
 }
 
-.prime-site-nav__affordance:hover {
-  color: var(--copper-deep);
-}
-
-.prime-site-nav__affordance:focus-visible {
-  outline: 2px solid var(--accent-prime);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-/* Magnifier glyph — kept as inline SVG accompaniment to "Search" label */
-.prime-site-nav__affordance-glyph {
-  width: 0.875rem;
-  height: 0.875rem;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  fill: none;
-}
-
-/* Article variant — Search affordance hidden per CD1 Concept 7 sanctuary
- * + SiteNav spec Field 2 article variant. */
-.prime-site-nav--article .prime-site-nav__center {
-  justify-content: flex-start;
-}
-
-.prime-site-nav__affordance.is-hidden {
-  display: none;
-}
-
-/* Mobile hamburger */
-.prime-site-nav__hamburger {
-  display: none;
-  background: transparent;
-  border: 0;
-  padding: 0.5rem;
-  cursor: pointer;
-  color: var(--text-strong);
-}
-
-@media (max-width: 720px) {
-  .prime-site-nav__center { display: none; }
-  .prime-site-nav__hamburger { display: inline-flex; }
-  .prime-site-nav--mobile-menu-open .prime-site-nav__center {
-    display: flex;
-    position: absolute;
-    inset: 100% 0 auto 0;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem 1.5rem;
-    background: var(--surface-page);
-    border-bottom: 1px solid var(--rail-edge);
-  }
-  .prime-site-nav--mobile-menu-open .prime-site-nav__list {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+@media (hover: hover) {
+  .prime-site-nav__mobile-link:not([aria-current="page"]):hover {
+    color: var(--platform-copper-deep);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .prime-site-nav__link,
-  .prime-site-nav__affordance {
-    transition: none;
-  }
+.prime-site-nav__mobile-link[aria-current="page"] {
+  color: var(--platform-accent-prime-active);
 }
 
-[data-prime-reduced-motion="reduce"] .prime-site-nav__link,
-[data-prime-reduced-motion="reduce"] .prime-site-nav__affordance {
-  transition: none;
+.prime-site-nav__mobile-link:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--sky-low),
+    0 0 0 4px var(--platform-accent-prime);
+}
+
+.prime-site-nav__mobile-marker {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 1.5rem;
+  width: 2px;
+  translate: 0 -50%;
+  background-color: var(--platform-accent-prime-active);
+}
+
+.prime-site-nav__mobile-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid var(--dispatch-lane-institutional-strong);
+  padding-inline: 1.5rem;
+  padding-block: 1rem;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .prime-site-nav__mobile-footer {
+    border-top-color: color-mix(
+      in oklab,
+      var(--dispatch-lane-institutional-strong) 15%,
+      transparent
+    );
+  }
 }

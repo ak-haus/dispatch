@@ -16,13 +16,17 @@ import { motion, MotionConfig, AnimatePresence } from 'motion/react'
 import { Dialog } from 'radix-ui'
 import { useCallback, useEffect, useState } from 'react'
 import { Wordmark } from './Wordmark'
-import { SiteNav, type SiteNavVariant } from './SiteNav'
-// SUBPATH import, never the barrel (B16 fork retirement — the library owns
-// the palette; the barrel would drag the whole component graph into the
-// island chunk).
+// SUBPATH imports, never the barrel (B16 fork retirement — the library owns
+// the palette and the nav cluster; the barrel would drag the whole component
+// graph into the island chunk). useMagnetic rides the SiteNav subpath: the
+// hook moved into the library with the nav port (one copy, no fork).
 import { SearchPalette } from '@prime-dispatch/ui/custom/SearchPalette'
 import type { SearchRecord } from '@prime-dispatch/ui/custom/SearchPalette'
-import { useMagnetic } from '@/lib/useMagnetic'
+import {
+	SiteNav,
+	useMagnetic,
+	type SiteNavVariant,
+} from '@prime-dispatch/ui/custom/SiteNav'
 
 interface Props {
 	theme?: 'neutral' | 'vellum'
