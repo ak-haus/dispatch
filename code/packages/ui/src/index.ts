@@ -47,11 +47,12 @@ export type {
   LiveTickerProps,
   LiveTickerEntry,
 } from "./components/custom/LiveTicker";
-export { SearchPalette } from "./components/custom/SearchPalette";
+export { SearchPalette, searchIndex, highlightMatches } from "./components/custom/SearchPalette";
 export type {
   SearchPaletteProps,
-  SearchPaletteResultGroup,
-  SearchPaletteResultItem,
+  SearchRecord,
+  SearchRecordType,
+  SearchRecordLane,
 } from "./components/custom/SearchPalette";
 
 // --- Phase 3 (Stream 1 F11 2026-05-11): /patterns components ---

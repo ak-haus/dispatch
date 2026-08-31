@@ -2,53 +2,403 @@
  *
  * Canon source: representation/visual-system/components/SearchPalette/spec.md
  *  + CD4 §3.1 #18 + CD1 Concept 3 page furniture as civic wayfinding.
+ * Color source: spec Fields 5-7 — substrate `tokens.color.atmosphere.
+ *               window-warm` (warm-paper printed-search-card register) /
+ *               backdrop `tokens.color.atmosphere.sky-low` at reduced
+ *               opacity / query-highlight on accent-prime / lane pigments
+ *               per color.md §4.3.
+ * Typography source: input + footer `tokens.type.meta` (JetBrains Mono,
+ *               terminal-search register) / match title `tokens.type.nav`
+ *               (Pangram Sans) / match snippet `tokens.type.body`
+ *               (Crimson Pro).
  *
- * AUTHORED AT B15 (idiom convergence, 2026-08-30). This component shipped
- * class hooks defined in NO stylesheet anywhere in the repo — the bucket-C
- * defect the sweep closes. This file is the canon-correct home for those
- * hooks, and it deliberately declares NOTHING visual yet.
+ * PORTED AT B16 (fork retirement, 2026-08-30). These declarations are the
+ * microsite fork's shipped styling (global.css §SearchPalette), carried
+ * VERBATIM — values untouched, selectors renamed from
+ * `.dispatch-search-palette*` to the library's `.prime-search-palette*`
+ * inventory — with ONE ruled exception: the small-print ink. The story
+ * rail's axe gate measured every fork pairing of body-muted/faint on the
+ * window-warm card below AA (muted 4.41, faint 4.03, 3.35 inside the
+ * <mark> tint), so AK ruled (B16, 2026-08-31) the palette's small runs
+ * onto the meta-ink pair — --dispatch-text-meta / --dispatch-text-meta-
+ * faint, dawn-deepened within the ink family, dusk/night aliased to the
+ * cycle body inks (dark cycles pixel-unchanged). Per-node math:
+ * packages/tokens/__tests__/contrast.test.mjs (B16 nodes).
  *
- * B16 LANDING ZONE — read before styling. The microsite carries a 384-LOC
- * fork of this component (vs 147 here) whose divergence is substantially
- * deliberate and load-bearing; B16's method is diff → classify → port the
- * deliberate parts INTO the library. The styled reality of SearchPalette
- * lives in that fork today. When B16 runs its SearchPalette session (the
- * cheapest fork entry, per the register), the ported styling lands under
- * the hook inventory below rather than inventing a parallel structure.
- * Styling authored here ahead of that diff would prejudge the port.
+ * The B15 landing-zone version of this file held cmdk/Dialog
+ * roof-hooks and deliberately zero declarations; the B16 diff ruled the
+ * fork's native-<dialog> structure DELIBERATE (spec Field 1), so that hook
+ * inventory is superseded by the fork's part inventory below.
+ *
+ * CASCADE NOTE. In the microsite these rules lived inside
+ * `@layer components`; here the file is UNLAYERED like every co-located
+ * component stylesheet (B15 discipline), so it outranks utility rules.
+ * The palette's markup carries no Tailwind utilities (its two
+ * visually-hidden nodes use the `__sr` hook below), and global.css has no
+ * competing bare `kbd` / `mark` / `input` tag rules — verified at port —
+ * so the layer move changes no rendering.
  *
  * INTENTIONAL ANTI-PATTERNS (do NOT add these without Mayor canon-promotion
  * via CD2 §10):
- *   - No visual declarations ahead of the B16 port (see above)
- *   - No re-styling of Dialog/Command internals — these hooks roof-style
- *     the headless primitives from above, which is the sanctioned direction
- *   - No per-cycle variants in this file (bridge-level cascade only)
+ *   - No re-styling of the retired cmdk/Radix internals — the component is
+ *     a native <dialog>; there are no headless primitives underneath.
+ *   - No per-cycle variants in this file (bridge-level cascade only — the
+ *     var() slots route through tokens.css [data-prime-cycle] blocks).
+ *   - No literal colors: var()/color-mix over canon slots only (Rule 4).
  */
 
-/* Modal shell (Dialog roof-hooks) */
-.prime-search-palette__overlay {
-}
-.prime-search-palette__dialog {
-}
-.prime-search-palette__title {
-}
-.prime-search-palette__description {
+.prime-search-palette {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  margin: auto;
+  padding: 0;
+  border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 30%, transparent);
+  border-radius: 10px;
+  width: min(640px, calc(100vw - 32px));
+  max-height: min(560px, calc(100vh - 64px));
+  background-color: var(--window-warm);
+  color: var(--platform-text-body-strong);
+  font-family: var(--font-body);
+  box-shadow:
+    0 10px 30px -10px color-mix(in oklch, var(--platform-text-body-strong) 50%, transparent),
+    0 4px 12px -4px color-mix(in oklch, var(--platform-text-body-strong) 25%, transparent);
+  overflow: hidden;
+  overscroll-behavior: contain;
+
+  /* Open/close motion. transition-behavior: allow-discrete is what lets
+     opacity + transform interpolate across the discrete display change
+     that native <dialog>.showModal() triggers. */
+  opacity: 0;
+  transform: translateY(8px) scale(0.985);
+  transition:
+    opacity 200ms ease-in,
+    transform 200ms ease-in,
+    overlay 200ms ease-in allow-discrete,
+    display 200ms ease-in allow-discrete;
 }
 
-/* Command surface (cmdk roof-hooks) */
-.prime-search-palette__command {
+.prime-search-palette[open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity 250ms ease-out,
+    transform 250ms ease-out,
+    overlay 250ms ease-out allow-discrete,
+    display 250ms ease-out allow-discrete;
 }
-.prime-search-palette__input {
+
+@starting-style {
+  .prime-search-palette[open] {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
 }
-.prime-search-palette__list {
+
+/* Backdrop — sky-low at 40% opacity per spec Field 5.
+ * -webkit-backdrop-filter is authored explicitly: in the microsite this rule
+ * rode global.css through Tailwind's Lightning CSS pass, which added the
+ * prefix; a component stylesheet imported from the library skips that pass,
+ * so the shipped prefix is carried by hand (same as the -webkit-line-clamp
+ * block below). */
+.prime-search-palette::backdrop {
+  background-color: color-mix(in oklch, var(--sky-low) 60%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition:
+    opacity 200ms ease-in,
+    backdrop-filter 200ms ease-in,
+    overlay 200ms ease-in allow-discrete,
+    display 200ms ease-in allow-discrete;
 }
-.prime-search-palette__group {
+
+.prime-search-palette[open]::backdrop {
+  opacity: 1;
+  transition:
+    opacity 250ms ease-out,
+    backdrop-filter 250ms ease-out,
+    overlay 250ms ease-out allow-discrete,
+    display 250ms ease-out allow-discrete;
 }
-.prime-search-palette__item {
+
+@starting-style {
+  .prime-search-palette[open]::backdrop {
+    opacity: 0;
+  }
 }
+
+/* Mobile variant — full-screen overlay */
+.prime-search-palette[data-variant='mobile'] {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  border-radius: 0;
+  border: 0;
+  inset: 0;
+}
+
+/* Reduced-motion: instant appearance-toggle, no backdrop fade */
+@media (prefers-reduced-motion: reduce) {
+  .prime-search-palette,
+  .prime-search-palette[open],
+  .prime-search-palette::backdrop,
+  .prime-search-palette[open]::backdrop {
+    transition: none;
+  }
+}
+
+/* Visually-hidden — the palette's sr-only nodes (title + live region).
+ * Declarations transplanted from the compiled Tailwind `.sr-only` rule so
+ * the hook is a transplant, not an invention (custom/ sources carry no raw
+ * utilities per the B15 law). */
+.prime-search-palette__sr {
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+/* Input row — Meta-code typography (terminal-search register) */
+.prime-search-palette__input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 20%, transparent);
+}
+
 .prime-search-palette__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--dispatch-text-body-muted);
 }
-.prime-search-palette__label {
+
+.prime-search-palette input[type='search'] {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 0.25rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--platform-text-body-strong);
+  caret-color: var(--platform-accent-prime);
 }
-.prime-search-palette__description-text {
+
+.prime-search-palette input[type='search']::placeholder {
+  color: var(--dispatch-text-body-muted);
+  font-family: var(--font-mono);
+}
+
+/* WebKit search cancel button — let users clear via the input UX */
+.prime-search-palette input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.prime-search-palette__close {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 25%, transparent);
+  border-radius: 4px;
+  padding: 0.125rem 0.4rem;
+  color: var(--dispatch-text-meta);
+  cursor: pointer;
+  transition: color 150ms ease-out, border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.prime-search-palette__close:hover {
+  color: var(--platform-text-body-strong);
+  border-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 40%, transparent);
+  background-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 5%, transparent);
+}
+
+.prime-search-palette__close:focus-visible {
+  outline: 2px solid var(--platform-accent-prime);
+  outline-offset: 2px;
+}
+
+.prime-search-palette kbd {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: inherit;
+}
+
+/* Match list */
+.prime-search-palette__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.375rem 0;
+  overflow-y: auto;
+  max-height: calc(560px - 56px - 48px);
+}
+
+.prime-search-palette[data-variant='mobile'] .prime-search-palette__list {
+  max-height: calc(100vh - 56px - 48px);
+}
+
+.prime-search-palette__match {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 100ms ease-out;
+  border-left: 2px solid transparent;
+}
+
+.prime-search-palette__match[data-selected='true'] {
+  background-color: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 6%, transparent);
+  border-left-color: var(--platform-accent-prime);
+}
+
+.prime-search-palette__match-type {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  padding-top: 0.125rem;
+}
+
+.prime-search-palette__type-badge {
+  font-family: var(--font-nav);
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dispatch-text-meta);
+  padding: 0.1rem 0.375rem;
+  border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 25%, transparent);
+  border-radius: 3px;
+}
+
+.prime-search-palette__lane-pigment {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--dispatch-lane-institutional-strong);
+}
+
+.prime-search-palette__lane-pigment[data-lane='Hybrid'] {
+  background-color: var(--platform-accent-prime);
+}
+
+.prime-search-palette__lane-pigment[data-lane='AI-led'] {
+  background-color: var(--dispatch-lane-editorial-strong);
+}
+
+/* (Human-led falls through to default = lane-institutional-strong) */
+
+.prime-search-palette__match-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.prime-search-palette__match-title {
+  margin: 0;
+  font-family: var(--font-nav);
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--platform-text-body-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prime-search-palette__match-snippet {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--dispatch-text-meta);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.prime-search-palette__match-kicker {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--dispatch-text-meta-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Query-highlight on title + snippet */
+.prime-search-palette mark {
+  background: color-mix(in oklch, var(--platform-accent-prime) 18%, transparent);
+  color: inherit;
+  padding: 0 0.05em;
+  border-radius: 2px;
+}
+
+/* Hint / empty / no-match panel */
+.prime-search-palette__hint {
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  color: var(--dispatch-text-meta);
+}
+
+.prime-search-palette__hint-title {
+  margin: 0 0 0.375rem;
+  font-family: var(--font-nav);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--platform-accent-prime);
+}
+
+.prime-search-palette__hint-body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.prime-search-palette__hint-body code {
+  font-family: var(--font-mono);
+  background: color-mix(in oklch, var(--dispatch-lane-institutional-strong) 8%, transparent);
+  padding: 0.05em 0.3em;
+  border-radius: 2px;
+}
+
+/* Footer with keyboard hints */
+.prime-search-palette__footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 20%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--dispatch-text-meta-faint);
+  flex-wrap: wrap;
+}
+
+.prime-search-palette__footer kbd {
+  display: inline-block;
+  padding: 0.05em 0.35em;
+  border: 1px solid color-mix(in oklch, var(--dispatch-lane-institutional-strong) 25%, transparent);
+  border-radius: 3px;
+  margin-right: 0.1em;
+}
+
+.prime-search-palette__footer-spacer {
+  margin-left: auto;
 }
