@@ -1,435 +1,461 @@
 {
-  "color": {
-    "$type": "color",
-    "platform": {
-      "accent-prime": {
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0.63,
-            0.185,
-            25
-          ]
-        },
-        "$description": "Lit-ember accent for UI pop (nav, lanes, pulse dot).",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-accent-prime",
-            "css": "oklch(0.63 0.185 25)",
-            "ratified-at": "amend 2 (2026-05-14), tokens.css authority chain"
-          }
-        }
-      },
-      "accent-prime-active": {
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0.52,
-            0.165,
-            22
-          ]
-        },
-        "$description": "Active-state ember.",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-accent-prime-active",
-            "css": "oklch(0.52 0.165 22)",
-            "ratified-at": "amend 2 (2026-05-14)"
-          }
-        }
-      },
-      "copper": {
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0.74,
-            0.14,
-            65
-          ]
-        },
-        "$description": "Gilded copper on walnut. 6.56:1 on dusk vellum-25 — AA at every size.",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-copper",
-            "css": "oklch(0.74 0.140 65)",
-            "ratified-at": "amend 2 (2026-05-14)"
-          }
-        }
-      },
-      "copper-deep": {
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0.6,
-            0.115,
-            60
-          ]
-        },
-        "$description": "Hover deepening on walnut.",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-copper-deep",
-            "css": "oklch(0.60 0.115 60)",
-            "ratified-at": "amend 2 (2026-05-14)"
-          }
-        }
-      },
-      "copper-label": {
-        "$value": "{color.platform.copper}",
-        "$description": "F5 size-scoped variant — dusk copper is already AA at label sizes (6.56:1 worst), so the label variant aliases cycle copper.",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-copper-label",
-            "css": "var(--platform-copper)",
-            "ratified-at": "ADR-0003 register §10 — executed S2"
-          }
-        }
-      },
-      "on-copper": {
-        "$value": "{color.dispatch.vellum.25}",
-        "$description": "F5 on-fill role — dusk vellum-25 on dusk copper: 6.56:1.",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-on-copper",
-            "css": "var(--dispatch-vellum-25)",
-            "ratified-at": "ADR-0003 register §10 — executed S2"
-          }
-        }
-      },
-      "text-body-strong": {
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0.94,
-            0.022,
-            75
-          ]
-        },
-        "$description": "Warm-cream ink.",
-        "$extensions": {
-          "prime": {
-            "tier": "platform",
-            "cycle": "dusk",
-            "cssName": "platform-text-body-strong",
-            "css": "oklch(0.94 0.022 75)",
-            "ratified-at": "amend 2 (2026-05-14)"
-          }
-        }
-      },
-      "wordmark": {
-        "dis": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.44,
-              0.155,
-              20
-            ]
-          },
-          "$description": "DIS locked to the Atlantic editorial burgundy register across all cycles (brand identity, not cycle mood); hairline lift to clear the dark walnut substrate.",
-          "$extensions": {
-            "prime": {
-              "tier": "platform",
-              "cycle": "dusk",
-              "cssName": "platform-wordmark-dis",
-              "css": "oklch(0.44 0.155 20)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        },
-        "patch": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              1,
-              0,
-              0
-            ]
-          },
-          "$description": "Patch inverts to pure white on the dark substrate.",
-          "$extensions": {
-            "prime": {
-              "tier": "platform",
-              "cycle": "dusk",
-              "cssName": "platform-wordmark-patch",
-              "css": "oklch(1 0 0)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        }
+ "color": {
+  "$type": "color",
+  "platform": {
+   "accent-prime": {
+    "$value": {
+     "colorSpace": "oklch",
+     "components": [
+      0.63,
+      0.185,
+      25
+     ]
+    },
+    "$description": "Lit-ember accent for UI pop (nav, lanes, pulse dot).",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-accent-prime",
+      "css": "oklch(0.63 0.185 25)",
+      "ratified-at": "amend 2 (2026-05-14), tokens.css authority chain"
+     }
+    }
+   },
+   "accent-prime-active": {
+    "$value": {
+     "colorSpace": "oklch",
+     "components": [
+      0.52,
+      0.165,
+      22
+     ]
+    },
+    "$description": "Active-state ember.",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-accent-prime-active",
+      "css": "oklch(0.52 0.165 22)",
+      "ratified-at": "amend 2 (2026-05-14)"
+     }
+    }
+   },
+   "copper": {
+    "$value": {
+     "colorSpace": "oklch",
+     "components": [
+      0.74,
+      0.14,
+      65
+     ]
+    },
+    "$description": "Gilded copper on walnut. 6.56:1 on dusk vellum-25 — AA at every size.",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-copper",
+      "css": "oklch(0.74 0.140 65)",
+      "ratified-at": "amend 2 (2026-05-14)"
+     }
+    }
+   },
+   "copper-deep": {
+    "$value": {
+     "colorSpace": "oklch",
+     "components": [
+      0.6,
+      0.115,
+      60
+     ]
+    },
+    "$description": "Hover deepening on walnut.",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-copper-deep",
+      "css": "oklch(0.60 0.115 60)",
+      "ratified-at": "amend 2 (2026-05-14)"
+     }
+    }
+   },
+   "copper-label": {
+    "$value": "{color.platform.copper}",
+    "$description": "F5 size-scoped variant — dusk copper is already AA at label sizes (6.56:1 worst), so the label variant aliases cycle copper.",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-copper-label",
+      "css": "var(--platform-copper)",
+      "ratified-at": "ADR-0003 register §10 — executed S2"
+     }
+    }
+   },
+   "on-copper": {
+    "$value": "{color.dispatch.vellum.25}",
+    "$description": "F5 on-fill role — dusk vellum-25 on dusk copper: 6.56:1.",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-on-copper",
+      "css": "var(--dispatch-vellum-25)",
+      "ratified-at": "ADR-0003 register §10 — executed S2"
+     }
+    }
+   },
+   "text-body-strong": {
+    "$value": {
+     "colorSpace": "oklch",
+     "components": [
+      0.94,
+      0.022,
+      75
+     ]
+    },
+    "$description": "Warm-cream ink.",
+    "$extensions": {
+     "prime": {
+      "tier": "platform",
+      "cycle": "dusk",
+      "cssName": "platform-text-body-strong",
+      "css": "oklch(0.94 0.022 75)",
+      "ratified-at": "amend 2 (2026-05-14)"
+     }
+    }
+   },
+   "wordmark": {
+    "dis": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.44,
+       0.155,
+       20
+      ]
+     },
+     "$description": "DIS locked to the Atlantic editorial burgundy register across all cycles (brand identity, not cycle mood); hairline lift to clear the dark walnut substrate.",
+     "$extensions": {
+      "prime": {
+       "tier": "platform",
+       "cycle": "dusk",
+       "cssName": "platform-wordmark-dis",
+       "css": "oklch(0.44 0.155 20)",
+       "ratified-at": "amend 2 (2026-05-14)"
       }
+     }
+    },
+    "patch": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       1,
+       0,
+       0
+      ]
+     },
+     "$description": "Patch inverts to pure white on the dark substrate.",
+     "$extensions": {
+      "prime": {
+       "tier": "platform",
+       "cycle": "dusk",
+       "cssName": "platform-wordmark-patch",
+       "css": "oklch(1 0 0)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    }
+   }
+  },
+  "dispatch": {
+   "lane": {
+    "editorial": {
+     "strong": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.66,
+        0.165,
+        35
+       ]
+      },
+      "$description": "Warm-earth lifted for the walnut register.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-lane-editorial-strong",
+        "css": "oklch(0.66 0.165 35)",
+        "ratified-at": "amend 2 (2026-05-14)"
+       }
+      }
+     }
+    },
+    "institutional": {
+     "strong": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.65,
+        0.055,
+        250
+       ]
+      },
+      "$description": "Cool-mineral lifted.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-lane-institutional-strong",
+        "css": "oklch(0.65 0.055 250)",
+        "ratified-at": "amend 2 (2026-05-14)"
+       }
+      }
+     }
     },
     "dispatch": {
-      "lane": {
-        "editorial": {
-          "strong": {
-            "$value": {
-              "colorSpace": "oklch",
-              "components": [
-                0.66,
-                0.165,
-                35
-              ]
-            },
-            "$description": "Warm-earth lifted for the walnut register.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-lane-editorial-strong",
-                "css": "oklch(0.66 0.165 35)",
-                "ratified-at": "amend 2 (2026-05-14)"
-              }
-            }
-          }
-        },
-        "institutional": {
-          "strong": {
-            "$value": {
-              "colorSpace": "oklch",
-              "components": [
-                0.65,
-                0.055,
-                250
-              ]
-            },
-            "$description": "Cool-mineral lifted.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-lane-institutional-strong",
-                "css": "oklch(0.65 0.055 250)",
-                "ratified-at": "amend 2 (2026-05-14)"
-              }
-            }
-          }
-        },
-        "dispatch": {
-          "strong": {
-            "$value": "{color.platform.accent-prime}",
-            "$description": "Lane 3 inherits cycle accent-prime.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-lane-dispatch-strong",
-                "css": "var(--platform-accent-prime)",
-                "ratified-at": "CD2 Decision 5d §10"
-              }
-            }
-          }
-        }
-      },
-      "text": {
-        "body": {
-          "strong": {
-            "$value": "{color.platform.text-body-strong}",
-            "$description": "Aliases the cycle platform ink.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-text-body-strong",
-                "css": "var(--platform-text-body-strong)",
-                "ratified-at": "CD2 §2.4"
-              }
-            }
-          },
-          "muted": {
-            "$value": {
-              "colorSpace": "oklch",
-              "components": [
-                0.72,
-                0.015,
-                70
-              ]
-            },
-            "$description": "Lifted muted ink. 6.27:1 on dusk vellum-25 — AA.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-text-body-muted",
-                "css": "oklch(0.72 0.015 70)",
-                "ratified-at": "amend 2 (2026-05-14)"
-              }
-            }
-          },
-          "faint": {
-            "$value": {
-              "colorSpace": "oklch",
-              "components": [
-                0.64,
-                0.014,
-                65
-              ]
-            },
-            "$description": "Whisper register — OQ-3 AA cycle variant (mirror of executed F5): C/H held at the amend-2 family, lightness lifted 0.56→0.64 for 4.62:1 on dusk vellum-25 (worst surface; 5.15 on -50, 5.60 on -100). Emphasis ordinal preserved: faint 0.64 < muted 0.72 < strong 0.94 — halation managed above AA, never below (Material dark-theme tiers). Per-node math in __tests__/contrast.test.mjs.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-text-body-faint",
-                "css": "oklch(0.64 0.014 65)",
-                "ratified-at": "OQ-3 (AK 2026-08-18) — executed S5; supersedes amend 2 (2026-05-14)"
-              }
-            }
-          },
-          "muted-deep": {
-            "$value": "{color.dispatch.text.body.muted}",
-            "$description": "F5 variant — dusk muted is already AA (6.27:1 worst); aliases cycle muted.",
-            "$extensions": {
-              "prime": {
-                "tier": "dispatch",
-                "cycle": "dusk",
-                "cssName": "dispatch-text-body-muted-deep",
-                "css": "var(--dispatch-text-body-muted)",
-                "ratified-at": "ADR-0003 register §10 — executed S2"
-              }
-            }
-          }
-        }
-      },
-      "vellum": {
-        "25": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.26,
-              0.018,
-              58
-            ]
-          },
-          "$description": "Walnut upper plane.",
-          "$extensions": {
-            "prime": {
-              "tier": "dispatch",
-              "cycle": "dusk",
-              "cssName": "dispatch-vellum-25",
-              "css": "oklch(0.26 0.018 58)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        },
-        "50": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.22,
-              0.022,
-              55
-            ]
-          },
-          "$description": "Walnut interop step.",
-          "$extensions": {
-            "prime": {
-              "tier": "dispatch",
-              "cycle": "dusk",
-              "cssName": "dispatch-vellum-50",
-              "css": "oklch(0.22 0.022 55)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        },
-        "100": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.18,
-              0.025,
-              50
-            ]
-          },
-          "$description": "Walnut page substrate.",
-          "$extensions": {
-            "prime": {
-              "tier": "dispatch",
-              "cycle": "dusk",
-              "cssName": "dispatch-vellum-100",
-              "css": "oklch(0.18 0.025 50)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        },
-        "200": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.14,
-              0.022,
-              48
-            ]
-          },
-          "$description": "Walnut reflect stratum.",
-          "$extensions": {
-            "prime": {
-              "tier": "dispatch",
-              "cycle": "dusk",
-              "cssName": "dispatch-vellum-200",
-              "css": "oklch(0.14 0.022 48)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        },
-        "300": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.1,
-              0.018,
-              45
-            ]
-          },
-          "$description": "Deepest walnut void.",
-          "$extensions": {
-            "prime": {
-              "tier": "dispatch",
-              "cycle": "dusk",
-              "cssName": "dispatch-vellum-300",
-              "css": "oklch(0.10 0.018 45)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        }
+     "strong": {
+      "$value": "{color.platform.accent-prime}",
+      "$description": "Lane 3 inherits cycle accent-prime.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-lane-dispatch-strong",
+        "css": "var(--platform-accent-prime)",
+        "ratified-at": "CD2 Decision 5d §10"
+       }
       }
-    },
-    "asset": {
-      "cartography": {
-        "pulse": {
-          "$value": {
-            "colorSpace": "oklch",
-            "components": [
-              0.65,
-              0.2,
-              24
-            ]
-          },
-          "$description": "Ember pulse lifted for the dark map.",
-          "$extensions": {
-            "prime": {
-              "tier": "asset",
-              "cycle": "dusk",
-              "cssName": "asset-cartography-pulse",
-              "css": "oklch(0.65 0.200 24)",
-              "ratified-at": "amend 2 (2026-05-14)"
-            }
-          }
-        }
+     }
+    }
+   },
+   "text": {
+    "body": {
+     "strong": {
+      "$value": "{color.platform.text-body-strong}",
+      "$description": "Aliases the cycle platform ink.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-text-body-strong",
+        "css": "var(--platform-text-body-strong)",
+        "ratified-at": "CD2 §2.4"
+       }
       }
+     },
+     "muted": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.72,
+        0.015,
+        70
+       ]
+      },
+      "$description": "Lifted muted ink. 6.27:1 on dusk vellum-25 — AA.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-text-body-muted",
+        "css": "oklch(0.72 0.015 70)",
+        "ratified-at": "amend 2 (2026-05-14)"
+       }
+      }
+     },
+     "faint": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.64,
+        0.014,
+        65
+       ]
+      },
+      "$description": "Whisper register — OQ-3 AA cycle variant (mirror of executed F5): C/H held at the amend-2 family, lightness lifted 0.56→0.64 for 4.62:1 on dusk vellum-25 (worst surface; 5.15 on -50, 5.60 on -100). Emphasis ordinal preserved: faint 0.64 < muted 0.72 < strong 0.94 — halation managed above AA, never below (Material dark-theme tiers). Per-node math in __tests__/contrast.test.mjs.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-text-body-faint",
+        "css": "oklch(0.64 0.014 65)",
+        "ratified-at": "OQ-3 (AK 2026-08-18) — executed S5; supersedes amend 2 (2026-05-14)"
+       }
+      }
+     },
+     "muted-deep": {
+      "$value": "{color.dispatch.text.body.muted}",
+      "$description": "F5 variant — dusk muted is already AA (6.27:1 worst); aliases cycle muted.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-text-body-muted-deep",
+        "css": "var(--dispatch-text-body-muted)",
+        "ratified-at": "ADR-0003 register §10 — executed S2"
+       }
+      }
+     }
     },
-    "$description": "DUSK cycle overrides — chiaroscuro engraving, lit oak-paneled study (promoted 2026-05-14, amend 2). Warm-dark walnut register (hue 45-58°, chroma 0.018-0.025), lit-ember accent, gilded copper, warm-cream ink. Self-contained DTCG tree; emitted into the [data-prime-cycle=\"dusk\"] runtime cascade block. Spatial-perceptual ordinal (sky-high lighter than window-warm) preserved so elevation hierarchy holds; the chrome aliases are NOT re-emitted (they cascade through the vellum overrides)."
-  }
+    "meta": {
+     "$value": "{color.dispatch.text.body.muted}",
+     "$description": "Meta register — dusk muted is already AA on the cycle card (OQ-3 cycle variants); aliases cycle muted so dark cycles are pixel-unchanged by the B16 ruling.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-text-meta",
+       "css": "var(--dispatch-text-body-muted)",
+       "ratified-at": "B16 SearchPalette AA ruling (AK, 2026-08-31)"
+      }
+     }
+    },
+    "meta-faint": {
+     "$value": "{color.dispatch.text.body.faint}",
+     "$description": "Meta register — dusk faint is already AA on the cycle card (OQ-3 cycle variants); aliases cycle faint so dark cycles are pixel-unchanged by the B16 ruling.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-text-meta-faint",
+       "css": "var(--dispatch-text-body-faint)",
+       "ratified-at": "B16 SearchPalette AA ruling (AK, 2026-08-31)"
+      }
+     }
+    }
+   },
+   "vellum": {
+    "25": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.26,
+       0.018,
+       58
+      ]
+     },
+     "$description": "Walnut upper plane.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-vellum-25",
+       "css": "oklch(0.26 0.018 58)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    },
+    "50": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.22,
+       0.022,
+       55
+      ]
+     },
+     "$description": "Walnut interop step.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-vellum-50",
+       "css": "oklch(0.22 0.022 55)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    },
+    "100": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.18,
+       0.025,
+       50
+      ]
+     },
+     "$description": "Walnut page substrate.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-vellum-100",
+       "css": "oklch(0.18 0.025 50)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    },
+    "200": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.14,
+       0.022,
+       48
+      ]
+     },
+     "$description": "Walnut reflect stratum.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-vellum-200",
+       "css": "oklch(0.14 0.022 48)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    },
+    "300": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.1,
+       0.018,
+       45
+      ]
+     },
+     "$description": "Deepest walnut void.",
+     "$extensions": {
+      "prime": {
+       "tier": "dispatch",
+       "cycle": "dusk",
+       "cssName": "dispatch-vellum-300",
+       "css": "oklch(0.10 0.018 45)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    }
+   }
+  },
+  "asset": {
+   "cartography": {
+    "pulse": {
+     "$value": {
+      "colorSpace": "oklch",
+      "components": [
+       0.65,
+       0.2,
+       24
+      ]
+     },
+     "$description": "Ember pulse lifted for the dark map.",
+     "$extensions": {
+      "prime": {
+       "tier": "asset",
+       "cycle": "dusk",
+       "cssName": "asset-cartography-pulse",
+       "css": "oklch(0.65 0.200 24)",
+       "ratified-at": "amend 2 (2026-05-14)"
+      }
+     }
+    }
+   }
+  },
+  "$description": "DUSK cycle overrides — chiaroscuro engraving, lit oak-paneled study (promoted 2026-05-14, amend 2). Warm-dark walnut register (hue 45-58°, chroma 0.018-0.025), lit-ember accent, gilded copper, warm-cream ink. Self-contained DTCG tree; emitted into the [data-prime-cycle=\"dusk\"] runtime cascade block. Spatial-perceptual ordinal (sky-high lighter than window-warm) preserved so elevation hierarchy holds; the chrome aliases are NOT re-emitted (they cascade through the vellum overrides)."
+ }
 }

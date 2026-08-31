@@ -123,6 +123,15 @@ export const DAWN = `:root {
      wheat, 6.33:1 on sky-low (register §10, executed at S2). */
   --dispatch-text-body-muted-deep: {css};
 
+  /* Meta ink pair: the B16 AA ruling (AK, 2026-08-31) — the palette/meta
+     small-print register on the window-warm card and its tints, where the
+     body inks fall below AA (muted 4.41 on window-warm, 3.35 in the
+     accent-18% mark tint; faint 4.03). Darkened within the ink family
+     (C/H held); card-ordinal preserved (meta-faint lighter than meta stays
+     the whisper). Per-node math in __tests__/contrast.test.mjs. */
+  --dispatch-text-meta:       {css};
+  --dispatch-text-meta-faint: {css};
+
   /* Vellum atmospheric scale (color.md §2.2 + §4.5) — numeric source-of-truth */
   --dispatch-vellum-25:  {css};
   --dispatch-vellum-50:  {css};
@@ -259,6 +268,8 @@ export const DUSK = `/* ========================================================
   --dispatch-text-body-muted:  {css};
   --dispatch-text-body-faint:  {css};
   --dispatch-text-body-muted-deep: {css};
+  --dispatch-text-meta:       {css};
+  --dispatch-text-meta-faint: {css};
 
   --dispatch-vellum-25:  {css};
   --dispatch-vellum-50:  {css};
@@ -315,6 +326,8 @@ export const NIGHT = `/* =======================================================
   --dispatch-text-body-muted:  {css};
   --dispatch-text-body-faint:  {css};
   --dispatch-text-body-muted-deep: {css};
+  --dispatch-text-meta:       {css};
+  --dispatch-text-meta-faint: {css};
 
   /* True-black Vellum — neutral near-zero chroma, hairline warm bias only.
      Spatial ordinal preserved: sky-high lifted upper plane, window-warm

@@ -34,27 +34,54 @@ describe("F11 — LiveTicker", () => {
 });
 
 describe("F11 — SearchPalette", () => {
-  it("renders Dialog when open + filters via cmdk", () => {
-    const onOpenChange = vi.fn();
-    const onSelect = vi.fn();
+  const index = [
+    {
+      id: "1",
+      type: "article" as const,
+      title: "Dispatch · Week 3",
+      snippet: "The cartography substrate lands.",
+      href: "/dispatch/week-3",
+      lane: "Hybrid" as const,
+    },
+    {
+      id: "2",
+      type: "district" as const,
+      title: "Editorial District",
+      snippet: "Homepage — low dial.",
+      href: "/",
+    },
+  ];
+
+  it("renders the spec Field 1 structure when open: native dialog + combobox input", () => {
+    const onClose = vi.fn();
+    render(<SearchPalette open onClose={onClose} index={index} />);
+    const dialog = screen.getByRole("dialog", { hidden: true });
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.tagName).toBe("DIALOG");
+    expect(dialog.id).toBe("dispatch-search-palette");
+    expect(
+      screen.getByRole("combobox", { name: "Search DISpatch", hidden: true }),
+    ).toBeInTheDocument();
+    // Empty query → the hint panel, no listbox, aria-controls unset (A13)
+    expect(screen.queryByRole("listbox", { hidden: true })).toBeNull();
+    expect(
+      screen
+        .getByRole("combobox", { name: "Search DISpatch", hidden: true })
+        .getAttribute("aria-controls"),
+    ).toBeNull();
+  });
+
+  it("queries the index via initialQuery: ranked options + <mark> highlight", () => {
+    const onClose = vi.fn();
     render(
-      <SearchPalette
-        open
-        onOpenChange={onOpenChange}
-        groups={[
-          {
-            heading: "Articles",
-            items: [
-              { id: "1", label: "Dispatch · Week 3", onSelect },
-              { id: "2", label: "Signal 001", onSelect },
-            ],
-          },
-        ]}
-      />,
+      <SearchPalette open onClose={onClose} index={index} initialQuery="dispatch" />,
     );
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText("Search Prime DISpatch")).toBeInTheDocument();
-    expect(screen.getByText("Dispatch · Week 3")).toBeInTheDocument();
+    const listbox = screen.getByRole("listbox", { hidden: true });
+    expect(listbox).toBeInTheDocument();
+    const options = screen.getAllByRole("option", { hidden: true });
+    expect(options.length).toBe(1);
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
+    expect(options[0]?.querySelector("mark")?.textContent).toBe("Dispatch");
   });
 });
 

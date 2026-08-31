@@ -102,6 +102,22 @@ const cases = [
   { cycle: 'dusk', fg: 'chrome-text', bg: 'surface-inset', min: 4.5, node: 'dusk chrome-text on surface-inset — OQ-4' },
   { cycle: 'night', fg: 'chrome-text', bg: 'surface-page', min: 4.5, node: 'night chrome-text on surface-page — OQ-4' },
   { cycle: 'night', fg: 'chrome-text', bg: 'surface-inset', min: 4.5, node: 'night chrome-text on surface-inset — OQ-4' },
+
+  // ---- B16 (AK 2026-08-31): the SearchPalette meta-ink pair — the palette's
+  // small-print register on the window-warm card, where the body inks fall
+  // below AA (muted 4.41, faint 4.03; story-rail axe, 2026-08-31). The card's
+  // tinted surfaces are color-mix recipes not var-resolvable here — the
+  // axe-measured surfaces are asserted literally (wheat-band precedent).
+  { cycle: 'dawn', fg: 'dispatch-text-meta', bg: 'window-warm', min: 4.5, node: 'palette snippet 13px / type badge 10px / hint body / close chip on the card — B16' },
+  { cycle: 'dawn', fg: 'dispatch-text-meta', bgLiteral: '#d4cbb6', min: 4.5, node: 'palette meta ink on the selected-row tint (institutional 6% over the card) — B16' },
+  { cycle: 'dawn', fg: 'dispatch-text-meta', bgLiteral: '#d0b4a2', min: 4.5, node: 'palette snippet inside the <mark> highlight (accent-prime 18% over the card) — B16' },
+  { cycle: 'dawn', fg: 'dispatch-text-meta', bgLiteral: '#d1c8b4', min: 4.5, node: 'palette hint code chip (institutional 8% over the card) — B16' },
+  { cycle: 'dawn', fg: 'dispatch-text-meta-faint', bg: 'window-warm', min: 4.5, node: 'palette match kicker + footer keyboard hints 11px on the card — B16' },
+  { cycle: 'dawn', fg: 'dispatch-text-meta-faint', bgLiteral: '#d4cbb6', min: 4.5, node: 'palette kicker inside the selected row — B16' },
+  { cycle: 'dusk', fg: 'dispatch-text-meta', bg: 'window-warm', min: 4.5, node: 'dusk palette meta (alias → cycle muted) on the dusk card — B16' },
+  { cycle: 'dusk', fg: 'dispatch-text-meta-faint', bg: 'window-warm', min: 4.5, node: 'dusk palette meta-faint (alias → cycle faint) — B16' },
+  { cycle: 'night', fg: 'dispatch-text-meta', bg: 'window-warm', min: 4.5, node: 'night palette meta (alias → cycle muted) on the void card — B16' },
+  { cycle: 'night', fg: 'dispatch-text-meta-faint', bg: 'window-warm', min: 4.5, node: 'night palette meta-faint (alias → cycle faint) — B16' },
 ];
 
 for (const c of cases) {
