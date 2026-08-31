@@ -6,6 +6,23 @@
 @import "./letterpress.css";
 @import "maplibre-gl/dist/maplibre-gl.css";
 
+/* ── The library is a scanned source (B16 precondition; F12's production half)
+ *
+ * `@prime-dispatch/ui` reaches this app as a workspace symlink under
+ * node_modules, and Tailwind v4 auto-detection excludes node_modules — so a
+ * utility-styled library component renders BARE in production the moment one
+ * lands on the live surface (measured at A14: 32 theme-backed utilities used
+ * only by packages/ui, zero in the built CSS). Same mechanism and path
+ * arithmetic as the story lane's entry (.storybook/tailwind.css), which is
+ * the worked example. Auto-detection stays ON (unlike the story lane, this
+ * surface's own sources are the primary vocabulary); the library path is
+ * ADDED to it. Stories and tests never render here, so they are subtracted —
+ * the shipped utility set is a function of shipped component sources only. */
+@source "../../../../packages/ui/src";
+@source not "../../../../packages/ui/src/**/*.stories.tsx";
+@source not "../../../../packages/ui/src/**/__tests__";
+@source not "../../../../packages/ui/src/**/*.test.tsx";
+
 /* All cycle-aware Tailwind utilities now cascade via var() chains that
  * route through tokens.css [data-prime-cycle="…"] blocks. No --color-*
  * overrides are needed here — those would only matter if @theme inline
