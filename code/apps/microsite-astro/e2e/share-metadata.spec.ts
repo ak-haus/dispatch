@@ -79,6 +79,14 @@ function jpegSize(bytes: Buffer): { width: number; height: number } {
 	throw new Error('no SOF marker')
 }
 
+/**
+ * Whether a card image is one of ours (a /og/ rendition) or a contract `hero.src` that is already an
+ * absolute URL elsewhere — the one case the card is used as given, with no dimensions to declare.
+ */
+function isRendition(image: string): boolean {
+	return /^https:\/\/dispatchmag\.dev\/og\/[a-z0-9-]+\.jpg$/.test(image)
+}
+
 /** The card and feed link every route carries, checked the same way everywhere. */
 async function expectCard(page: Page, request: APIRequestContext, title: string, description: string) {
 	expect(await meta(page, 'description')).toBe(description)
@@ -90,17 +98,25 @@ async function expectCard(page: Page, request: APIRequestContext, title: string,
 	expect(await meta(page, 'twitter:description')).toBe(description)
 
 	const image = (await meta(page, 'og:image')) ?? ''
+	expect(image, 'og:image is an absolute https URL').toMatch(/^https:\/\//)
 	expect(await meta(page, 'twitter:image')).toBe(image)
-	expect(await meta(page, 'og:image:type')).toBe('image/jpeg')
-	expect(await meta(page, 'og:image:width')).toBe(String(CARD_WIDTH))
-	expect(await meta(page, 'og:image:height')).toBe(String(CARD_HEIGHT))
 	const alt = await meta(page, 'og:image:alt')
 	expect(alt).toBeTruthy()
 	expect(await meta(page, 'twitter:image:alt')).toBe(alt)
 
-	// The image the tags name is really there.
-	const res = await request.get(local(image))
-	expect(res.status(), `${image} is served`).toBe(200)
+	if (isRendition(image)) {
+		expect(await meta(page, 'og:image:type')).toBe('image/jpeg')
+		expect(await meta(page, 'og:image:width')).toBe(String(CARD_WIDTH))
+		expect(await meta(page, 'og:image:height')).toBe(String(CARD_HEIGHT))
+		// The image the tags name is really there.
+		const res = await request.get(local(image))
+		expect(res.status(), `${image} is served`).toBe(200)
+	} else {
+		// A remote contract hero: its size is unknown, so no dimensions may be claimed.
+		for (const key of ['og:image:type', 'og:image:width', 'og:image:height']) {
+			await expect(page.locator(`head meta[property="${key}"]`), key).toHaveCount(0)
+		}
+	}
 
 	const feed = page.locator('head link[rel="alternate"][type="application/rss+xml"]')
 	await expect(feed).toHaveCount(1)
@@ -151,9 +167,14 @@ test('every dispatch says in its head what its page says', async ({ page, reques
 		expect(await meta(page, 'article:published_time')).toBe(published)
 
 		const { image, alt } = await expectCard(page, request, title, dek)
-		expect(image).toBe(`${ORIGIN}/og/${id}.jpg`)
-		// The card's alt is the one the page gives the same plate.
-		expect(await page.locator('aside img').first().getAttribute('alt')).toBe(alt)
+		// A dispatch's card is its own rendition, the site card when it has no image of its own, or a
+		// remote contract hero — never another dispatch's.
+		if (isRendition(image)) expect([`${ORIGIN}/og/${id}.jpg`, `${ORIGIN}/og/site.jpg`]).toContain(image)
+		// When the card is built from the plate the page shows, it carries that plate's alt.
+		const plate = page.locator('aside img')
+		if (image === `${ORIGIN}/og/${id}.jpg` && alt?.startsWith('Banner illustration for ') && (await plate.count()) > 0) {
+			expect(await plate.first().getAttribute('alt')).toBe(alt)
+		}
 
 		const ld = page.locator('head script[type="application/ld+json"]')
 		await expect(ld).toHaveCount(1)
@@ -189,14 +210,22 @@ test('pages without an address of their own name no canonical', async ({ page })
 	}
 })
 
-test('every card is a 1200×630 JPEG under 300 KB', async ({ request }) => {
-	const slugs = ['site', ...(await dispatchPaths(request)).map((p) => p.split('/').filter(Boolean).pop())]
-	for (const slug of slugs) {
-		const res = await request.get(`/og/${slug}.jpg`)
-		expect(res.status(), slug).toBe(200)
+test('every card a page names is a 1200×630 JPEG under 300 KB', async ({ page, request }) => {
+	// Collected from the pages rather than assumed per dispatch, so a dispatch with no plate of its
+	// own (it falls back to the site card) is valid content, not a failing test.
+	const cards = new Set<string>()
+	for (const path of [...Object.keys(SITE_ROUTES), ...(await dispatchPaths(request))]) {
+		await page.goto(path)
+		const image = (await meta(page, 'og:image')) ?? ''
+		if (isRendition(image)) cards.add(local(image))
+	}
+	expect(cards.has('/og/site.jpg'), 'the site card is in use').toBe(true)
+	for (const card of cards) {
+		const res = await request.get(card)
+		expect(res.status(), card).toBe(200)
 		const bytes = await res.body()
-		expect(jpegSize(bytes), slug).toEqual({ width: CARD_WIDTH, height: CARD_HEIGHT })
-		expect(bytes.length, `${slug} bytes`).toBeLessThan(CARD_MAX_BYTES)
+		expect(jpegSize(bytes), card).toEqual({ width: CARD_WIDTH, height: CARD_HEIGHT })
+		expect(bytes.length, `${card} bytes`).toBeLessThan(CARD_MAX_BYTES)
 	}
 })
 
@@ -210,6 +239,29 @@ test('the feed lists every dispatch, newest first, as the pages describe them', 
 	expect(xml).toContain(`<atom:link href="${ORIGIN}/rss.xml" rel="self" type="application/rss+xml"/>`)
 	// RSS 2.0 <author> must be an e-mail address; the byline rides dc:creator instead.
 	expect(xml).not.toContain('<author>')
+
+	// Well-formed, and the RSS 2.0 structure every reader relies on: one channel carrying title, link
+	// and description; every item carrying title, link, guid, pubDate and description exactly once.
+	await page.goto('/')
+	const structure = await page.evaluate((source) => {
+		const doc = new DOMParser().parseFromString(source, 'application/xml')
+		if (doc.getElementsByTagName('parsererror').length > 0) return { wellFormed: false }
+		const once = (el: Element, tag: string) => [...el.children].filter((c) => c.tagName === tag).length === 1
+		const channels = doc.documentElement.getElementsByTagName('channel')
+		const channel = channels[0]
+		return {
+			wellFormed: true,
+			root: doc.documentElement.tagName,
+			version: doc.documentElement.getAttribute('version'),
+			channels: channels.length,
+			channelFields: ['title', 'link', 'description'].every((t) => once(channel, t)),
+			items: [...channel.getElementsByTagName('item')].map((item) =>
+				['title', 'link', 'guid', 'pubDate', 'description'].every((t) => once(item, t)),
+			),
+		}
+	}, xml)
+	expect(structure).toMatchObject({ wellFormed: true, root: 'rss', version: '2.0', channels: 1, channelFields: true })
+	expect(structure.items?.every(Boolean), 'every item carries its five fields once').toBe(true)
 
 	const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => {
 		const field = (tag: string) => m[1].match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1] ?? ''
