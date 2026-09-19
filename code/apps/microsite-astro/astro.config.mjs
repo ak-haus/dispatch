@@ -44,6 +44,14 @@ const SENTRY_UPLOAD = Boolean(process.env.SENTRY_AUTH_TOKEN)
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://dispatchmag.dev',
+	// Astro 7 changed the default to 'jsx', which strips the whitespace between
+	// inline elements. Measured against the Astro 6 build (B1, 2026-09-19), that
+	// glued the article byline ("AK Almoumen·Mayor"), the back links and prose
+	// around inline <code>. `true` is Astro 6's lossless, rendering-preserving
+	// compression, as the v7 upgrade guide documents for keeping the previous
+	// behavior. Adopting JSX whitespace would be a deliberate change of its own:
+	// explicit {" "} at every inline seam, reviewed pixel by pixel.
+	compressHTML: true,
 	integrations: [
 		react(),
 		mdx(),
@@ -108,6 +116,19 @@ export default defineConfig({
 		},
 		resolve: {
 			dedupe: ['react', 'react-dom'],
+			// Astro 7 (B1): the prerender step imports its bundled output from
+			// dist/.prerender, and that output keeps Astro's own `cookie` import
+			// external. Under pnpm's strict layout the bare specifier cannot
+			// resolve from the app, so it either fails or walks up to an unrelated
+			// hoisted copy — measured on 2026-09-19 as cookie@0.7.2 from a
+			// node_modules outside the repo, which lacks the `parseCookie` export
+			// Astro 7 needs. Bundling it resolves Astro's own copy at build time —
+			// the fix Astro applies upstream to `neotraverse` (ALWAYS_NOEXTERNAL,
+			// withastro/astro#17508). Vite 8 spelling: top-level `resolve.noExternal`
+			// ("previously `ssr.noExternal`") reaches every server environment,
+			// Astro's `prerender` included; `ssr.noExternal` alone does not.
+			// Drop it once Astro bundles `cookie` itself.
+			noExternal: ['cookie'],
 		},
 		optimizeDeps: {
 			include: ['react', 'react-dom', 'react-dom/client'],
