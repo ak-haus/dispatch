@@ -13,6 +13,13 @@ name: checkpoint automerge
 # modification, a fork) is left for a human. If a later push breaks the shape,
 # auto-merge is switched back off. It is automation, not a gate, so it does not
 # join the ruleset.
+#
+# Branch cleanup: a merge performed by auto-merge that GITHUB_TOKEN enabled does
+# not trigger the repository's "Automatically delete head branches" setting
+# (measured on #53, 2026-09-19; merges by a person still do). That merge also
+# starts no workflow run, so each new checkpoint PR deletes the heads of earlier
+# checkpoint PRs that have already MERGED. It never touches open or unmerged PRs,
+# never the current branch, and only names matching checkpoint/YYYY-MM-DD.
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
@@ -72,3 +79,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: gh pr merge --disable-auto "$PR_URL" || true
+
+      - name: Delete heads of earlier, already-merged checkpoint PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CURRENT: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          gh pr list --repo "$GITHUB_REPOSITORY" --state merged --limit 100 \
+            --json headRefName,headRepositoryOwner \
+            --jq ".[] | select(.headRepositoryOwner.login == \"${GITHUB_REPOSITORY_OWNER}\") | .headRefName" \
+          | sort -u | while read -r ref; do
+              [[ "$ref" =~ ^checkpoint/[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || continue
+              [[ "$ref" == "$CURRENT" ]] && continue
+              if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${ref}" >/dev/null 2>&1; then
+                gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${ref}"
+                echo "deleted merged head ${ref}"
+              fi
+            done
