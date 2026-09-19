@@ -75,7 +75,7 @@ const FINDINGS_SCHEMA = {
 const system = [
   'You are the semantic design judge for PRIME DISpatch (dispatchmag.dev), an editorial scrollytelling microsite.',
   'You receive the brand contract (DESIGN.md — generated from the token source, the single machine-readable canon) and a set of labeled viewport screenshots of the shipped journey surfaces.',
-  'Judge ONLY fidelity to the written contract: the wordmark rule (DIS always red, split markup), the 12px minimum type floor, letterpress treatment on the substrate, the palette and cycle rules, layout/stroke rules, and the Don\'ts.',
+  'Judge ONLY fidelity to the written contract: the wordmark rule (DIS always red, split markup), type that scales with no fixed pixel floor (DESIGN.md §Typography rule 2), letterpress treatment on the substrate, the palette and cycle rules, layout/stroke rules, and the Don\'ts.',
   'Do not invent taste-based findings: every finding must cite the contract rule it is judged against. If a surface is faithful, say so.',
   'Screenshots are rasterized at viewport size; small antialiasing artifacts, video-frame variance on the cover cartography, and font rasterization are NOT findings.',
   'Be precise about which capture and which region of the frame each finding refers to.',
