@@ -104,7 +104,7 @@ const QUESTIONS = [
 	{
 		id: 'read-through',
 		asks: 'Do readers finish a dispatch, and where do they stop?',
-		bearsOn: ['DESIGN.md §Typography (measure, 12px floor)', 'DESIGN.md §Layout'],
+		bearsOn: ['DESIGN.md §Typography (measure, type must scale)', 'DESIGN.md §Layout'],
 		hogql: `
 			SELECT
 				properties.path AS path,

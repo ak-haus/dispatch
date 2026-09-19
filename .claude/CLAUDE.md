@@ -48,8 +48,8 @@ below-the-fold, `client:idle` non-critical) · keep React components under ~400 
   (`representation/visual-system/`). Mutable: motion + scroll + interaction + responsive behavior.
 
 ## Universal type rules (apply everywhere)
-Moved to `DESIGN.md` §Typography (the generated brand contract — wordmark `DIS`-red split rule, 12px floor,
-letterpress on the substrate). They apply everywhere, no exception; read them there, edit them in
+Moved to `DESIGN.md` §Typography (the generated brand contract — wordmark `DIS`-red split rule, type must
+scale with no fixed pixel floor (R1a, ADR-0004), letterpress on the substrate). They apply everywhere, no exception; read them there, edit them in
 `code/packages/tokens/scripts/emit/layout-design-md.mjs` (never in the generated file).
 
 ## Verification before claiming done
