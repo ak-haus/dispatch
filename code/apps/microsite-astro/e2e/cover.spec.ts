@@ -30,8 +30,8 @@ const VIEWPORTS = [
 ] as const
 
 async function coverGeometry(page: import('@playwright/test').Page) {
-	// The letters animate in on the main thread through Motion, so
-	// getAnimations() never sees them and settleMotion returns early.
+	// The letters rise in through a CSS animation (`.wordmark-enter`), which
+	// settleMotion already waits out; this asserts the rest state directly.
 	await page.waitForFunction(
 		() =>
 			Array.from(
@@ -96,9 +96,8 @@ for (const vp of VIEWPORTS) {
 			//
 			// The ADR assigns home to this lane precisely because the pixel floor
 			// excludes it (visual.spec.ts header note), and this file is the only
-			// place the cover provably reaches rest: coverGeometry waits on the
-			// letter-by-letter wordmark, which Motion drives on the main thread
-			// where getAnimations() cannot see it.
+			// place the cover provably reaches rest: coverGeometry waits for every
+			// letter of the wordmark to finish its entrance.
 			//
 			// One snapshot per viewport, from THIS test only — the other four
 			// cover tests end on the same page (and one deliberately rewrites the

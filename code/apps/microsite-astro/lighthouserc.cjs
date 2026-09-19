@@ -1,22 +1,40 @@
 /**
  * Lighthouse budget (Golden Board A4) — a RATCHET, not an aspiration.
  *
- * Ceilings sit ~15–25% above the 2026-08-18 measured baseline so CI blocks
- * REGRESSIONS from today's floor; the two known defects stay visible on the
- * Golden Board as their own repair rows and tighten this file when fixed:
- *   /            perf 65 · LCP 13.2s (map-hero image cost) · 2.3MB
- *   /wire/       perf 95 · LCP 2.6s · 374KB
- *   /dispatch/…  perf 54 · LCP 5.4s · CLS 0.345 (article layout shift)
- * B13 re-measured 2026-09-19 (Lighthouse 12.6.1, mobile, simulated, 3 runs):
- *   production, shipped PP faces    CLS 0.0000  (what readers get — B13 is repaired)
- *   local build with the PP faces   CLS 0.0285
- *   THIS job's build (no PP faces)  CLS 0.2326 on Astro 7 · 0.3185 on Astro 6
- * This job builds hermetic-fontless, so its CLS measures a page no reader sees.
- * The ceiling binds what the job measures: 0.42 → 0.28 (~20% over 0.2326). F40
- * files the instrument gap: hydrate the PP faces here, as the visual lanes have
- * since S1, then re-baseline — the article ceiling can then fall toward 0.05.
+ * Ceilings sit ~15–30% above the measured baseline, so CI blocks REGRESSIONS
+ * from today's floor. Re-baselined 2026-09-19 at Build 25 on the job's own
+ * figures, which the run now prints (scripts/lighthouse-figures.mjs), with
+ * the licensed PP faces hydrated — before F40 this job built fontless and its
+ * article CLS read 0.2326 against production's 0.0000.
+ *
+ * BASELINE — CI, Lighthouse 12.6.1, Chrome 152, mobile, simulated, 3 runs,
+ * median (min–max over two runs of the same code, so the spread is the
+ * runner's own), PP faces served:
+ *   /            perf 70 · LCP 6994–7908 (6489–8304) · CLS 0.0000 · TBT 12–89 · 2009KB
+ *   /wire/       perf 93 · LCP 2864–3026 (2719–3170) · CLS 0.0007 · TBT 0 ·  365KB
+ *   /dispatch/…  perf 73 · LCP 6330–6338 (6187–6352) · CLS 0.0008 · TBT 0 ·  884KB
+ *
+ * Production the same day, before the B12 repair (dispatchmag.dev, same
+ * Lighthouse, 3 runs, canonical no-slash URLs): / LCP 12.70s · CLS 0.0000 ·
+ * 2435KB · /wire LCP 1.69s · CLS 0.0006 · 453KB · article LCP 6.49s · CLS
+ * 0.0285 · 970KB. Byte weights match this job to within 0.3% once
+ * production's analytics module (PostHog, ~84KB, keyed only in Vercel) is
+ * subtracted — the evidence that both now measure the same page. The
+ * post-repair production figures are in the Build 25 record.
+ *
+ * Two instrument limits, stated so nobody reads more into these numbers:
+ *   - LCP here is a Lantern ESTIMATE whose graph holds every request that
+ *     finished before the observed paint. Served from localhost that is
+ *     always every request, so this LCP tracks eager bytes and the critical
+ *     path — it moved not at all when B12 made the cover's text paint at
+ *     first paint instead of after hydration (13.6s both ways) and fell to
+ *     7.0s only when the below-the-fold images went lazy. Render delay is
+ *     therefore guarded in e2e/home.spec.ts, not here.
+ *   - Reader truth is production Lighthouse, not this job (F40).
+ *
  * Lab metrics: LCP/CLS/TBT (TBT is the lab proxy for INP; INP is field-only).
- * Hermetic: static dist served locally, no feed URL, no credentials.
+ * Hermetic: static dist served locally, no feed URL, no credentials; the PP
+ * faces come from their public rail at build time, as the visual lanes' do.
  */
 
 module.exports = {
@@ -35,30 +53,39 @@ module.exports = {
 				{
 					matchingUrlPattern: '://localhost:\\d+/$',
 					assertions: {
-						'categories:performance': ['error', { minScore: 0.55 }],
-						'largest-contentful-paint': ['error', { maxNumericValue: 17000 }],
-						'cumulative-layout-shift': ['error', { maxNumericValue: 0.05 }],
-						'total-blocking-time': ['error', { maxNumericValue: 400 }],
-						'total-byte-weight': ['error', { maxNumericValue: 3145728 }],
+						'categories:performance': ['error', { minScore: 0.62 }],
+						// 10000: ~20% over the slowest run seen across two CI runs of
+						// the same code (8304ms). A tighter ceiling would be measuring
+						// the runner, which is the F20 lesson about flaky gates.
+						'largest-contentful-paint': ['error', { maxNumericValue: 10000 }],
+						'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
+						'total-blocking-time': ['error', { maxNumericValue: 300 }],
+						// 2.5MiB: 27% over the measured 2009KB, and above the 2345KB a
+						// run costs when Chrome cannot estimate the connection and so
+						// fetches lazy images within 3000px instead of 1250px (B12).
+						'total-byte-weight': ['error', { maxNumericValue: 2621440 }],
 					},
 				},
 				{
 					matchingUrlPattern: '/wire/$',
 					assertions: {
-						'categories:performance': ['error', { minScore: 0.85 }],
-						'largest-contentful-paint': ['error', { maxNumericValue: 4500 }],
-						'cumulative-layout-shift': ['error', { maxNumericValue: 0.08 }],
-						'total-blocking-time': ['error', { maxNumericValue: 300 }],
-						'total-byte-weight': ['error', { maxNumericValue: 614400 }],
+						'categories:performance': ['error', { minScore: 0.9 }],
+						'largest-contentful-paint': ['error', { maxNumericValue: 3600 }],
+						'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
+						'total-blocking-time': ['error', { maxNumericValue: 150 }],
+						'total-byte-weight': ['error', { maxNumericValue: 450560 }],
 					},
 				},
 				{
 					matchingUrlPattern: '/dispatch/',
 					assertions: {
-						'categories:performance': ['error', { minScore: 0.45 }],
-						'largest-contentful-paint': ['error', { maxNumericValue: 8000 }],
-						'cumulative-layout-shift': ['error', { maxNumericValue: 0.28 }],
-						'total-blocking-time': ['error', { maxNumericValue: 300 }],
+						'categories:performance': ['error', { minScore: 0.65 }],
+						'largest-contentful-paint': ['error', { maxNumericValue: 7300 }],
+						// 0.05, the ceiling F40 said the article could reach once the
+						// faces were hydrated: CI reads 0.0008 with them, and the worst
+						// reading anywhere (local Windows, production) is 0.0285.
+						'cumulative-layout-shift': ['error', { maxNumericValue: 0.05 }],
+						'total-blocking-time': ['error', { maxNumericValue: 200 }],
 						'total-byte-weight': ['error', { maxNumericValue: 1048576 }],
 					},
 				},

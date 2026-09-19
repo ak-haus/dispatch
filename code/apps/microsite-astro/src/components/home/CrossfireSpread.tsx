@@ -479,6 +479,7 @@ function DossierCard({
 			<div className="relative flex flex-1 min-h-0 overflow-hidden">
 				{/* Banner — full-bleed background */}
 				<img
+					loading="lazy"
 					src={slot.media.src}
 					alt={slot.media.alt ?? ''}
 					className="absolute inset-0 h-full w-full object-cover"
@@ -623,6 +624,7 @@ function DispatchCard({ headline, story, slot }: PlatformProps) {
 			</div>
 			<div className="relative aspect-[16/9] overflow-hidden">
 				<img
+					loading="lazy"
 					src={slot.media.poster ?? slot.media.src}
 					alt=""
 					className="absolute inset-0 h-full w-full object-cover"
@@ -699,7 +701,7 @@ function NewsletterCard({ headline, story, slot }: PlatformProps) {
 			</div>
 			{/* Hero image */}
 			<div className="relative aspect-[16/9] overflow-hidden">
-				<img src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+				<img loading="lazy" src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
 			</div>
 			{/* Body */}
 			<div className="flex flex-1 flex-col gap-2 p-4">
@@ -757,7 +759,7 @@ function LinkedInCard({ headline, story, slot }: PlatformProps) {
 				{headline} — {excerpt}
 			</p>
 			<div className="relative mt-3 aspect-[16/9] overflow-hidden">
-				<img src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+				<img loading="lazy" src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
 			</div>
 			{e && (
 				<div className="flex items-center justify-between border-y border-[#e0e0e0] bg-[#f3f2ef] px-4 py-1.5 text-[12px] text-[#666]">
@@ -809,7 +811,7 @@ function HashnodeCard({ headline, story, slot }: PlatformProps) {
 			style={{ border: '1px solid #e6e8eb', color: '#1a1a1a' }}
 		>
 			<div className="relative aspect-[16/9] overflow-hidden bg-[#f4f5f7]">
-				<img src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+				<img loading="lazy" src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
 			</div>
 			<div className="flex flex-1 flex-col gap-3 p-5">
 				<div className="flex items-center gap-2">
@@ -876,7 +878,7 @@ function DevCard({ headline, story, slot }: PlatformProps) {
 			style={{ border: '1px solid #e7e7e7', color: devBlack }}
 		>
 			<div className="relative aspect-[1000/420] overflow-hidden">
-				<img src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+				<img loading="lazy" src={slot.media.poster ?? slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
 			</div>
 			<div className="flex flex-1 flex-col gap-2 p-5">
 				<div className="flex items-center gap-2">
@@ -979,7 +981,7 @@ function InstagramCard({ headline, story, slot }: PlatformProps) {
 						</span>
 					</>
 				) : (
-					<img src={slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+					<img loading="lazy" src={slot.media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
 				)}
 			</div>
 			{/* Action row */}
