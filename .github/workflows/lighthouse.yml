@@ -25,7 +25,16 @@ jobs:
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:astro
-      - run: pnpm --filter microsite-astro lighthouse
+      - id: lhci
+        run: pnpm --filter microsite-astro lighthouse
+      # lhci prints nothing when every assertion passes, so the ratchet's own
+      # readings were invisible (F40). This prints them to the log and the step
+      # summary on every run, and fails if a run measured the page without the
+      # licensed PP faces.
+      - name: the ratchet's figures (median per surface) + the PP-face guard
+        if: ${{ !cancelled() && steps.lhci.outcome != 'skipped' }}
+        working-directory: code/apps/microsite-astro
+        run: node scripts/lighthouse-figures.mjs
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
