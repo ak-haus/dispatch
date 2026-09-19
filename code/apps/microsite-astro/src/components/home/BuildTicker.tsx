@@ -285,8 +285,11 @@ export function BuildTicker() {
 				</motion.div>
 
 				{/* Caption — single line, full horizontal spread under the ticker.
-				    Reads as a tape-machine annotation rather than a paragraph. */}
-				<p className="mt-5 flex w-full items-baseline justify-between gap-6 whitespace-nowrap font-mono text-[12px] uppercase tracking-[0.32em] text-body-muted">
+				    Reads as a tape-machine annotation rather than a paragraph.
+				    Below md it wraps: at 0.32em tracking the line is ~510px, and
+				    a nowrap line that wide made the whole page overflow a phone
+				    (WCAG 1.4.10 Reflow), which zoomed Chrome's viewport out (B12). */}
+				<p className="mt-5 flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-2 font-mono text-[12px] uppercase tracking-[0.32em] text-body-muted md:flex-nowrap md:whitespace-nowrap">
 					<span>
 						<span className="text-body-strong font-bold">Log</span>
 						<span aria-hidden="true" className="mx-3 text-body-faint">·</span>

@@ -53,6 +53,29 @@
   background: none;
 }
 
+/* ── Wordmark load entry (CD5 §3.5; B12) ─────────────────────────────────
+ * Each letter rises out of a blur, staggered by an inline animation-delay.
+ * CSS, not Motion, so it plays from first paint instead of waiting for the
+ * hero island to hydrate. The rest of the cover renders visible: its text
+ * is the page's LCP candidate, and Chrome ignores paints at opacity 0.
+ * Reduced motion: a static wordmark (the §3.5 fallback).
+ * ─────────────────────────────────────────────────────────────────────── */
+@keyframes wordmark-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+  }
+}
+.wordmark-enter {
+  animation: wordmark-enter 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-enter {
+    animation: none;
+  }
+}
+
 
 /* Tailwind dark: variant matches both legacy .dark and the canonical
    [data-prime-cycle="night"] attribute so dark:* utilities work in either. */

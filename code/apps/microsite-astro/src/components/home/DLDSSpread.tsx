@@ -99,6 +99,7 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 									{/* Cover banner */}
 									<div className="relative aspect-[16/10] overflow-hidden bg-window-warm">
 										<img
+											loading="lazy"
 											src={banner}
 											alt=""
 											aria-hidden="true"
@@ -214,6 +215,7 @@ function NextEditionCard({ slot }: { slot: number }) {
 				    overlaid; on hover the banner saturates back up. */}
 				<div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden">
 					<img
+						loading="lazy"
 						src={NEXT_EDITION_BANNER}
 						alt=""
 						aria-hidden="true"
@@ -229,6 +231,7 @@ function NextEditionCard({ slot }: { slot: number }) {
 						className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
 					>
 						<img
+							loading="lazy"
 							src={NEXT_EDITION_BANNER}
 							alt=""
 							className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"

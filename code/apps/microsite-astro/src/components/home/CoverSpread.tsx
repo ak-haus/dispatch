@@ -13,6 +13,13 @@
  *
  * Backdrop: cartography muted to opacity 0.55 + brightness 0.93 so type
  * reads cleanly. Vellum wash concentrates over the type column.
+ *
+ * Entrance: only the wordmark animates in (CD5 §3.5), in CSS so it plays
+ * from first paint (`.wordmark-enter`, global.css). Everything else renders
+ * visible. The dek is the page's LCP element, and LCP ignores paints at
+ * opacity 0 (Chrome 86), so a fade-in on the cover's text moves LCP to the
+ * reveal. Under Motion the reveal waited for hydration, and production
+ * Lighthouse read LCP 12.5–13.9s (B12, 2026-09-19).
  */
 
 'use client'
@@ -71,10 +78,7 @@ export function CoverSpread({
 			/>
 
 			{/* Top eyebrow bar — slim, 12px caps */}
-			<motion.div
-				initial={{ opacity: 0, y: -8 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1], delay: 0.1 }}
+			<div
 				className="relative z-20 border-b border-body-strong/25"
 				style={{
 					backgroundColor: 'color-mix(in oklch, var(--sky-low) 84%, transparent)',
@@ -96,7 +100,7 @@ export function CoverSpread({
 						{issueLabel} · <span data-live="timestamp">{dateLabel}</span>
 					</span>
 				</div>
-			</motion.div>
+			</div>
 
 			{/* MAIN COVER — wordmark group fills upper portion (flex-1 + center),
 			    dek + Turn the page anchored together at the bottom. */}
@@ -104,18 +108,13 @@ export function CoverSpread({
 				{/* Upper: Volume + Wordmark (+ Live) */}
 				<div className="flex flex-1 flex-col items-center justify-center">
 					{/* Volume label — letterpress text, no box */}
-					<motion.p
-						initial={{ opacity: 0, y: 6 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ delay: 0.4, duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}
-						className="dispatch-emboss font-mono text-[13px] font-bold uppercase tracking-[0.36em] text-body-strong"
-					>
+					<p className="dispatch-emboss font-mono text-[13px] font-bold uppercase tracking-[0.36em] text-body-strong">
 						<span className="text-accent-prime-active">Vol.&nbsp;01</span>
 						<span aria-hidden="true" className="mx-3 text-body-muted">·</span>
 						{dispatchCount === 1 ? '1 dispatch' : `${dispatchCount} dispatches`}
 						<span aria-hidden="true" className="mx-2 text-body-muted">·</span>
 						in print
-					</motion.p>
+					</p>
 
 					<div
 						className="mt-5 mb-3 h-px w-12 md:w-20"
@@ -162,19 +161,13 @@ export function CoverSpread({
 					>
 							<span className="inline-flex" aria-hidden="true">
 								{dis.map((c, i) => (
-									<motion.span
+									<span
 										key={`dis-${i}`}
-										initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
-										animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-										transition={{
-											duration: 0.85,
-											ease: [0.2, 0.7, 0.2, 1],
-											delay: 0.55 + i * 0.07,
-										}}
-										className="text-wordmark-dis inline-block"
+										className="wordmark-enter text-wordmark-dis inline-block"
+										style={{ animationDelay: `${0.55 + i * 0.07}s` }}
 									>
 										{c}
-									</motion.span>
+									</span>
 								))}
 							</span>
 							<span
@@ -183,19 +176,13 @@ export function CoverSpread({
 								aria-hidden="true"
 							>
 								{patch.map((c, i) => (
-									<motion.span
+									<span
 										key={`patch-${i}`}
-										initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
-										animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-										transition={{
-											duration: 0.85,
-											ease: [0.2, 0.7, 0.2, 1],
-											delay: 1.05 + i * 0.06,
-										}}
-										className="text-wordmark-patch inline-block"
+										className="wordmark-enter text-wordmark-patch inline-block"
+										style={{ animationDelay: `${1.05 + i * 0.06}s` }}
 									>
 										{c}
-									</motion.span>
+									</span>
 								))}
 						</span>
 					</h1>
@@ -208,12 +195,7 @@ export function CoverSpread({
 					    Mirrors Vol. 01 styling above: mono, bold, 0.36em tracking,
 					    letterpress. */}
 					{featuredTitle && (
-						<motion.div
-							initial={{ opacity: 0, y: 6 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ delay: 2.0, duration: 0.7 }}
-							className="mt-16 flex items-baseline gap-3"
-					>
+						<div className="mt-16 flex items-baseline gap-3">
 							<span
 								className="relative inline-flex size-2 shrink-0 translate-y-[-2px] rounded-full bg-accent-prime-active"
 								aria-hidden="true"
@@ -228,27 +210,17 @@ export function CoverSpread({
 								<span aria-hidden="true" className="mx-3 text-body-muted">—</span>
 								<span>{featuredTitle}</span>
 							</p>
-						</motion.div>
+						</div>
 					)}
 				</div>
 
 				{/* Bottom: dek paragraph + Turn the page (grouped together) */}
 				<div className="flex flex-col items-center gap-6 pb-10 text-center">
-					<motion.p
-						initial={{ opacity: 0, y: 12 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ delay: 1.7, duration: 0.7, ease: 'easeOut' }}
-						className="dispatch-emboss max-w-[42ch] font-narrative font-medium text-[1.0625rem] leading-[1.55] text-body-strong md:text-[1.1875rem]"
-					>
+					<p className="dispatch-emboss max-w-[42ch] font-narrative font-medium text-[1.0625rem] leading-[1.55] text-body-strong md:text-[1.1875rem]">
 						A dev-diary magazine on the construction of Prime City — dispatches issued from the Editorial District.
-					</motion.p>
+					</p>
 
-					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ delay: 2.4, duration: 0.8 }}
-						className="pointer-events-none flex flex-col items-center gap-2"
-					>
+					<div className="pointer-events-none flex flex-col items-center gap-2">
 						<p className="dispatch-emboss font-mono text-[12px] font-bold uppercase tracking-[0.36em] text-body-strong">
 							Turn the page
 						</p>
@@ -263,7 +235,7 @@ export function CoverSpread({
 							transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
 							className="h-7 w-px bg-body-strong/55"
 						/>
-					</motion.div>
+					</div>
 				</div>
 			</div>
 		</section>
