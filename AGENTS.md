@@ -91,7 +91,7 @@ a published URL to satisfy a field: omit the optional field instead.
   emitter `code/packages/tokens/scripts/emit/layout-design-md.mjs`, never the generated file) and stop.
 
 ## Layout (navigate by this; folders carry an `index.md` — `ls` a folder and read it)
-- `code/` — the **pnpm monorepo**: `apps/microsite-astro` (Astro 6, **LIVE**) · `apps/microsite-next` (Next 15 dashboard) ·
+- `code/` — the **pnpm monorepo**: `apps/microsite-astro` (Astro 7, **LIVE**) ·
   `apps/storybook` · `packages/tokens` (Style Dictionary) · `packages/ui` · `vercel.json` (deploy SoT).
 - **Brand canon** — `representation/visual-system/` (the **CD1–5** ratified Decision Docs: thesis · color · cartography ·
   components · motion). `lifecycle/` — component build records + fixtures. `specs/` — curated product specs.

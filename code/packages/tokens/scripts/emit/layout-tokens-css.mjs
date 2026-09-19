@@ -155,9 +155,9 @@ export const DAWN = `:root {
 
   /* ==========================================================================
    * UI SLOT ALIASES — the W2-era short-name token API still consumed by
-   * packages/ui component CSS and microsite-next's @theme bridge, undefined
+   * packages/ui component CSS, undefined
    * since the tiered rename (census 2026-08-18). Aliases resolve to tiered
-   * canon so Storybook / ui / next render honestly; the cycle blocks need no
+   * canon so Storybook / ui render honestly; the cycle blocks need no
    * overrides here — the cascade follows the tiered tokens.
    * ========================================================================== */
   --accent-prime:        {css};

@@ -20,7 +20,7 @@ DTCG source here, and CI fails closed on any drift.
 | Path | What |
 |---|---|
 | `src/color/{platform,dispatch,asset}.json` | Tiered color canon (dawn), amendment-locked values |
-| `src/color/ui-slots.json` | W2 short-name alias API (packages/ui + microsite-next consumers) |
+| `src/color/ui-slots.json` | W2 short-name alias API (packages/ui consumers) |
 | `src/color/shadcn-dark.json` | Sitemap-only shadcn dark shim (`.dark` block) |
 | `src/cycles/{dusk,night}.json` | Cycle override trees → `[data-prime-cycle]` cascade blocks |
 | `src/typography.json` | Family slots (live stacks; canon contradictions FILED inline) + ratified weights |
@@ -41,7 +41,7 @@ DTCG source here, and CI fails closed on any drift.
   `@theme inline` freezes into compiled utilities and cycle theming dies; the
   cycle overrides live in tokens.css, OUTSIDE the theme block)
 - `dist/tokens.css` (`./css`) + `dist/tokens.theme.css` (`./theme`) for package
-  consumers (Storybook preview, microsite-next)
+  consumers (Storybook preview)
 - `DESIGN.md` at the **repo root** — the S3 brand contract (ADR-0003 §Stage 7):
   spec-shaped YAML token frontmatter (Google Labs DESIGN.md spec, register §6
   house-hybrid) + house prose with pointers into

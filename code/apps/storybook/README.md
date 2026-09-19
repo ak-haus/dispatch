@@ -10,7 +10,7 @@ last_amended: 2026-05-17
 ---
 # `apps/storybook` — Prime DISpatch component documentation surface
 
-Storybook 9 (React + Vite) sibling app to `microsite-next` and `microsite-astro`. Indexes the `@prime-dispatch/ui` component library across the whole brand-bible-registry.
+Storybook 9 (React + Vite) sibling app to `microsite-astro`. Indexes the `@prime-dispatch/ui` component library across the whole brand-bible-registry.
 
 ## Why this lives in `apps/` (not in `packages/ui/`)
 
@@ -20,7 +20,7 @@ Research-derived (c) HYBRID placement per W3-S-A research — see [research arti
 - **Vercel official Turborepo design-system starter** uses `apps/docs/` for Storybook with `packages/ui` for component source — 5 of 7 surveyed precedents follow this shape
 - **shadcn/ui MCP registry consumer pattern is Storybook-blind** — registry JSON has zero Storybook fields; placement choice is pure DX, not contract-shaping
 
-This means `@prime-dispatch/ui` stays Storybook-free as a workspace package; consumers (`microsite-next`, `microsite-astro`, future Buildings) install it without the Storybook devDependency tax. Storybook lives here alongside the other consumer apps.
+This means `@prime-dispatch/ui` stays Storybook-free as a workspace package; consumers (`microsite-astro`, future Buildings) install it without the Storybook devDependency tax. Storybook lives here alongside the other consumer apps.
 
 ## Common commands
 

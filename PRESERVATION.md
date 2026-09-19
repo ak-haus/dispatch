@@ -19,7 +19,7 @@
 ## What Dispatch is
 
 Prime's editorial microsite — a JS-first scrollytelling publication. A self-contained **pnpm** monorepo
-(`code/`): an Astro 6 website (`microsite-astro`), a secondary Next.js surface (`microsite-next`), Storybook,
+(`code/`): an Astro 7 website (`microsite-astro`), Storybook,
 and the `@prime-dispatch/tokens` + `@prime-dispatch/ui` libraries. Plus design canon (`representation/`,
 `canon-brief.md`), curated product specs (`specs/`), and inspiration (`inspo/`).
 

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Prime DISpatch Storybook 9 surface — indexes @prime-dispatch/ui component library across the whole brand-bible-registry; sibling app to microsite-next + microsite-astro per W3-S-A research-derived (c) HYBRID placement.",
+  "description": "Prime DISpatch Storybook 9 surface — indexes @prime-dispatch/ui component library across the whole brand-bible-registry; sibling app to microsite-astro per W3-S-A research-derived (c) HYBRID placement.",
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
     "build": "storybook build -o storybook-static",
