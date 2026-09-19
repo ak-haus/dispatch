@@ -49,11 +49,28 @@ column: B18 — share-metadata surface
    - `atom:link rel=self` is declared.
    - The W3C Feed Validation Service reports it **valid**, 0 errors. Its one warning, "self
      reference doesn't match document location", comes from validating pasted text.
-5. **OQ-9 filed** (DESIGN.md §Adjudicated questions, through the emitter). The contract's `author`
-   names a byline, not what kind of author it is, so the JSON-LD ships without `author`. Four options
-   are recorded for AK.
+5. **OQ-9, filed and ruled** (DESIGN.md §Adjudicated questions, through the emitter). The contract's
+   `author` names a byline, not what kind of author it is. AK ruled it to the field's recommendation,
+   option (b), which needs no schema change:
+   - Google's AI-content guidance: accurate author bylines, but "giving AI an author byline is
+     probably not the best way".
+   - `provenance.lane`, the contract's DLDS disclosure, already records who led the work.
+   - So Human-led and Hybrid bylines are typed `Person` in the JSON-LD, and AI-led bylines get no
+     author claim.
+6. **F43 fixed at AK's direction** (filed and closed here). The sitemap now names the same URL as
+   rel=canonical. Each `<loc>` goes through the pages' own `canonicalUrl` (an `@astrojs/sitemap`
+   `serialize` step). Google: "don't specify one URL in a sitemap, but a different URL for that same
+   page using rel=canonical".
 
-## Decisions for AK's disposition
+## AK's dispositions (2026-09-19)
+
+- **Merge:** approved once AK accepted the Chromatic archive-lane change. The change was 1 snapshot on
+  a commit that touched only the e2e spec and a records file; the round before it read 6 unchanged.
+- **Canonical deviation: accepted.** The row's acceptance reads "every indexable route".
+- **F43 and OQ-9:** ruled "whatever the field and the industry recommend". Both were executed in this
+  PR (What landed, items 5 and 6).
+
+The deviation, for the record:
 
 - **No canonical on the 404 or the two noindex previews.** This departs from the row's literal
   "every route emits canonical". The 404 is served at every unknown address, so it has no URL of its
@@ -70,9 +87,9 @@ column: B18 — share-metadata surface
 |---|---|
 | `pnpm audit --prod` | No known vulnerabilities |
 | `pnpm typecheck` | 0 errors (microsite-astro, 100 files) |
-| Unit | microsite-astro 98/98 (+17 share-module tests) |
+| Unit | microsite-astro 99/99 (+18 share-module tests) |
 | Site build | 14 pages + 7 cards + `/rss.xml`; neither leaks into the sitemap |
-| e2e, pinned container | `share-metadata.spec.ts` 9/9. It checks each head against its page's h1, dek, `<time>` and banner alt, against the feed, and against every card's JPEG dimensions and size. `sharp`'s linux binary resolves in the image |
+| e2e, pinned container | full suite 49/49 on the final commit (a transient font-fetch failure in the container's hydration step cleared on rerun). `share-metadata.spec.ts` 10/10. It checks each head against its page's h1, dek, `<time>` and banner alt, against the feed, and against every card's JPEG dimensions and size. `sharp`'s linux binary resolves in the image |
 | Mutation | canonical left un-normalized → 5 of 9 tests red with the exact URL mismatch |
 | Independent review (fresh context, given the diff and the brief, not my conclusions) | sourcing law clean; no blocking bug. **One defect in the spec, fixed in this PR:** it assumed every dispatch has a banner plate, so a valid new dispatch with no plate, or with a contract `hero`, would have turned e2e red. It now accepts every contract-legal card source, collects the cards from the pages rather than assuming one per dispatch, and parses the feed as XML (well-formed; the RSS 2.0 fields present exactly once). Proven by running it with dispatch-06's plate removed: 9/9 |
 | Advisor (commitment boundary) | adopted xmlns/og:image:type/absolute URLs; "directory format serves `/about/`" refuted by the live 308; "author = Organization" disputed (contradicts the visible byline) and carried into OQ-9 |
@@ -81,12 +98,6 @@ column: B18 — share-metadata surface
 
 The defect test is the same for each: none blocks this row's gate.
 
-- **F43 — the sitemap lists URLs that redirect.** `@astrojs/sitemap` emits `/foo/`, production
-  answers 308 → `/foo`, and the new canonical names `/foo`. Google treats the sitemap as a
-  canonical signal, so the two now disagree. The likely repair is Astro `trailingSlash: 'never'`.
-  It touches the sitemap-discovered e2e journey, so it is its own change. The independent review
-  argued B18 is what makes the two disagree and proposed a narrower repair: an `@astrojs/sitemap`
-  `serialize` step that strips the slash. That is a few lines, and AK can fold it in.
 - **F44 — the home `<title>` reads "DISpatch — DISpatch".** `StackLayout` appends the brand to a
   page title that is already the brand. `og:title` is unaffected.
 - **F45 — `favicon.svg` ships but nothing references it.** The head declares no icon, and browsers
