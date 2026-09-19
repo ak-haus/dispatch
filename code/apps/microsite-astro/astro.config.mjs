@@ -5,6 +5,9 @@ import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import { canonicalUrl } from './src/lib/share/share.ts'
+
+const SITE = 'https://dispatchmag.dev'
 
 // Source-map upload for A6's error tracking. ARMS ON THE TOKEN and on nothing
 // else: `SENTRY_AUTH_TOKEN` is set on the Vercel project for PRODUCTION only, so
@@ -43,7 +46,7 @@ const SENTRY_UPLOAD = Boolean(process.env.SENTRY_AUTH_TOKEN)
 //
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://dispatchmag.dev',
+	site: SITE,
 	// Astro 7 changed the default to 'jsx', which strips the whitespace between
 	// inline elements. Measured against the Astro 6 build (B1, 2026-09-19), that
 	// glued the article byline ("AK Almoumen·Mayor"), the back links and prose
@@ -60,7 +63,15 @@ export default defineConfig({
 		// they stay out of the sitemap we hand crawlers. They also carry
 		// noindex via StackLayout. The e2e + judge specs still reach them by
 		// direct path; only article discovery reads the sitemap.
-		sitemap({ filter: (page) => !new URL(page).pathname.startsWith('/preview/') }),
+		//
+		// Each URL goes through the same `canonicalUrl` the pages' rel=canonical
+		// uses (B18, F43): production serves the no-slash form (vercel.json
+		// `trailingSlash: false`), and Google's guidance is never to name one URL
+		// in the sitemap and another in rel=canonical for the same page.
+		sitemap({
+			filter: (page) => !new URL(page).pathname.startsWith('/preview/'),
+			serialize: (item) => ({ ...item, url: canonicalUrl(new URL(SITE), new URL(item.url).pathname) }),
+		}),
 	],
 	vite: {
 		plugins: [

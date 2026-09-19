@@ -34,6 +34,11 @@ are still the way to force one.
   verify before claiming done — `tsc --noEmit` clean + a Tailwind cache-reset + a green post-deploy
   smoke; keep secrets in Doppler; stay in the scope you were asked. *(House style, enforced in `.claude/CLAUDE.md`,
   not a safety control: motion/JS over static — the visual product is the JS; split the `DISpatch` wordmark, `DIS` red.)*
+- **Decide technical questions by the field's consensus, never by asking AK** (AK's standing order, 2026-09-19).
+  Standards, primary vendor and platform documentation, and established industry and academic practice
+  settle every technical call. The decision is recorded with its citation and the alternatives. AK is
+  asked only what the field cannot answer: product intent, content, spend, the ASK FIRST actions above,
+  and his own gate sign-offs (Chromatic dispositions, D1).
 
 ## Commands (the real ones — pnpm monorepo; run from `code/` unless noted)
 - Dev (the LIVE Astro surface): `cd code/apps/microsite-astro && pnpm dev` (`:4321`) · Next dashboard: `cd code && pnpm dev:next`.
