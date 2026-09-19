@@ -107,6 +107,19 @@ of `bfb6467`. Three runs per surface:
   imports `maplibre-gl/dist/maplibre-gl.css`; `CartographyCanvas`, its only JS consumer, is mounted
   nowhere. The CartographyCanvas disposition (B16's remainder) decides it: dropping the component also
   drops maplibre, its stylesheet and one critical advisory.
+- **F38 — the archive lane has held "3 changes" on every records-only commit since 2026-09-03.**
+  Commit statuses: `UI Tests: dispatch_playwright` reads "3 changes must be accepted as baselines" on
+  `caa9cd6`, `8209f39`, `17ec4c8`, `4f2c617`, `ef4dc31` (the five September sweeps) and on this PR,
+  while `main`'s last build (`bfb6467`, 2026-08-31) accepted 1. Under F19's lineage rule, a count that
+  holds across commits is one pending baseline, not noise. So every PR, Build 22's included, inherits
+  these three until AK dispositions them once. The three snapshots can't be named from here (the
+  Chromatic UI needs AK's login).
+  **Hypothesis, unverified:** every wall-clock date on the archived surfaces is wrapped in `data-live`
+  and ignored (`CoverSpread.tsx:96`, `Marginalia.tsx:114`, `Colophon.tsx:48`, `ArticleSpread.tsx:78`,
+  `CrossfireSpread.tsx:332`, the wire timestamps). But the text's width grows at the month rollover
+  ("August" → "September"), which shifts neighbouring ink the diff does not ignore. That would also
+  explain why the count began after 2026-08-31. If confirmed, the repair is a fixed-width date region,
+  not a wider ignore.
 - **B6 amended (Crossfire; routine-reported, not re-verified, since Crossfire is not hydrated here):**
   `src/index.md` omits `alerts/` and `feed/` (sweeps 08-24 → 09-14);
   `services/transcribe/requirements.txt:5` tags the diarization TODO D4+ where `app.py:44` says D2+
@@ -120,6 +133,10 @@ of `bfb6467`. Three runs per surface:
 
 ## 5. Not done — AK's
 
+- **This PR's archive-lane disposition.** Fourteen of the fifteen required contexts are green. The
+  fifteenth, `UI Tests: dispatch_playwright`, holds the three standing changes (F38) for AK under
+  policy A. The session does not accept baselines. Once AK dispositions them, the PR can merge. Nothing
+  under `code/` changes, so the merge deploys nothing.
 - **Branch hygiene.** Eighteen remote branches are redundant:
   - ten merged earlier: six by merge commit, four squash-merged with content verified on `main`;
   - the eight sweep branches, whose content this PR carries.
