@@ -8,10 +8,11 @@
  * article CLS read 0.2326 against production's 0.0000.
  *
  * BASELINE — CI, Lighthouse 12.6.1, Chrome 152, mobile, simulated, 3 runs,
- * median (min–max), PP faces served:
- *   /            perf 70 · LCP 6994 (6489–7827) · CLS 0.0000 · TBT 89 · 2009KB
- *   /wire/       perf 93 · LCP 3017 (2867–3033) · CLS 0.0007 · TBT 0 ·  365KB
- *   /dispatch/…  perf 73 · LCP 6330 (6187–6348) · CLS 0.0008 · TBT 0 ·  884KB
+ * median (min–max over two runs of the same code, so the spread is the
+ * runner's own), PP faces served:
+ *   /            perf 70 · LCP 6994–7908 (6489–8304) · CLS 0.0000 · TBT 12–89 · 2009KB
+ *   /wire/       perf 93 · LCP 2864–3026 (2719–3170) · CLS 0.0007 · TBT 0 ·  365KB
+ *   /dispatch/…  perf 73 · LCP 6330–6338 (6187–6352) · CLS 0.0008 · TBT 0 ·  884KB
  *
  * Production the same day, before the B12 repair (dispatchmag.dev, same
  * Lighthouse, 3 runs, canonical no-slash URLs): / LCP 12.70s · CLS 0.0000 ·
@@ -53,7 +54,10 @@ module.exports = {
 					matchingUrlPattern: '://localhost:\\d+/$',
 					assertions: {
 						'categories:performance': ['error', { minScore: 0.62 }],
-						'largest-contentful-paint': ['error', { maxNumericValue: 9000 }],
+						// 10000: ~20% over the slowest run seen across two CI runs of
+						// the same code (8304ms). A tighter ceiling would be measuring
+						// the runner, which is the F20 lesson about flaky gates.
+						'largest-contentful-paint': ['error', { maxNumericValue: 10000 }],
 						'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
 						'total-blocking-time': ['error', { maxNumericValue: 300 }],
 						// 2.5MiB: 27% over the measured 2009KB, and above the 2345KB a

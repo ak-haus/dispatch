@@ -164,7 +164,7 @@ export function CoverSpread({
 									<span
 										key={`dis-${i}`}
 										className="wordmark-enter text-wordmark-dis inline-block"
-										style={{ animationDelay: `${0.55 + i * 0.07}s` }}
+										style={{ animationDelay: `${(0.55 + i * 0.07).toFixed(2)}s` }}
 									>
 										{c}
 									</span>
@@ -179,7 +179,7 @@ export function CoverSpread({
 									<span
 										key={`patch-${i}`}
 										className="wordmark-enter text-wordmark-patch inline-block"
-										style={{ animationDelay: `${1.05 + i * 0.06}s` }}
+										style={{ animationDelay: `${(1.05 + i * 0.06).toFixed(2)}s` }}
 									>
 										{c}
 									</span>
