@@ -1,0 +1,64 @@
+---
+/**
+ * Share metadata for <head> (Golden Board B18): description, canonical, the
+ * Open Graph + Twitter card, the feed link and, on dispatches, the article
+ * fields and Article JSON-LD. Static HTML only — scrapers run no JS.
+ *
+ * Every value arrives from StackLayout, which takes it from the page's
+ * authored props or, on a dispatch, from the editorial contract. The
+ * derivations (URLs, the card, the JSON-LD) live in src/lib/share/share.ts.
+ */
+import {
+	CARD,
+	SITE_NAME,
+	canonicalUrl,
+	cardImageUrl,
+	feedUrl,
+	serializeJsonLd,
+	type CardSource,
+} from '@/lib/share/share'
+
+interface Props {
+	/** Unbranded title — og:title "without any branding" (WhatsApp's rule); og:site_name carries the brand. */
+	title: string
+	description: string
+	card: CardSource
+	/** Keeps a canonical off the page: a noindex page must not also name a canonical (mixed signals). */
+	noindex: boolean
+	/** Served at every unknown address (the 404): no canonical and no og:url, because it has no URL of its own. */
+	unaddressed: boolean
+	article?: { publishedTime: Date; jsonLd: Record<string, unknown> }
+}
+
+const { title, description, card, noindex, unaddressed, article } = Astro.props
+
+if (!Astro.site) throw new Error('[share] astro.config `site` is required for absolute share URLs')
+const site = Astro.site
+const url = unaddressed ? undefined : canonicalUrl(site, Astro.url.pathname)
+const image = cardImageUrl(site, card)
+const rendition = card.kind === 'rendition'
+---
+
+<meta name="description" content={description} />
+{url && !noindex && <link rel="canonical" href={url} />}
+<link rel="alternate" type="application/rss+xml" title={SITE_NAME} href={feedUrl(site)} />
+
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:type" content={article ? 'article' : 'website'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+{url && <meta property="og:url" content={url} />}
+<meta property="og:image" content={image} />
+{rendition && <meta property="og:image:type" content="image/jpeg" />}
+{rendition && <meta property="og:image:width" content={String(CARD.width)} />}
+{rendition && <meta property="og:image:height" content={String(CARD.height)} />}
+<meta property="og:image:alt" content={card.alt} />
+{article && <meta property="article:published_time" content={article.publishedTime.toISOString()} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={card.alt} />
+
+{article && <script type="application/ld+json" set:html={serializeJsonLd(article.jsonLd)} />}

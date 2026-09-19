@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content'
 import StackLayout from '@/layouts/StackLayout.astro'
 import { EditorialDistrictMapHero } from '@/components/EditorialDistrictMapHero'
 import type { StoryArticle } from '@/components/StoryCardCluster'
+import { SITE_DESCRIPTION } from '@/lib/share/share'
 
 // Fetch published dispatches, sorted newest first.
 const entries = await getCollection('dispatch')
@@ -108,7 +109,7 @@ const crossfireArticle: StoryArticle | undefined = articles.find(
 <StackLayout
 	title="DISpatch"
 	kicker="Editorial District · Prime City"
-	description="A dev-diary magazine — the first Building in Prime City's Editorial District. Construction dispatches from inside the work."
+	description={SITE_DESCRIPTION}
 	theme="vellum"
 	hideHero={true}
 	fullbleed={true}

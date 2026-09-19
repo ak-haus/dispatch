@@ -1,7 +1,9 @@
 ---
 import '@/styles/global.css'
 import { Masthead } from '@/components/Masthead'
+import ShareMeta from '@/components/ShareMeta.astro'
 import { buildSearchIndex } from '@/lib/search-index'
+import { SITE_CARD, type CardSource } from '@/lib/share/share'
 
 interface Props {
 	title: string
@@ -25,6 +27,12 @@ interface Props {
 	 *  astro.config.mjs: the meta tag governs crawlers that arrive by link,
 	 *  the filter stops us advertising the route in the first place. */
 	noindex?: boolean
+	/** Share card image (B18). Defaults to the site card; dispatches pass their own. */
+	card?: CardSource
+	/** Article fields for the share metadata — dispatches only (B18). */
+	article?: { publishedTime: Date; jsonLd: Record<string, unknown> }
+	/** The 404: served at every unknown address, so it names no canonical or og:url. */
+	unaddressed?: boolean
 }
 
 const {
@@ -36,6 +44,9 @@ const {
 	fullbleed = false,
 	fullWidthMain = false,
 	noindex = false,
+	card = SITE_CARD,
+	article,
+	unaddressed = false,
 } = Astro.props
 const unconstrained = fullbleed || fullWidthMain
 
@@ -61,6 +72,14 @@ const searchIndex = await buildSearchIndex()
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>{title} — DISpatch</title>
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
+		<ShareMeta
+			title={title}
+			description={description}
+			card={card}
+			noindex={noindex}
+			unaddressed={unaddressed}
+			article={article}
+		/>
 
 		<!--
 			Critical-weight font preloads (canon typography/css/preload.html):

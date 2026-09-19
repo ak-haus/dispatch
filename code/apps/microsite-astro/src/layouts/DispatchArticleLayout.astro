@@ -7,6 +7,8 @@ import StackLayout from '@/layouts/StackLayout.astro'
 import BackToDispatch from '@/components/BackToDispatch.astro'
 import { ProvenanceTooltip } from '@/components/ProvenanceTooltip'
 import { ChapterRail } from '@prime-dispatch/ui/custom/ChapterRail'
+import { articleJsonLd, canonicalUrl, cardImageUrl, dispatchCard } from '@/lib/share/share'
+import { publicFileExists } from '@/lib/share/public-files'
 
 interface Props {
 	entry: CollectionEntry<'dispatch'>
@@ -48,6 +50,20 @@ const LANE_TINT: Record<string, string> = {
 	'AI-led': 'var(--dispatch-lane-editorial-strong)',
 }
 const laneTint = LANE_TINT[data.provenance.lane] ?? 'var(--platform-accent-prime)'
+
+// Share metadata (B18) — every value from the editorial contract.
+const shareCard = dispatchCard({ id: entry.id, title: data.title, hero: data.hero }, publicFileExists)
+if (!Astro.site) throw new Error('[share] astro.config `site` is required for absolute share URLs')
+const shareArticle = {
+	publishedTime: data.date,
+	jsonLd: articleJsonLd({
+		title: data.title,
+		dek: data.dek,
+		date: data.date,
+		url: canonicalUrl(Astro.site, Astro.url.pathname),
+		image: cardImageUrl(Astro.site, shareCard),
+	}),
+}
 ---
 
 <StackLayout
@@ -57,6 +73,8 @@ const laneTint = LANE_TINT[data.provenance.lane] ?? 'var(--platform-accent-prime
 	theme="vellum"
 	hideHero
 	fullWidthMain
+	card={shareCard}
+	article={shareArticle}
 >
 	{/* ── Title hero ──────────────────────────────────────────────────
 	    Two-column split that mirrors the homepage cover's magazine-cover
