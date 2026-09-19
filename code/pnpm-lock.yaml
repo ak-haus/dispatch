@@ -193,8 +193,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       next:
-        specifier: ^15.5.23
-        version: 15.5.23(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^15.5.25
+        version: 15.5.25(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -1390,57 +1390,57 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@next/env@15.5.23':
-    resolution: {integrity: sha512-Mv3Z9hVbFcPnoLevsZ6rnX1TBtyHb5E17yN7HTPDXSXxeNsGBjUFrdbjRXKKXIOhfth7/cg6Ay7PZ2UFawaWsQ==}
+  '@next/env@15.5.25':
+    resolution: {integrity: sha512-42h1lLr07vl4gawALP1hsgRZjHB1xYa58JfUfHwr0f7jG/zhPakh5GHkADHXOC9ZxUvlQFOPIrp7s6qX4DezPQ==}
 
-  '@next/swc-darwin-arm64@15.5.23':
-    resolution: {integrity: sha512-SrEwOROH/rhA03F59hHtdhgtfZMWGzr5duDBWgRQt2rS3mJhqMKOcnNx6txOd0/i3E3D3uFKYFvyHsEiwQxzag==}
+  '@next/swc-darwin-arm64@15.5.25':
+    resolution: {integrity: sha512-w+RR0v/QuApnWEjRGm1z6gcObKwGMb5YPA7V3bzBEVSBpMFUXprer0tS27UxjUcEnqbhL7Zuzohej79B6rYmBg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@15.5.23':
-    resolution: {integrity: sha512-f0FpFbG2EhDCuptBGcfrLcYMDuQAhe6m1QA4VVfXFrIBoFXvXt/olGbBkYkloKlXQtmhuzvtdYyuu/6zf07GIg==}
+  '@next/swc-darwin-x64@15.5.25':
+    resolution: {integrity: sha512-QiGGBUSakt8S1H4Lt9Ehsh6Ja87axiBnQQgysOObvCbI7iUfJnRGntF1P64S4/ijuHFnSB8KLsEddkY3nN26uw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@15.5.23':
-    resolution: {integrity: sha512-WlNtfepUXKX2u2ZsJZ8c3c8+tJSRZqsYzoMwLOY72A8ucKCCgxgNhiePA3qzFYahVWrwcQd8jOeJmBinc+VFVQ==}
+  '@next/swc-linux-arm64-gnu@15.5.25':
+    resolution: {integrity: sha512-ehLos/66zo0d/mJCU5u96a/VDcr01aaUrX0o/i16UdInxz8qPTCDSxGtjk/Lps1sIr1RJFdiX3hxc0fxJo+cPA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-arm64-musl@15.5.23':
-    resolution: {integrity: sha512-W/6qKk7UG93mg14PmQC+2urt69MIdwTBLNQ6MJyeC4wOCIHCjz+VfgssvS1pK7mgYBtLC1g6VKNoHD9xB0WWGg==}
+  '@next/swc-linux-arm64-musl@15.5.25':
+    resolution: {integrity: sha512-ZVMrqLiJ7DiChgmbkQwFtdhAnUkSH/4p7tB29QY+giATb0Q/XGHNRSKAb/B8XGDHRUaA67NepOW5W8u3ZRJBAA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-linux-x64-gnu@15.5.23':
-    resolution: {integrity: sha512-vzefI32mi6VMk96RaTAyxApgfGbiFzQBXVsekEjsDv1fr48mlABTWx0sUYhaYCBHWqCalxmz3DxbxFcbFvzNtw==}
+  '@next/swc-linux-x64-gnu@15.5.25':
+    resolution: {integrity: sha512-UOewtDGkTMJTiODrEdeLZ50yGb59xCZSriNpXkfPMxRRgwDkGc7i8mLWqV5076wEdb+Ca/XN7MhJyM3CupyNyQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-x64-musl@15.5.23':
-    resolution: {integrity: sha512-qppK/3dTGOTI+aoWWBZc3DshFIhrzgL8guATlaN9V6M1QJxbkP/rhEZ22tdICsQ/2WWXopMZ2Jokzj2u3uKY3Q==}
+  '@next/swc-linux-x64-musl@15.5.25':
+    resolution: {integrity: sha512-UBHwA8AhkCZgtRfU1aJpunuAJe/6gZv6jDESQe4p5MjTb5V0YEeJBWCdNqx15Vj3x+5jmauRfeMJSjfQj9HGFQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-win32-arm64-msvc@15.5.23':
-    resolution: {integrity: sha512-Wc29KFOdT7XBcII3Vtmw7aoU8Uk3Mes/FNJfhFeSHdYBFJWMcR/DsI8U9BCPUhq/uycsUVuqSKGthW15tLsigA==}
+  '@next/swc-win32-arm64-msvc@15.5.25':
+    resolution: {integrity: sha512-QcFcPRr16djk5IqK5+e8O80eZfgWzIvVBXfitIq0tQ/uc+eyfdoZ0NmKc0cnbIJyfVwREapKuG97YcxWA9gcpA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@15.5.23':
-    resolution: {integrity: sha512-/C7wRW4fa9s/PKA18zGPPpVmx8ycgVpP8yOxro4gzGTzjPJdscbAP3ODeFvgiIovxD176Z2J/SXO9t8PJKHLeQ==}
+  '@next/swc-win32-x64-msvc@15.5.25':
+    resolution: {integrity: sha512-zREeykps3ndWr9egJgvJKqVkkDuaw6Zrrg23cYBos0ygydFkAWYU4+PaPVwXzP1eAYQJe53ShSK45iDM529BOg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -5126,8 +5126,8 @@ packages:
     resolution: {integrity: sha512-eonl3sLUha+S1GzTPxychyhnUzKyeQkZ7jLjKrBagJgPla13F+uQ71HgpFefyHgqrjEbCPkDArxYsjY8/+gLKA==}
     engines: {node: '>= 0.4.0'}
 
-  next@15.5.23:
-    resolution: {integrity: sha512-Gvd2WKgvxIXCGotxcI1im/Uf3rS3J3oZGw0g/uskg6AVBZhyE3aAbujkYWzS3xLmEPEtTLfkaVQUKK0KMTSIkA==}
+  next@15.5.25:
+    resolution: {integrity: sha512-OMWNulIIqKM2ykvC2qMjIt0IoavB4UB2SCs4iXJ6z6847FvyH8jBmBWcvrF5iuhTu8Przh20Fo/aoszIdqx4PA==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
     hasBin: true
     peerDependencies:
@@ -6079,8 +6079,8 @@ packages:
   third-party-web@0.26.7:
     resolution: {integrity: sha512-buUzX4sXC4efFX6xg2bw6/eZsCUh8qQwSavC4D9HpONMFlRbcHhD8Je5qwYdCpViR6q0qla2wPP+t91a2vgolg==}
 
-  third-party-web@0.29.2:
-    resolution: {integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==}
+  third-party-web@0.30.0:
+    resolution: {integrity: sha512-p+PfyL5U0ediGzvwPzMSdD9MnC8rHW6nWJJVLIQvqN7RsSqfaZ+7n4c9GILqH36EYR0eXB9CzAeCRnKFr/9uJg==}
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
@@ -7937,30 +7937,30 @@ snapshots:
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true
 
-  '@next/env@15.5.23': {}
+  '@next/env@15.5.25': {}
 
-  '@next/swc-darwin-arm64@15.5.23':
+  '@next/swc-darwin-arm64@15.5.25':
     optional: true
 
-  '@next/swc-darwin-x64@15.5.23':
+  '@next/swc-darwin-x64@15.5.25':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@15.5.23':
+  '@next/swc-linux-arm64-gnu@15.5.25':
     optional: true
 
-  '@next/swc-linux-arm64-musl@15.5.23':
+  '@next/swc-linux-arm64-musl@15.5.25':
     optional: true
 
-  '@next/swc-linux-x64-gnu@15.5.23':
+  '@next/swc-linux-x64-gnu@15.5.25':
     optional: true
 
-  '@next/swc-linux-x64-musl@15.5.23':
+  '@next/swc-linux-x64-musl@15.5.25':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@15.5.23':
+  '@next/swc-win32-arm64-msvc@15.5.25':
     optional: true
 
-  '@next/swc-win32-x64-msvc@15.5.23':
+  '@next/swc-win32-x64-msvc@15.5.25':
     optional: true
 
   '@observablehq/plot@0.6.17':
@@ -7977,7 +7977,7 @@ snapshots:
   '@paulirish/trace_engine@0.0.53':
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.2
+      third-party-web: 0.30.0
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -9503,6 +9503,26 @@ snapshots:
       - msw
       - utf-8-validate
       - vite
+
+  '@vitest/browser@3.2.7(playwright@1.62.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.9.0))(vitest@3.2.7)':
+    dependencies:
+      '@testing-library/dom': 10.4.1
+      '@testing-library/user-event': 14.6.4(@testing-library/dom@10.4.1)
+      '@vitest/mocker': 3.2.7(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.9.0))
+      '@vitest/utils': 3.2.7
+      magic-string: 0.30.21
+      sirv: 3.0.2
+      tinyrainbow: 2.0.0
+      vitest: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(@vitest/browser@3.2.7)(happy-dom@20.11.2)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.9.0)
+      ws: 8.21.3
+    optionalDependencies:
+      playwright: 1.62.1
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -12211,9 +12231,9 @@ snapshots:
 
   netmask@2.1.1: {}
 
-  next@15.5.23(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next@15.5.25(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
-      '@next/env': 15.5.23
+      '@next/env': 15.5.25
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001809
       postcss: 8.5.26
@@ -12221,14 +12241,14 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       styled-jsx: 5.1.6(react@19.2.8)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 15.5.23
-      '@next/swc-darwin-x64': 15.5.23
-      '@next/swc-linux-arm64-gnu': 15.5.23
-      '@next/swc-linux-arm64-musl': 15.5.23
-      '@next/swc-linux-x64-gnu': 15.5.23
-      '@next/swc-linux-x64-musl': 15.5.23
-      '@next/swc-win32-arm64-msvc': 15.5.23
-      '@next/swc-win32-x64-msvc': 15.5.23
+      '@next/swc-darwin-arm64': 15.5.25
+      '@next/swc-darwin-x64': 15.5.25
+      '@next/swc-linux-arm64-gnu': 15.5.25
+      '@next/swc-linux-arm64-musl': 15.5.25
+      '@next/swc-linux-x64-gnu': 15.5.25
+      '@next/swc-linux-x64-musl': 15.5.25
+      '@next/swc-win32-arm64-msvc': 15.5.25
+      '@next/swc-win32-x64-msvc': 15.5.25
       '@opentelemetry/api': 1.9.1
       '@playwright/test': 1.62.1
       sharp: 0.34.5
@@ -13431,7 +13451,7 @@ snapshots:
 
   third-party-web@0.26.7: {}
 
-  third-party-web@0.29.2: {}
+  third-party-web@0.30.0: {}
 
   through@2.3.8: {}
 
@@ -14076,7 +14096,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.13
       '@types/node': 24.13.3
-      '@vitest/browser': 3.2.7(playwright@1.62.1)(vite@6.4.3(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.9.0))(vitest@3.2.7)
+      '@vitest/browser': 3.2.7(playwright@1.62.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.9.0))(vitest@3.2.7)
       happy-dom: 20.11.2
     transitivePeerDependencies:
       - jiti
