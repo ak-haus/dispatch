@@ -6,9 +6,10 @@
  * Sourcing law. Every editorial value comes from the zod contract in
  * src/content.config.ts (title · dek · author · date · the optional hero) or
  * from a page's own authored props. A field the contract lacks is AK's to
- * add; it is never inferred here. That is why the Article JSON-LD carries no
- * `author`: the contract names the byline but not whether it is a person or
- * an agent, and `@type: Person` for an agent would be a false claim (OQ-9).
+ * add; it is never inferred here. The byline's kind is read from the
+ * contract's own disclosure field, `provenance.lane` (OQ-9, ruled
+ * 2026-09-19): a Human-led or Hybrid byline is the person who led the work
+ * and is typed Person; an AI-led byline is an agent and gets no author claim.
  *
  * Pure: no astro:* or node:* imports, so the unit suite runs it directly.
  * File-system lookups are injected (see ./public-files.ts).
@@ -121,6 +122,21 @@ export function feedUrl(site: URL): string {
 	return new URL(FEED_PATH, site).href
 }
 
+/** The contract's provenance lanes (DLDS). */
+export type ProvenanceLane = 'Human-led' | 'Hybrid' | 'AI-led'
+
+/**
+ * The byline as a schema.org author, or nothing (OQ-9). schema.org types an
+ * author as a Person or an Organization; an agent is neither. The lane says
+ * who led: Human-led and Hybrid (the canon's human-led-AI-assisted) put a
+ * person on the byline, so it is typed Person. AI-led puts the agent there,
+ * and Google's guidance on AI content advises against giving AI an author
+ * byline, so no author is claimed. The page still discloses the lane.
+ */
+export function bylineAuthor(name: string, lane: ProvenanceLane): { '@type': 'Person'; name: string } | undefined {
+	return lane === 'AI-led' ? undefined : { '@type': 'Person', name }
+}
+
 /** The Article JSON-LD for a dispatch. Every value is a contract field or derived from one. */
 export function articleJsonLd(input: {
 	title: string
@@ -128,7 +144,10 @@ export function articleJsonLd(input: {
 	date: Date
 	url: string
 	image: string
+	author: { name: string }
+	lane: ProvenanceLane
 }): Record<string, unknown> {
+	const author = bylineAuthor(input.author.name, input.lane)
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'Article',
@@ -137,6 +156,7 @@ export function articleJsonLd(input: {
 		datePublished: input.date.toISOString(),
 		image: [input.image],
 		url: input.url,
+		...(author ? { author: [author] } : {}),
 	}
 }
 

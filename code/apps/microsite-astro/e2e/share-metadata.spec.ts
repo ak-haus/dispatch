@@ -176,6 +176,14 @@ test('every dispatch says in its head what its page says', async ({ page, reques
 			expect(await plate.first().getAttribute('alt')).toBe(alt)
 		}
 
+		// The byline and the lane the page discloses decide the JSON-LD author (OQ-9): a person led a
+		// Human-led or Hybrid dispatch and is typed Person; an AI-led byline is an agent and gets no author.
+		const byline = ((await page.locator('time[datetime]').locator('xpath=..').locator('span.font-extrabold').first().textContent()) ?? '').trim()
+		const disclosure = (await page.locator('button[aria-label^="DLDS provenance:"]').first().getAttribute('aria-label')) ?? ''
+		const lane = disclosure.match(/^DLDS provenance: (Human-led|Hybrid|AI-led) lane\./)?.[1]
+		expect(byline.length, 'the page shows a byline').toBeGreaterThan(0)
+		expect(lane, 'the page discloses its lane').toBeTruthy()
+
 		const ld = page.locator('head script[type="application/ld+json"]')
 		await expect(ld).toHaveCount(1)
 		const data = JSON.parse((await ld.textContent()) ?? '{}')
@@ -187,7 +195,20 @@ test('every dispatch says in its head what its page says', async ({ page, reques
 			datePublished: published,
 			image: [image],
 			url,
+			...(lane === 'AI-led' ? {} : { author: [{ '@type': 'Person', name: byline }] }),
 		})
+	}
+})
+
+test('every sitemap URL is the canonical of the page it lists (F43)', async ({ page, request }) => {
+	// Google: never name one URL in the sitemap and another in rel=canonical for the same page.
+	const res = await request.get('/sitemap-0.xml')
+	expect(res.ok()).toBe(true)
+	const locs = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+	expect(locs.length).toBeGreaterThan(0)
+	for (const loc of locs) {
+		await page.goto(new URL(loc).pathname)
+		expect(await canonical(page), loc).toBe(loc)
 	}
 })
 

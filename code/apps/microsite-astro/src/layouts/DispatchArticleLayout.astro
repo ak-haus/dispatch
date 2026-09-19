@@ -62,6 +62,8 @@ const shareArticle = {
 		date: data.date,
 		url: canonicalUrl(Astro.site, Astro.url.pathname),
 		image: cardImageUrl(Astro.site, shareCard),
+		author: data.author,
+		lane: data.provenance.lane,
 	}),
 }
 ---

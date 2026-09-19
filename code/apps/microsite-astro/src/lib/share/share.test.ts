@@ -3,6 +3,7 @@ import {
 	CARD,
 	SITE_CARD,
 	articleJsonLd,
+	bylineAuthor,
 	canonicalUrl,
 	cardImageUrl,
 	cardRenditions,
@@ -103,16 +104,17 @@ describe('cardRenditions — what /og/ builds', () => {
 })
 
 describe('articleJsonLd — contract fields only', () => {
-	const ld = articleJsonLd({
+	const base = {
 		title: 'Title',
 		dek: 'Dek',
 		date: new Date('2026-05-12'),
 		url: 'https://dispatchmag.dev/dispatch/dispatch-01',
 		image: 'https://dispatchmag.dev/og/dispatch-01.jpg',
-	})
+		author: { name: 'AK Almoumen' },
+	}
 
-	it('maps title, dek, date, url and the card image', () => {
-		expect(ld).toEqual({
+	it('maps title, dek, date, url, the card image and a person byline', () => {
+		expect(articleJsonLd({ ...base, lane: 'Hybrid' })).toEqual({
 			'@context': 'https://schema.org',
 			'@type': 'Article',
 			headline: 'Title',
@@ -120,11 +122,18 @@ describe('articleJsonLd — contract fields only', () => {
 			datePublished: '2026-05-12T00:00:00.000Z',
 			image: ['https://dispatchmag.dev/og/dispatch-01.jpg'],
 			url: 'https://dispatchmag.dev/dispatch/dispatch-01',
+			author: [{ '@type': 'Person', name: 'AK Almoumen' }],
 		})
 	})
 
-	it('carries no author: the contract cannot say what kind of author a byline is (OQ-9)', () => {
-		expect(ld).not.toHaveProperty('author')
+	it('types Human-led and Hybrid bylines as a Person — a person led the work (OQ-9)', () => {
+		expect(bylineAuthor('A Writer', 'Human-led')).toEqual({ '@type': 'Person', name: 'A Writer' })
+		expect(bylineAuthor('A Writer', 'Hybrid')).toEqual({ '@type': 'Person', name: 'A Writer' })
+	})
+
+	it('claims no author for an AI-led byline — an agent is neither Person nor Organization (OQ-9)', () => {
+		expect(bylineAuthor('Claude', 'AI-led')).toBeUndefined()
+		expect(articleJsonLd({ ...base, author: { name: 'Claude' }, lane: 'AI-led' })).not.toHaveProperty('author')
 	})
 })
 
