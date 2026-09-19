@@ -15,7 +15,7 @@ modes at the bottom are the ones already paid for.
 
 | # | Input | Where | What it settles |
 |---|---|---|---|
-| 1 | **The brand contract** | `DESIGN.md` (repo root) | Colors, the eight typography slots, the universal type rules (wordmark split, 12px floor, letterpress), motion gates, do's and don'ts. **Generated** — never hand-edit; edit `code/packages/tokens/scripts/emit/layout-design-md.mjs`. |
+| 1 | **The brand contract** | `DESIGN.md` (repo root) | Colors, the eight typography slots, the universal type rules (wordmark split, type must scale — no fixed pixel floor, letterpress), motion gates, do's and don'ts. **Generated** — never hand-edit; edit `code/packages/tokens/scripts/emit/layout-design-md.mjs`. |
 | 2 | **The generated tokens** | `code/packages/tokens/` → `dist/tokens.css` + `tokens.theme.css` | The only sanctioned values. Construction Rule 4: components consume `var(--token)`, never a literal. |
 | 3 | **The component registry** | `code/apps/storybook` over `packages/ui` | What already exists, and the story idiom to match. |
 | 4 | **The canon** | `representation/visual-system/` — CD1–5, plus `components-multimedia.md` (CD7) for #21–31, plus `components/construction-rules.md` | What the component *is*: the 7-field spec, the 7 hard rules, the tombstoned inventions you must not re-propose. |
