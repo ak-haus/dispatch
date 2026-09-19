@@ -62,6 +62,11 @@ are still the way to force one.
   ritual reconcile by `gh pr list --search`, not by recall — which is the failure this rule exists for: the ledger has
   drifted five times, most sharply when a row still read "held for disposition" for a PR that had merged the day
   before. The machine-checkable in-repo ledger is a separate, larger piece of work; this line is the zero-cost half.
+- **Checkpoint reports land by auto-merge** (F35, AK 2026-09-19). The Mon/Thu routine never pushes to `main`. It
+  opens a PR from `checkpoint/YYYY-MM-DD`, and `checkpoint-automerge.yml` enables GitHub auto-merge only when the
+  whole diff is one new `lifecycle/checkpoints/YYYY-MM-DD-checkpoint.md`. The fifteen contexts still gate the merge,
+  and merged head branches delete themselves. Name any human checkpoint record something else (for example
+  `-sweep-landing.md` or `-ledger.md`), so it can never collide with the routine's filename.
 
 ## Authoring a dispatch (ADR-0003 §Stage 8 — there is no CMS)
 **AK OWNS CONTENT.** An agent may *draft*; AK signs off. Creating or editing any `.mdx` is an ASK-FIRST action, and

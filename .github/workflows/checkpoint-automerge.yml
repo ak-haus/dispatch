@@ -1,0 +1,74 @@
+name: checkpoint automerge
+
+# F35 (AK ruling, 2026-09-19): the Mon/Thu checkpoint routine's report PRs land
+# through GitHub's native auto-merge, the documented pattern for bot-authored PRs
+# against a protected branch. See GitHub Docs "Automatically merging a pull
+# request", Dependabot's `gh pr merge --auto --merge`, and Renovate's
+# `platformAutomerge`. Ruleset 21012416 is untouched: auto-merge merges only after
+# all fifteen required checks pass, and no bypass actor is added.
+#
+# This workflow only ENABLES auto-merge, and only for a same-repo PR from
+# checkpoint/YYYY-MM-DD whose entire diff is one new file,
+# lifecycle/checkpoints/YYYY-MM-DD-checkpoint.md. Anything else (a second file, a
+# modification, a fork) is left for a human. If a later push breaks the shape,
+# auto-merge is switched back off. It is automation, not a gate, so it does not
+# join the ruleset.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-automerge:
+    name: checkpoint automerge (report-only guard)
+    if: >-
+      startsWith(github.head_ref, 'checkpoint/') &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Guard — the diff is exactly one new dated report
+        id: guard
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          date="${HEAD_REF#checkpoint/}"
+          if [[ ! "$date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "::notice::branch ${HEAD_REF} is not checkpoint/YYYY-MM-DD; auto-merge stays off"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          expected=$'A\t'"lifecycle/checkpoints/${date}-checkpoint.md"
+          actual="$(git diff --name-status "${BASE_SHA}...${HEAD_SHA}")"
+          if [[ "$actual" == "$expected" ]]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            printf '::notice::diff is not exactly one new report; auto-merge stays off:\n%s\n' "$actual"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enable auto-merge (merge commit)
+        if: steps.guard.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --merge "$PR_URL"
+
+      - name: Keep auto-merge off when the shape breaks
+        if: steps.guard.outputs.ok != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --disable-auto "$PR_URL" || true

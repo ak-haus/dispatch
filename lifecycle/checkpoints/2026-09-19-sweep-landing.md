@@ -33,8 +33,7 @@ also opened draft PRs (#37, #40, #44); five did not. Each later run diffs agains
 `2026-08-20-checkpoint.md`, the only report on `main`, so the same flags re-file every run.
 
 Landed here by `git cherry-pick -x`: original author, date and SHA preserved in each commit, and each
-file byte-identical to its branch (`git diff --quiet` per file). The draft PRs close in favour of this
-one. What stays open is structural and AK's (F35 below).
+file byte-identical to its branch (`git diff --quiet` per file). The draft PRs closed in favour of #51. What stays open is structural and AK's (F35 below).
 
 ## 2. Records amended (record-shaped, ≤15 min — this session's job)
 
@@ -131,18 +130,42 @@ of `bfb6467`. Three runs per surface:
   - the OQ-5–8 rows still carried AK chips (ruled 2026-08-21, #33);
   - the "Next ▸" opener still pointed at sitting 3 (done 2026-08-22).
 
-## 5. Not done — AK's
+## 5. AK's rulings — the same day
 
-- **This PR's archive-lane disposition.** Fourteen of the fifteen required contexts are green. The
-  fifteenth, `UI Tests: dispatch_playwright`, holds the three standing changes (F38) for AK under
-  policy A. The session does not accept baselines. Once AK dispositions them, the PR can merge. Nothing
-  under `code/` changes, so the merge deploys nothing.
-- **Branch hygiene.** Eighteen remote branches are redundant:
-  - ten merged earlier: six by merge commit, four squash-merged with content verified on `main`;
-  - the eight sweep branches, whose content this PR carries.
+AK ruled on every open item after reading the close. This section records the rulings and what the
+session did with each.
 
-  Deleting them was refused by the session's permission classifier as a destructive git action, so they
-  stand. Each is recoverable from the SHA and PR ref below.
+- **F38 — the archive lane.** AK reviewed the three standing changes in Chromatic and found them clean.
+  PR #51 merged as `a22c5ff` with all contexts green. Draft PRs #37, #40 and #44 were closed as
+  superseded.
+- **F35 — the landing path.** AK's ruling: "whichever is the most technically acceptable and
+  recommended standard in engineering and web development." The documented standard for bot PRs
+  against a protected branch is the platform's native auto-merge, gated by the required checks with no
+  bypass actor. Sources: GitHub Docs "Automatically merging a pull request"; Dependabot's
+  `gh pr merge --auto --merge` pattern in GitHub Docs "Automating Dependabot with GitHub Actions";
+  Renovate's `platformAutomerge` default. Renovate also recommends "Automatically delete head
+  branches". Executed:
+  - the repository settings `allow_auto_merge` and `delete_branch_on_merge` are on;
+  - `.github/workflows/checkpoint-automerge.yml` enables auto-merge only for a same-repo
+    `checkpoint/YYYY-MM-DD` PR whose whole diff is one new report, and switches it off if the shape
+    breaks;
+  - the routine now opens a ready PR, never pushes to `main`, never polls a PR, reads its register
+    from the newest report instead of a frozen list, and audits Dispatch only (next item).
+- **Crossfire — its own app.** AK's ruling: the Crossfire section inside Dispatch is a native
+  integration of Crossfire the app inside Dispatch, not the whole of it, and Crossfire waits for its
+  own firmness-and-stability run. Recorded as an amendment to ADR-0002 (supersedes its "Repos governed"
+  line). Crossfire's open rows are parked, and D1 depends only on Dispatch's rows, including the
+  Dispatch side of the integration.
+- **CartographyCanvas — promoted, but not in Phase B.** AK's ruling: promote it, and move it to the
+  design and architecture slices, because the development container that would let coding agents build
+  the map AK needs is not established yet. B16 closes as the fork retirement it was sized as (3/3). The
+  promotion becomes **T8** on the design/architecture tracks, blocked on that container. F37 (the
+  sitewide maplibre stylesheet) rides with T8. maplibre-gl stays a dependency, so Build 22 patches it
+  5 → 6 to clear its critical advisory.
+- **Build 22 — B1, upgrade Astro.** AK picked it: "Upgrade Astro and do the best recommended action."
+- **Branch hygiene (BR1) — done with AK's permission.** Nineteen remote branches deleted after
+  verification: the eighteen below, plus this session's merged `claude/checkpoint-2026-09-19`. The
+  remote now holds `main` only. Each is recoverable from the tip and PR ref below.
 
   | Branch | Tip | Landed by |
   |---|---|---|
@@ -156,25 +179,22 @@ of `bfb6467`. Three runs per surface:
   | `claude/a14-tailwind-storybook-39aomk` | `42e1d1c` | #35 (squash) |
   | `claude/a14-checkpoint-records` | `b967d5f` | #36 (squash) |
   | `claude/b4-post-deploy-oracle-8ykx70` | `4d01747` | #39 / #41 (squash) |
-  | `checkpoint/2026-08-24` | `0f3b450` | this PR (cherry-pick; draft #37) |
-  | `checkpoint/2026-08-27` | `5af1ffd` | this PR (draft #40) |
-  | `checkpoint/2026-08-31` | `c9c24f7` | this PR (draft #44) |
-  | `checkpoint/2026-09-03` | `caa9cd6` | this PR |
-  | `checkpoint/2026-09-07` | `8209f39` | this PR |
-  | `checkpoint/2026-09-10` | `17ec4c8` | this PR |
-  | `checkpoint/2026-09-14` | `4f2c617` | this PR |
-  | `checkpoint/2026-09-17` | `ef4dc31` | this PR |
-
-- **F35's option.**
-- **The CartographyCanvas disposition.** It now also decides F37 and one critical advisory.
+  | `checkpoint/2026-08-24` | `0f3b450` | #51 (cherry-pick; draft #37) |
+  | `checkpoint/2026-08-27` | `5af1ffd` | #51 (draft #40) |
+  | `checkpoint/2026-08-31` | `c9c24f7` | #51 (draft #44) |
+  | `checkpoint/2026-09-03` | `caa9cd6` | #51 |
+  | `checkpoint/2026-09-07` | `8209f39` | #51 |
+  | `checkpoint/2026-09-10` | `17ec4c8` | #51 |
+  | `checkpoint/2026-09-14` | `4f2c617` | #51 |
+  | `checkpoint/2026-09-17` | `ef4dc31` | #51 |
 
 ## Next opener
 
-**Build 22 — B1 as a security build** (proposed on the board; AK picks). Order:
+**Build 22 — B1 as a security build** (picked by AK, 2026-09-19). Order:
 
 1. the in-range lockfile refresh;
 2. Astro 7 with `@astrojs/react` 6 and `@astrojs/mdx` 8 (8.x requires astro `^7.2.6`);
-3. maplibre, per the CartographyCanvas ruling.
+3. maplibre-gl 5 → 6 (CartographyCanvas is promoted, so the dependency stays and gets patched).
 
 Riding along: B13's ratchet tighten, and the semantic-judge 12px line.
 

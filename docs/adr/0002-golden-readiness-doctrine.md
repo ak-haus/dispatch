@@ -66,3 +66,25 @@ The program is **multi-session by design**. Two session types, with the Golden B
 Positive: "golden" becomes a declared, gated state per product rather than a mood; instruments compound; the design stack gets a governed on-ramp; flags stop derailing builds. Negative/accepted: Phase A adds CI cost and a new harness dependency (Playwright); visual-testing vendors introduce accounts/spend (choice deferred to ADR-0003); the board is one more surface to maintain (mitigated by the close ritual).
 
 **Supersession.** This ADR supersedes the PAI Playwright ban (recorded in amended canon). If ADR-0003 changes stack choices named here, it marks the specific lines superseded — no silent overwrite.
+
+## Amendment — 2026-09-19 (AK): Crossfire runs its own program
+
+- **Status:** Accepted (AK, 2026-09-19), ruled at the 2026-09-19 human checkpoint.
+- **Ruling:** Crossfire is its own app. The Crossfire section inside Dispatch is a native integration
+  of Crossfire the app inside Dispatch; it is not the whole of Crossfire. Crossfire's work waits until
+  Crossfire receives its own firmness-and-stability run.
+- **Supersedes** the header line "Repos governed: `ak-haus/dispatch` + Crossfire (release doctrine is
+  shared; work items are per-repo)". The doctrine in this ADR — phases A–E, golden declared at D per
+  product, the session protocol — stays the template Crossfire's own run will follow. The two programs
+  no longer share an execution path.
+
+**Consequences.**
+
+1. Dispatch's golden gate (D1) depends only on Dispatch's rows. These include the Dispatch side of the
+   integration: the ADR-0001 feed consumer (`scripts/generate-wire-snapshot.mjs` and
+   `src/lib/wire/` in `microsite-astro`), the Live Wire at `/wire`, and the home spreads that render
+   the feed, with D1's "ticker-while-paused" presentation sign-off.
+2. Crossfire's open rows — B6–B11, C1's Crossfire half, D2, D3, E2 and F21 — are parked for
+   Crossfire's own run. Its landed Phase A rows (A7–A12) stand as its instrument floor.
+3. The between-builds routine audits Dispatch and the integration seam only. It no longer audits
+   Crossfire's internals.
