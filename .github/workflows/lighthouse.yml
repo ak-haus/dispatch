@@ -5,7 +5,9 @@ on: [push, pull_request]
 # surface, ceilings pinned ~15-25% over the 2026-08-18 baseline so a
 # regression from today's floor fails CI. The known defects (home LCP,
 # article CLS) live on the Golden Board as repair rows — fixing them
-# tightens lighthouserc.cjs. Hermetic: static dist served locally.
+# tightens lighthouserc.cjs. The build hydrates the licensed PP faces from
+# their public rail (no credentials), as the visual lanes have since S1; the
+# measurement serves the static dist locally, with no feed URL.
 jobs:
   lighthouse:
     name: lighthouse (budget ratchet)
@@ -24,6 +26,12 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      # F40: measure the page readers get. The PP faces are gitignored (the
+      # B14 EULA cut), so a checkout has none, and without them the article
+      # measured CLS 0.2326 here against 0.0000 in production. fetch-fonts.mjs
+      # fails loud on a missing binary.
+      - name: hydrate the PP font rail — measure the page readers get (F40)
+        run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       - run: pnpm build:astro
       - id: lhci
         run: pnpm --filter microsite-astro lighthouse
