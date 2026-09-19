@@ -470,7 +470,7 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
   path). The live surface complies — every family self-hosts from \`/fonts/\` (OQ-2, executed
   at the fonts restoration build).
 
-## Adjudicated questions — AK rulings (OQ-1–8, all ruled)
+## Adjudicated questions — AK rulings (OQ-1–8 ruled · OQ-9 open)
 
 > **Sitting 1 (2026-08-18) — OQ-1–4.** FILED at S2 (tokens README §F5; typography.json
 > \`$description\`s), surfaced at S3 per ADR-0003 §Stage 7, RULED after a cited research pass
@@ -487,6 +487,9 @@ construction-rules.md §Chiseled history, MANIFEST.yaml \`chiseled-history\`):
 > component EXECUTIONS ride later builds, per the OQ-3/OQ-4 precedent.
 >
 > This contract reports the shipped truth for each.
+>
+> **Filed 2026-09-19 (Build 24 · B18) — OQ-9, open.** Found while wiring share metadata from the
+> editorial contract: the byline carries no machine-readable kind.
 
 ### OQ-1 · Body family — DECIDED (AK 2026-08-18): restore Crimson Pro — EXECUTED (fonts build)
 
@@ -636,6 +639,30 @@ Parsons & Kua) — "objective automated checks… that verify decisions are bein
 over the ADR "revisit if" clause precisely because a clause is only read by whoever happens to
 open the file. Filed as a board row; whether it earns a ruleset seat or rides an existing gate is
 a build-time call.
+
+### OQ-9 · What kind of author is a byline — OPEN (filed 2026-09-19, Build 24 · B18)
+
+The contract's \`author\` is \`{name, role, handle?}\`: it names a byline for print, not for machines.
+Three share-metadata values need more than that, and none may be inferred — the contract is not
+widened to fit (AGENTS.md):
+
+- **Article JSON-LD \`author\`.** schema.org types an author as \`Person\` or \`Organization\`. Five of
+  six dispatches carry an agent byline (\`Claude · Brand Terrace Operator\`, lane AI-led): \`Person\`
+  would be false, and \`Organization\` contradicts the visible byline. B18 ships the Article
+  JSON-LD **without** \`author\` — valid, since Google's Article documentation lists no required
+  properties.
+- **\`article:author\`** (Open Graph) takes profile URLs; the contract holds none.
+- **\`twitter:creator\`** takes an X handle; \`author.handle\` names no platform.
+
+The feed is unaffected: the byline rides \`dc:creator\`, which takes free text.
+
+**Options for AK:** (a) add \`author.kind: person | agent\` (and an optional \`author.url\`) to the
+contract — typed \`Person\` where the kind is person, omitted for agents; a schema widening, so AK's
+editorial call. (b) Rule that the provenance lane types the byline — Human-led and Hybrid bylines
+are people, AI-led bylines are agents; no schema change (the second-opinion pass at B18 favoured
+typing the one human byline now). (c) Hold that the publication takes editorial responsibility
+and credit \`Organization: DISpatch\` — truthful only if the visible byline changes with it.
+(d) Keep bylines out of machine metadata — the shipped state.
 
 ## Canon reading paths
 
