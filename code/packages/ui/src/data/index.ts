@@ -1,7 +1,7 @@
 // Prime DISpatch — data primitives
 //
 // F3 (data) per Stream 1 Vertical Floor Plan 2026-05-11.
-// TanStack Query primitives consumed by both microsite-astro + microsite-next.
+// TanStack Query primitives. No app imports them (F41).
 
 export {
   createPrimeQueryClient,

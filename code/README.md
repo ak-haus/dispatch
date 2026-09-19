@@ -1,25 +1,22 @@
 ---
-title: `code/` — Prime DISpatch microsite hybrid foundation
+title: `code/` — the Prime DISpatch monorepo
 origin: prime-authored
 sphere: 3-purgatorio/4-buildings-terrace
 audience: [citizens, mayor, eden]
 authority: mayor
 status: active
 load_bearing: true
-last_amended: 2026-05-17
+last_amended: 2026-09-19
 ---
-# `code/` — Prime DISpatch microsite hybrid foundation
+# `code/` — the Prime DISpatch monorepo
 
-Astro 6 + Next.js 15 **co-foundational hybrid** monorepo. Per master plan §1.7 reframe 2.6 + §3.B platform foundation: both frameworks integrated into the platform substrate from the start, both accessible from the infrastructure level throughout. NOT parallel-peers; NOT umbrella+bolt-on. Both load-bearing.
-
-Composition patterns (when to reach for which framework, hybrid composition recipes, dial mechanics) were documented in the V1 operator runbook (private ops archive since the B14 public cut, 2026-08-18).
+An Astro 7 editorial site in a pnpm monorepo: the live site (`apps/microsite-astro`), its Storybook (`apps/storybook`), and the shared `@prime-dispatch/tokens` and `@prime-dispatch/ui` packages.
 
 ## Workspace layout
 
 | Path | Purpose | Owning Wave/Stream |
 |---|---|---|
-| `apps/microsite-next/` | Next.js 15 surface — App Router + RSC + Server Actions. Interactive / authenticated / dashboard / admin surfaces. | W2-S-A scaffold; W5 fills |
-| `apps/microsite-astro/` | Astro 6 surface — Server Islands + Content Layer. Document-heavy / editorial / static-shell-with-islands surfaces. | W2-S-A scaffold; W5 fills |
+| `apps/microsite-astro/` | Astro 7 surface — Server Islands + Content Layer. Document-heavy / editorial / static-shell-with-islands surfaces. | W2-S-A scaffold; W5 fills |
 | `packages/tokens/` | Design tokens (Style Dictionary v4 outputs — `tokens.css` / `tokens.tailwind.config.ts` / `tokens.toon`). | W2-S-D fills |
 | `packages/` (future) | Shared workspace packages — `ui/` (W3-S-A), `brand-bible/` (W3-S-A), `voice/` (W4), `content-schema/` (W4 — Zod discriminated union per §3.C). | W3+ |
 | `tooling/` (future) | Shared build/lint/test configs (eslint / prettier / vitest / playwright). | W3+ |
@@ -28,10 +25,8 @@ Composition patterns (when to reach for which framework, hybrid composition reci
 
 ```bash
 pnpm install            # install all workspace deps
-pnpm dev:next           # Next.js dev server
 pnpm dev:astro          # Astro dev server
 pnpm build              # build all workspaces in parallel
-pnpm build:next         # Next.js production build
 pnpm build:astro        # Astro production build
 pnpm typecheck          # typecheck all workspaces
 ```
@@ -43,8 +38,7 @@ pnpm typecheck          # typecheck all workspaces
 | Node | 22 LTS (pinned in `.nvmrc`) | engines.node `>=22.0.0` |
 | Package manager | pnpm 10.33.0 (pinned via `packageManager` field) | engines.pnpm `>=10.0.0` |
 | TypeScript | 5.7+ strict (shared config in `tsconfig.base.json`) | `noUncheckedIndexedAccess` + `verbatimModuleSyntax` enabled |
-| Astro | 6 (STABLE per master plan §1.7 reframe 2.6; Cloudflare acq Jan 16 2026; MIT preserved) | App Router-equivalent: Astro 6 routing |
-| Next.js | 15 (App Router + RSC + Server Actions) | React 19 baseline |
+| Astro | 7 (7.3.3) | Astro routing; requires Vite 8 |
 
 ## Discipline references
 
@@ -70,15 +64,15 @@ production `deployment_status` and is dispatchable on demand. It proves a `200` 
 browser; a Vercel `READY` status does NOT guarantee pages were built — the Astro/Vite trap (below) produces `READY`
 with zero rendered HTML, and a header check alone cannot see JS death either.
 
-### Astro 6.3.x + Vite version trap
+### Astro + Vite version trap
 
 **Symptom:** Vercel reports `READY`, live site returns 404 on every route, `dist/` contains only public assets and no rendered HTML.
 
-**Root cause:** Astro 6.3.x requires Vite `^7.3.2` as a hard dependency. If `pnpm.overrides.vite` pins below `7` (e.g., `"vite": "^6.x"`), pnpm resolves a Vite version that is incompatible with Astro 6.3.x. The build exits 0 with `0 page(s) built` and no error message.
+**Root cause:** Astro requires one Vite major as a hard dependency (Astro 7.3.3 requires `^8.0.13`). If `pnpm.overrides.vite` pins below it, pnpm resolves a Vite that Astro cannot use. On Astro 6.3 (Vite 7) the build exited 0 with `0 page(s) built` and no error message.
 
-**Current status (2026-05-23):** NOT active. Lock file resolves `vite@7.3.3` for `@tailwindcss/vite` (Astro surface). Storybook uses `vite@6.4.2` separately — this is safe because Storybook is a distinct workspace package.
+**Current status:** not active. The lockfile resolves `vite@8.3.0` for the Astro surface. Storybook uses `vite@6.4.3` in its own workspace package, and vitest's own dependency resolves `vite@7.3.6`; neither builds the site.
 
-**Guard:** never add `pnpm.overrides.vite` pinning below `7` to the root `package.json`. If a dep requires Vite 6, isolate it in its own workspace package so the Astro surface stays on Vite 7+.
+**Guard:** never add a `pnpm.overrides.vite` pin below the major Astro requires (8 today) to the root `package.json`. If a dep requires an older Vite, isolate it in its own workspace package so the Astro surface keeps its Vite.
 
 **Verification:**
 ```bash

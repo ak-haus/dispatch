@@ -16,7 +16,7 @@ last_amended: 2026-06-11
 > prime-city monorepo paths (`v1-dev-diary-microsite/...`,
 > `working/v1-dev-diary-microsite`) are dead.
 
-This microsite (Astro 6, static output) deploys to Vercel from `main` of
+This microsite (Astro 7, static output) deploys to Vercel from `main` of
 `github.com/ak-haus/dispatch`. The `code/` folder is the pnpm workspace
 root; the microsite is one workspace member.
 

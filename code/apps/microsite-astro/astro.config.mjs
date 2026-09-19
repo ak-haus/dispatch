@@ -27,7 +27,7 @@ import { sentryVitePlugin } from '@sentry/vite-plugin'
 // optimistic by a known 0.74%.
 const SENTRY_UPLOAD = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
-// Prime DISpatch — Astro 6 editorial surface.
+// Prime DISpatch — Astro 7 editorial surface.
 // Lives at code/apps/microsite-astro (pnpm workspace member).
 //
 // Workspace-runtime correctness:

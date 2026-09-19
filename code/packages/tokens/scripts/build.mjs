@@ -11,7 +11,7 @@
  *
  * Both are written INTO microsite-astro/src/styles/ (committed; the CI drift
  * gate rebuilds and fails closed on any diff) and mirrored to dist/ for
- * package consumers (Storybook preview, microsite-next).
+ * package consumers (Storybook preview).
  */
 import { mkdirSync, writeFileSync, copyFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

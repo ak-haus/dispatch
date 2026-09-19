@@ -39,7 +39,7 @@ colors:
   window-warm: "{colors.dispatch-vellum-300}"
   # asset tier
   asset-cartography-pulse: "oklch(0.45 0.18 22)"
-  # W2 short-name alias API (packages/ui + microsite-next consumers)
+  # W2 short-name alias API (packages/ui consumers)
   accent-prime: "{colors.platform-accent-prime}"
   accent-prime-active: "{colors.platform-accent-prime-active}"
   copper: "{colors.platform-copper}"

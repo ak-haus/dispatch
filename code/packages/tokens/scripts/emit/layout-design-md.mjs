@@ -133,7 +133,7 @@ export function renderDesignMd({ dawnTree, duskTree, nightTree }) {
     }
     fm.push(`  ${t.cssName}: ${yq(specColorValue(t.css, dawnByCssName, t.path))}`);
   }
-  fm.push('  # W2 short-name alias API (packages/ui + microsite-next consumers)');
+  fm.push('  # W2 short-name alias API (packages/ui consumers)');
   for (const t of aliases) {
     fm.push(`  ${t.cssName}: ${yq(specColorValue(t.css, dawnByCssName, t.path))}`);
   }

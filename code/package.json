@@ -3,18 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Prime DISpatch microsite — Astro 6 + Next.js 15 co-foundational hybrid monorepo (master plan §1.7 reframe 2.6 + §3.B).",
+  "description": "Prime DISpatch — the Astro 7 editorial site, its Storybook, and the shared tokens and ui packages.",
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "dev:next": "pnpm --filter microsite-next dev",
     "dev:astro": "pnpm --filter microsite-astro dev",
     "dev:storybook": "pnpm --filter storybook dev",
     "build": "pnpm -r build",
-    "build:next": "pnpm --filter microsite-next build",
     "build:astro": "pnpm --fail-if-no-match --filter @prime-dispatch/tokens build && pnpm --fail-if-no-match --filter microsite-astro build",
     "build:tokens": "pnpm --fail-if-no-match --filter @prime-dispatch/tokens build",
     "build:storybook": "pnpm --filter storybook build",

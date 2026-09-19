@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Prime DISpatch component library — 20 V1 components per CD4 ratified inventory; consumed by apps/microsite-next, apps/microsite-astro, apps/storybook; future Buildings consume via shadcn/ui MCP registry.",
+  "description": "Prime DISpatch component library — 20 V1 components per CD4 ratified inventory; consumed by apps/microsite-astro, apps/storybook; future Buildings consume via shadcn/ui MCP registry.",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {

@@ -11,7 +11,7 @@ last_amended: 2026-06-11
 # DISpatch microsite
 
 The DISpatch editorial surface — Prime's dev-diary magazine. A JS-first
-scrollytelling site: Astro 6 static output with React 19 islands, animated
+scrollytelling site: Astro 7 static output with React 19 islands, animated
 by GSAP + ScrollTrigger, Motion, and Lenis smooth scroll, styled with
 Tailwind v4 on the DISpatch token bridge. Eleven static pages: home, six
 MDX dispatches (`/dispatch/[id]`), about, sitemap, article surface, and a
