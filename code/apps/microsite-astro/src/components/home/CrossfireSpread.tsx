@@ -303,6 +303,7 @@ export function CrossfireSpread({
 			    global `body.dispatch-hero header { position: fixed }` rule that
 			    pins the masthead chrome on the homepage hero. */}
 			<motion.div
+				data-ssr-reveal
 				initial={{ opacity: 0, y: 12 }}
 				whileInView={{ opacity: 1, y: 0 }}
 				viewport={{ once: true, amount: 0.4 }}

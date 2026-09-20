@@ -15,6 +15,7 @@
 import { motion, MotionConfig, AnimatePresence } from 'motion/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Wordmark } from './Wordmark'
+import { markMotionReady } from '@/lib/motion-ready'
 // SUBPATH imports, never the barrel (B16 fork retirement — the library owns
 // the palette and the nav cluster; the barrel would drag the whole component
 // graph into the island chunk). useMagnetic rides the SiteNav subpath: the
@@ -68,6 +69,14 @@ export function Masthead({
 	 * ChapterRail, which already scan clean with their sheets open.
 	 */
 	const menuRef = useRef<HTMLDialogElement | null>(null)
+
+	// React is alive: cancel the no-JS SSR reveal fallback so Motion owns the
+	// choreography again (F63 · F66). This island is `client:load` on every
+	// route, so it is the earliest honest proof the bundle arrived. The call
+	// refuses itself past the deadline — see src/lib/motion-ready.ts.
+	useEffect(() => {
+		markMotionReady()
+	}, [])
 
 	useEffect(() => {
 		const dlg = menuRef.current
@@ -169,6 +178,7 @@ export function Masthead({
 				<motion.header
 					data-hidden={hidden ? 'true' : 'false'}
 					data-scrolled={scrolled ? 'true' : 'false'}
+					data-ssr-reveal
 					initial={{ opacity: 0, y: -4 }}
 					animate={{
 						opacity: 1,
@@ -204,6 +214,7 @@ export function Masthead({
 							ref={wordmarkMagnetic.ref}
 							onMouseMove={wordmarkMagnetic.onMouseMove}
 							onMouseLeave={wordmarkMagnetic.onMouseLeave}
+							data-ssr-reveal
 							initial={{ opacity: 0, y: 2 }}
 							animate={{
 								opacity: 1,

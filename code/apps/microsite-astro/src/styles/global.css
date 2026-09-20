@@ -103,6 +103,60 @@
 }
 
 
+/* ── SSR reveal fallback (F63 · F66) ──────────────────────────────
+ * Motion server-renders `initial={{ opacity: 0 }}` as an inline style, and
+ * ONLY hydration clears it. Two ways that never arrives, one root:
+ *   F63 — the shared vendor chunk 404s. 16 elements on `/` stay in the DOM
+ *         and invisible, `innerText.length` unchanged, and no `pageerror`
+ *         fires, so Sentry sees nothing. The 404 page loses its navigation.
+ *   F66 — the chunk merely arrives late (hydration at 36.2s on Slow 3G) and
+ *         the reader has already skimmed past the content it would reveal.
+ * This reveals them with NO JavaScript, which is the point: a keyframe
+ * animation outranks the inline `style` attribute in the cascade (CSS Cascade
+ * 5 §6.6.1 — the animation origin beats normal author declarations; only an
+ * `!important` inline would win, and Motion emits none), so the rescue does
+ * not depend on the thing that failed. Same reasoning as the cover settle
+ * above: CSS runs from first paint, Motion runs after an island hydrates.
+ * `markMotionReady()` cancels it inside a deadline on a healthy load, so the
+ * designed reveal still plays; see src/lib/motion-ready.ts for why a late
+ * cancel is refused rather than allowed to snap content back to hidden.
+ * Reduced motion: the same rescue, arriving without the movement.
+ * ───────────────────────────────────────────────────────────────── */
+@property --hero-masthead-shown {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+@keyframes hero-masthead-rescue {
+  to {
+    --hero-masthead-shown: 1;
+    pointer-events: auto;
+  }
+}
+@keyframes ssr-reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[data-ssr-reveal] {
+  animation: ssr-reveal 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) var(--ssr-reveal-delay, 2s) forwards;
+}
+/* A healthy hydration, inside the deadline: the keyframe has not fired yet,
+   so removing it is invisible and Motion owns the reveal as designed. */
+html[data-motion-ready] [data-ssr-reveal] {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* The rescue still has to happen — unreadable content is not an
+     accessibility win — but it arrives as a cut, with no fade and no travel.
+     Both rescues, so the hero masthead does not slide in either. */
+  [data-ssr-reveal],
+  body.dispatch-hero:not(.past-hero) header {
+    animation-duration: 1ms;
+  }
+}
+
 /* Tailwind dark: variant matches both legacy .dark and the canonical
    [data-prime-cycle="night"] attribute so dark:* utilities work in either. */
 @custom-variant dark (&:where(.dark, .dark *, [data-prime-cycle="night"], [data-prime-cycle="night"] *));
@@ -197,10 +251,27 @@ body.dispatch-hero header {
   width: 100% !important;
   transition: opacity 0.35s ease, transform 0.35s ease !important;
 }
+/* The hide is gated on `.past-hero`, which ONLY the hero island's Lenis
+   hook can add — so when the shared chunk 404s or arrives late, the
+   masthead and the whole site nav stay unreachable (F63 names the header
+   as lost on `/`; this is a SECOND mechanism for it, not Motion's inline
+   style, and `!important` is why the keyframe rescue above cannot reach
+   it). The `!important` is load-bearing: it is what beats Motion's own
+   inline `opacity: 1` on the header. So the rescue is routed through a
+   registered custom property instead — the important declaration keeps
+   winning the cascade while the animation origin still owns the VALUE. */
 body.dispatch-hero:not(.past-hero) header {
-  opacity: 0 !important;
-  transform: translateY(-100%) !important;
-  pointer-events: none !important;
+  opacity: var(--hero-masthead-shown, 0) !important;
+  transform: translateY(calc(-100% + var(--hero-masthead-shown, 0) * 100%)) !important;
+  /* No longer !important: nothing sets pointer-events inline, and the
+     rescue keyframe has to be able to hand the nav back to the reader. */
+  pointer-events: none;
+  animation: hero-masthead-rescue 0.4s ease var(--ssr-reveal-delay, 2s) forwards;
+}
+/* A healthy hydration cancels it on the same deadline as the SSR rescue,
+   before it can fire, so the designed hero behaviour is untouched. */
+html[data-motion-ready] body.dispatch-hero:not(.past-hero) header {
+  animation: none;
 }
 body.dispatch-hero.past-hero header {
   opacity: 1 !important;

@@ -84,6 +84,7 @@ export function SpheresSpread() {
 			<div className="mx-auto max-w-[1880px] px-6 py-20 md:px-12 md:py-28">
 				{/* ── Section header ─────────────────────────────────────────── */}
 				<motion.div
+					data-ssr-reveal
 					initial={{ opacity: 0, y: 16 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.3 }}
@@ -108,6 +109,7 @@ export function SpheresSpread() {
 
 				{/* ── Lede + Terminal ────────────────────────────────────────── */}
 				<motion.div
+					data-ssr-reveal
 					initial={{ opacity: 0, y: 16 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.3 }}
@@ -159,6 +161,7 @@ export function SpheresSpread() {
 						{COSMOLOGY.map((layer, i) => (
 							<motion.li
 								key={layer.name}
+								data-ssr-reveal
 								variants={{
 									hidden: { opacity: 0, y: 12 },
 									visible: { opacity: 1, y: 0 },
@@ -220,6 +223,7 @@ export function SpheresSpread() {
 
 				{/* ── Footnote ───────────────────────────────────────────────── */}
 				<motion.p
+					data-ssr-reveal
 					initial={{ opacity: 0, y: 12 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.5 }}
