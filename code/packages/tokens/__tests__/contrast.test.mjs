@@ -118,6 +118,24 @@ const cases = [
   { cycle: 'dusk', fg: 'dispatch-text-meta-faint', bg: 'window-warm', min: 4.5, node: 'dusk palette meta-faint (alias → cycle faint) — B16' },
   { cycle: 'night', fg: 'dispatch-text-meta', bg: 'window-warm', min: 4.5, node: 'night palette meta (alias → cycle muted) on the void card — B16' },
   { cycle: 'night', fg: 'dispatch-text-meta-faint', bg: 'window-warm', min: 4.5, node: 'night palette meta-faint (alias → cycle faint) — B16' },
+
+  // ---- F53 (AK 2026-09-20): the editorial lane's label role. The canon lane
+  // pigment is a DISPLAY token; carried as text below the large-text threshold
+  // it read 4.25:1 on the /article card and 4.02:1 on the /sitemap focused-zone
+  // tint (axe, against the locally-served production build). The role-scoped
+  // sibling holds hue 41 and chroma 0.16 and grades lightness 0.55 → 0.52 —
+  // the first rung clearing AA on BOTH (0.53 gives 4.66 and 4.41). The card
+  // and tint surfaces are color-mix recipes not var-resolvable here, so the
+  // axe-measured grounds are asserted literally (the B16 wheat-band precedent).
+  { cycle: 'dawn', fg: 'dispatch-lane-editorial-label', bgLiteral: '#efe8da', min: 4.5, node: 'article card kicker 12px/700 + Read affordance 12px/800 on the card ground — F53' },
+  { cycle: 'dawn', fg: 'dispatch-lane-editorial-label', bgLiteral: '#f0e0d2', min: 4.5, node: 'atlas index zone name 15px/700 on the focused-zone tint (editorial 10% over sky-low) — F53' },
+  { cycle: 'dawn', fg: 'dispatch-lane-editorial-label', bg: 'dispatch-vellum-100', min: 4.5, node: 'editorial lane label on the untinted page ground — F53' },
+  // Dark cycles: the label sibling equals the cycle display pigment BY
+  // MEASUREMENT — dusk reads 5.68:1 and night 7.22:1 on their own grounds, so
+  // no grade is owed. Asserted so a future cycle edit cannot silently drop
+  // either below AA. (The dark-cycle wine failures are T4/OQ-6b's, not this.)
+  { cycle: 'dusk', fg: 'dispatch-lane-editorial-label', bg: 'dispatch-vellum-100', min: 4.5, node: 'dusk editorial lane label on the walnut ground — F53' },
+  { cycle: 'night', fg: 'dispatch-lane-editorial-label', bg: 'dispatch-vellum-100', min: 4.5, node: 'night editorial lane label on the void ground — F53' },
 ];
 
 for (const c of cases) {
@@ -129,6 +147,17 @@ for (const c of cases) {
   });
 }
 
+// Documented, deliberate NON-assertion (F53, measured 2026-09-20): the atlas
+// index zone name in its focused CIVIC state. Canon copper reads 3.03:1 on that
+// tint (#f0e4d5 = copper 10% over sky-low); the index now binds the F5
+// --platform-copper-label instead, which lifts it to 4.19:1 — better, and still
+// short of AA. F5 graded copper-label against the UNTINTED substrate, where it
+// clears at 4.66:1 (asserted above); nobody had measured it against a copper
+// tint. Not asserted here because it does not yet pass, and not fixed here
+// because a tint-grade copper rung is the F5 register, not the editorial lane.
+// Unreachable by the suite regardless: the atlas focuses 'editorial' by
+// default and only hover moves it. Filed as F68.
+//
 // Documented, deliberate NON-assertion (pre-existing canon): dawn display
 // copper on vellum-300 is 2.56:1 (no display-copper-on-window-warm node exists
 // today). The former dusk/night faint FILED-guard is gone — OQ-3 (AK

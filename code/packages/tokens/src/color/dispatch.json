@@ -31,6 +31,33 @@
         "ratified-at": "CD2 Decision 5b §10"
        }
       }
+     },
+     "label": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.52,
+        0.16,
+        41
+       ]
+      },
+      "$description": "Lane 1 Editorial, label role — the F53 role-scoped AA variant of the editorial lane pigment for label/body-size text (<18pt regular / <14pt bold). Hue 41 and chroma 0.16 are held EXACTLY from the canon lane pigment; lightness alone is graded 0.55 → 0.52, the OQ-5/OQ-6b method. 4.87:1 on the /article card ground (#efe8da) and 4.61:1 on the /sitemap zone tint (#f0e0d2); 0.52 is the FIRST rung clearing AA on both — 0.53 reads 4.66 and 4.41, which passes the card and fails the tint. The canon display pigment is untouched, so CD1–5 is untouched: this is a sibling, not an amendment.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cssName": "dispatch-lane-editorial-label",
+        "css": "oklch(0.52 0.16 41)",
+        "concept-citation": {
+         "universal-concept": "Role-scoped split of a brand pigment — colour abstracted by role, with text roles held separately from brand tokens (IBM Carbon), and the GRADE of the chosen hue adjusted to meet contrast rather than the hue itself (USWDS)",
+         "reference-platforms": [
+          "IBM Carbon Design System — colour tokens by role/usage",
+          "U.S. Web Design System — grade adjustment preserves brand identity",
+          "WCAG 2.2 SC 1.4.3 (4.5:1 below large-text threshold)"
+         ]
+        },
+        "ratified-at": "F53 lane half (AK, 2026-09-20) — the --platform-copper-label precedent (F5); per-node math in __tests__/contrast.test.mjs"
+       }
+      }
      }
     },
     "institutional": {

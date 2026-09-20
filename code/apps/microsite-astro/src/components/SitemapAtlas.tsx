@@ -128,6 +128,30 @@ const LANE_COLORS: Record<ZoneLane, string> = {
 	civic: 'var(--platform-copper)',
 }
 
+/**
+ * Lane pigments in the TEXT role (F53). LANE_COLORS above stays the display
+ * register — zone fills, rings, glows, notches, icons — where the canon
+ * pigment is governed by WCAG 1.4.11 (3:1 non-text) and passes. The focused
+ * zone name in the index rail is 15px/700, below the large-text threshold, so
+ * it is governed by 1.4.3 (4.5:1) and needs the role-scoped AA sibling.
+ *
+ * editorial → the F53 label rung: hue 41 + chroma 0.16 held from canon,
+ *   lightness graded 0.55 → 0.52. 4.61:1 on the focused zone tint (measured;
+ *   the canon pigment read 4.02:1 there).
+ * civic → --platform-copper-label, the F5 sibling that already exists for
+ *   exactly this size register. Canon copper reads 3.02:1 in this role, so
+ *   the display token was failing here too — reachable by hover rather than
+ *   by the default state the suite scans.
+ * institutional → unchanged; measured passing in this role.
+ * dispatch → unchanged; accent-prime's AA work is T4/OQ-6b's, not this build's.
+ */
+const LANE_LABEL_COLORS: Record<ZoneLane, string> = {
+	editorial: 'var(--lane-editorial-label)',
+	institutional: 'var(--lane-institutional)',
+	dispatch: 'var(--platform-accent-prime)',
+	civic: 'var(--platform-copper-label)',
+}
+
 /* ─── Main component ─────────────────────────────────────────────────────── */
 
 export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
@@ -558,6 +582,7 @@ function ZoneIndexCard({
 				{zones.map((zone, i) => {
 					const isFocused = zone.id === focusId
 					const color = LANE_COLORS[zone.lane]
+					const labelColor = LANE_LABEL_COLORS[zone.lane]
 					const Icon = zone.icon
 					return (
 						<li key={zone.id}>
@@ -598,7 +623,7 @@ function ZoneIndexCard({
 										className="block truncate font-narrative text-[15px] font-bold leading-tight"
 										style={{
 											color: isFocused
-												? color
+												? labelColor
 												: 'var(--platform-text-body-strong)',
 											transition: 'color 0.2s',
 										}}

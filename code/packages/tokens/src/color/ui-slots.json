@@ -164,6 +164,24 @@
           }
         }
       },
+      "lane-editorial-label": {
+        "$value": "{color.dispatch.lane.editorial.label}",
+        "$description": "W2 short-name alias for the label role. Use this wherever the editorial lane pigment carries text below the WCAG large-text threshold (<18pt regular / <14pt bold); --lane-editorial stays the display pigment for rules, notches, fills and headline-scale type.",
+        "$extensions": {
+          "prime": {
+            "tier": "dispatch",
+            "cssName": "lane-editorial-label",
+            "css": "var(--dispatch-lane-editorial-label)",
+            "concept-citation": {
+              "universal-concept": "W2 short-name token API",
+              "reference-platforms": [
+                "packages/ui census 2026-08-18"
+              ]
+            },
+            "ratified-at": "F53 lane half (AK, 2026-09-20)"
+          }
+        }
+      },
       "lane-institutional": {
         "$value": "{color.dispatch.lane.institutional.strong}",
         "$description": "W2 short-name alias; grounded by the in-code fallback #5a6770 (MetroMapMarker.tsx:83) = cool-mineral register.",
