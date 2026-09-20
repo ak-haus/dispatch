@@ -56,6 +56,7 @@ export function ArticleSpread({
 
 			<div className="relative mx-auto max-w-[1360px] 2xl:max-w-[1600px] min-[2200px]:max-w-[1880px] px-6 py-20 md:px-16 md:py-32 lg:py-40">
 				<motion.div
+					data-ssr-reveal
 					initial={{ opacity: 0, y: 16 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.3 }}
@@ -82,6 +83,7 @@ export function ArticleSpread({
 				<div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-20">
 					{/* ── Recto: the article opening proper ──────────────────── */}
 					<motion.article
+						data-ssr-reveal
 						initial={{ opacity: 0, y: 24 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, amount: 0.2 }}
@@ -144,6 +146,7 @@ export function ArticleSpread({
 
 					{/* ── Verso: pull-quote + meta in OKLCH callouts ─────────── */}
 					<motion.aside
+						data-ssr-reveal
 						initial={{ opacity: 0, y: 24 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, amount: 0.3 }}

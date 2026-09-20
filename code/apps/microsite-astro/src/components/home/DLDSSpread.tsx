@@ -47,6 +47,7 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 			<div className="mx-auto max-w-[1880px] px-6 py-20 md:px-12 md:py-28">
 				{/* Section header */}
 				<motion.div
+					data-ssr-reveal
 					initial={{ opacity: 0, y: 16 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.3 }}
@@ -83,6 +84,7 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 						return (
 							<motion.li
 								key={a.id}
+								data-ssr-reveal
 								initial={{ opacity: 0, y: 24 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, amount: 0.25 }}
@@ -198,6 +200,7 @@ function NextEditionCard({ slot }: { slot: number }) {
 
 	return (
 		<motion.li
+			data-ssr-reveal
 			initial={{ opacity: 0, y: 24 }}
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true, amount: 0.25 }}

@@ -46,6 +46,7 @@ export function WireCard({
 			aria-setsize={setsize}
 			aria-labelledby={titleId}
 			aria-describedby={metaId}
+			data-ssr-reveal
 			variants={cardEntrance}
 			transition={{ duration: 0.4, ease: 'easeOut' }}
 			className="relative border-l-2 py-3 pl-5 pr-2 outline-offset-4"

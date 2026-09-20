@@ -914,6 +914,7 @@ export const CartographyCanvas = forwardRef<SVGSVGElement, CartographyCanvasProp
 					{hoveredZone && (
 						<motion.div
 							key={hoveredZone.id}
+							data-ssr-reveal
 							initial={{ opacity: 0, y: 8 }}
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: 8 }}

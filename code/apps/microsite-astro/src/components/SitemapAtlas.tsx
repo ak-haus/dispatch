@@ -371,6 +371,7 @@ function MapMarker({
 				<motion.span
 					aria-hidden="true"
 					className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+					data-ssr-reveal
 					initial={{ scale: 0.6, opacity: 0 }}
 					animate={{ scale: 1, opacity: 1 }}
 					transition={{ duration: 0.25 }}
@@ -402,6 +403,7 @@ function MapMarker({
 			<AnimatePresence>
 				{isFocused && (
 					<motion.span
+						data-ssr-reveal
 						initial={{ opacity: 0, x: -4 }}
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: -4 }}
@@ -432,6 +434,7 @@ function FocusedZoneCard({ zone }: { zone: AtlasZone }) {
 		<AnimatePresence mode="wait">
 			<motion.article
 				key={zone.id}
+				data-ssr-reveal
 				initial={{ opacity: 0, y: 12 }}
 				animate={{ opacity: 1, y: 0 }}
 				exit={{ opacity: 0, y: -8 }}
@@ -463,6 +466,7 @@ function FocusedZoneCard({ zone }: { zone: AtlasZone }) {
 
 					{/* Icon centerpiece */}
 					<motion.div
+						data-ssr-reveal
 						initial={{ scale: 0.7, opacity: 0 }}
 						animate={{ scale: 1, opacity: 1 }}
 						transition={{ delay: 0.1, duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
@@ -676,6 +680,7 @@ function RecentDispatchesCard({ articles }: { articles: ArticleEntry[] }) {
 				{articles.slice(0, 4).map((a, i) => (
 					<motion.li
 						key={a.href}
+						data-ssr-reveal
 						initial={{ opacity: 0, x: -4 }}
 						whileInView={{ opacity: 1, x: 0 }}
 						viewport={{ once: true, amount: 0.3 }}

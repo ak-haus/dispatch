@@ -106,6 +106,7 @@ export function ImageWithCaption({
   return (
     <motion.figure
       className={clsx("prime-figure", VARIANT_CLASS[variant], className)}
+      data-ssr-reveal
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -80px 0px" }}

@@ -404,6 +404,14 @@ export function ChapterRail({
                       visible; others fade in on rail hover. */}
                   <motion.span
                     className="prime-chapter-rail__label"
+                    /* Hidden BY DESIGN, not awaiting hydration: an inactive
+                       chapter's label reveals on rail hover. Named opt-out
+                       from the F63 SSR reveal rescue (ADR-0004: allowances
+                       are named, never blanket) — ssr-reveal.test.ts fails on
+                       any server-rendered `opacity:0` carrying neither
+                       marker, so a new motion island cannot go invisible
+                       silently, and this one cannot be revealed by accident. */
+                    data-ssr-hidden
                     initial={false}
                     animate={{
                       opacity: isActive ? 1 : 0,
