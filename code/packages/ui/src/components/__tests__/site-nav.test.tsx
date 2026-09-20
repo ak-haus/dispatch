@@ -94,8 +94,9 @@ describe("SiteNav — theme-cycler", () => {
     fireEvent.click(screen.getByRole("button", { name: /Night cycle/ }));
     expect(document.documentElement.getAttribute("data-prime-cycle")).toBe("night");
     expect(document.documentElement.classList.contains("dark")).toBe(true);
-    // RAW string protocol — what the microsite's blocking script reads
-    // (NOT the zustand-JSON of state/theme-cycler)
+    // RAW string protocol — what the microsite's blocking script reads,
+    // and since F41 removed the rival zustand store the only writer of
+    // this key (F30 retired, Build 26)
     expect(localStorage.getItem("prime-cycle")).toBe("night");
     expect(
       screen.getByRole("button", { name: "Night cycle (active)" }),
