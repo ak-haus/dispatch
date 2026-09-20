@@ -84,10 +84,57 @@ export async function settleMotion(page: Page): Promise<void> {
  */
 const INCOMPUTABLE_RULES = new Set(['color-contrast'])
 
+/**
+ * Node-level allowance (B27, F32) — deliberately NOT a new INCOMPUTABLE_RULES
+ * entry, because `aria-valid-attr-value` catches real defects and blanket
+ * grandfathering is what ADR-0004 forbids (the R1 precedent: named, never
+ * blanket). One check result is allowed, matched on axe's own message.
+ *
+ * WHAT IT IS. A trigger for a popup that does not exist until it is opened —
+ * the ARIA disclosure pattern — carries `aria-controls` pointing at an id
+ * that is absent (or display:none) while closed. axe cannot statically decide
+ * whether the author got the id right, so it answers `incomplete` rather than
+ * pass or fail. That is a limit of static analysis over deferred markup, not
+ * an open accessibility question about the page.
+ *
+ * WHO HITS IT. Two first-party triggers, both correct: the masthead's menu
+ * button (Radix Dialog.Content, mounted only while open) and ChapterRail's
+ * chapter chip (a <dialog> the UA keeps at display:none until showModal()).
+ * Neither had ever been scanned before B27 — every axe floor in this suite
+ * ran at 1280w, where both are hidden.
+ *
+ * WHY IT IS SAFE. The allowance is keyed to this one message, so any OTHER
+ * aria-valid-attr-value finding — a typo'd role, a bad aria-live value, an
+ * aria-labelledby pointing at nothing — still fails the suite. And the
+ * OPEN-popup state is scanned too (chapter-navigation.spec.ts), where the
+ * reference resolves and axe answers definitively: the pattern is proven
+ * correct there rather than merely excused here.
+ */
+const DEFERRED_POPUP_INCOMPLETE =
+	'Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup'
+
+/** Every check message axe attached to a node, across all three buckets. */
+function nodeMessages(node: { any?: { message?: string }[]; all?: { message?: string }[]; none?: { message?: string }[] }): string[] {
+	return [...(node.any ?? []), ...(node.all ?? []), ...(node.none ?? [])]
+		.map((c) => c.message ?? '')
+		.filter(Boolean)
+}
+
 export async function expectNoAxeViolations(page: Page, testInfo: TestInfo): Promise<void> {
 	await settleMotion(page)
 	const results = await new AxeBuilder({ page }).withTags(TAGS).analyze()
-	const undetermined = results.incomplete.filter((v) => !INCOMPUTABLE_RULES.has(v.id))
+	const undetermined = results.incomplete
+		.filter((v) => !INCOMPUTABLE_RULES.has(v.id))
+		// Drop only the allowed check result, node by node; a rule keeps failing
+		// on every other node it flagged.
+		// startsWith, not equality: axe appends the offending value to the
+		// message (`...aria-haspopup: aria-controls="dispatch-mobile-menu"`), so
+		// the prefix is the stable part and the suffix names the node.
+		.map((v) => ({
+			...v,
+			nodes: v.nodes.filter((n) => !nodeMessages(n).some((m) => m.startsWith(DEFERRED_POPUP_INCOMPLETE))),
+		}))
+		.filter((v) => v.nodes.length > 0)
 	if (results.violations.length > 0 || undetermined.length > 0) {
 		await testInfo.attach('axe-violations', {
 			body: JSON.stringify({ violations: results.violations, incomplete: undetermined }, null, 2),
