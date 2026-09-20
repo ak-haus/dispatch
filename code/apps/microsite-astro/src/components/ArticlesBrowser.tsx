@@ -24,7 +24,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion, AnimatePresence, MotionConfig } from 'motion/react'
+import { motion, AnimatePresence, MotionConfig, useReducedMotion } from 'motion/react'
 import { Play, Pause, Image as ImageIcon, Film, Headphones, Filter, Calendar } from 'lucide-react'
 import { PALETTE } from './home/shared/palette'
 
@@ -480,8 +480,14 @@ function HoverImage({ src, alt }: { src: string; alt: string }) {
 
 function HoverVideo({ src, poster }: { src: string; poster?: string; alt?: string }) {
 	const videoRef = useRef<HTMLVideoElement>(null)
+	/* The reduced-motion floor (F55 item 4, CD5 §2). Hovering started an
+	 * infinitely looping video with no gate — the plainest case of WCAG 2.1
+	 * SC 2.3.3, motion animation triggered by interaction. The poster frame
+	 * stays, so the card still shows its cover art. */
+	const reduceMotion = useReducedMotion()
 
 	const onEnter = () => {
+		if (reduceMotion) return
 		const v = videoRef.current
 		if (!v) return
 		v.play().catch(() => undefined)

@@ -198,6 +198,17 @@ export function CrossfireSpread({
 		let ctx: GsapContext | null = null
 		let lenisCb: ((l: { velocity: number; scroll: number }) => void) | null = null
 
+		/* The reduced-motion floor (F55 item 2, CD5 §2). Pinning the deck for
+		 * six viewport heights and scrubbing a rotateX(-28deg) flip is motion
+		 * animation triggered by scrolling — WCAG 2.1 SC 2.3.3 — and it ran
+		 * ungated: measured at a 5400px pin-spacer reaching a full 28° under
+		 * reduce. Skipping the timeline is only half the answer, because the
+		 * cards are absolutely stacked and five of six would vanish; the
+		 * matching `@media (prefers-reduced-motion: reduce)` block in
+		 * global.css unstacks them into normal flow so every dossier stays
+		 * readable. Content kept, motion gone. */
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
 		;(async () => {
 			const [{ default: gsap }, { ScrollTrigger }, { CustomEase }] = await Promise.all([
 				import('gsap'),
@@ -341,14 +352,14 @@ export function CrossfireSpread({
 			    NO bottom rail — the per-card LIVE marker carries that signal. */}
 			<div
 				ref={pinRef}
-				className="relative w-full overflow-hidden"
+				className="crossfire-deck-pin relative w-full overflow-hidden"
 				style={{ height: '100svh', perspective: '1800px' }}
 			>
 				{/* DECK STACK — full-bleed: cards fill the pin area edge-to-edge,
 				    every viewport size. No padding, no max-width, no aspect ratio
 				    constraint. Media inside uses object-cover so it always covers
 				    without distortion. */}
-				<div className="absolute inset-0 z-10">
+				<div className="crossfire-deck-layer absolute inset-0 z-10">
 					<div className="relative h-full w-full">
 						{slots.map((slot, i) => (
 							<DossierCard
@@ -393,7 +404,14 @@ function DossierCard({
 	const stackOffset = 22 // px per card behind — bigger so all 6 tab rows are visible
 	const yShift = -(total - 1 - index) * stackOffset
 
-	const viewOnHref = slot.url ?? `#${slot.kind}`
+	/* F57 — `?? \`#${slot.kind}\`` manufactured seven dead anchors on the home
+	 * page (#linkedin, #hashnode, #dev, #instagram, #newsletter, #read,
+	 * #subscribe), every one of them a tab stop reading "VIEW ON LINKEDIN →"
+	 * and going nowhere. That is the authoring contract's "never invent
+	 * placeholder URLs" broken in the renderer. `undefined` here is honest:
+	 * an <a> with no href is the HTML standard's placeholder for a link that
+	 * might otherwise have been placed. */
+	const viewOnHref = slot.url
 
 	return (
 		<article
@@ -477,7 +495,7 @@ function DossierCard({
 			    overlaid on the right portion. The banner extends edge-to-edge;
 			    the thumbnail floats over a slice of it. Caption strip below
 			    sits on the sky-low paper substrate. */}
-			<div className="relative flex flex-1 min-h-0 overflow-hidden">
+			<div className="dossier-card__media relative flex flex-1 min-h-0 overflow-hidden">
 				{/* Banner — full-bleed background */}
 				<img
 					loading="lazy"
@@ -558,14 +576,16 @@ function DossierCard({
 						</p>
 					</div>
 					<a
-						href={viewOnHref}
+						{...(viewOnHref ? { href: viewOnHref } : {})}
 						className="group hidden shrink-0 items-center gap-2 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em] transition-all duration-200 hover:gap-3 sm:inline-flex"
 						style={{ color: slot.tint }}
 					>
 						View on {slot.platformLabel}
-						<span className="transition-transform duration-200 group-hover:translate-x-0.5">
-							→
-						</span>
+						{viewOnHref && (
+							<span className="transition-transform duration-200 group-hover:translate-x-0.5">
+								→
+							</span>
+						)}
 					</a>
 				</div>
 			</footer>
@@ -711,12 +731,12 @@ function NewsletterCard({ headline, story, slot }: PlatformProps) {
 				</h3>
 				<p className="line-clamp-3 font-body text-[12.5px] leading-[1.5] text-body-muted">{story.dek}</p>
 				<a
-					href={slot.url ?? '#read'}
+					{...(slot.url ? { href: slot.url } : {})}
 					className="mt-auto inline-flex w-fit items-center gap-2 rounded-[3px] px-3 py-2 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em] text-white transition-opacity hover:opacity-90"
 					style={{ backgroundColor: PALETTE.copperDeep }}
 				>
 					Read the dispatch
-					<span aria-hidden="true">→</span>
+					{slot.url && <span aria-hidden="true">→</span>}
 				</a>
 				<div className="flex items-center justify-between pt-1 font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
 					<span>{story.dateLabel}</span>

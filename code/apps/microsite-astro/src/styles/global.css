@@ -234,6 +234,55 @@ html[data-motion-ready] [data-ssr-reveal] {
   }
 }
 
+/* ── The reduced-motion floor, CSS half (F47 · F55) ──────────────────────
+ * CD5 §2 marks this LAUNCH-NON-NEGOTIABLE. W3C WAI's guidance on
+ * `prefers-reduced-motion` is to remove or replace the MOTION while keeping
+ * the CONTENT — which is why the deck below is unstacked rather than
+ * hidden, and why the pulse rings stop rather than their dots disappearing.
+ *
+ * Named, not blanket, per ADR-0004: these are the specific decorations
+ * measured as still running under reduce, not a global `animation: none`.
+ * ──────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* F47 — eight infinite halos on `/` (cover, crossfire and DLDS LIVE dots)
+     and one more on every dispatch route. Each is an aria-hidden ring drawn
+     OVER a solid dot that stays put, so stopping it costs no signal. An
+     endless pulse is neither a static state nor a ≤200ms crossfade. */
+  .animate-ping {
+    animation: none;
+  }
+
+  /* F55(2) — the crossfire deck. Its six dossiers are stacked `absolute
+     inset-0` and only the GSAP scrub separates them, so switching the
+     timeline off (see CrossfireSpread.tsx) would bury five of six. Unstack
+     into normal flow instead: no pin, no 3D, every dossier readable. The
+     inline `height`/`perspective`/`transform` are component-authored, so
+     `!important` is what reaches them — the same reason the hero masthead
+     rules above carry it. */
+  .crossfire-deck-pin {
+    height: auto !important;
+    perspective: none !important;
+    overflow: visible !important;
+  }
+  .crossfire-deck-layer {
+    position: static !important;
+  }
+  .dossier-card {
+    position: static !important;
+    transform: none !important;
+    margin-bottom: 1.5rem;
+  }
+  /* The banner is `absolute inset-0` inside a `flex-1 min-h-0` region, which
+     resolves to zero once the card is in flow rather than filling a pinned
+     viewport — the dossiers stayed readable but the cover art collapsed.
+     Give the region its own band so the unstacked deck still reads as the
+     designed spread instead of a bare list. */
+  .dossier-card__media {
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
+}
+
 /* Homepage hero — masthead hide/reveal.
    The Masthead is `sticky top-0` so it occupies 80px in normal flow.
    When `dispatch-hero` is active, we promote it to `fixed top-0` so the
