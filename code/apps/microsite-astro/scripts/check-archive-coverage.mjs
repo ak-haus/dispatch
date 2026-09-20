@@ -29,6 +29,12 @@ import path from 'node:path'
 const EXPECTED = new Map([
 	['home-cover', 2], // cover.spec.ts, desktop + mobile — the pixel floor excludes home
 	['article', 1],
+	// chapter-navigation.spec.ts, phone width — the chip/sheet pair reached no
+	// viewport until F32 (B27), so this is the phone article's first pixel
+	// coverage. Closed state by design: a showModal() dialog lives in the top
+	// layer and an archived DOM cannot replay it, so an open-sheet snapshot
+	// would ship a panel with no backdrop — a state the browser never presents.
+	['article-mobile', 1],
 	['wire', 1],
 	['not-found', 1],
 	['figure-proving-ground', 1],
