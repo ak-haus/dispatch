@@ -67,9 +67,10 @@ all. So the unmet peer sits on a package that importer never loads.
 | `@storybook/addon-vitest@10.6.0` (latest) | `^3.0.0 \|\| ^4.0.0` | `storybook@^10.6.0`, `@vitest/browser-playwright@^4.0.0` |
 
 So vitest 4 costs a Storybook 9 → 10 major plus the v4 browser-provider split
-(`@vitest/browser` → `@vitest/browser-playwright`), and **no `@storybook/addon-vitest` release at any
-version supports vitest 5** — every 10.6.x line still reads `^3.0.0 || ^4.0.0`. That is a build of its
-own, not an inline fix.
+(`@vitest/browser` → `@vitest/browser-playwright`). **Vitest 5 is not available on a stable Storybook
+at all**: `latest` (10.6.0) reads `^3.0.0 || ^4.0.0`, and the first peer range admitting `^5.0.0` is
+`11.0.0-alpha.1` on the `next` dist-tag — an alpha, so not a candidate. Either way it is a build of
+its own, not an inline fix.
 
 **What the Vite split actually cost, and what landed for it.** The split is not only a warning. F31's
 sweep put `packages/ui/vitest.config.ts` under tsc for the first time and it failed immediately:
