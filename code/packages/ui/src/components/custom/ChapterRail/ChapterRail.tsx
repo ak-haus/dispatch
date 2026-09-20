@@ -65,13 +65,19 @@ import "./ChapterRail.css";
  *     SearchPalette/SiteNav affordance ruling).
  *   - The twin's isVisited dimming, title prop and trackScroll switch —
  *     no spec Field names them and no host exercised them.
- * Recorded findings (host-side, unchanged by this port):
- *   - The host mounts article-default inside a hidden lg:block wrapper,
- *     so the fork's own lg-gated chip/sheet are unreachable at EVERY
- *     viewport on the live article — below lg the whole island is
- *     display:none, at lg+ the mobile pair hides itself. Ported
- *     like-for-like; filed to the board ledger as a product gap, not
- *     repaired here.
+ *
+ * Host gate, OPENED AT B27 (F32, AK ruled to build 2026-09-20). The port
+ * recorded this as a product gap and shipped it like-for-like: the host
+ * mounted article-default inside a `hidden lg:block` wrapper, so the
+ * chip/sheet were unreachable at EVERY viewport — below lg the whole island
+ * was display:none, at lg+ the mobile pair hides itself. The wrapper's
+ * `hidden lg:block` is gone; this component's two rules are the whole
+ * viewport split now, and they are a deliberate PAIR, not a defect:
+ *   - .prime-chapter-rail      display:none → block at 64rem (desktop rail)
+ *   - .prime-chapter-rail__mobile  display:none at 64rem+ (phone chip/sheet)
+ * Opening either one is a regression, not a fix: the first puts a 32px
+ * sticky rail on a phone, the second puts the chip on the desktop beside
+ * the rail it duplicates.
  *
  * Story-lifecycle affordances (F19/F20 law — every story state renders
  * deterministically on first paint, no interaction timing in any

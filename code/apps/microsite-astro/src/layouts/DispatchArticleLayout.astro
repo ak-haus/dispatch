@@ -227,9 +227,15 @@ const shareArticle = {
 	    The article column has its own mx-auto so the prose stays centered
 	    in the viewport regardless of the rail width. */}
 	<div class="relative z-10 lg:grid lg:grid-cols-[56px_minmax(0,1fr)] lg:gap-6">
-		{/* Rail column — only renders if there are h2 anchors. Hidden below lg. */}
+		{/* Rail column — only renders if there are h2 anchors. The COMPONENT owns the
+		    viewport split, not this wrapper: the thread-with-dots rail is desktop chrome
+		    (its own 64rem rule) and the chip/sheet pair is the phone form (hidden at
+		    64rem+). A `hidden lg:block` here gated BOTH off below lg, which is how the
+		    mobile pair came to be unreachable at every viewport — F32. Below lg this
+		    column contributes no box: the rail is display:none, the chip is fixed, and
+		    the closed <dialog> keeps the UA’s display:none through allow-discrete. */}
 		{chapters.length > 0 && (
-			<div class="hidden lg:block lg:pl-3">
+			<div class="lg:pl-3">
 				<ChapterRail
 					client:load
 					variant="article-default"
