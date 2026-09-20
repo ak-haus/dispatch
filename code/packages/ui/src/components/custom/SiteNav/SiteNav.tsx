@@ -38,10 +38,11 @@ import "./SiteNav.css";
  *   - ThemeCycler is HOSTED here per spec Field 6 — segmented three-way
  *     control (dawn / dusk / night, aria-pressed), persisting the RAW
  *     string 'prime-cycle' + html[data-prime-cycle] (+ .dark mirror on
- *     night). Deliberately NOT wired to state/theme-cycler: that zustand
- *     store persists JSON under the same key — a different protocol than
- *     the microsite's blocking FOUC script reads. Converging the two is
- *     its own adjudication (filed to the board ledger at B16).
+ *     night). This is the ONLY protocol on that key: the library's rival
+ *     zustand store, which persisted JSON under it, was removed with the
+ *     consumer-less state module (F41, Build 26), and the collision it
+ *     created (F30) went with it. The raw string is what the microsite's
+ *     blocking FOUC script reads, so the two ends agree by construction.
  *
  * Accessibility (spec Field 4):
  *   - <nav aria-label="Primary navigation"> wraps the link list; the
