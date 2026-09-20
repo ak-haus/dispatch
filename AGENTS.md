@@ -65,8 +65,18 @@ are still the way to force one.
   board row **names its ID in the title or the body** — `F18`, `R1`, `A6`. The flag ledger lives *outside* this repo,
   so no gate can bind to it and no query can find a close that was only remembered. Naming the ID makes the close
   ritual reconcile by `gh pr list --search`, not by recall — which is the failure this rule exists for: the ledger has
-  drifted five times, most sharply when a row still read "held for disposition" for a PR that had merged the day
-  before. The machine-checkable in-repo ledger is a separate, larger piece of work; this line is the zero-cost half.
+  drifted nine times, most sharply when a row still read "held for disposition" for a PR that had merged the day
+  before.
+- **Audit the ledger before republishing the board** (F25's machine-checkable half, 2026-09-20). Run
+  `node scripts/audit-flag-ledger.mjs <board.html>` against the saved copy of the board, and paste the tally it
+  prints. It derives `N filed · N settled · N open` from each row's `data-flag` / `data-state`, and it **fails** on
+  an unattributed row, a flag discussed with no row, a duplicate ID, or a header that disagrees with its own rows —
+  so the tally can no longer be asserted by hand, only regenerated. It is deliberately **not** a CI gate: the board
+  is a private Artifact and no workflow can fetch it, so this is a close-ritual command run by the session that is
+  about to republish. That turns an act of memory into a command that fails; it does not turn it into a gate. What
+  it is worth: measured at the Build 27 close, every one of the 48 flags had a row while the header read
+  `47 / 33 / 14` against an actual `48 / 31 / 17`. The rows do not drift — the tally does. The in-repo ledger with
+  the board as its presentation layer remains the real repair, and stays a Phase B row.
 - **Checkpoint reports land by auto-merge** (F35, AK 2026-09-19). The Mon/Thu routine never pushes to `main`. It
   opens a PR from `checkpoint/YYYY-MM-DD`, and `checkpoint-automerge.yml` enables GitHub auto-merge only when the
   whole diff is one new `lifecycle/checkpoints/YYYY-MM-DD-checkpoint.md`. The fifteen contexts still gate the merge,
