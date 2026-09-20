@@ -193,6 +193,26 @@
         "ratified-at": "amend 2 (2026-05-14)"
        }
       }
+     },
+     "label": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.66,
+        0.165,
+        35
+       ]
+      },
+      "$description": "Label role, dusk — equal to this cycle's display pigment by measurement, not by omission. Dusk already lifts the lane for the walnut register, and #e56647 on the walnut ground (#1b0e08) reads 5.68:1, clearing AA at label size with margin. No grade shift is owed here, so applying one would move a passing surface for nothing. The dark-cycle contrast work in this neighbourhood is the accent-prime wine, which T4/OQ-6b owns.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "dusk",
+        "cssName": "dispatch-lane-editorial-label",
+        "css": "oklch(0.66 0.165 35)",
+        "ratified-at": "F53 lane half (AK, 2026-09-20)"
+       }
+      }
      }
     },
     "institutional": {

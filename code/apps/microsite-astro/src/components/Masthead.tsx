@@ -13,8 +13,7 @@
  */
 
 import { motion, MotionConfig, AnimatePresence } from 'motion/react'
-import { Dialog } from 'radix-ui'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Wordmark } from './Wordmark'
 // SUBPATH imports, never the barrel (B16 fork retirement — the library owns
 // the palette and the nav cluster; the barrel would drag the whole component
@@ -49,6 +48,45 @@ export function Masthead({
 	const [hidden, setHidden] = useState(false)
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 	const [paletteOpen, setPaletteOpen] = useState(false)
+
+	/**
+	 * The mobile menu is a NATIVE <dialog> driven by showModal(), not a Radix
+	 * Dialog (F54). Radix marks the background `aria-hidden` via aria-hidden's
+	 * `hideOthers` and never sets `inert`, so every focusable node behind the
+	 * sheet stays in the tab order as far as static analysis can tell, and axe
+	 * answers `aria-hidden-focus` INCOMPLETE on five nodes — three background
+	 * containers plus Radix's own two `tabindex="0"` focus guards. axe reads the
+	 * DOM, not the runtime trap, so no amount of correct JS resolves it.
+	 *
+	 * showModal() moves the question to the platform: per the HTML standard,
+	 * while a modal dialog is open "every node that is connected to document,
+	 * with the exception of the subject element and its flat tree descendants,
+	 * must become inert", and inert nodes "cannot be focused" and are not
+	 * exposed "to accessibility APIs or assistive technologies". The focus trap,
+	 * Escape-cancel and aria-modal all come from the UA, the guards disappear,
+	 * and axe returns fully determinate. Same pattern as SearchPalette and
+	 * ChapterRail, which already scan clean with their sheets open.
+	 */
+	const menuRef = useRef<HTMLDialogElement | null>(null)
+
+	useEffect(() => {
+		const dlg = menuRef.current
+		if (!dlg) return
+		if (mobileMenuOpen && !dlg.open) dlg.showModal()
+	}, [mobileMenuOpen])
+
+	// Escape arrives as the dialog's native `cancel` event. Prevent the default
+	// close so the exit animation runs; AnimatePresence calls close() after it.
+	useEffect(() => {
+		const dlg = menuRef.current
+		if (!dlg) return
+		const onCancel = (e: Event) => {
+			e.preventDefault()
+			setMobileMenuOpen(false)
+		}
+		dlg.addEventListener('cancel', onCancel)
+		return () => dlg.removeEventListener('cancel', onCancel)
+	}, [])
 
 	const openPalette = useCallback(() => setPaletteOpen(true), [])
 	const closePalette = useCallback(() => setPaletteOpen(false), [])
@@ -201,10 +239,11 @@ export function Masthead({
 							onPaletteOpen={openPalette}
 						/>
 
-						<Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-							<Dialog.Trigger asChild>
+						<>
+							{/* Trigger — plain button; the sheet below is a native <dialog>. */}
 								<button
 									type="button"
+									onClick={() => setMobileMenuOpen((v) => !v)}
 									aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
 									aria-expanded={mobileMenuOpen}
 									aria-controls="dispatch-mobile-menu"
@@ -242,25 +281,26 @@ export function Masthead({
 										)}
 									</svg>
 								</button>
-							</Dialog.Trigger>
 
-							<AnimatePresence>
+							{/* The sheet. A native <dialog> is always mounted so the ref is
+							    stable; showModal() puts it in the top layer and makes the rest
+							    of the document inert (HTML standard). The backdrop is the
+							    ::backdrop pseudo-element, not a sibling overlay node. */}
+							<dialog
+								ref={menuRef}
+								id="dispatch-mobile-menu"
+								aria-label="Primary navigation"
+								onClick={(e) => {
+									// A click landing on the dialog itself is a backdrop click;
+									// clicks inside the sheet stop at the sheet.
+									if (e.target === e.currentTarget) setMobileMenuOpen(false)
+								}}
+								className="fixed inset-0 z-50 m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 outline-none backdrop:bg-body-strong/30 backdrop:backdrop-blur-sm"
+							>
+							<AnimatePresence onExitComplete={() => menuRef.current?.close()}>
 								{mobileMenuOpen && (
-									<Dialog.Portal forceMount>
-										<Dialog.Overlay asChild>
-											<motion.div
-												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-												transition={{ duration: 0.2 }}
-												className="fixed inset-0 z-50 bg-body-strong/30 backdrop-blur-sm"
-											/>
-										</Dialog.Overlay>
-										<Dialog.Content
-											asChild
-											id="dispatch-mobile-menu"
-											aria-label="Primary navigation"
-										>
+									<>
+										<>
 											<motion.div
 												initial={{ x: '100%' }}
 												animate={{ x: 0 }}
@@ -275,9 +315,10 @@ export function Masthead({
 											>
 												<div className="flex items-center justify-between border-b border-lane-institutional-strong/15 px-6 py-5">
 													<Wordmark size="sheet" />
-													<Dialog.Close asChild>
+													<>
 														<button
 															type="button"
+															onClick={() => setMobileMenuOpen(false)}
 															aria-label="Close menu"
 															className="inline-flex h-10 w-10 items-center justify-center rounded-md text-body-strong outline-none transition-colors hover:bg-lane-institutional-strong/8 focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 														>
@@ -296,15 +337,13 @@ export function Masthead({
 																<line x1="6" y1="6" x2="18" y2="18" />
 															</svg>
 														</button>
-													</Dialog.Close>
+													</>
 												</div>
 
-												<Dialog.Title className="sr-only">
-													DISpatch navigation
-												</Dialog.Title>
-												<Dialog.Description className="sr-only">
+												<h2 className="sr-only">DISpatch navigation</h2>
+												<p className="sr-only">
 													Primary navigation menu for the DISpatch publication.
-												</Dialog.Description>
+												</p>
 
 												<SiteNav
 													currentPath={currentPath}
@@ -321,11 +360,12 @@ export function Masthead({
 													DISpatch · &copy; 2026
 												</div>
 											</motion.div>
-										</Dialog.Content>
-									</Dialog.Portal>
+										</>
+									</>
 								)}
 							</AnimatePresence>
-						</Dialog.Root>
+							</dialog>
+						</>
 					</div>
 				</motion.header>
 			</MotionConfig>

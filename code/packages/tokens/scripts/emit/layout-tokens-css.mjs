@@ -107,6 +107,11 @@ export const DAWN = `:root {
 
   /* Lane pigments (color.md §4.3) */
   --dispatch-lane-editorial-strong:      {css};   /* warm-earth */
+  /* Lane-editorial-label (F53): the role-scoped AA variant for label/body-size
+     text. Hue 41 + chroma 0.16 held from the canon pigment; lightness alone
+     graded 0.55 → 0.52. 4.87:1 on the article card, 4.61:1 on the sitemap
+     tint — the first rung clearing both. Display-size lane stays canon. */
+  --dispatch-lane-editorial-label:       {css};
   --dispatch-lane-institutional-strong:  {css}; /* cool-mineral */
   /* Lane 3 dispatch inherits Prime accent-prime — DTCG aliasing */
   --dispatch-lane-dispatch-strong:       {css};
@@ -169,6 +174,7 @@ export const DAWN = `:root {
   --text-muted:          {css};
   --text-accent:         {css};
   --lane-editorial:      {css};
+  --lane-editorial-label: {css};
   --lane-institutional:  {css};
   --lane-dispatch:       {css};
   --wordmark-dis:        {css};
@@ -261,6 +267,7 @@ export const DUSK = `/* ========================================================
   --platform-wordmark-patch: {css};
 
   --dispatch-lane-editorial-strong:     {css};
+  --dispatch-lane-editorial-label:      {css};
   --dispatch-lane-institutional-strong: {css};
   --dispatch-lane-dispatch-strong:      {css};
 
@@ -319,6 +326,7 @@ export const NIGHT = `/* =======================================================
   --platform-wordmark-patch: {css};
 
   --dispatch-lane-editorial-strong:     {css};
+  --dispatch-lane-editorial-label:      {css};
   --dispatch-lane-institutional-strong: {css};
   --dispatch-lane-dispatch-strong:      {css};
 

@@ -20,6 +20,7 @@ colors:
   platform-wordmark-patch: "{colors.platform-text-body-strong}"
   # dispatch tier
   dispatch-lane-editorial-strong: "oklch(0.55 0.16 41)"
+  dispatch-lane-editorial-label: "oklch(0.52 0.16 41)"
   dispatch-lane-institutional-strong: "oklch(0.41 0.043 257)"
   dispatch-lane-dispatch-strong: "{colors.platform-accent-prime}"
   dispatch-text-body-strong: "{colors.platform-text-body-strong}"
@@ -49,6 +50,7 @@ colors:
   text-muted: "{colors.dispatch-text-body-muted}"
   text-accent: "{colors.platform-accent-prime}"
   lane-editorial: "{colors.dispatch-lane-editorial-strong}"
+  lane-editorial-label: "{colors.dispatch-lane-editorial-label}"
   lane-institutional: "{colors.dispatch-lane-institutional-strong}"
   lane-dispatch: "{colors.dispatch-lane-dispatch-strong}"
   wordmark-dis: "{colors.platform-wordmark-dis}"
@@ -173,6 +175,7 @@ named failure mode** — every accent placement carries an inline CSS-comment ju
 | `--platform-wordmark-dis` | `var(--platform-accent-prime)` | platform |
 | `--platform-wordmark-patch` | `var(--platform-text-body-strong)` | platform |
 | `--dispatch-lane-editorial-strong` | `oklch(0.55 0.16 41)` | dispatch |
+| `--dispatch-lane-editorial-label` | `oklch(0.52 0.16 41)` | dispatch |
 | `--dispatch-lane-institutional-strong` | `oklch(0.41 0.043 257)` | dispatch |
 | `--dispatch-lane-dispatch-strong` | `var(--platform-accent-prime)` | dispatch |
 | `--dispatch-text-body-strong` | `var(--platform-text-body-strong)` | dispatch |
@@ -205,6 +208,7 @@ named failure mode** — every accent placement carries an inline CSS-comment ju
 | `--text-muted` | `--dispatch-text-body-muted` |
 | `--text-accent` | `--platform-accent-prime` |
 | `--lane-editorial` | `--dispatch-lane-editorial-strong` |
+| `--lane-editorial-label` | `--dispatch-lane-editorial-label` |
 | `--lane-institutional` | `--dispatch-lane-institutional-strong` |
 | `--lane-dispatch` | `--dispatch-lane-dispatch-strong` |
 | `--wordmark-dis` | `--platform-wordmark-dis` |
@@ -250,6 +254,7 @@ against the cycle's values at runtime.
 | `--platform-wordmark-dis` | `oklch(0.44 0.155 20)` | `oklch(0.48 0.165 20)` |
 | `--platform-wordmark-patch` | `oklch(1 0 0)` | `oklch(1 0 0)` |
 | `--dispatch-lane-editorial-strong` | `oklch(0.66 0.165 35)` | `oklch(0.70 0.180 38)` |
+| `--dispatch-lane-editorial-label` | `oklch(0.66 0.165 35)` | `oklch(0.70 0.180 38)` |
 | `--dispatch-lane-institutional-strong` | `oklch(0.65 0.055 250)` | `oklch(0.70 0.060 250)` |
 | `--dispatch-lane-dispatch-strong` | `var(--platform-accent-prime)` | `var(--platform-accent-prime)` |
 | `--dispatch-text-body-strong` | `var(--platform-text-body-strong)` | `var(--platform-text-body-strong)` |

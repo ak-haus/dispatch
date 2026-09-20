@@ -95,6 +95,11 @@
 
   /* Lane pigments (color.md §4.3) */
   --dispatch-lane-editorial-strong:      oklch(0.55 0.16 41);   /* warm-earth */
+  /* Lane-editorial-label (F53): the role-scoped AA variant for label/body-size
+     text. Hue 41 + chroma 0.16 held from the canon pigment; lightness alone
+     graded 0.55 → 0.52. 4.87:1 on the article card, 4.61:1 on the sitemap
+     tint — the first rung clearing both. Display-size lane stays canon. */
+  --dispatch-lane-editorial-label:       oklch(0.52 0.16 41);
   --dispatch-lane-institutional-strong:  oklch(0.41 0.043 257); /* cool-mineral */
   /* Lane 3 dispatch inherits Prime accent-prime — DTCG aliasing */
   --dispatch-lane-dispatch-strong:       var(--platform-accent-prime);
@@ -157,6 +162,7 @@
   --text-muted:          var(--dispatch-text-body-muted);
   --text-accent:         var(--platform-accent-prime);
   --lane-editorial:      var(--dispatch-lane-editorial-strong);
+  --lane-editorial-label: var(--dispatch-lane-editorial-label);
   --lane-institutional:  var(--dispatch-lane-institutional-strong);
   --lane-dispatch:       var(--dispatch-lane-dispatch-strong);
   --wordmark-dis:        var(--platform-wordmark-dis);
@@ -249,6 +255,7 @@
   --platform-wordmark-patch: oklch(1 0 0);
 
   --dispatch-lane-editorial-strong:     oklch(0.66 0.165 35);
+  --dispatch-lane-editorial-label:      oklch(0.66 0.165 35);
   --dispatch-lane-institutional-strong: oklch(0.65 0.055 250);
   --dispatch-lane-dispatch-strong:      var(--platform-accent-prime);
 
@@ -307,6 +314,7 @@
   --platform-wordmark-patch: oklch(1 0 0);
 
   --dispatch-lane-editorial-strong:     oklch(0.70 0.180 38);
+  --dispatch-lane-editorial-label:      oklch(0.70 0.180 38);
   --dispatch-lane-institutional-strong: oklch(0.70 0.060 250);
   --dispatch-lane-dispatch-strong:      var(--platform-accent-prime);
 

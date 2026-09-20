@@ -60,6 +60,21 @@ const LANE_COLORS: Record<ArticleListing['lane'], string> = {
 	'AI-led': 'var(--lane-editorial)',
 }
 
+/**
+ * Lane pigments in the TEXT role (F53). LANE_COLORS above stays the display
+ * register — the card's corner notch and the kicker dot, which are non-text
+ * and governed by WCAG 1.4.11 (3:1). The card kicker and the Read affordance
+ * are 12px bold, below the large-text threshold, so 1.4.3 (4.5:1) governs and
+ * they need the role-scoped AA sibling: the editorial lane read 4.25:1 on the
+ * card ground and reads 4.87:1 on the label rung. The other two lanes measured
+ * passing in this role and are unchanged.
+ */
+const LANE_LABEL_COLORS: Record<ArticleListing['lane'], string> = {
+	'Human-led': 'var(--lane-institutional)',
+	'Hybrid': 'var(--platform-accent-prime)',
+	'AI-led': 'var(--lane-editorial-label)',
+}
+
 const MEDIA_ICONS = {
 	image: ImageIcon,
 	video: Film,
@@ -337,6 +352,7 @@ function ArticleCard({
 }) {
 	const MediaIcon = MEDIA_ICONS[hero.kind]
 	const laneColor = LANE_COLORS[article.lane]
+	const laneLabelColor = LANE_LABEL_COLORS[article.lane]
 
 	return (
 		<motion.li
@@ -382,7 +398,7 @@ function ArticleCard({
 					<div className="flex items-baseline justify-between gap-3">
 						<span
 							className="flex items-center gap-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.28em]"
-							style={{ color: laneColor }}
+							style={{ color: laneLabelColor }}
 						>
 							<span
 								aria-hidden="true"
@@ -426,7 +442,7 @@ function ArticleCard({
 						</span>
 						<span
 							className="flex items-center gap-1.5 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em] transition-all duration-200 group-hover:gap-2.5"
-							style={{ color: laneColor }}
+							style={{ color: laneLabelColor }}
 						>
 							Read
 							<span aria-hidden="true">→</span>
@@ -461,7 +477,7 @@ function HoverImage({ src, alt }: { src: string; alt: string }) {
 	)
 }
 
-function HoverVideo({ src, poster, alt }: { src: string; poster?: string; alt?: string }) {
+function HoverVideo({ src, poster }: { src: string; poster?: string; alt?: string }) {
 	const videoRef = useRef<HTMLVideoElement>(null)
 
 	const onEnter = () => {
@@ -482,6 +498,18 @@ function HoverVideo({ src, poster, alt }: { src: string; poster?: string; alt?: 
 			onMouseEnter={onEnter}
 			onMouseLeave={onLeave}
 		>
+			{/* Decorative cover art, removed from the accessibility tree (F54).
+			    This player is hardcoded `muted` and loops a silent cartographic
+			    texture behind a link that already carries its own name from the
+			    card's kicker, title and dek — there is no audio content, so WCAG
+			    1.2.2 (Captions, Prerecorded), which governs "prerecorded audio
+			    content in synchronized media", does not apply. axe cannot detect
+			    the absence of an audio track and so answers `video-caption`
+			    INCOMPLETE on every <video> lacking a caption track; marking the
+			    element decorative is what makes it determinate, and it is also
+			    the honest description — captioning silence would add noise to
+			    the link's name rather than information. `alt` is retained on the
+			    prop for the image and audio branches, which do surface it. */}
 			<video
 				ref={videoRef}
 				src={src}
@@ -490,7 +518,7 @@ function HoverVideo({ src, poster, alt }: { src: string; poster?: string; alt?: 
 				loop
 				playsInline
 				preload="metadata"
-				aria-label={alt}
+				aria-hidden="true"
 				className="absolute inset-0 h-full w-full object-cover"
 			/>
 			<div

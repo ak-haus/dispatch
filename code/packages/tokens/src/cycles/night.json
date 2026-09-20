@@ -193,6 +193,26 @@
         "ratified-at": "amend 2 (2026-05-14)"
        }
       }
+     },
+     "label": {
+      "$value": {
+       "colorSpace": "oklch",
+       "components": [
+        0.7,
+        0.18,
+        38
+       ]
+      },
+      "$description": "Label role, night — equal to this cycle's display pigment by measurement, not by omission. Night lifts the lane furthest for the void, and #f86e42 on the void ground (#020201) reads 7.22:1, clearing AA at label size with room to spare. No grade shift is owed. The dark-cycle contrast work in this neighbourhood is the accent-prime wine, which T4/OQ-6b owns.",
+      "$extensions": {
+       "prime": {
+        "tier": "dispatch",
+        "cycle": "night",
+        "cssName": "dispatch-lane-editorial-label",
+        "css": "oklch(0.70 0.180 38)",
+        "ratified-at": "F53 lane half (AK, 2026-09-20)"
+       }
+      }
      }
     },
     "institutional": {
