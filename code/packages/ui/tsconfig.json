@@ -5,16 +5,14 @@
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "moduleResolution": "Bundler",
     "noEmit": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "types": ["react", "react-dom"]
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
-    "src/**/*.stories.tsx"
-  ]
+  // Everything this package ships or authors rides one program (F31): the
+  // components, the 47 story files, the test files, and the two root configs.
+  // The stories need `@storybook/react-vite`, which is why this package now
+  // declares it; the tests need `test-setup.ts` in-program for the
+  // `@testing-library/jest-dom/vitest` matcher types to reach them.
+  "include": ["src/**/*", "test-setup.ts", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }
