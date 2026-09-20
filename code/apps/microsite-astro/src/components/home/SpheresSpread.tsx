@@ -327,9 +327,18 @@ function TerminalPanel() {
 				</div>
 
 				{/* Code */}
+				{/* A horizontally scrollable region must be reachable by keyboard, or
+				    its overflowed content is unreadable without a mouse (WCAG 2.1.1;
+				    axe scrollable-region-focusable). tabIndex makes it a stop; the
+				    labelled role is what gives that stop a name when it is announced.
+				    Filed as F67 at the Build 29 pass — the first axe scan /about has
+				    ever had. */}
 				<pre
 					className="flex-1 overflow-x-auto py-4 pl-5 pr-4 whitespace-pre"
 					style={{ color: PWSH.text }}
+					tabIndex={0}
+					role="region"
+					aria-label="Crossfire dossier deck source listing"
 				>
 {/* Real Crossfire timeline — syntax-highlighted by hand */}
 <><span style={{ color: PWSH.comment }}>{'// Crossfire dossier deck — Lenis ↔ ScrollTrigger bridge'}</span>{'\n'}

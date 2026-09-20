@@ -70,7 +70,15 @@ const searchIndex = await buildSearchIndex()
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>{title} — DISpatch</title>
+		{/* The home page's title prop IS the brand, so the unconditional suffix
+		    rendered "DISpatch — DISpatch" (F44). og:title is unbranded by design
+		    and is unaffected either way. */}
+		<title>{title === 'DISpatch' ? title : `${title} — DISpatch`}</title>
+		{/* favicon.svg and favicon.ico both ship; nothing referenced either, so
+		    browsers fell back to /favicon.ico by convention and link previews got
+		    nothing (F45). SVG first for modern browsers, .ico as the fallback. */}
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<ShareMeta
 			title={title}

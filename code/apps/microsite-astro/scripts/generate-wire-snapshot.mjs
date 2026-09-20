@@ -66,7 +66,11 @@ try {
 		e !== null &&
 		typeof e === 'object' &&
 		typeof e.id === 'string' &&
+		// Date validity is contract, not formatting: an unparseable ts throws
+		// RangeError out of Intl.DateTimeFormat during SSR prerender. Rejecting
+		// here fails loud BEFORE the poisoned entry is written to disk.
 		typeof e.ts === 'string' &&
+		Number.isFinite(new Date(e.ts).getTime()) &&
 		typeof e.platform === 'string' &&
 		e.kind === 'publish' &&
 		typeof e.title === 'string' &&

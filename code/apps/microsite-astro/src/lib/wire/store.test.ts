@@ -82,7 +82,10 @@ describe('polling', () => {
 		subscribe()
 		await flush()
 		expect(fetchMock).toHaveBeenCalledTimes(1)
-		expect(fetchMock).toHaveBeenCalledWith(FEED_URL, { cache: 'no-cache' })
+		expect(fetchMock).toHaveBeenCalledWith(
+			FEED_URL,
+			expect.objectContaining({ cache: 'no-cache', signal: expect.any(AbortSignal) }),
+		)
 		expect(store.getSnapshot().status).toBe('live')
 		expect(store.getSnapshot().feed.entries[0]?.id).toBe('a')
 		expect(store.getSnapshot().lastFetched).not.toBeNull()
@@ -310,5 +313,66 @@ describe('visibility discipline', () => {
 		await flush(60_000)
 		expect(fetchMock).toHaveBeenCalledTimes(1)
 		expect(store.getSnapshot().status).toBe('paused')
+	})
+})
+
+describe('stalled connections and failure storms (F64)', () => {
+	it('carries an abort signal so a connection that never answers cannot hang the chain', async () => {
+		// The defect: `await fetch(...)` with no signal against a feed that accepts
+		// and never responds never settles — neither branch runs, schedule() is
+		// never called, and polling stops for good while status still reads 'live'.
+		// The full stall is not unit-testable (fake timers with a mocked fetch
+		// always settle — that is WHY this shipped); what is mechanical is that the
+		// request carries the signal that turns a stall into a normal failure.
+		fetchMock.mockResolvedValueOnce(ok(feedWith('a')))
+		subscribe()
+		await flush()
+		const init = fetchMock.mock.calls[0]?.[1] as RequestInit
+		expect(init.signal).toBeInstanceOf(AbortSignal)
+	})
+
+	it('an aborted request degrades status and re-arms the chain', async () => {
+		// What the signal produces when it fires, end to end.
+		fetchMock.mockRejectedValue(new DOMException('The operation was aborted.', 'TimeoutError'))
+		subscribe()
+		await flush()
+		expect(store.getSnapshot().status).not.toBe('live')
+		await flush(300_000) // past the backoff cap, so the retry must have fired
+		expect(fetchMock.mock.calls.length).toBeGreaterThanOrEqual(2)
+	})
+
+	it('a focus storm during a failure streak does not preempt the jittered backoff', async () => {
+		// The defect: revalidateNow() throttles on lastFetched, which is assigned
+		// ONLY on success. During a failure streak it is stale, the throttle is
+		// skipped, and tick()'s clearTimer() discards the pending retry — so every
+		// focus event fired an immediate request at a feed that was already down.
+		// Measured at the C1 bash: 8 focus events -> 8 requests at ~405ms spacing.
+		fetchMock.mockResolvedValue(httpError(500))
+		subscribe()
+		await flush()
+		const afterFirstFailure = fetchMock.mock.calls.length
+		expect(afterFirstFailure).toBe(1)
+
+		for (let i = 0; i < 8; i += 1) window.dispatchEvent(new Event('focus'))
+		await flush(0)
+
+		expect(fetchMock.mock.calls.length).toBe(afterFirstFailure)
+	})
+
+	it('a focus storm while a request is still in flight does not stack requests', async () => {
+		let release: ((r: Response) => void) | undefined
+		fetchMock.mockReturnValueOnce(new Promise<Response>((res) => { release = res }))
+		subscribe()
+		await flush(0)
+		expect(fetchMock).toHaveBeenCalledTimes(1)
+
+		for (let i = 0; i < 8; i += 1) window.dispatchEvent(new Event('focus'))
+		await flush(0)
+		expect(fetchMock).toHaveBeenCalledTimes(1)
+
+		fetchMock.mockResolvedValue(ok(feedWith('b')))
+		release?.(ok(feedWith('a')))
+		await flush(0)
+		expect(store.getSnapshot().status).toBe('live')
 	})
 })

@@ -289,7 +289,7 @@ export function BuildTicker() {
 				    Below md it wraps: at 0.32em tracking the line is ~510px, and
 				    a nowrap line that wide made the whole page overflow a phone
 				    (WCAG 1.4.10 Reflow), which zoomed Chrome's viewport out (B12). */}
-				<p className="mt-5 flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-2 font-mono text-[12px] uppercase tracking-[0.32em] text-body-muted md:flex-nowrap md:whitespace-nowrap">
+				<p className="mt-5 flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-2 font-mono text-[12px] uppercase tracking-[0.32em] text-body-muted xl:flex-nowrap xl:whitespace-nowrap">
 					<span>
 						<span className="text-body-strong font-bold">Log</span>
 						<span aria-hidden="true" className="mx-3 text-body-faint">·</span>

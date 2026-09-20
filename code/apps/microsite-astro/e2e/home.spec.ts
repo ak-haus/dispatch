@@ -86,8 +86,15 @@ test('home paints its largest text with the first paint, not after hydration (B1
  * (BuildTicker) made the whole page scroll sideways on a phone, and Chrome
  * widened the initial viewport to 514×1027 to fit it, which pulled
  * below-the-fold headings into the LCP race (B12).
+ *
+ * 768 · 820 · 1024 are the F51 band. B12's repair stopped at the phone: the
+ * caption was still forced onto one line from `md` up while its intrinsic
+ * width is 1167px, so the page scrolled sideways by up to 463px from 768px
+ * upward — measured on PRODUCTION — and every floor here ran at 1280, just
+ * outside it on both sides. The floor now sits INSIDE the band that hid it.
+ * 1280 pins the far edge so the nowrap cannot creep back down.
  */
-for (const width of [320, 412]) {
+for (const width of [320, 412, 768, 820, 1024, 1280]) {
 	test(`home reflows at ${width}px with no sideways scroll (WCAG 1.4.10, B12)`, async ({ page }) => {
 		await page.setViewportSize({ width, height: 800 })
 		await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
@@ -100,3 +107,22 @@ for (const width of [320, 412]) {
 		expect(scrollWidth, 'the page is wider than the viewport').toBeLessThanOrEqual(clientWidth)
 	})
 }
+
+/**
+ * The other half of F51's reproduction: a landscape phone is ≥768px wide, so
+ * it enters the same band from a direction the portrait floors never cover.
+ * Measured at +419px before the repair.
+ */
+test('home reflows on a landscape phone (812×375) with no sideways scroll (F51)', async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 812, height: 375 })
+	await serveWireFeed(page, makeFeed([makeEntry(1, 2)]))
+	await page.goto('/')
+	await settleMotion(page)
+	const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+		scrollWidth: document.documentElement.scrollWidth,
+		clientWidth: document.documentElement.clientWidth,
+	}))
+	expect(scrollWidth, 'the page is wider than the viewport').toBeLessThanOrEqual(clientWidth)
+})

@@ -28,6 +28,11 @@ export interface WireState {
 const FAILURES_BEFORE_RECONNECTING = 3
 const BACKOFF_CAP_MS = 5 * 60_000
 const REVALIDATE_THROTTLE_MS = 5_000
+/** A connection that accepts and never answers must become a failure, not a
+ *  hang: without this the await never settles, neither branch runs, schedule()
+ *  is never called and polling stops for good while status still reads 'live'.
+ *  This is the stalled-radio / captive-portal case, not a clean error. */
+const FETCH_TIMEOUT_MS = 10_000
 
 const snapshot: WireFeed = isWireFeed(snapshotData) ? snapshotData : EMPTY_FEED
 
@@ -40,6 +45,9 @@ let baseIntervalMs = 60_000
 let timer: ReturnType<typeof setTimeout> | null = null
 let failures = 0
 let started = false
+/** Single-flight latch. A focus/online storm must not stack requests on top of
+ *  a request that has not answered yet. */
+let inFlight = false
 
 function emit(next: WireState) {
 	state = next
@@ -64,8 +72,12 @@ async function tick() {
 		if (state.status !== 'paused') emit({ ...state, status: 'paused' })
 		return // visibilitychange revalidates and restarts the chain
 	}
+	inFlight = true
 	try {
-		const res = await fetch(WIRE_FEED_URL, { cache: 'no-cache' })
+		const res = await fetch(WIRE_FEED_URL, {
+			cache: 'no-cache',
+			signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+		})
 		if (!res.ok) throw new Error(`feed ${res.status}`)
 		const body: unknown = await res.json()
 		if (!isWireFeed(body)) throw new Error('feed shape invalid')
@@ -81,11 +93,23 @@ async function tick() {
 		// Full jitter (AWS): random in [0, min(cap, base·2^n)]
 		const ceiling = Math.min(BACKOFF_CAP_MS, baseIntervalMs * 2 ** failures)
 		schedule(Math.max(1_000, Math.random() * ceiling))
+	} finally {
+		inFlight = false
 	}
 }
 
 function revalidateNow() {
 	if (typeof document !== 'undefined' && document.hidden) return
+	// A request is already out. Stacking another on top of it is the thundering
+	// herd this guard exists to prevent, and it cannot be caught by lastFetched
+	// (which only moves on success).
+	if (inFlight) return
+	// Respect a pending backoff. The throttle below keys on lastFetched, which is
+	// assigned ONLY in the success branch — so during a failure streak it is
+	// stale, the throttle is skipped, and tick()'s clearTimer() would discard the
+	// jittered retry. That turns every focus event into an immediate request
+	// against a feed that is already down, once per open tab.
+	if (failures > 0 && timer !== null) return
 	if (state.lastFetched !== null && Date.now() - state.lastFetched < REVALIDATE_THROTTLE_MS) {
 		// Deferred, not dropped. On return-from-hidden the timer was cleared by
 		// the hide branch — a bare return here would end the polling chain
