@@ -41,7 +41,12 @@ function isEntry(x: unknown): x is WireEntry {
 	const e = x as Record<string, unknown>
 	return (
 		typeof e.id === 'string' &&
+		// Not just a type check: ts is handed to Intl.DateTimeFormat by
+		// absoluteTime()/dayLabel(), which throw RangeError on an unparseable
+		// value. A throw there unmounts the React tree and the surface renders
+		// empty in front of the reader, so validity is part of the contract.
 		typeof e.ts === 'string' &&
+		Number.isFinite(new Date(e.ts).getTime()) &&
 		typeof e.platform === 'string' &&
 		e.kind === 'publish' &&
 		typeof e.title === 'string' &&

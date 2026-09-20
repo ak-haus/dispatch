@@ -96,3 +96,35 @@ describe('isWireFeed — the https content-trust allowlist', () => {
 		)
 	})
 })
+
+describe('timestamp validity is contract, not formatting (F50)', () => {
+	// The guard checked `typeof e.ts === 'string'` and nothing more, so an
+	// unparseable timestamp PASSED and then threw RangeError out of
+	// Intl.DateTimeFormat in absoluteTime()/dayLabel() — React unmounted and
+	// /wire rendered zero children in front of the reader, on every reload.
+	it.each([
+		['not a date at all', 'not-a-date'],
+		['empty string', ''],
+		['whitespace', '   '],
+		['a year beyond the ECMAScript range', '+275761-01-01T00:00:00.000Z'],
+		['a malformed ISO string', '2026-13-45T99:99:99Z'],
+		['a bare label', 'yesterday'],
+	])('rejects an entry whose ts is %s', (_name, ts) => {
+		expect(isWireFeed(feed({ entries: [entry({ ts })] }))).toBe(false)
+	})
+
+	it('accepts a genuine ISO timestamp', () => {
+		expect(isWireFeed(feed({ entries: [entry({ ts: '2026-08-18T11:00:00.000Z' })] }))).toBe(true)
+	})
+
+	it('a rejected feed means the surface keeps its last-good state, never a throw', () => {
+		// The honest-failure path (reject-whole / keep-last-good) only protects
+		// feeds the guard REJECTS. This is the assertion that puts a bad date on
+		// that side of the line.
+		const poisoned = feed({ entries: [entry({ ts: 'not-a-date' })] })
+		expect(isWireFeed(poisoned)).toBe(false)
+		expect(() =>
+			new Intl.DateTimeFormat('en-US').format(new Date('2026-08-18T11:00:00.000Z')),
+		).not.toThrow()
+	})
+})

@@ -151,7 +151,7 @@ export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
 						<div className="flex items-baseline gap-4">
 							<span
 								className="font-mono text-[12px] font-bold uppercase tracking-[0.42em]"
-								style={{ color: 'var(--platform-copper)' }}
+								style={{ color: 'var(--platform-copper-label)' }}
 							>
 								Atlas
 							</span>
@@ -546,7 +546,7 @@ function ZoneIndexCard({
 			<div className="flex items-baseline justify-between border-b border-body-strong/15 pb-2.5">
 				<span
 					className="font-mono text-[12px] font-bold uppercase tracking-[0.32em]"
-					style={{ color: 'var(--platform-copper)' }}
+					style={{ color: 'var(--platform-copper-label)' }}
 				>
 					All zones
 				</span>
@@ -635,7 +635,7 @@ function RecentDispatchesCard({ articles }: { articles: ArticleEntry[] }) {
 			<div className="flex items-baseline justify-between border-b border-body-strong/15 pb-2.5">
 				<span
 					className="font-mono text-[12px] font-bold uppercase tracking-[0.32em]"
-					style={{ color: 'var(--platform-copper)' }}
+					style={{ color: 'var(--platform-copper-label)' }}
 				>
 					Recent dispatches
 				</span>
