@@ -69,7 +69,7 @@ export function WireCard({
 				<a
 					href={entry.url}
 					data-analytics="wire:entry_open"
-					rel="noopener"
+					rel="noopener noreferrer"
 					target="_blank"
 					className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current"
 					style={{ color: 'inherit' }}
