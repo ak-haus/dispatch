@@ -318,7 +318,16 @@ export function Masthead({
 												exit={{ x: '100%' }}
 												transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
 												className={[
+													/* F58 — the panel is `fixed`, so it sits OUTSIDE the
+													   dialog's scroll flow and the dialog's own
+													   `overflow-y: auto` can never reach it: measured
+													   `scrollHeight === clientHeight === 375` while four
+													   controls sat at bottom 386-390 on a landscape phone,
+													   unreachable by wheel, touch or Tab. The scroller has
+													   to be this panel. `overscroll-contain` keeps the
+													   gesture from chaining to the page behind it (F52). */
 													'fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col',
+													'overflow-y-auto overscroll-contain',
 													'border-l border-lane-institutional-strong/20',
 													isVellum ? 'bg-sky-low' : 'bg-background',
 													'shadow-2xl outline-none',

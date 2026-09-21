@@ -14,7 +14,7 @@
  * Framework-free on purpose — React wiring lives in the islands.
  */
 
-import { EMPTY_FEED, WIRE_FEED_URL, isWireFeed, type WireFeed } from './contract'
+import { EMPTY_FEED, WIRE_FEED_URL, isWireFeed, normalizeFeed, type WireFeed } from './contract'
 import snapshotData from '../../data/wire-snapshot.json'
 
 export type WireStatus = 'live' | 'stale' | 'paused' | 'reconnecting'
@@ -34,7 +34,9 @@ const REVALIDATE_THROTTLE_MS = 5_000
  *  This is the stalled-radio / captive-portal case, not a clean error. */
 const FETCH_TIMEOUT_MS = 10_000
 
-const snapshot: WireFeed = isWireFeed(snapshotData) ? snapshotData : EMPTY_FEED
+/* Normalised at the boundary, so no surface can disagree about what the feed
+ * is: capped to its stated length and stripped of bidi display spoofing (F62). */
+const snapshot: WireFeed = isWireFeed(snapshotData) ? normalizeFeed(snapshotData) : EMPTY_FEED
 
 /** Stable initial state — server render and first client render must match. */
 const INITIAL_STATE: WireState = { feed: snapshot, status: 'stale', lastFetched: null }
@@ -82,7 +84,7 @@ async function tick() {
 		const body: unknown = await res.json()
 		if (!isWireFeed(body)) throw new Error('feed shape invalid')
 		failures = 0
-		emit({ feed: body, status: 'live', lastFetched: Date.now() })
+		emit({ feed: normalizeFeed(body), status: 'live', lastFetched: Date.now() })
 		schedule(baseIntervalMs)
 	} catch {
 		failures += 1

@@ -336,13 +336,16 @@ function NextEditionCard({ slot }: { slot: number }) {
 						<span className="font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
 							At sunrise
 						</span>
+						{/* F57 — `#subscribe` matched no id on any page: a dead tab
+						    stop reading "SUBSCRIBE →". There is no subscribe
+						    destination to point it at, so it renders as the HTML
+						    standard's placeholder link (no href, no arrow, out of
+						    the tab order) until one exists. */}
 						<a
-							href="#subscribe"
-							className="flex items-center gap-1.5 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em] transition-all duration-200 hover:gap-2.5"
+							className="flex items-center gap-1.5 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em]"
 							style={{ color: copperDeep }}
 						>
 							Subscribe
-							<span aria-hidden="true">→</span>
 						</a>
 					</div>
 				</div>

@@ -57,8 +57,12 @@ const provenance = {
 			Design system · Figure preview
 		</p>
 
+		{/* F59 — a single unbreakable token at a fixed `text-5xl` is wider than
+		    a 320px viewport and overflows its own box (measured 437px wide at
+		    every viewport). Fluid type plus `break-words` lets it reflow; the
+		    size at desktop width is unchanged. */}
 		<h1
-			class="mt-6 max-w-3xl font-narrative text-5xl font-bold leading-tight tracking-tight text-body-strong sm:text-6xl"
+			class="mt-6 max-w-3xl break-words font-narrative text-[clamp(1.75rem,9vw,3rem)] font-bold leading-tight tracking-tight text-body-strong sm:text-6xl"
 		>
 			ImageWithCaption
 		</h1>

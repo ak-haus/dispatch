@@ -131,6 +131,7 @@
   to {
     --hero-masthead-shown: 1;
     pointer-events: auto;
+    visibility: visible;
   }
 }
 @keyframes ssr-reveal {
@@ -225,12 +226,94 @@ html[data-motion-ready] [data-ssr-reveal] {
 /* Dark-cycle shadcn neutral palette is defined in tokens.css under both
    .dark and [data-prime-cycle="night"] selectors. */
 
+/* ── Skip link (F56) ─────────────────────────────────────────────────────
+ * WCAG 2.4.1 Bypass Blocks, Level A, technique G1. Out of sight until it
+ * takes focus, then the first thing on the page — never `display: none`,
+ * which would take it out of the tab order and defeat the point.
+ * ──────────────────────────────────────────────────────────────────────── */
+.dispatch-skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: 3px;
+  background-color: var(--platform-accent-prime, #7a2f1e);
+  color: #fff;
+  font-family: var(--font-nav, inherit);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.dispatch-skip-link:focus-visible,
+.dispatch-skip-link:focus {
+  top: 0.5rem;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+/* The skip target takes focus programmatically; it must never draw a ring
+   for a reader who simply clicked past it. */
+#main-content:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* Disable SVG animate elements under prefers-reduced-motion.
    Covers CartographyCanvas feTurbulence drift + building marker pulse rings.
    display:none removes them from the SVG animation pipeline entirely. */
 @media (prefers-reduced-motion: reduce) {
   svg animate {
     display: none;
+  }
+}
+
+/* ── The reduced-motion floor, CSS half (F47 · F55) ──────────────────────
+ * CD5 §2 marks this LAUNCH-NON-NEGOTIABLE. W3C WAI's guidance on
+ * `prefers-reduced-motion` is to remove or replace the MOTION while keeping
+ * the CONTENT — which is why the deck below is unstacked rather than
+ * hidden, and why the pulse rings stop rather than their dots disappearing.
+ *
+ * Named, not blanket, per ADR-0004: these are the specific decorations
+ * measured as still running under reduce, not a global `animation: none`.
+ * ──────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* F47 — eight infinite halos on `/` (cover, crossfire and DLDS LIVE dots)
+     and one more on every dispatch route. Each is an aria-hidden ring drawn
+     OVER a solid dot that stays put, so stopping it costs no signal. An
+     endless pulse is neither a static state nor a ≤200ms crossfade. */
+  .animate-ping {
+    animation: none;
+  }
+
+  /* F55(2) — the crossfire deck. Its six dossiers are stacked `absolute
+     inset-0` and only the GSAP scrub separates them, so switching the
+     timeline off (see CrossfireSpread.tsx) would bury five of six. Unstack
+     into normal flow instead: no pin, no 3D, every dossier readable. The
+     inline `height`/`perspective`/`transform` are component-authored, so
+     `!important` is what reaches them — the same reason the hero masthead
+     rules above carry it. */
+  .crossfire-deck-pin {
+    height: auto !important;
+    perspective: none !important;
+    overflow: visible !important;
+  }
+  .crossfire-deck-layer {
+    position: static !important;
+  }
+  .dossier-card {
+    position: static !important;
+    transform: none !important;
+    margin-bottom: 1.5rem;
+  }
+  /* The banner is `absolute inset-0` inside a `flex-1 min-h-0` region, which
+     resolves to zero once the card is in flow rather than filling a pinned
+     viewport — the dossiers stayed readable but the cover art collapsed.
+     Give the region its own band so the unstacked deck still reads as the
+     designed spread instead of a bare list. */
+  .dossier-card__media {
+    aspect-ratio: 16 / 9;
+    min-height: 0;
   }
 }
 
@@ -263,6 +346,14 @@ body.dispatch-hero header {
 body.dispatch-hero:not(.past-hero) header {
   opacity: var(--hero-masthead-shown, 0) !important;
   transform: translateY(calc(-100% + var(--hero-masthead-shown, 0) * 100%)) !important;
+  /* F56 — `opacity: 0` + `pointer-events: none` hides this from the eye and
+     the mouse but NOT from the keyboard: 10 focusable children stayed in the
+     tab order at every width, entirely above the viewport (top -66px), and
+     pressing Enter on one opened the whole navigation dialog. `visibility`
+     is what removes a subtree from the tab order, and unlike `display` it
+     still animates back. WCAG 2.4.7 / 2.4.11 — axe has no rule for focus
+     visibility, so no instrument at any width could have caught this. */
+  visibility: hidden;
   /* No longer !important: nothing sets pointer-events inline, and the
      rescue keyframe has to be able to hand the nav back to the reader. */
   pointer-events: none;
@@ -277,6 +368,7 @@ body.dispatch-hero.past-hero header {
   opacity: 1 !important;
   transform: translateY(0) !important;
   pointer-events: auto !important;
+  visibility: visible !important;
 }
 @media (prefers-reduced-motion: reduce) {
   body.dispatch-hero header {

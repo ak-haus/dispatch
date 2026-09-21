@@ -25,6 +25,18 @@ interface DayGroup {
 	entries: Array<{ entry: WireEntry; posinset: number }>
 }
 
+/**
+ * What counts as "already seen" (F62).
+ *
+ * `id` alone is the feed's own choice, so identical content re-sent under new
+ * ids registered as new publishes. Keying on the content a reader would
+ * recognise — when it was published, where it points and what it says — means
+ * re-identifying unchanged entries changes nothing on screen.
+ */
+function seenKey(e: { id: string; ts: string; url: string; title: string }): string {
+	return `${e.ts}|${e.url}|${e.title}`
+}
+
 export function WirePage() {
 	const { state, displayed, paused, togglePause, pendingCount, announcements } =
 		useWireFeed(WIRE_INTERVAL_MS)
@@ -41,10 +53,16 @@ export function WirePage() {
 	// the page; clicking returns to the top of the wire and clears it.
 	useEffect(() => {
 		const prev = prevIdsRef.current
-		const fresh = displayed.entries.filter((e) => !prev.has(e.id))
-		prevIdsRef.current = new Set(displayed.entries.map((e) => e.id))
+		const fresh = displayed.entries.filter((e) => !prev.has(seenKey(e)))
+		prevIdsRef.current = new Set(displayed.entries.map(seenKey))
 		if (fresh.length > 0 && window.scrollY > TOAST_SCROLL_THRESHOLD) {
-			setToastCount((c) => c + fresh.length)
+			// Clamped to the feed itself (F62). The count used to accumulate
+			// without bound, and "new" was decided by `id` ALONE — a field the
+			// feed chooses. Re-sending 60 unchanged publishes under fresh ids
+			// read "60 new publishes" and could scroll-jack attention
+			// indefinitely. The reader can never have more unread entries than
+			// the wire is currently carrying.
+			setToastCount((c) => Math.min(c + fresh.length, displayed.entries.length))
 		}
 	}, [displayed.entries])
 

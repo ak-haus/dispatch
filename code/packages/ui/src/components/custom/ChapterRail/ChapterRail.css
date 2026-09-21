@@ -647,6 +647,14 @@
   .prime-chapter-rail__sheet[open]::backdrop {
     transition: none;
   }
+  /* The live dot's halo (F55 item 3). This block covered only the sheet and
+     its backdrop, so the rail shipped an endless 1s pulse on every dispatch
+     route under reduce. The solid dot underneath carries the same signal and
+     is untouched, so nothing is lost by stopping the halo — named, not
+     blanket, per ADR-0004. */
+  .prime-chapter-rail__ping {
+    animation: none;
+  }
 }
 
 /* ── Sheet contents */

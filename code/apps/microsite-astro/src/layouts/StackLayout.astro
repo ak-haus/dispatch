@@ -181,6 +181,12 @@ const searchIndex = await buildSearchIndex()
 			fullbleed && 'dispatch-hero',
 		]}
 	>
+		{/* Skip link — WCAG 2.4.1 Bypass Blocks (Level A), technique G1.
+		    Nine masthead stops precede the content at 1280px and every route's
+		    first focusable element was the wordmark, with no landmark carrying
+		    an id to skip to (F56). It stays out of sight until focused. */}
+		<a href="#main-content" class="dispatch-skip-link">Skip to main content</a>
+
 		<Masthead
 			client:load
 			theme={theme}
@@ -189,7 +195,7 @@ const searchIndex = await buildSearchIndex()
 			searchIndex={searchIndex}
 		/>
 
-		<main class:list={[
+		<main id="main-content" tabindex="-1" class:list={[
 				'flex-1 w-full',
 				!unconstrained && 'mx-auto max-w-5xl px-6 py-16',
 			]}>
@@ -289,11 +295,90 @@ const searchIndex = await buildSearchIndex()
 					event.preventDefault()
 					lenis.scrollTo(dest, { offset: -16 })
 					history.pushState(null, '', href)
+					/* `preventDefault()` cancels the hash navigation, and with it
+					 * the focus move the browser would have made — which silently
+					 * defeated the skip link: it scrolled the page and left focus
+					 * on itself, so the next Tab went back into the navigation it
+					 * was meant to bypass (F56). Put the focus move back. */
+					if (dest instanceof HTMLElement) {
+						dest.focus({ preventScroll: true })
+					}
 				})
 
 				;(window as Window & { __lenis?: Lenis }).__lenis = lenis
 			} else {
 				document.documentElement.style.scrollBehavior = 'auto'
+			}
+
+			/*
+			 * Modal scroll lock — F52.
+			 *
+			 * An open overlay scrolled the page behind itself on every surface:
+			 * 1999px behind the menu, 2851px behind the chapter sheet, with each
+			 * one correctly modal the whole time. `showModal()`'s top layer makes
+			 * the rest of the document inert for FOCUS, per the HTML standard —
+			 * it says nothing about wheel events.
+			 *
+			 * TWO scrollers have to be stopped, which is why the earlier
+			 * Lenis-only draft still leaked. Lenis drives the page
+			 * PROGRAMMATICALLY from its own rAF loop, so `overflow: hidden`
+			 * cannot reach it; and `lenis.stop()` hands wheel events straight
+			 * back to the BROWSER, which then scrolls natively. Measured:
+			 * `__lenis.isStopped` read true behind the open sheet while the page
+			 * still travelled 2851px. So the lock stops Lenis AND pins the
+			 * document, and it must sit OUT here rather than inside the branch
+			 * above — under reduced motion Lenis is never constructed at all, and
+			 * a lock that lives in that branch would leave exactly the readers
+			 * this floor exists for with no lock whatsoever.
+			 *
+			 * Derived from DOM state rather than paired with each overlay's
+			 * handlers. Three components own overlays (Masthead, ChapterRail,
+			 * SearchPalette) and ChapterRail ships from packages/ui, so
+			 * imperative stop/start calls would mean three lock owners that
+			 * desync the moment two overlap — close one while the other is open
+			 * and scrolling returns early. "Is any modal dialog open?" has no
+			 * such state to lose, and it covers the next overlay for free.
+			 */
+			{
+				const root = document.documentElement
+				const anyModalOpen = () => {
+					for (const dlg of document.querySelectorAll('dialog[open]')) {
+						// `.show()` sets [open] too but grants no top layer and
+						// locks nothing; `:modal` is what separates them.
+						if (dlg.matches(':modal')) return true
+					}
+					return false
+				}
+
+				let locked = false
+				const syncScrollLock = () => {
+					const shouldLock = anyModalOpen()
+					if (shouldLock === locked) return
+					locked = shouldLock
+
+					const lenis = (window as Window & { __lenis?: Lenis }).__lenis
+					if (shouldLock) {
+						// Measure the scrollbar BEFORE hiding it, then hold the
+						// gutter open — otherwise every overlay reflows the page
+						// under itself on a pointer platform.
+						const gutter = window.innerWidth - root.clientWidth
+						if (gutter > 0) root.style.paddingRight = `${gutter}px`
+						root.style.overflow = 'hidden'
+						lenis?.stop()
+					} else {
+						root.style.overflow = ''
+						root.style.paddingRight = ''
+						lenis?.start()
+					}
+				}
+
+				new MutationObserver(syncScrollLock).observe(root, {
+					subtree: true,
+					childList: true,
+					attributes: true,
+					attributeFilter: ['open'],
+				})
+				syncScrollLock()
 			}
 		</script>
 	</body>

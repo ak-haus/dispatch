@@ -34,7 +34,7 @@ type AtlasZone = {
 	 *  the red building footprints in /cartography/district.webp. */
 	anchor: { x: number; y: number }
 	description: string
-	entries?: { label: string; href: string; meta?: string }[]
+	entries?: { label: string; href?: string; meta?: string }[]
 }
 
 /* Marker positions sit on the red building cluster of district.webp.
@@ -45,7 +45,11 @@ const ZONES: AtlasZone[] = [
 		id: 'editorial',
 		name: 'Editorial District',
 		role: 'Where the dispatches live',
-		href: '/dispatch',
+		/* `/dispatch` was never a route — it 404s in production, and it is
+		 * this zone's primary affordance (the CTA and the marker click target
+		 * both use it). The zone's own first entry already names the real
+		 * destination, so nothing here is a product choice: F57. */
+		href: '/article',
 		lane: 'editorial',
 		icon: Newspaper,
 		anchor: { x: 48, y: 42 },
@@ -104,7 +108,10 @@ const ZONES: AtlasZone[] = [
 			"Today's dispatch as it appears across DISpatch, Newsletter, LinkedIn, Hashnode, Dev.to, and Instagram. Same story; six platform shapes; one folder of asset cards.",
 		entries: [
 			{ label: 'View on home', href: '/#crossfire', meta: 'embedded' },
-			{ label: 'Newsletter archive', href: '/newsletter', meta: 'soon' },
+			/* No `/newsletter` route exists; the entry's own meta says 'soon'.
+			 * An <a> with no href is the HTML standard's placeholder for
+			 * exactly this — the label stays, the dead navigation goes (F57). */
+			{ label: 'Newsletter archive', meta: 'soon' },
 		],
 	},
 	{
@@ -340,7 +347,14 @@ function MapMarker({
 			onFocus={onEnter}
 			onBlur={onLeave}
 			aria-label={`${zone.name} — ${zone.role}`}
-			className="absolute -translate-x-1/2 -translate-y-1/2 outline-none"
+			/* Markers navigate by assignment, not by <a>, so a broken zone
+			 * destination is invisible to a link sweep. Declared here so the
+			 * F57 pin can check every zone, not just the focused one. */
+			data-atlas-href={zone.href}
+			/* `outline-none` with nothing put back is a removed focus indicator,
+			 * not a styled one — WCAG 2.4.7 Level A. The sibling at the entry
+			 * list 78 lines away already carries the correct pattern (F56). */
+			className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 			style={{ left: `${zone.anchor.x}%`, top: `${zone.anchor.y}%`, zIndex: isFocused ? 20 : 10 }}
 		>
 			{/* Outer pulse ring (animation) */}
@@ -517,9 +531,9 @@ function FocusedZoneCard({ zone }: { zone: AtlasZone }) {
 					{zone.entries && zone.entries.length > 0 && (
 						<ul className="flex flex-col border-t border-body-strong/15 pt-3 mt-1">
 							{zone.entries.map((entry) => (
-								<li key={entry.href}>
+								<li key={entry.label}>
 									<a
-										href={entry.href}
+										{...(entry.href ? { href: entry.href, 'data-atlas-href': entry.href } : {})}
 										className="group/entry flex items-baseline justify-between gap-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low rounded-sm"
 									>
 										<span
@@ -529,14 +543,16 @@ function FocusedZoneCard({ zone }: { zone: AtlasZone }) {
 										</span>
 										<span className="flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
 											{entry.meta && <span>{entry.meta}</span>}
-											<motion.span
-												aria-hidden="true"
-												style={{ color }}
-												className="inline-block"
-												whileHover={{ x: 3 }}
-											>
-												→
-											</motion.span>
+											{entry.href && (
+												<motion.span
+													aria-hidden="true"
+													style={{ color }}
+													className="inline-block"
+													whileHover={{ x: 3 }}
+												>
+													→
+												</motion.span>
+											)}
 										</span>
 									</a>
 								</li>
@@ -546,6 +562,7 @@ function FocusedZoneCard({ zone }: { zone: AtlasZone }) {
 
 					<a
 						href={zone.href}
+						data-atlas-href={zone.href}
 						className="mt-2 inline-flex items-center gap-2 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em] transition-all duration-200 hover:gap-3"
 						style={{ color }}
 					>
@@ -599,7 +616,8 @@ function ZoneIndexCard({
 								onClick={() => {
 									window.location.href = zone.href
 								}}
-								className="group/index grid w-full grid-cols-[2.25rem_auto_minmax(0,1fr)_auto] items-center gap-3 rounded-sm py-2.5 px-2 text-left outline-none transition-colors"
+								data-atlas-href={zone.href}
+								className="group/index grid w-full grid-cols-[2.25rem_auto_minmax(0,1fr)_auto] items-center gap-3 rounded-sm py-2.5 px-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 								animate={{
 									backgroundColor: isFocused
 										? `color-mix(in oklch, ${color} 10%, transparent)`

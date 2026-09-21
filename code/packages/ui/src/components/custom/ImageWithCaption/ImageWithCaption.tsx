@@ -107,7 +107,16 @@ export function ImageWithCaption({
     <motion.figure
       className={clsx("prime-figure", VARIANT_CLASS[variant], className)}
       data-ssr-reveal
-      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+      /* Under reduce this MUST be the resolved end state, never `false`
+       * (F55). `useReducedMotion()` is always false on the server, so the
+       * hidden `initial` serialises into the markup either way; `false` then
+       * tells Motion to adopt the DOM as-is, and with `whileInView`
+       * undefined nothing ever restores it — measured as 4 of 4 figures
+       * permanently at `opacity: 0`. Build 31's keyframe rescues only the
+       * chunk-failure path, because a healthy hydration cancels it. Handing
+       * Motion the end state clears the server style on hydration with no
+       * animation, which is what the floor asks for. */
+      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -80px 0px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}

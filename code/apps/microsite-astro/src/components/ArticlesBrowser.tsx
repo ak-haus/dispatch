@@ -24,7 +24,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion, AnimatePresence, MotionConfig } from 'motion/react'
+import { motion, AnimatePresence, MotionConfig, useReducedMotion } from 'motion/react'
 import { Play, Pause, Image as ImageIcon, Film, Headphones, Filter, Calendar } from 'lucide-react'
 import { PALETTE } from './home/shared/palette'
 
@@ -89,7 +89,14 @@ const DEFAULT_HERO_ROTATION: ArticleListing['hero'][] = [
 	{ kind: 'video', src: '/cartography/district.mp4', poster: '/cartography/district.webp', alt: 'Cartographic motion' },
 	{ kind: 'image', src: '/cartography/district.webp', alt: 'Editorial District' },
 	{ kind: 'image', src: '/banners/dispatch-02.webp', alt: 'Dispatch banner' },
-	{ kind: 'audio', src: '/cartography/district.mp4', alt: 'Audio dispatch' },
+	/* F61(1) + F65 — there was a fourth entry here,
+	 * `{ kind: 'audio', src: '/cartography/district.mp4' }`: an MP4 presented
+	 * as audio. Zero audio files ship in dist/ (the same search finds 8
+	 * .webp), so the audio card downloaded a 3.86MB video to play audio it
+	 * did not have, beside a hardcoded duration and a synthesised waveform,
+	 * under page copy promising "the real cover media the dispatch was
+	 * published with". A kind with no asset behind it is not a default, it is
+	 * a claim — and this rotation may only name media that exists. */
 ]
 
 function resolveHero(article: ArticleListing, index: number): NonNullable<ArticleListing['hero']> {
@@ -118,6 +125,18 @@ export function ArticlesBrowser({ articles }: { articles: ArticleListing[] }) {
 		})
 		return sorted
 	}, [articles, laneFilter, mediaFilter, sort])
+
+	/* Every media kind present across the collection, in canonical order. */
+	const mediaOptions = useMemo(() => {
+		const present = new Set(articles.map((a, i) => resolveHero(a, i).kind))
+		const ordered: Array<{ value: MediaFilter; label: string }> = [
+			{ value: 'all', label: 'All' },
+			{ value: 'image', label: 'Image' },
+			{ value: 'video', label: 'Video' },
+			{ value: 'audio', label: 'Audio' },
+		]
+		return ordered.filter((o) => o.value === 'all' || present.has(o.value as 'image' | 'video' | 'audio'))
+	}, [articles])
 
 	const counts = useMemo(() => {
 		const total = articles.length
@@ -221,12 +240,10 @@ export function ArticlesBrowser({ articles }: { articles: ArticleListing[] }) {
 						<FilterGroup
 							icon={ImageIcon}
 							label="Media"
-							options={[
-								{ value: 'all', label: 'All' },
-								{ value: 'image', label: 'Image' },
-								{ value: 'video', label: 'Video' },
-								{ value: 'audio', label: 'Audio' },
-							]}
+							/* Derived, not declared: the filter may only offer kinds
+							 * that some card actually carries, or it advertises an
+							 * empty result as a category (F61). */
+							options={mediaOptions}
 							value={mediaFilter}
 							onChange={(v) => setMediaFilter(v as MediaFilter)}
 						/>
@@ -294,12 +311,18 @@ function FilterGroup({
 	pillColor?: 'lane'
 }) {
 	return (
-		<div className="flex items-center gap-2">
+		/* F59 — WCAG 1.4.10 Reflow. The outer bar wrapped but each group did
+		 * not, and this one's intrinsic width is 368px: `/article` measured
+		 * scrollWidth 368 against innerWidth 320, broken from 320 to 367 and
+		 * clean from 368. A row of filter pills is not one of SC 1.4.10's
+		 * two-dimensional exceptions (maps, data tables, toolbars-in-view), so
+		 * it reflows rather than scrolling sideways. */
+		<div className="flex flex-wrap items-center gap-x-2 gap-y-1">
 			<span className="flex items-center gap-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.28em] text-body-muted">
 				<Icon className="size-3" strokeWidth={2} />
 				{label}
 			</span>
-			<div className="flex gap-px rounded-full border border-body-strong/15 bg-window-warm/50 p-0.5">
+			<div className="flex flex-wrap gap-px rounded-full border border-body-strong/15 bg-window-warm/50 p-0.5">
 				{options.map((opt) => {
 					const active = opt.value === value
 					return (
@@ -480,8 +503,14 @@ function HoverImage({ src, alt }: { src: string; alt: string }) {
 
 function HoverVideo({ src, poster }: { src: string; poster?: string; alt?: string }) {
 	const videoRef = useRef<HTMLVideoElement>(null)
+	/* The reduced-motion floor (F55 item 4, CD5 §2). Hovering started an
+	 * infinitely looping video with no gate — the plainest case of WCAG 2.1
+	 * SC 2.3.3, motion animation triggered by interaction. The poster frame
+	 * stays, so the card still shows its cover art. */
+	const reduceMotion = useReducedMotion()
 
 	const onEnter = () => {
+		if (reduceMotion) return
 		const v = videoRef.current
 		if (!v) return
 		v.play().catch(() => undefined)
@@ -518,7 +547,15 @@ function HoverVideo({ src, poster }: { src: string; poster?: string; alt?: strin
 				muted
 				loop
 				playsInline
-				preload="metadata"
+				/* F65 — `preload="metadata"` cost the route two full 3.8MB
+				 * transfers on load: Chrome opens a `bytes=0-` range for the
+				 * metadata and the server answers with the whole file, which is
+				 * ~167 seconds at Slow 3G's 51.2 KB/s on a primary nav
+				 * destination ("Articles" lands here). Nothing needs the media
+				 * before a hover, and the poster is already on the page — so
+				 * load none of it until the hover that plays it. Under reduce we
+				 * never play at all, so nothing is fetched there either. */
+				preload="none"
 				aria-hidden="true"
 				className="absolute inset-0 h-full w-full object-cover"
 			/>
@@ -609,8 +646,12 @@ function MiniWaveform({ src }: { src: string }) {
 					/>
 				))}
 			</div>
+			{/* The duration here was the literal string "04:32" on every card
+			    regardless of the asset (F61). A real one comes from the media
+			    element; until a dispatch declares an audio hero there is none
+			    to read, and inventing one is the defect. */}
 			<span className="relative z-10 font-mono text-[12px] uppercase tracking-[0.3em] text-white/55">
-				Audio dispatch · 04:32
+				Audio dispatch
 			</span>
 		</div>
 	)
