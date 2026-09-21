@@ -351,7 +351,10 @@ function MapMarker({
 			 * destination is invisible to a link sweep. Declared here so the
 			 * F57 pin can check every zone, not just the focused one. */
 			data-atlas-href={zone.href}
-			className="absolute -translate-x-1/2 -translate-y-1/2 outline-none"
+			/* `outline-none` with nothing put back is a removed focus indicator,
+			 * not a styled one — WCAG 2.4.7 Level A. The sibling at the entry
+			 * list 78 lines away already carries the correct pattern (F56). */
+			className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 			style={{ left: `${zone.anchor.x}%`, top: `${zone.anchor.y}%`, zIndex: isFocused ? 20 : 10 }}
 		>
 			{/* Outer pulse ring (animation) */}
@@ -614,7 +617,7 @@ function ZoneIndexCard({
 									window.location.href = zone.href
 								}}
 								data-atlas-href={zone.href}
-								className="group/index grid w-full grid-cols-[2.25rem_auto_minmax(0,1fr)_auto] items-center gap-3 rounded-sm py-2.5 px-2 text-left outline-none transition-colors"
+								className="group/index grid w-full grid-cols-[2.25rem_auto_minmax(0,1fr)_auto] items-center gap-3 rounded-sm py-2.5 px-2 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 								animate={{
 									backgroundColor: isFocused
 										? `color-mix(in oklch, ${color} 10%, transparent)`

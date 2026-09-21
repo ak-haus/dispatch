@@ -181,6 +181,12 @@ const searchIndex = await buildSearchIndex()
 			fullbleed && 'dispatch-hero',
 		]}
 	>
+		{/* Skip link — WCAG 2.4.1 Bypass Blocks (Level A), technique G1.
+		    Nine masthead stops precede the content at 1280px and every route's
+		    first focusable element was the wordmark, with no landmark carrying
+		    an id to skip to (F56). It stays out of sight until focused. */}
+		<a href="#main-content" class="dispatch-skip-link">Skip to main content</a>
+
 		<Masthead
 			client:load
 			theme={theme}
@@ -189,7 +195,7 @@ const searchIndex = await buildSearchIndex()
 			searchIndex={searchIndex}
 		/>
 
-		<main class:list={[
+		<main id="main-content" tabindex="-1" class:list={[
 				'flex-1 w-full',
 				!unconstrained && 'mx-auto max-w-5xl px-6 py-16',
 			]}>
@@ -289,6 +295,14 @@ const searchIndex = await buildSearchIndex()
 					event.preventDefault()
 					lenis.scrollTo(dest, { offset: -16 })
 					history.pushState(null, '', href)
+					/* `preventDefault()` cancels the hash navigation, and with it
+					 * the focus move the browser would have made — which silently
+					 * defeated the skip link: it scrolled the page and left focus
+					 * on itself, so the next Tab went back into the navigation it
+					 * was meant to bypass (F56). Put the focus move back. */
+					if (dest instanceof HTMLElement) {
+						dest.focus({ preventScroll: true })
+					}
 				})
 
 				;(window as Window & { __lenis?: Lenis }).__lenis = lenis

@@ -121,11 +121,11 @@ const textRoles = [
 			<div class="divide-y divide-lane-institutional-strong/20">
 				{
 					platformSwatches.map((s) => (
-						<div class="grid grid-cols-12 items-center gap-4 py-5">
+						<div class="grid grid-cols-6 items-center gap-4 py-5 sm:grid-cols-12">
 							<div class="col-span-1">
 								<div class:list={['size-12 rounded-md', s.swatch]} />
 							</div>
-							<div class="col-span-3 font-narrative">
+							<div class="col-span-3 break-words font-narrative">
 								<p class="text-lg font-medium text-body-strong">{s.name}</p>
 								<p class={`mt-0.5 font-mono text-xs ${s.text}`}>{s.value}</p>
 							</div>
@@ -147,11 +147,11 @@ const textRoles = [
 			<div class="divide-y divide-lane-institutional-strong/20">
 				{
 					laneSwatches.map((s) => (
-						<div class="grid grid-cols-12 items-center gap-4 py-5">
+						<div class="grid grid-cols-6 items-center gap-4 py-5 sm:grid-cols-12">
 							<div class="col-span-1">
 								<div class:list={['size-12 rounded-md', s.swatch]} />
 							</div>
-							<div class="col-span-3 font-narrative">
+							<div class="col-span-3 break-words font-narrative">
 								<p class="text-lg font-medium text-body-strong">{s.name}</p>
 								<p class={`mt-0.5 font-mono text-xs ${s.text}`}>{s.value}</p>
 							</div>
@@ -170,7 +170,7 @@ const textRoles = [
 				</p>
 				<p class="font-mono text-xs text-body-faint">5-step warm substrate · spatial-perceptual aliases</p>
 			</div>
-			<div class="grid grid-cols-5 gap-3">
+			<div class="grid grid-cols-2 gap-3 sm:grid-cols-5">
 				{
 					vellumScale.map((v) => (
 						<div class="flex flex-col">
@@ -200,8 +200,8 @@ const textRoles = [
 			<div class="divide-y divide-lane-institutional-strong/20">
 				{
 					textRoles.map((t) => (
-						<div class="grid grid-cols-12 items-center gap-4 py-5">
-							<div class="col-span-3 font-narrative">
+						<div class="grid grid-cols-6 items-center gap-4 py-5 sm:grid-cols-12">
+							<div class="col-span-3 break-words font-narrative">
 								<p class="text-lg font-medium text-body-strong">{t.name}</p>
 								<p class={`mt-0.5 font-mono text-xs ${t.text}`}>{t.value}</p>
 							</div>
@@ -226,7 +226,7 @@ const textRoles = [
 					Decision 8 · illuminated-manuscript graduated discipline
 				</p>
 			</div>
-			<div class="grid grid-cols-4 gap-4">
+			<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
 				<div class="rounded-md border border-lane-institutional-strong/20 bg-sky-high p-5">
 					<p class="font-nav text-[13px] font-extrabold uppercase tracking-[0.06em] text-copper">
 						Default
@@ -275,7 +275,7 @@ const textRoles = [
 					<span class="text-wordmark-dis">DIS</span><span
 						class="text-wordmark-patch text-[1.08em] -ml-[0.02em]">patch</span>
 				</span>
-				<span class="font-wordmark text-7xl font-bold tracking-[-0.025em] leading-none">
+				<span class="font-wordmark text-[clamp(2.5rem,16vw,4.5rem)] font-bold tracking-[-0.025em] leading-none">
 					<span class="text-wordmark-dis">DIS</span><span
 						class="text-wordmark-patch text-[1.08em] -ml-[0.02em]">patch</span>
 				</span>

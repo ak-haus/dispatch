@@ -294,12 +294,18 @@ function FilterGroup({
 	pillColor?: 'lane'
 }) {
 	return (
-		<div className="flex items-center gap-2">
+		/* F59 — WCAG 1.4.10 Reflow. The outer bar wrapped but each group did
+		 * not, and this one's intrinsic width is 368px: `/article` measured
+		 * scrollWidth 368 against innerWidth 320, broken from 320 to 367 and
+		 * clean from 368. A row of filter pills is not one of SC 1.4.10's
+		 * two-dimensional exceptions (maps, data tables, toolbars-in-view), so
+		 * it reflows rather than scrolling sideways. */
+		<div className="flex flex-wrap items-center gap-x-2 gap-y-1">
 			<span className="flex items-center gap-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.28em] text-body-muted">
 				<Icon className="size-3" strokeWidth={2} />
 				{label}
 			</span>
-			<div className="flex gap-px rounded-full border border-body-strong/15 bg-window-warm/50 p-0.5">
+			<div className="flex flex-wrap gap-px rounded-full border border-body-strong/15 bg-window-warm/50 p-0.5">
 				{options.map((opt) => {
 					const active = opt.value === value
 					return (
