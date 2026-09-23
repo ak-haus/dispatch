@@ -205,10 +205,15 @@ test('F55(2) control — the deck DOES pin and flip without reduce', async ({ pa
 	expect(maxRot).toBeGreaterThan(20)
 })
 
-/* ── F55(4) — hover starts an infinitely looping video ───────────────────── */
+/* ── F55(4) — hover starts an infinitely looping video ─────────────────────
+ * On the reading room's proving ground since Build 33: F61 retired the
+ * rotation that gave /article its video covers, so a video card now exists
+ * only where one is declared — and no dispatch declares one yet. */
+const VIDEO_CARDS = '/preview/reading-room'
+
 test.describe('F55(4) — hover video under reduce', () => {
 	test('hovering a card does not start playback', async ({ page }) => {
-		await gotoReduced(page, '/article')
+		await gotoReduced(page, VIDEO_CARDS)
 		await page.waitForTimeout(1500)
 		const videos = page.locator('video')
 		const n = await videos.count()
@@ -224,7 +229,7 @@ test.describe('F55(4) — hover video under reduce', () => {
 })
 
 test('F55(4) control — hover DOES start playback without reduce', async ({ page }) => {
-	await page.goto('/article')
+	await page.goto(VIDEO_CARDS)
 	await page.waitForTimeout(1500)
 	const v = page.locator('video').first()
 	await v.scrollIntoViewIfNeeded()

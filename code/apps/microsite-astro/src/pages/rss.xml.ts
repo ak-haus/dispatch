@@ -12,12 +12,15 @@ import rss from '@astrojs/rss'
 import type { APIRoute } from 'astro'
 import { getCollection } from 'astro:content'
 import { SITE_DESCRIPTION, SITE_NAME, canonicalUrl, escapeXml, feedUrl } from '@/lib/share/share'
+import { newestFirst } from '@/lib/dispatch'
 
 export const GET: APIRoute = async ({ site }) => {
 	if (!site) throw new Error('[share] astro.config `site` is required for the feed')
 	const entries = await getCollection('dispatch')
-	// Newest first; same-day dispatches in reverse id order, so the order is stable.
-	entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime() || b.id.localeCompare(a.id))
+	// Newest first; same-day dispatches in reverse id order, so the order is
+	// stable. The rule began here and is shared now (F61), so the feed and the
+	// home can no longer disagree about which dispatch is newest.
+	entries.sort(newestFirst)
 
 	return rss({
 		title: SITE_NAME,

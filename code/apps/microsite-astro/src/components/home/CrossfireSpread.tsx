@@ -56,6 +56,7 @@ import {
 	Bookmark,
 	ThumbsUp,
 } from 'lucide-react'
+import { initials } from './shared/initials'
 import { PALETTE } from './shared/palette'
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
@@ -96,17 +97,17 @@ export type CrossfireSurface = {
 }
 
 /** Story metadata used by every platform thumbnail. Built by the parent
- *  from the featured dispatch's frontmatter. */
+ *  from the dispatch's frontmatter — contract fields only (F61: this type
+ *  also carried an `authorHandle` defaulted to an invented '@dispatch_prime'
+ *  and a `siteUrl` on a domain the site does not live at; nothing rendered
+ *  either, and both shipped in the island payload). */
 export type CrossfireStory = {
 	title: string
 	dek: string
 	author: string
-	authorHandle: string
 	authorRole: string
-	date: string
 	dateLabel: string
 	readingTime: string
-	siteUrl: string
 }
 
 /** Internal slot type — surface + presentation values resolved from
@@ -173,11 +174,9 @@ function toSlot(surface: CrossfireSurface, index: number): CrossfireSlot {
 export function CrossfireSpread({
 	story,
 	surfaces,
-	dateLabel,
 }: {
 	story: CrossfireStory
 	surfaces: CrossfireSurface[]
-	dateLabel?: string
 }) {
 	const sectionRef = useRef<HTMLElement>(null)
 	const pinRef = useRef<HTMLDivElement>(null)
@@ -305,7 +304,7 @@ export function CrossfireSpread({
 	return (
 		<section
 			ref={sectionRef}
-			aria-label="Crossfire — today's dispatch across surfaces"
+			aria-label="Crossfire — one dispatch across its surfaces"
 			className="relative w-full border-t border-body-strong/15"
 			style={{ backgroundColor: 'var(--sky-low)' }}
 		>
@@ -340,16 +339,16 @@ export function CrossfireSpread({
 						<span>/</span>
 						<span>{String(slots.length).padStart(2, '0')}</span>
 						<span>·</span>
-						{/* data-live: the hero passes a wall-clock dateLabel — see WireCard. */}
-						<span data-live="timestamp">{dateLabel ?? story.dateLabel}</span>
+						{/* The story's own date (F61) — this was the reader's clock,
+						    which dated a May dispatch "today" on every visit. */}
+						<span>{story.dateLabel}</span>
 					</span>
 				</div>
 			</motion.div>
 
 			{/* PIN AREA — viewport-height container that holds the deck.
 			    Pin engages when its top edge meets the viewport top; releases
-			    after the timeline completes (N-1 viewport heights of scroll).
-			    NO bottom rail — the per-card LIVE marker carries that signal. */}
+			    after the timeline completes (N-1 viewport heights of scroll). */}
 			<div
 				ref={pinRef}
 				className="crossfire-deck-pin relative w-full overflow-hidden"
@@ -433,10 +432,11 @@ function DossierCard({
 					'0 50px 120px -32px rgba(0,0,0,0.50), 0 14px 32px -10px rgba(0,0,0,0.20), inset 0 0 0 1px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5)',
 			}}
 		>
-			{/* TAB ROW — folder tab + per-card LIVE marker + dossier ID.
-			    shrink-0 so it never collapses. The LIVE marker (red pulsing dot
-			    + "LIVE" caps) is now per-card; the global bottom rail was
-			    redundant and got removed. */}
+			{/* TAB ROW — folder tab + dossier ID. shrink-0 so it never
+			    collapses. F61: every card carried a pulsing "LIVE" beacon. The
+			    contract records no liveness for a surface — `url` is the only
+			    evidence of publication it holds, and five of six surfaces have
+			    none — so the beacon asserted a state nothing supplies. */}
 			<div className="relative z-30 flex h-9 shrink-0 items-stretch">
 				<div
 					className="flex shrink-0 items-center pl-5 pr-7"
@@ -460,25 +460,6 @@ function DossierCard({
 					}}
 				/>
 				<div className="flex shrink-0 items-center gap-3 self-end pb-1.5 pr-5">
-					{/* Per-card LIVE marker — pulsing dot + caps */}
-					<span className="flex items-center gap-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.28em] text-body-strong">
-						<span
-							className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-prime-active"
-							aria-hidden="true"
-							style={{
-								boxShadow:
-									'0 0 0 2px color-mix(in oklch, var(--platform-accent-prime) 25%, transparent), 0 0 8px color-mix(in oklch, var(--platform-accent-prime) 55%, transparent)',
-							}}
-						>
-							<span className="absolute inset-0 animate-ping rounded-full bg-accent-prime-active opacity-65" />
-						</span>
-						<span style={{ color: 'var(--platform-accent-prime-active)' }}>Live</span>
-					</span>
-					<span
-						aria-hidden="true"
-						className="block h-3 w-px"
-						style={{ backgroundColor: 'color-mix(in oklch, var(--platform-text-body-strong) 25%, transparent)' }}
-					/>
 					<span className="font-mono text-[12px] font-bold uppercase tracking-[0.28em] text-body-strong">
 						Dossier № {String(index + 1).padStart(2, '0')}
 					</span>
@@ -555,8 +536,11 @@ function DossierCard({
 						>
 							{headline}
 						</p>
+						{/* "Posted on", not "Posted today on" (F61): the surfaces the
+						    editor declared are the contract's claim of distribution;
+						    no field dates any of them, and the story is from May. */}
 						<p className="mt-1 truncate font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
-							Posted today on{' '}
+							Posted on{' '}
 							{allPlatformLabels.map((p, idx) => (
 								<span key={p}>
 									<span
@@ -657,7 +641,7 @@ function DispatchCard({ headline, story, slot }: PlatformProps) {
 					className="font-mono text-[12px] font-bold uppercase tracking-[0.32em]"
 					style={{ color: PALETTE.accent }}
 				>
-					Editorial District · today
+					Editorial District
 				</span>
 				<h3
 					className="font-narrative font-bold leading-[1.08] tracking-[-0.018em] text-body-strong"
@@ -707,13 +691,16 @@ function NewsletterCard({ headline, story, slot }: PlatformProps) {
 			<div className="border-b border-body-strong/12 bg-window-warm/40 px-4 py-2.5">
 				<div className="flex items-center gap-2">
 					<Mail className="size-3.5 shrink-0" style={{ color: PALETTE.copper }} strokeWidth={2.2} />
+					{/* F61: this read "daily dispatch" from "dispatches@prime.city"
+					    — a cadence and a sender address the contract supplies
+					    neither of. The publication is the sender it can name. */}
 					<span className="truncate font-mono text-[12px] font-semibold uppercase tracking-[0.18em] text-body-strong">
-						DISpatch · daily dispatch
+						DISpatch · newsletter
 					</span>
 				</div>
 				<div className="mt-1.5 grid grid-cols-[44px_1fr] gap-x-2 font-mono text-[12px] text-body-muted">
 					<span>From</span>
-					<span className="truncate text-body-strong">dispatches@prime.city</span>
+					<span className="truncate text-body-strong">DISpatch</span>
 					<span>To</span>
 					<span className="truncate">{sentToLabel}</span>
 					<span>Subj</span>
@@ -753,6 +740,11 @@ function LinkedInCard({ headline, story, slot }: PlatformProps) {
 	const linkedinBlue = 'oklch(0.42 0.10 245)'
 	const e = slot.engagement
 	const excerpt = slot.excerpt ?? story.dek
+	/* F61: the post's author is the account the surface names (`handle`) —
+	 * the card showed the dispatch's byline instead, under an "AK" avatar that
+	 * matched neither. The byline and its role stand in only when the surface
+	 * names no account. */
+	const poster = slot.handle ?? story.author
 	return (
 		<article
 			className="flex h-full max-h-[520px] w-full max-w-[440px] flex-col overflow-hidden rounded-[8px] bg-white shadow-[0_18px_50px_-20px_rgba(0,0,0,0.32)]"
@@ -765,12 +757,12 @@ function LinkedInCard({ headline, story, slot }: PlatformProps) {
 						background: `linear-gradient(135deg, ${linkedinBlue} 0%, var(--platform-accent-prime) 100%)`,
 					}}
 				>
-					AK
+					{initials(poster)}
 				</div>
 				<div className="min-w-0 flex-1">
-					<p className="truncate text-[14px] font-semibold leading-tight">{story.author}</p>
-					<p className="truncate text-[12px] leading-tight text-[#666]">{story.authorRole}</p>
-					<p className="truncate text-[12px] leading-tight text-[#666]">today · 🌐</p>
+					<p className="truncate text-[14px] font-semibold leading-tight">{poster}</p>
+					{!slot.handle && <p className="truncate text-[12px] leading-tight text-[#666]">{story.authorRole}</p>}
+					<p className="truncate text-[12px] leading-tight text-[#666]">{story.dateLabel} · 🌐</p>
 				</div>
 				<button className="rounded-[3px] px-3 py-1 text-[13px] font-semibold" style={{ color: linkedinBlue, border: `1px solid ${linkedinBlue}` }}>
 					+ Follow
@@ -825,7 +817,8 @@ function LinkedInCard({ headline, story, slot }: PlatformProps) {
 function HashnodeCard({ headline, story, slot }: PlatformProps) {
 	const hashnodeBlue = 'oklch(0.55 0.16 256)'
 	const e = slot.engagement
-	const tags = slot.tags ?? ['prime-city', 'dev-diary', 'construction']
+	/* F61: no invented tags when the surface declares none. */
+	const tags = slot.tags ?? []
 	return (
 		<article
 			className="flex h-full max-h-[510px] w-full max-w-[420px] flex-col overflow-hidden rounded-[10px] bg-white shadow-[0_18px_50px_-20px_rgba(0,0,0,0.32)]"
@@ -840,30 +833,36 @@ function HashnodeCard({ headline, story, slot }: PlatformProps) {
 						className="flex size-8 items-center justify-center rounded-full text-[12px] font-bold text-white"
 						style={{ backgroundColor: hashnodeBlue }}
 					>
-						AK
+						{initials(story.author)}
 					</div>
 					<div className="min-w-0 flex-1 leading-tight">
 						<p className="truncate text-[13px] font-semibold text-[#1a1a1a]">
 							{story.author}
 						</p>
-						<p className="truncate text-[12px] text-[#677182]">primecity.hashnode.dev · {story.dateLabel}</p>
+						{/* F61: the blog was "primecity.hashnode.dev", a domain the
+						    contract never names; it names one only as `handle`. */}
+						<p className="truncate text-[12px] text-[#677182]">
+							{slot.handle ? `${slot.handle} · ${story.dateLabel}` : story.dateLabel}
+						</p>
 					</div>
 				</div>
 				<h3 className="font-narrative text-[20px] font-bold leading-[1.15] tracking-[-0.01em]">
 					{headline}
 				</h3>
 				<p className="line-clamp-2 text-[13.5px] leading-[1.5] text-[#677182]">{story.dek}</p>
-				<div className="flex flex-wrap gap-1.5">
-					{tags.slice(0, 3).map((t) => (
-						<span
-							key={t}
-							className="rounded-full px-2.5 py-1 text-[12px]"
-							style={{ backgroundColor: '#f4f5f7', color: hashnodeBlue }}
-						>
-							#{t}
-						</span>
-					))}
-				</div>
+				{tags.length > 0 && (
+					<div className="flex flex-wrap gap-1.5">
+						{tags.slice(0, 3).map((t) => (
+							<span
+								key={t}
+								className="rounded-full px-2.5 py-1 text-[12px]"
+								style={{ backgroundColor: '#f4f5f7', color: hashnodeBlue }}
+							>
+								#{t}
+							</span>
+						))}
+					</div>
+				)}
 				<div className="mt-auto flex items-center gap-4 border-t border-[#e6e8eb] pt-3 text-[12px] text-[#677182]">
 					{typeof e?.likes === 'number' && (
 						<span className="flex items-center gap-1">
@@ -892,7 +891,8 @@ function HashnodeCard({ headline, story, slot }: PlatformProps) {
 function DevCard({ headline, story, slot }: PlatformProps) {
 	const devBlack = '#0a0a0a'
 	const e = slot.engagement
-	const tags = slot.tags ?? ['devjournal', 'primecity', 'construction', 'scrollytelling']
+	/* F61: no invented tags when the surface declares none. */
+	const tags = slot.tags ?? []
 	return (
 		<article
 			className="flex h-full max-h-[520px] w-full max-w-[420px] flex-col overflow-hidden rounded-[6px] bg-white shadow-[0_18px_50px_-20px_rgba(0,0,0,0.32)]"
@@ -907,7 +907,7 @@ function DevCard({ headline, story, slot }: PlatformProps) {
 						className="flex size-8 items-center justify-center rounded-full text-[12px] font-bold text-white"
 						style={{ background: 'linear-gradient(135deg, var(--platform-accent-prime) 0%, var(--platform-copper) 100%)' }}
 					>
-						AK
+						{initials(story.author)}
 					</div>
 					<div className="leading-tight">
 						<p className="text-[13px] font-medium text-[#3d3d3d]">{story.author}</p>
@@ -917,13 +917,15 @@ function DevCard({ headline, story, slot }: PlatformProps) {
 				<h3 className="font-narrative text-[22px] font-bold leading-[1.12] tracking-[-0.01em] text-[#0a0a0a]">
 					{headline}
 				</h3>
-				<div className="flex flex-wrap gap-1">
-					{tags.slice(0, 4).map((t) => (
-						<span key={t} className="rounded-md px-2 py-0.5 text-[12px] text-[#3d3d3d] hover:bg-[#f1f1f1]">
-							#{t}
-						</span>
-					))}
-				</div>
+				{tags.length > 0 && (
+					<div className="flex flex-wrap gap-1">
+						{tags.slice(0, 4).map((t) => (
+							<span key={t} className="rounded-md px-2 py-0.5 text-[12px] text-[#3d3d3d] hover:bg-[#f1f1f1]">
+								#{t}
+							</span>
+						))}
+					</div>
+				)}
 				<div className="mt-auto flex items-center justify-between pt-2 text-[12px] text-[#717171]">
 					<div className="flex items-center gap-3">
 						{typeof e?.reactions === 'number' && (
@@ -951,7 +953,10 @@ function DevCard({ headline, story, slot }: PlatformProps) {
 
 function InstagramCard({ headline, story, slot }: PlatformProps) {
 	const e = slot.engagement
-	const igHandle = slot.handle ?? 'dispatch.prime'
+	/* F61: the account is the surface's `handle` or nothing — it defaulted to
+	 * an invented 'dispatch.prime' (both dispatches happen to declare that very
+	 * handle, which is exactly why the default was never noticed). */
+	const igHandle = slot.handle
 	const igCaption = slot.caption ?? headline
 	return (
 		<article
@@ -972,12 +977,12 @@ function InstagramCard({ headline, story, slot }: PlatformProps) {
 							className="flex size-7 items-center justify-center rounded-full text-[12px] font-bold text-white"
 							style={{ background: 'linear-gradient(135deg, #c13584 0%, #f56040 100%)' }}
 						>
-							DP
+							{igHandle ? initials(igHandle) : null}
 						</div>
 					</div>
 				</div>
 				<div className="flex-1 leading-tight">
-					<p className="text-[13.5px] font-semibold">{igHandle}</p>
+					{igHandle && <p className="text-[13.5px] font-semibold">{igHandle}</p>}
 					<p className="text-[12px] text-[#737373]">Editorial District · Prime City</p>
 				</div>
 				<button className="text-[18px] leading-none text-[#262626]" aria-label="More">
@@ -1018,7 +1023,8 @@ function InstagramCard({ headline, story, slot }: PlatformProps) {
 					<p className="text-[13px] font-semibold">{e.likes.toLocaleString('en-US')} likes</p>
 				)}
 				<p className="mt-1 line-clamp-2 text-[13px] leading-[1.4]">
-					<span className="font-semibold">{igHandle}</span> {igCaption} {story.dek.slice(0, 80)}…
+					{igHandle && <span className="font-semibold">{igHandle} </span>}
+					{igCaption} {story.dek.slice(0, 80)}…
 				</p>
 				<p className="mt-1 text-[12px] uppercase text-[#737373]">{story.dateLabel}</p>
 			</div>

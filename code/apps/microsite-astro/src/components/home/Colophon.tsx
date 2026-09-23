@@ -3,19 +3,24 @@
  *
  * Three-column flat layout on md+ (Colophon · Issue metadata · Editors'
  * epigraph), stacked on phone. The Colophon column carries the typeface
- * credits ("Set in Pangram Editorial New & Vollkorn"); the meta column
- * is a dl table of issue/date/district/building values; the editors'
- * column carries an italic epigraph that reads as a manifesto closer.
+ * credits, read from the type system by the page (src/lib/typefaces.ts, F61);
+ * the meta column is a dl table of issue/date/district/building values; the
+ * editors' column carries an italic epigraph that reads as a manifesto closer.
  */
 
+import { Fragment } from 'react'
 import { PALETTE } from './shared/palette'
 
 export function Colophon({
 	issueLabel,
 	dateLabel,
+	typefaces,
 }: {
 	issueLabel: string
-	dateLabel: string
+	/** The issue's date — the newest dispatch's; absent when nothing is in print. */
+	dateLabel?: string
+	/** The faces the issue is set in, in the type system's slot order. */
+	typefaces: readonly string[]
 }) {
 	return (
 		<section
@@ -33,8 +38,14 @@ export function Colophon({
 							Colophon
 						</p>
 						<p className="mt-4 font-narrative italic text-[1.25rem] leading-snug text-body-strong">
-							Set in <span className="not-italic">Pangram Editorial New</span> &amp;{' '}
-							<span className="not-italic">Vollkorn</span>.
+							Set in{' '}
+							{typefaces.map((face, i) => (
+								<Fragment key={face}>
+									{i > 0 && (i === typefaces.length - 1 ? ' & ' : ', ')}
+									<span className="not-italic">{face}</span>
+								</Fragment>
+							))}
+							.
 						</p>
 						<p className="mt-2 font-narrative text-[0.9375rem] leading-relaxed text-body-muted">
 							Printed in vellum. Issued from the Editorial District, Prime City, MMXXVI.
@@ -43,11 +54,12 @@ export function Colophon({
 					<dl className="grid grid-cols-2 gap-x-6 gap-y-3 font-mono text-[12px] uppercase tracking-[0.22em]">
 						<dt className="text-body-faint">Issue</dt>
 						<dd className="text-body-strong">{issueLabel}</dd>
-						<dt className="text-body-faint">Date</dt>
-						{/* data-live: dateLabel is wall-clock text — see WireCard. */}
-						<dd data-live="timestamp" className="text-body-strong">
-							{dateLabel}
-						</dd>
+						{dateLabel && (
+							<>
+								<dt className="text-body-faint">Date</dt>
+								<dd className="text-body-strong">{dateLabel}</dd>
+							</>
+						)}
 						<dt className="text-body-faint">District</dt>
 						<dd className="text-body-strong">Editorial · Recto</dd>
 						<dt className="text-body-faint">Building</dt>

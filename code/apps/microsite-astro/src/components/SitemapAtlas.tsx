@@ -14,7 +14,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion, AnimatePresence, MotionConfig, useReducedMotion } from 'motion/react'
 import { Compass, Map as MapIcon, FileText, MessageSquareText, Landmark, Newspaper, ArrowRight } from 'lucide-react'
 import { PALETTE } from './home/shared/palette'
@@ -55,21 +55,22 @@ const ZONES: AtlasZone[] = [
 		anchor: { x: 48, y: 42 },
 		description:
 			'The reading sanctuary. Long-form dispatches issued from inside Prime City as the building goes up. Each story shipped here is the spine of one editorial cycle.',
-		entries: [
-			{ label: 'All articles', href: '/article', meta: 'browse' },
-			{ label: 'Latest dispatch', href: '/dispatch/dispatch-01', meta: 'today' },
-		],
+		/* "Latest dispatch" is not listed here: it was hardcoded as
+		 * `/dispatch/dispatch-01` · "today" — the OLDEST dispatch, dated by
+		 * nothing (F61). SitemapAtlas appends it from the dispatches it is
+		 * given, newest first. */
+		entries: [{ label: 'All articles', href: '/article', meta: 'browse' }],
 	},
 	{
 		id: 'home',
 		name: 'Reception',
-		role: 'The cover, every day',
+		role: 'The cover',
 		href: '/',
 		lane: 'dispatch',
 		icon: Compass,
 		anchor: { x: 52, y: 26 },
 		description:
-			"The front door. The cover wordmark, today's featured dispatch, the live ticker, and the Crossfire — one story across all six surfaces it gets published to.",
+			"The front door. The cover wordmark, the featured dispatch, the live ticker, and the Crossfire — one story across all six surfaces it gets published to.",
 		entries: [{ label: 'Reception (home)', href: '/', meta: 'cover' }],
 	},
 	{
@@ -93,7 +94,7 @@ const ZONES: AtlasZone[] = [
 		icon: Landmark,
 		anchor: { x: 36, y: 72 },
 		description:
-			"The publication's reason and the editor behind it. What Prime City is. Why this dev diary is shipped daily. Where the work sits in the larger arc.",
+			"The publication's reason and the editor behind it. What Prime City is. Why this dev diary is shipped. Where the work sits in the larger arc.",
 		entries: [{ label: 'About DISpatch', href: '/about' }],
 	},
 	{
@@ -105,7 +106,7 @@ const ZONES: AtlasZone[] = [
 		icon: MessageSquareText,
 		anchor: { x: 70, y: 44 },
 		description:
-			"Today's dispatch as it appears across DISpatch, Newsletter, LinkedIn, Hashnode, Dev.to, and Instagram. Same story; six platform shapes; one folder of asset cards.",
+			"One dispatch as it appears across DISpatch, Newsletter, LinkedIn, Hashnode, Dev.to, and Instagram. Same story; six platform shapes; one folder of asset cards.",
 		entries: [
 			{ label: 'View on home', href: '/#crossfire', meta: 'embedded' },
 			/* No `/newsletter` route exists; the entry's own meta says 'soon'.
@@ -161,13 +162,30 @@ const LANE_LABEL_COLORS: Record<ZoneLane, string> = {
 
 /* ─── Main component ─────────────────────────────────────────────────────── */
 
+/**
+ * The zones with the editorial zone's "Latest dispatch" entry derived from the
+ * newest dispatch — its own link and its own date — or no such entry when
+ * nothing is in print (F61). No zone copy may promise a cadence either: the
+ * atlas read "every day", "shipped daily" and "today's", which no field in the
+ * contract supplies and a months-old newest dispatch contradicts.
+ */
+function withLatestDispatch(zones: AtlasZone[], latest: ArticleEntry | undefined): AtlasZone[] {
+	if (!latest) return zones
+	return zones.map((zone) =>
+		zone.id === 'editorial'
+			? { ...zone, entries: [...(zone.entries ?? []), { label: 'Latest dispatch', href: latest.href, meta: latest.dateLabel }] }
+			: zone,
+	)
+}
+
 export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
+	const zones = useMemo(() => withLatestDispatch(ZONES, articles[0]), [articles])
 	const [hoveredId, setHoveredId] = useState<string | null>(null)
 	const [tappedId, setTappedId] = useState<string | null>(null)
 	const reducedMotion = useReducedMotion()
 
 	const focusId = hoveredId ?? tappedId ?? 'editorial'
-	const focusedZone = ZONES.find((z) => z.id === focusId) ?? ZONES[0]
+	const focusedZone = zones.find((z) => z.id === focusId) ?? zones[0]
 
 	return (
 		<MotionConfig reducedMotion="user">
@@ -196,7 +214,7 @@ export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
 								className="inline-flex h-1.5 w-1.5 rounded-full"
 								style={{ backgroundColor: 'var(--platform-accent-prime)' }}
 							/>
-							{ZONES.length} markers · 1 atlas
+							{zones.length} markers · 1 atlas
 						</span>
 					</div>
 					<p className="mt-5 max-w-[68ch] font-narrative text-[clamp(0.9375rem,1.1vw,1.0625rem)] leading-[1.55] text-body-muted">
@@ -287,7 +305,7 @@ export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
 						</div>
 
 						{/* Markers — pulsing dots ON red buildings, no polygons */}
-						{ZONES.map((zone) => (
+						{zones.map((zone) => (
 							<MapMarker
 								key={zone.id}
 								zone={zone}
@@ -308,7 +326,7 @@ export function SitemapAtlas({ articles }: { articles: ArticleEntry[] }) {
 					{/* RIGHT — three premium card surfaces */}
 					<div className="flex flex-col gap-5">
 						<FocusedZoneCard zone={focusedZone} />
-						<ZoneIndexCard zones={ZONES} focusId={focusId} setHoveredId={setHoveredId} />
+						<ZoneIndexCard zones={zones} focusId={focusId} setHoveredId={setHoveredId} />
 						{articles.length > 0 && <RecentDispatchesCard articles={articles} />}
 					</div>
 				</div>

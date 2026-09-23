@@ -9,6 +9,15 @@
  * Two OKLCH marginalia blocks (wheat square + blue stripe) drift on
  * scroll via useScroll → useTransform, reading as magazine sidebar
  * callouts at the edges of the section.
+ *
+ * Every word on the verso belongs to the featured dispatch (F61). The pull
+ * quote, the Editor's note and the series number were literals — dispatch-01's
+ * opening sentence, a note describing dispatch-01, "Dispatch No. 06" — so they
+ * mis-described every other dispatch the home featured, under a lane chip that
+ * contradicted them. Now: the quote is the dispatch's own authored
+ * <PullQuote>, the note is its contract `provenance.summary` (the same text
+ * its page discloses), the number is the one its id carries. Each is optional
+ * and renders nothing when the dispatch supplies nothing.
  */
 
 'use client'
@@ -24,7 +33,8 @@ export function ArticleSpread({
 	dateLabel,
 }: {
 	featured?: StoryArticle
-	dateLabel: string
+	/** The issue's dateline; absent when nothing is in print. */
+	dateLabel?: string
 }) {
 	const sectionRef = useRef<HTMLElement>(null)
 
@@ -74,10 +84,11 @@ export function ArticleSpread({
 							The Featured Dispatch
 						</span>
 					</div>
-					<span className="hidden font-mono text-[12px] uppercase tracking-[0.32em] text-body-faint md:inline">
-						{/* data-live wraps ONLY the wall-clock date — see WireCard. */}
-						Opened · <span data-live="timestamp">{dateLabel}</span>
-					</span>
+					{dateLabel && (
+						<span className="hidden font-mono text-[12px] uppercase tracking-[0.32em] text-body-faint md:inline">
+							Opened · {dateLabel}
+						</span>
+					)}
 				</motion.div>
 
 				<div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-20">
@@ -153,31 +164,35 @@ export function ArticleSpread({
 						transition={{ duration: 0.9, delay: 0.1 }}
 						className="lg:pt-10"
 					>
-						<div
-							className="rounded-sm p-6 md:p-8"
-							style={{ backgroundColor: PALETTE.wheat }}
-						>
-							<p
-								className="font-mono text-[12px] font-bold uppercase tracking-[0.36em]"
-								style={{
-									color: PALETTE.warmInk,
-									textShadow: `0 1px 0 color-mix(in oklch, ${PALETTE.paper} 60%, transparent)`,
-								}}
+						{featured.data.pullQuote && (
+							<figure
+								className="mb-8 rounded-sm p-6 md:p-8"
+								style={{ backgroundColor: PALETTE.wheat }}
 							>
-								From the dispatch
-							</p>
-							<p
-								className="mt-4 font-narrative italic leading-[1.18] tracking-[-0.012em]"
-								style={{
-									fontSize: 'clamp(1.375rem, 2.4vw, 1.875rem)',
-									color: PALETTE.warmInk,
-								}}
-							>
-								“<span className="text-wordmark-dis font-bold not-italic">DIS</span><span className="not-italic" style={{ color: PALETTE.warmInk }}>patch</span> publishes as a magazine, reads as a notebook, and behaves as a website.”
-							</p>
-						</div>
+								<figcaption
+									className="font-mono text-[12px] font-bold uppercase tracking-[0.36em]"
+									style={{
+										color: PALETTE.warmInk,
+										textShadow: `0 1px 0 color-mix(in oklch, ${PALETTE.paper} 60%, transparent)`,
+									}}
+								>
+									From the dispatch
+								</figcaption>
+								{/* Editorial prose, quoted verbatim — rendered as its page
+								    renders it (PullQuote.astro), so no wordmark split (R1b). */}
+								<blockquote
+									className="mt-4 font-narrative italic leading-[1.18] tracking-[-0.012em]"
+									style={{
+										fontSize: 'clamp(1.375rem, 2.4vw, 1.875rem)',
+										color: PALETTE.warmInk,
+									}}
+								>
+									“{featured.data.pullQuote}”
+								</blockquote>
+							</figure>
+						)}
 
-						<dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-body-strong/15 pt-6 font-mono text-[12px] uppercase tracking-[0.22em]">
+						<dl className="grid grid-cols-2 gap-x-6 gap-y-4 border-t border-body-strong/15 pt-6 font-mono text-[12px] uppercase tracking-[0.22em]">
 							<dt className="text-body-faint">Lane</dt>
 							<dd className="font-nav font-bold text-body-strong">
 								{featured.data.provenance.lane}
@@ -186,27 +201,33 @@ export function ArticleSpread({
 							<dd className="text-body-strong">{featured.data.dateLabel}</dd>
 							<dt className="text-body-faint">Length</dt>
 							<dd className="text-body-strong">{featured.data.readingTime}</dd>
-							<dt className="text-body-faint">Series</dt>
-							<dd className="text-body-strong">Dispatch No. 06</dd>
+							{featured.data.number && (
+								<>
+									<dt className="text-body-faint">Series</dt>
+									<dd className="text-body-strong">Dispatch No. {featured.data.number}</dd>
+								</>
+							)}
 						</dl>
 
-						<div
-							className="mt-8 rounded-sm border-l-[3px] p-5"
-							style={{
-								borderLeftColor: laneTint(featured.data.provenance.lane),
-								backgroundColor: 'color-mix(in oklch, var(--sky-low) 30%, transparent)',
-							}}
-						>
-							<p
-								className="font-mono text-[12px] font-bold uppercase tracking-[0.32em]"
-								style={{ color: laneTint(featured.data.provenance.lane) }}
+						{featured.data.provenance.summary && (
+							<div
+								className="mt-8 rounded-sm border-l-[3px] p-5"
+								style={{
+									borderLeftColor: laneTint(featured.data.provenance.lane),
+									backgroundColor: 'color-mix(in oklch, var(--sky-low) 30%, transparent)',
+								}}
 							>
-								Editor's note · {featured.data.provenance.lane}
-							</p>
-							<p className="mt-2 font-narrative italic text-[0.9375rem] leading-snug text-body-muted">
-								The first dispatch from the Mayor — a charter for what DISpatch is and how it intends to behave.
-							</p>
-						</div>
+								<p
+									className="font-mono text-[12px] font-bold uppercase tracking-[0.32em]"
+									style={{ color: laneTint(featured.data.provenance.lane) }}
+								>
+									Editor's note · {featured.data.provenance.lane}
+								</p>
+								<p className="mt-2 font-narrative italic text-[0.9375rem] leading-snug text-body-muted">
+									{featured.data.provenance.summary}
+								</p>
+							</div>
+						)}
 					</motion.aside>
 				</div>
 			</div>

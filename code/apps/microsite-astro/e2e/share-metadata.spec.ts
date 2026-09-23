@@ -222,7 +222,7 @@ test('pages without an address of their own name no canonical', async ({ page })
 	expect(await meta(page, 'og:image')).toBe(`${ORIGIN}/og/site.jpg`)
 
 	// noindex proving grounds: a canonical beside noindex is a mixed signal.
-	for (const path of ['/preview/figure/', '/preview/tokens/']) {
+	for (const path of ['/preview/figure/', '/preview/tokens/', '/preview/reading-room/']) {
 		await page.goto(path)
 		expect(await meta(page, 'robots')).toBe('noindex, nofollow')
 		expect(await canonical(page), path).toBeNull()

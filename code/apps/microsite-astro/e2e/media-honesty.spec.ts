@@ -106,9 +106,18 @@ test('/article does not download video nobody asked to play', async ({ page, con
 	 * unfixed build at zero — which is exactly how the defect hid: Chrome
 	 * streamed a 3.8MB non-faststart file looking for its moov atom and then
 	 * gave up. Those bytes crossed the wire and the reader paid for them.
-	 * `dataReceived` fires per chunk and counts them. */
-	cdp.on('Network.dataReceived', (e: { requestId: string; encodedDataLength: number; dataLength: number }) =>
-		size.set(e.requestId, (size.get(e.requestId) ?? 0) + (e.encodedDataLength || e.dataLength || 0)),
+	 * `dataReceived` fires per chunk and counts them.
+	 *
+	 * Sum `dataLength`, and only it (Build 33). Chrome reports each chunk's
+	 * `encodedDataLength` one event LATE — measured for a 323,066-byte plate
+	 * as [enc 0, data 134898] [134898, 188168] [188168, 0] — so the former
+	 * `encodedDataLength || dataLength` counted every request's first chunk
+	 * twice: +40% to +100% per image, which read six real covers (1.65MB,
+	 * equal to the sum of their content-lengths to the byte) as 3.3MB. Media
+	 * is never content-encoded, so decoded length IS transfer length here,
+	 * and an aborted request's chunks still arrive as `dataReceived`. */
+	cdp.on('Network.dataReceived', (e: { requestId: string; dataLength: number }) =>
+		size.set(e.requestId, (size.get(e.requestId) ?? 0) + e.dataLength),
 	)
 
 	await page.goto('/article')
