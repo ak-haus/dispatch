@@ -27,11 +27,13 @@
     "cartography:depth": "doppler run --project prime-city --config dev -- node scripts/depth-cartography.mjs"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.1",
     "@astrojs/mdx": "^8.0.1",
     "@astrojs/react": "^6.0.6",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@observablehq/plot": "^0.6.17",
+    "@prime-dispatch/tokens": "workspace:*",
     "@prime-dispatch/ui": "workspace:*",
     "@react-spring/web": "^10.1.2",
     "@sentry/browser": "^10.70.0",
