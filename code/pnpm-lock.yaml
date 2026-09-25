@@ -29,6 +29,9 @@ importers:
 
   apps/microsite-astro:
     dependencies:
+      '@astrojs/markdown-satteri':
+        specifier: 0.4.1
+        version: 0.4.1
       '@astrojs/mdx':
         specifier: ^8.0.1
         version: 8.0.1(@astrojs/markdown-satteri@0.4.1)(astro@7.3.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.3)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
@@ -44,6 +47,9 @@ importers:
       '@observablehq/plot':
         specifier: ^0.6.17
         version: 0.6.17
+      '@prime-dispatch/tokens':
+        specifier: workspace:*
+        version: link:../../packages/tokens
       '@prime-dispatch/ui':
         specifier: workspace:*
         version: link:../../packages/ui

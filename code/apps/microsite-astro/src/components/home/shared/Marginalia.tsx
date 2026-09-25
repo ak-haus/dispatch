@@ -34,7 +34,8 @@ export function Marginalia({
 	dateLabel,
 }: {
 	issueLabel: string
-	dateLabel: string
+	/** The issue's dateline (the newest dispatch's date); absent when nothing is in print. */
+	dateLabel?: string
 }) {
 	const railRef = useRef<HTMLElement>(null)
 
@@ -109,9 +110,9 @@ export function Marginalia({
 						'0 1px 0 color-mix(in oklch, var(--sky-low) 75%, transparent), 0 -1px 0 color-mix(in oklch, var(--platform-text-body-strong) 8%, transparent)',
 				}}
 			>
-				{/* data-live wraps ONLY the wall-clock date (see WireCard) — the
-				    wordmark + issue label stay in the Chromatic diff. */}
-				DISpatch · {issueLabel} · <span data-live="timestamp">{dateLabel}</span>
+				{/* The issue's own date (F61) — static, so no longer declared live. */}
+				DISpatch · {issueLabel}
+				{dateLabel && ` · ${dateLabel}`}
 			</p>
 		</aside>
 	)

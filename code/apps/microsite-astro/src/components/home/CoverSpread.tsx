@@ -63,7 +63,8 @@ export function CoverSpread({
 	featuredTitle,
 }: {
 	issueLabel: string
-	dateLabel: string
+	/** The issue's dateline (the newest dispatch's date); absent when nothing is in print. */
+	dateLabel?: string
 	dispatchCount: number
 	reducedMotion: boolean
 	/** Title of the most recent dispatch — surfaced in the LIVE marker.
@@ -125,9 +126,10 @@ export function CoverSpread({
 						Editorial District · Recto
 					</span>
 					<span className="font-mono text-[12px] font-semibold uppercase tracking-[0.26em] text-body-strong">
-						{/* data-live wraps ONLY the wall-clock date (see WireCard) —
-						    the issue label stays in the Chromatic diff. */}
-						{issueLabel} · <span data-live="timestamp">{dateLabel}</span>
+						{/* The issue's own date (F61) — static, so it is diffed like
+						    the rest of the label rather than declared live. */}
+						{issueLabel}
+						{dateLabel && ` · ${dateLabel}`}
 					</span>
 				</div>
 			</div>

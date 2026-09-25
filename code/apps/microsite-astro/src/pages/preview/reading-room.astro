@@ -1,0 +1,67 @@
+---
+/**
+ * Reading-room proving ground — the card players no dispatch reaches (F61).
+ *
+ * `/article` used to hand cards a video cover from a rotation; F61 retired
+ * that, so every card now shows its dispatch's own cover, and no dispatch
+ * declares a video one (the contract's `hero` carries no kind yet). The
+ * hover-to-play player is still the reading room's answer for a cover that
+ * IS a video, and it carries the reduced-motion floor (F55(4), CD5 §2) — so
+ * it keeps a route to be pinned on. This is that route, on the house pattern
+ * /preview/figure set: a component state no content reaches gets its own
+ * deterministic surface, never a content change (AK owns content), and the
+ * surface is noindex + sitemap-excluded.
+ *
+ * The listing is the real one, built exactly as /article builds it. ONE card
+ * is given a fixture video cover (the district loop, which ships), so it is a
+ * video by declaration here and nowhere else. There is no audio fixture: no
+ * audio file ships (Build 32), and a proving ground may only use media that
+ * exists.
+ */
+import { getCollection } from 'astro:content'
+import StackLayout from '@/layouts/StackLayout.astro'
+import { ArticlesBrowser, type ArticleListing } from '@/components/ArticlesBrowser'
+import { dispatchCover } from '@/lib/share/share'
+import { publicFileExists } from '@/lib/share/public-files'
+import { formatDispatchDate, newestFirst } from '@/lib/dispatch'
+
+const FIXTURE_VIDEO = {
+	kind: 'video' as const,
+	src: '/cartography/district.mp4',
+	poster: '/cartography/district.webp',
+	alt: 'Proving-ground fixture: the district loop',
+}
+
+const entries = await getCollection('dispatch')
+entries.sort(newestFirst)
+
+const articles: ArticleListing[] = entries.map((e, i) => {
+	const cover = dispatchCover({ id: e.id, title: e.data.title, hero: e.data.hero }, publicFileExists)
+	return {
+		id: e.id,
+		href: `/dispatch/${e.id}`,
+		title: e.data.title,
+		kicker: e.data.kicker,
+		dek: e.data.dek,
+		author: { name: e.data.author.name, role: e.data.author.role },
+		dateISO: e.data.date.toISOString(),
+		dateLabel: formatDispatchDate(e.data.date),
+		readingTime: e.data.readingTime,
+		lane: e.data.provenance.lane,
+		tags: e.data.tags,
+		hero: i === 0 ? FIXTURE_VIDEO : cover ? { kind: 'image' as const, src: cover.src, alt: cover.alt } : undefined,
+	}
+})
+---
+
+<StackLayout
+	title="Reading room preview"
+	kicker="Design system · Component canon"
+	description="The reading room's card players, including the video cover no dispatch declares yet."
+	theme="vellum"
+	hideHero
+	fullWidthMain
+	noindex
+>
+	<ArticlesBrowser client:load articles={articles} />
+</StackLayout>

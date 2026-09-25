@@ -40,8 +40,7 @@ export type CardRendition = Extract<CardSource, { kind: 'rendition' }>
 
 /**
  * The card for every route that is not a dispatch: the district plate, the
- * homepage cover's own map. The alt is the one the site already gives this
- * image (ArticlesBrowser's default rotation).
+ * homepage cover's own map, with an alt that names what it depicts.
  */
 export const SITE_CARD: CardRendition = {
 	kind: 'rendition',
@@ -62,31 +61,53 @@ const PLATE_EXTENSIONS = ['webp', 'jpg', 'png'] as const
 
 const ABSOLUTE_URL = /^https?:\/\//i
 
+/** A dispatch's own cover image, as a page can put it in an `<img>`. */
+export interface DispatchCover {
+	/** Root-relative path for a file under public/, or the contract's absolute URL. */
+	src: string
+	alt: string
+	/** The file under public/ it came from; absent for a remote hero. */
+	file?: string
+}
+
 /**
- * A dispatch's card: the contract `hero` when set, else the dispatch's
- * banner plate (public/banners/<id>.*, the image its page shows), else the
- * site card. A local file that does not exist throws, so the build fails
- * rather than ship an og:image that 404s.
+ * A dispatch's own cover: the contract `hero` when set, else the dispatch's
+ * banner plate (public/banners/<id>.*, the image its page shows), else
+ * NOTHING. It never falls back to someone else's art — the card below may use
+ * the site's plate for a link preview, but a page that shows `undefined` here
+ * must show the absence, not borrow a cover (F61: the reading room assigned
+ * covers by index, so dispatch-04 wore dispatch-02's banner). A local file
+ * that does not exist throws, so the build fails rather than ship a 404.
+ */
+export function dispatchCover(
+	entry: CardEntry,
+	publicFileExists: (file: string) => boolean,
+): DispatchCover | undefined {
+	if (entry.hero) {
+		if (ABSOLUTE_URL.test(entry.hero.src)) return { src: entry.hero.src, alt: entry.hero.alt }
+		const file = entry.hero.src.replace(/^\/+/, '')
+		if (!publicFileExists(file)) {
+			throw new Error(`[share] ${entry.id}: hero.src "${entry.hero.src}" is not a file under public/`)
+		}
+		return { src: `/${file}`, alt: entry.hero.alt, file }
+	}
+	const plate = PLATE_EXTENSIONS.map((ext) => `banners/${entry.id}.${ext}`).find(publicFileExists)
+	return plate ? { src: `/${plate}`, alt: `Banner illustration for ${entry.title}`, file: plate } : undefined
+}
+
+/**
+ * A dispatch's card: its own cover (above) when it has one, else the site
+ * card. A link preview must carry an image, which is why this — and only
+ * this — falls back to the site's plate.
  */
 export function dispatchCard(entry: CardEntry, publicFileExists: (file: string) => boolean): CardSource {
 	if (entry.id === SITE_CARD.slug) {
 		throw new Error(`[share] dispatch id "${entry.id}" collides with the site card's slug`)
 	}
-	if (entry.hero) {
-		if (ABSOLUTE_URL.test(entry.hero.src)) {
-			return { kind: 'remote', url: entry.hero.src, alt: entry.hero.alt }
-		}
-		const file = entry.hero.src.replace(/^\/+/, '')
-		if (!publicFileExists(file)) {
-			throw new Error(`[share] ${entry.id}: hero.src "${entry.hero.src}" is not a file under public/`)
-		}
-		return { kind: 'rendition', slug: entry.id, sourceFile: file, alt: entry.hero.alt }
-	}
-	const plate = PLATE_EXTENSIONS.map((ext) => `banners/${entry.id}.${ext}`).find(publicFileExists)
-	if (plate) {
-		return { kind: 'rendition', slug: entry.id, sourceFile: plate, alt: `Banner illustration for ${entry.title}` }
-	}
-	return SITE_CARD
+	const cover = dispatchCover(entry, publicFileExists)
+	if (!cover) return SITE_CARD
+	if (cover.file === undefined) return { kind: 'remote', url: cover.src, alt: cover.alt }
+	return { kind: 'rendition', slug: entry.id, sourceFile: cover.file, alt: cover.alt }
 }
 
 /** Every rendition the /og/ endpoint must build: the site card plus each dispatch's own. */

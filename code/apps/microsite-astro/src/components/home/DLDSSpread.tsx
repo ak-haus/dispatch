@@ -9,7 +9,17 @@
  * Locked 2026-05-14 by AK:
  *   - Title: "More dispatches" (NOT "Other dispatches in print")
  *   - Visually appealing card grid, not a tabular index
- *   - Real cover imagery using /banners/ assets cycled by index
+ *   - Real cover imagery from /banners/
+ *
+ * F61 — every card now describes the dispatch it links to. The banners were
+ * cycled by index, which put dispatch-02's plate on dispatch-03's card once
+ * each dispatch had its own plate (the one its page and its share card show);
+ * the folio was the card's position, so dispatch-03 read "№ 02" here and
+ * "Dispatch 03" on its own page; and a seventh card announced "№ 07 · In
+ * production · Tomorrow · Every day, one story… at sunrise", which no field in
+ * the contract supplies and the newest dispatch — months old — contradicts.
+ * Cover and number come from the dispatch (src/lib/share, src/lib/dispatch);
+ * where one has neither, the card shows the absence.
  */
 
 'use client'
@@ -19,21 +29,10 @@ import { PALETTE } from './shared/palette'
 import { LANE_COLORS } from './shared/lane-colors'
 import type { StoryArticle } from '../StoryCardCluster'
 
-/* Cover banner for the next-edition placeholder. Refreshed when AK drops a
- * new asset into /public/banners/. Currently dispatch-07.webp. */
-const NEXT_EDITION_BANNER = '/banners/dispatch-07.webp'
-
-const BANNERS = [
-	'/banners/dispatch-02.webp',
-	'/banners/dispatch-03.webp',
-	'/banners/dispatch-04.webp',
-	'/banners/dispatch-05.webp',
-	'/banners/dispatch-06.webp',
-] as const
-
-function bannerFor(index: number): string {
-	return BANNERS[index % BANNERS.length]!
-}
+/* The district plate — the page's own substrate, shown as ground (never as a
+ * cover) for a dispatch that has no cover of its own. Decorative either way:
+ * the card's link is named by its text. */
+const HOUSE_PLATE = '/cartography/district.webp'
 
 export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 	if (rest.length === 0) return null
@@ -71,7 +70,9 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 							className="inline-flex h-1.5 w-1.5 rounded-full"
 							style={{ backgroundColor: PALETTE.accent }}
 						/>
-						{rest.length + 1} in the queue
+						{/* The cards below, counted — "+ 1" counted the invented
+						    next edition, and "queue" was its promise (F61). */}
+						{rest.length} in print
 					</span>
 				</motion.div>
 
@@ -79,8 +80,8 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 				<ol className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 xl:grid-cols-3">
 					{rest.map((a, i) => {
 						const laneColor = LANE_COLORS[a.data.provenance.lane]
-						const banner = bannerFor(i)
-						const num = String(i + 2).padStart(2, '0')
+						const banner = a.data.cover?.src ?? HOUSE_PLATE
+						const num = a.data.number
 						return (
 							<motion.li
 								key={a.id}
@@ -117,11 +118,14 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 													'linear-gradient(to top, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.04) 35%, transparent 60%)',
 											}}
 										/>
-										{/* Number folio — top-left badge */}
-										<span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-[2px] border border-white/22 bg-black/45 px-2.5 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.26em] text-white/90 backdrop-blur-sm">
-											<span aria-hidden="true">№</span>
-											{num}
-										</span>
+										{/* Number folio — top-left badge: the dispatch's own number,
+										    or no folio at all (F61). */}
+										{num && (
+											<span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-[2px] border border-white/22 bg-black/45 px-2.5 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.26em] text-white/90 backdrop-blur-sm">
+												<span aria-hidden="true">№</span>
+												{num}
+											</span>
+										)}
 										{/* Lane pigment bar — bottom-left, grows on hover */}
 										<span
 											aria-hidden="true"
@@ -177,179 +181,8 @@ export function DLDSSpread({ rest }: { rest: StoryArticle[] }) {
 							</motion.li>
 						)
 					})}
-
-					{/* Next-edition placeholder — always fills the next slot.
-					    Homepage only (DLDSSpread isn't used elsewhere). */}
-					<NextEditionCard slot={rest.length + 2} />
 				</ol>
 			</div>
 		</section>
-	)
-}
-
-/* ── NextEditionCard — placeholder for tomorrow's dispatch ──────────────
- * Visually distinct from the article cards: copper accents, dashed border,
- * sunrise glyph centered in the cover area. Not a navigable article — it's
- * a queue indicator telling readers the next story is in production.
- * ──────────────────────────────────────────────────────────────────────── */
-
-function NextEditionCard({ slot }: { slot: number }) {
-	const num = String(slot).padStart(2, '0')
-	const copper = PALETTE.copper
-	const copperDeep = PALETTE.copperDeep
-
-	return (
-		<motion.li
-			data-ssr-reveal
-			initial={{ opacity: 0, y: 24 }}
-			whileInView={{ opacity: 1, y: 0 }}
-			viewport={{ once: true, amount: 0.25 }}
-			transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1], delay: 0.4 }}
-		>
-			<div
-				className="group relative flex h-full flex-col overflow-hidden rounded-[3px] border-2 border-dashed bg-sky-low transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.30),0_8px_16px_-8px_rgba(0,0,0,0.12)]"
-				style={{
-					borderColor: `color-mix(in oklch, ${copper} 45%, transparent)`,
-				}}
-			>
-				{/* Cover banner — real artwork from /banners/ with a copper
-				    desaturated treatment so it reads as "preview, not yet
-				    published." Subtle film grain + "NEXT EDITION" badge
-				    overlaid; on hover the banner saturates back up. */}
-				<div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden">
-					<img
-						loading="lazy"
-						src={NEXT_EDITION_BANNER}
-						alt=""
-						aria-hidden="true"
-						className="absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-out"
-						style={{
-							filter: 'saturate(0.72) brightness(0.96)',
-						}}
-						draggable={false}
-					/>
-					{/* Hover state — restore full saturation */}
-					<div
-						aria-hidden="true"
-						className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
-					>
-						<img
-							loading="lazy"
-							src={NEXT_EDITION_BANNER}
-							alt=""
-							className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-							draggable={false}
-						/>
-					</div>
-
-					{/* Copper veil — preview tint */}
-					<div
-						aria-hidden="true"
-						className="pointer-events-none absolute inset-0 transition-opacity duration-500 group-hover:opacity-50"
-						style={{
-							background: `linear-gradient(165deg, color-mix(in oklch, ${copper} 28%, transparent) 0%, color-mix(in oklch, ${copperDeep} 18%, transparent) 60%, transparent 100%)`,
-						}}
-					/>
-
-					{/* Centered "NEXT EDITION" pill — the visual cue that this
-					    isn't a published article. */}
-					{/* data-live: infinite pulse — see CoverSpread. */}
-					<motion.div
-						data-live="pulse"
-						className="relative z-10 flex flex-col items-center gap-2"
-						animate={{ y: [0, -2, 0] }}
-						transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-					>
-						<span
-							className="inline-flex items-center gap-2 rounded-full border-2 bg-sky-low/92 px-4 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.32em] backdrop-blur-md"
-							style={{
-								borderColor: copper,
-								color: copperDeep,
-								boxShadow: `0 10px 28px -10px color-mix(in oklch, ${copperDeep} 70%, transparent)`,
-							}}
-						>
-							<span
-								aria-hidden="true"
-								className="relative inline-flex h-1.5 w-1.5 rounded-full"
-								style={{ backgroundColor: copper }}
-							>
-								<span
-									className="absolute inset-0 animate-ping rounded-full"
-									style={{ backgroundColor: copper, opacity: 0.55 }}
-								/>
-							</span>
-							Next edition
-						</span>
-					</motion.div>
-
-					{/* Number folio — top-left */}
-					<span
-						className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-[2px] border bg-window-warm/85 px-2.5 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.26em] backdrop-blur-sm"
-						style={{
-							borderColor: `color-mix(in oklch, ${copper} 35%, transparent)`,
-							color: copperDeep,
-						}}
-					>
-						<span aria-hidden="true">№</span>
-						{num}
-					</span>
-
-					{/* Lane stripe — copper, grows on hover */}
-					<span
-						aria-hidden="true"
-						className="absolute bottom-0 left-0 h-1.5 transition-all duration-300 group-hover:h-2"
-						style={{ backgroundColor: copper, width: '38%' }}
-					/>
-				</div>
-
-				<div className="flex flex-1 flex-col gap-3 p-5 md:p-6">
-					<div className="flex items-center justify-between gap-3">
-						<span
-							className="flex items-center gap-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.28em]"
-							style={{ color: copperDeep }}
-						>
-							<span
-								aria-hidden="true"
-								className="block size-1.5 rounded-full"
-								style={{ backgroundColor: copper }}
-							/>
-							In production
-						</span>
-						<span className="shrink-0 font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
-							Tomorrow
-						</span>
-					</div>
-
-					<h3
-						className="font-narrative font-bold leading-[1.08] tracking-[-0.018em] text-body-strong"
-						style={{ fontSize: 'clamp(1.25rem, 1.6vw, 1.625rem)' }}
-					>
-						The next dispatch, drafting now
-					</h3>
-
-					<p className="line-clamp-3 font-narrative text-[14.5px] leading-[1.5] text-body-muted">
-						Every day, one story. The next edition is being drafted from inside the work and
-						will land at sunrise. Subscribe to read it before the page updates.
-					</p>
-
-					<div className="mt-auto flex items-center justify-between border-t border-body-strong/10 pt-3">
-						<span className="font-mono text-[12px] uppercase tracking-[0.22em] text-body-muted">
-							At sunrise
-						</span>
-						{/* F57 — `#subscribe` matched no id on any page: a dead tab
-						    stop reading "SUBSCRIBE →". There is no subscribe
-						    destination to point it at, so it renders as the HTML
-						    standard's placeholder link (no href, no arrow, out of
-						    the tab order) until one exists. */}
-						<a
-							className="flex items-center gap-1.5 font-nav text-[12px] font-extrabold uppercase tracking-[0.22em]"
-							style={{ color: copperDeep }}
-						>
-							Subscribe
-						</a>
-					</div>
-				</div>
-			</div>
-		</motion.li>
 	)
 }

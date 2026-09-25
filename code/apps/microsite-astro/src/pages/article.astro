@@ -13,38 +13,33 @@ import { getCollection } from 'astro:content'
 import StackLayout from '@/layouts/StackLayout.astro'
 import BackToDispatch from '@/components/BackToDispatch.astro'
 import { ArticlesBrowser, type ArticleListing } from '@/components/ArticlesBrowser'
+import { dispatchCover } from '@/lib/share/share'
+import { publicFileExists } from '@/lib/share/public-files'
+import { formatDispatchDate, newestFirst } from '@/lib/dispatch'
 
 const entries = await getCollection('dispatch')
-entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+entries.sort(newestFirst)
 
-const formatDate = (d: Date) =>
-	new Intl.DateTimeFormat('en-US', {
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric',
-		timeZone: 'UTC',
-	}).format(d)
-
-const articles: ArticleListing[] = entries.map((e) => ({
-	id: e.id,
-	href: `/dispatch/${e.id}`,
-	title: e.data.title,
-	kicker: e.data.kicker,
-	dek: e.data.dek,
-	author: { name: e.data.author.name, role: e.data.author.role },
-	dateISO: e.data.date.toISOString(),
-	dateLabel: formatDate(e.data.date),
-	readingTime: e.data.readingTime,
-	lane: e.data.provenance.lane,
-	tags: e.data.tags,
-	hero: e.data.hero
-		? {
-				kind: 'image' as const,
-				src: e.data.hero.src,
-				alt: e.data.hero.alt,
-			}
-		: undefined,
-}))
+const articles: ArticleListing[] = entries.map((e) => {
+	// Each card's cover is the dispatch's own — its contract hero, else the
+	// banner plate its page and its share card show — by the one rule those
+	// use (F61). Absent when it has neither; the browser shows the absence.
+	const cover = dispatchCover({ id: e.id, title: e.data.title, hero: e.data.hero }, publicFileExists)
+	return {
+		id: e.id,
+		href: `/dispatch/${e.id}`,
+		title: e.data.title,
+		kicker: e.data.kicker,
+		dek: e.data.dek,
+		author: { name: e.data.author.name, role: e.data.author.role },
+		dateISO: e.data.date.toISOString(),
+		dateLabel: formatDispatchDate(e.data.date),
+		readingTime: e.data.readingTime,
+		lane: e.data.provenance.lane,
+		tags: e.data.tags,
+		hero: cover ? { kind: 'image' as const, src: cover.src, alt: cover.alt } : undefined,
+	}
+})
 ---
 
 <StackLayout

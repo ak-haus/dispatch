@@ -31,8 +31,19 @@ export type StoryArticle = {
 		readingTime: string
 		/** Pre-formatted date string from server (e.g. "2026-05-12"). */
 		dateLabel: string
+		/** The number the id carries ("06"), from src/lib/dispatch.ts —
+		 *  absent when the id carries none, never a list position (F61). */
+		number?: string
+		/** The dispatch's own cover (contract hero, else its banner plate),
+		 *  from dispatchCover — absent when it has neither (F61). */
+		cover?: { src: string; alt: string }
+		/** Its authored <PullQuote> text, read at compile time — set only
+		 *  where a surface shows it (the featured dispatch) (F61). */
+		pullQuote?: string
 		provenance: {
 			lane: 'Human-led' | 'Hybrid' | 'AI-led'
+			/** The contract's provenance note (provenance.summary). */
+			summary?: string
 		}
 		author: {
 			name: string

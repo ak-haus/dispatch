@@ -8,6 +8,7 @@ import {
 	cardImageUrl,
 	cardRenditions,
 	dispatchCard,
+	dispatchCover,
 	escapeXml,
 	feedUrl,
 	serializeJsonLd,
@@ -81,6 +82,41 @@ describe('dispatchCard — contract hero, then the plate, then the site card', (
 
 	it("refuses a dispatch id that would overwrite the site card's image", () => {
 		expect(() => dispatchCard({ id: 'site', title: 'T' }, files('banners/site.webp'))).toThrow(/collides/)
+	})
+})
+
+describe("dispatchCover — a dispatch's own cover, or nothing", () => {
+	it("is the dispatch's plate, at a root-relative src with the page's alt", () => {
+		expect(dispatchCover({ id: 'dispatch-03', title: 'C' }, files('banners/dispatch-03.webp'))).toEqual({
+			src: '/banners/dispatch-03.webp',
+			alt: 'Banner illustration for C',
+			file: 'banners/dispatch-03.webp',
+		})
+	})
+
+	it("never borrows another dispatch's plate or the site's — absence is undefined (F61)", () => {
+		// Every other plate is present; this dispatch's is not.
+		const others = files('banners/dispatch-02.webp', 'banners/dispatch-04.webp', 'cartography/district.webp')
+		expect(dispatchCover({ id: 'dispatch-03', title: 'C' }, others)).toBeUndefined()
+	})
+
+	it('prefers the contract hero, local or remote', () => {
+		expect(
+			dispatchCover(
+				{ id: 'dispatch-01', title: 'T', hero: { src: '/images/cover.jpg', alt: 'The cover' } },
+				files('images/cover.jpg', 'banners/dispatch-01.webp'),
+			),
+		).toEqual({ src: '/images/cover.jpg', alt: 'The cover', file: 'images/cover.jpg' })
+		expect(
+			dispatchCover({ id: 'dispatch-01', title: 'T', hero: { src: 'https://cdn.example.com/c.jpg', alt: 'R' } }, files()),
+		).toEqual({ src: 'https://cdn.example.com/c.jpg', alt: 'R' })
+	})
+
+	it('agrees with the share card for every dispatch that has a cover', () => {
+		const present = files('banners/dispatch-01.webp')
+		const entry = { id: 'dispatch-01', title: 'A' }
+		const card = dispatchCard(entry, present)
+		expect(card.kind === 'rendition' && card.sourceFile).toBe(dispatchCover(entry, present)!.file)
 	})
 })
 

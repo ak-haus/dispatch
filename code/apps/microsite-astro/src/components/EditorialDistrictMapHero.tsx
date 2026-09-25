@@ -25,7 +25,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { MotionConfig, useReducedMotion } from 'motion/react'
 import type { StoryArticle } from './StoryCardCluster'
 import { Marginalia } from './home/shared/Marginalia'
@@ -39,12 +39,16 @@ import { WireTicker } from './wire'
 
 export type EditorialDistrictMapHeroProps = {
 	articles: StoryArticle[]
-	/** Build-time date label (en-US long form, UTC) baked by index.astro.
-	 *  Used verbatim for the server render + first client render so static
-	 *  HTML and hydration agree; an effect swaps in the live date after
-	 *  mount. Computing `new Date()` during render caused a React #418
-	 *  hydration mismatch on every stale static deploy (fixed 2026-08-17). */
-	initialDateLabel: string
+	/** The issue's dateline (en-US long form, UTC): the newest dispatch's
+	 *  date, formatted by index.astro — absent when nothing is in print.
+	 *  It is the ISSUE's date, so it is static: no effect swaps in the
+	 *  reader's clock after mount (F61), which also means server render and
+	 *  hydration cannot disagree about it (the React #418 of 2026-08-17). */
+	editionDateLabel?: string
+	/** The faces the colophon credits, derived from the type system by
+	 *  index.astro (src/lib/typefaces.ts) — server-side, so the token source
+	 *  never ships in this island's bundle. */
+	typefaces: readonly string[]
 	/** Crossfire deck source. May be the same as articles[0] (when the
 	 *  featured/newest dispatch has crossfire data) OR an older dispatch
 	 *  (when the newest is a draft without surfaces wired). Decoupled
@@ -66,23 +70,13 @@ export function EditorialDistrictMapHero({
 	articles,
 	crossfireArticle,
 	dispatchCount,
-	initialDateLabel,
+	editionDateLabel: dateLabel,
+	typefaces,
 }: EditorialDistrictMapHeroProps) {
 	const reducedMotion = useReducedMotion()
 	const featured = articles[0]
 	const rest = articles.slice(1)
 
-	const [dateLabel, setDateLabel] = useState(initialDateLabel)
-	useEffect(() => {
-		setDateLabel(
-			new Intl.DateTimeFormat('en-US', {
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric',
-				timeZone: 'UTC',
-			}).format(new Date()),
-		)
-	}, [])
 	const issueLabel = `Vol. 01 · No. ${String(dispatchCount).padStart(2, '0')}`
 
 	// Masthead hide/reveal — Lenis-velocity + top-edge hover.
@@ -172,21 +166,17 @@ export function EditorialDistrictMapHero({
 						title: crossfireArticle.data.title,
 						dek: crossfireArticle.data.dek,
 						author: crossfireArticle.data.author.name,
-						authorHandle: crossfireArticle.data.author.handle ?? '@dispatch_prime',
 						authorRole: crossfireArticle.data.author.role,
-						date: crossfireArticle.data.dateLabel,
 						dateLabel: crossfireArticle.data.dateLabel,
 						readingTime: crossfireArticle.data.readingTime,
-						siteUrl: `dispatch.prime${crossfireArticle.href}`,
 					}}
 					surfaces={crossfireArticle.data.crossfire?.surfaces ?? []}
-					dateLabel={dateLabel}
 				/>
 			)}
 			{/* Live Wire — Crossfire's sanitized publish feed (ADR-0001): the
 			    proof-strip directly under the Crossfire spread it evidences. */}
 			<WireTicker />
-			<Colophon issueLabel={issueLabel} dateLabel={dateLabel} />
+			<Colophon issueLabel={issueLabel} dateLabel={dateLabel} typefaces={typefaces} />
 			{/* Build ticker last — sits at the very bottom of the page like a
 			    stock-ticker tape under the colophon. SpheresSpread (Prime
 			    cosmology) moved to /about per AK 2026-05-14. */}

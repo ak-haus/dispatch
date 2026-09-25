@@ -12,7 +12,8 @@
       "import": "./src/index.ts"
     },
     "./css": "./dist/tokens.css",
-    "./theme": "./dist/tokens.theme.css"
+    "./theme": "./dist/tokens.theme.css",
+    "./typography.json": "./src/typography.json"
   },
   "files": [
     "src",

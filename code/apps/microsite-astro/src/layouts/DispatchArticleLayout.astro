@@ -1,14 +1,13 @@
 ---
-import fs from 'node:fs'
-import path from 'node:path'
 import type { CollectionEntry } from 'astro:content'
 import type { MarkdownHeading } from 'astro'
 import StackLayout from '@/layouts/StackLayout.astro'
 import BackToDispatch from '@/components/BackToDispatch.astro'
 import { ProvenanceTooltip } from '@/components/ProvenanceTooltip'
 import { ChapterRail } from '@prime-dispatch/ui/custom/ChapterRail'
-import { articleJsonLd, canonicalUrl, cardImageUrl, dispatchCard } from '@/lib/share/share'
+import { articleJsonLd, canonicalUrl, cardImageUrl, dispatchCard, dispatchCover } from '@/lib/share/share'
 import { publicFileExists } from '@/lib/share/public-files'
+import { dispatchNumber, formatDispatchDate } from '@/lib/dispatch'
 
 interface Props {
 	entry: CollectionEntry<'dispatch'>
@@ -17,31 +16,23 @@ interface Props {
 
 const { entry, headings = [] } = Astro.props
 
-// Probe for a per-article AI-generated banner illustration, by dispatch id.
-// public/banners/{entry.id}.{webp,jpg,png} → rendered as a top hero banner.
-// Falls back to a stylized vellum + lane-pigment placeholder when absent —
-// the placeholder is intentional so we can ship the layout now and drop
-// real illustrations in later without code changes.
-const bannerDir = path.join(process.cwd(), 'public', 'banners')
-const bannerName = ['webp', 'jpg', 'png']
-	.map((ext) => `${entry.id}.${ext}`)
-	.find((f) => {
-		try { return fs.existsSync(path.join(bannerDir, f)) } catch { return false }
-	})
-const bannerImage = bannerName ? `/banners/${bannerName}` : undefined
-
 const { data } = entry
+
+// The dispatch's own cover: its contract `hero`, else its banner plate
+// (public/banners/{entry.id}.{webp,jpg,png}) — the one rule its share card
+// and the listings use (src/lib/share, F61), so a declared hero is no longer
+// ignored here while the card honours it. Falls back to a stylized vellum +
+// lane-pigment treatment when it has neither.
+const cover = dispatchCover({ id: entry.id, title: data.title, hero: data.hero }, publicFileExists)
 
 // Filter to h2 headings only — these are the canonical chapter anchors.
 const chapters = headings.filter((h) => h.depth === 2)
 
-const dateLabel = new Intl.DateTimeFormat('en-CA', {
-	year: 'numeric',
-	month: '2-digit',
-	day: '2-digit',
-	timeZone: 'UTC',
-}).format(data.date)
-const volumeLabel = `Vol. 1 · Dispatch ${entry.id.replace(/^dispatch-?/i, '').padStart(2, '0')} · ${dateLabel}`
+// Date and number by the shared rules (src/lib/dispatch, F61) — the same ones
+// the home and the reading room print, so a dispatch reads alike everywhere.
+const dateLabel = formatDispatchDate(data.date)
+const number = dispatchNumber(entry.id)
+const volumeLabel = ['Vol. 1', number && `Dispatch ${number}`, dateLabel].filter(Boolean).join(' · ')
 
 // Lane pigment for the banner placeholder accent.
 const LANE_TINT: Record<string, string> = {
@@ -186,10 +177,10 @@ const shareArticle = {
 				style={`background-color: color-mix(in oklch, ${laneTint} 18%, var(--sky-low));`}
 				aria-label="Article banner illustration"
 			>
-				{bannerImage ? (
+				{cover ? (
 					<img
-						src={bannerImage}
-						alt={`Banner illustration for ${data.title}`}
+						src={cover.src}
+						alt={cover.alt}
 						class="absolute inset-0 h-full w-full object-cover"
 					/>
 				) : (

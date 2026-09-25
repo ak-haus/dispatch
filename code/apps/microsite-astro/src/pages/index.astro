@@ -1,37 +1,35 @@
 ---
 import fs from 'node:fs'
 import path from 'node:path'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import StackLayout from '@/layouts/StackLayout.astro'
 import { EditorialDistrictMapHero } from '@/components/EditorialDistrictMapHero'
 import type { StoryArticle } from '@/components/StoryCardCluster'
-import { SITE_DESCRIPTION } from '@/lib/share/share'
+import { SITE_DESCRIPTION, dispatchCover } from '@/lib/share/share'
+import { publicFileExists } from '@/lib/share/public-files'
+import { dispatchNumber, formatDispatchDate, formatEditionDate, newestFirst } from '@/lib/dispatch'
+import { TYPEFACES } from '@/lib/typefaces'
 
-// Fetch published dispatches, sorted newest first.
+// Fetch published dispatches, newest first — the feed's order (F61: the home
+// sorted by date alone, so which of five same-day dispatches it featured was
+// the collection's enumeration order, and it disagreed with /rss.xml).
 const entries = await getCollection('dispatch')
-entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-
-// Pre-format date server-side so the React island receives a plain string.
-// Date formatting belongs on the server; the island doesn't need the Date object.
-const formatDate = (d: Date) =>
-	new Intl.DateTimeFormat('en-CA', {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
-		timeZone: 'UTC',
-	}).format(d)
+entries.sort(newestFirst)
 
 const mapboxToken = import.meta.env.PUBLIC_MAPBOX_TOKEN ?? ''
 
-// Build-time issue date for the hero masthead strip. Baked into the static
-// HTML so server and client agree at hydration; the hero island refreshes it
-// to the live date after mount (see EditorialDistrictMapHero).
-const heroDateLabel = new Intl.DateTimeFormat('en-US', {
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric',
-	timeZone: 'UTC',
-}).format(new Date())
+// The issue's date for the masthead strip, the cover, the colophon: the
+// newest dispatch's (F61). It used to be the reader's clock, refreshed after
+// mount, which re-dated a months-old issue to "today" on every visit — the
+// same promise of daily publication the next-edition card made in words.
+const editionDateLabel = entries[0] ? formatEditionDate(entries[0].data.date) : undefined
+
+// The featured dispatch's own pull quote — authored in its MDX body as
+// <PullQuote text> and read off its syntax tree at compile time (see
+// src/lib/pull-quote.ts). A dispatch that pulls none shows none.
+const featuredPullQuote = entries[0]
+	? (await render(entries[0])).remarkPluginFrontmatter.pullQuote
+	: undefined
 
 // Probe for a commissioned district-scale cartographic illustration.
 // If public/cartography/district.{webp,jpg,png} exists, it's used as the base
@@ -62,24 +60,30 @@ const depthImage = depthFileName ? `/cartography/${depthFileName}` : undefined
 //   0.428 = procedural map ratio (1200/2800, very tall)
 const districtImageAspect = districtImage ? 0.753 : undefined
 
-const articles: StoryArticle[] = entries.map((entry) => ({
-	id: entry.id,
-	href: `/dispatch/${entry.id}`,
-	data: {
-		title: entry.data.title,
-		kicker: entry.data.kicker,
-		dek: entry.data.dek,
-		readingTime: entry.data.readingTime,
-		dateLabel: formatDate(entry.data.date),
-		provenance: { lane: entry.data.provenance.lane },
-		author: {
-			name: entry.data.author.name,
-			role: entry.data.author.role,
-			handle: entry.data.author.handle,
+const articles: StoryArticle[] = entries.map((entry, i) => {
+	const cover = dispatchCover({ id: entry.id, title: entry.data.title, hero: entry.data.hero }, publicFileExists)
+	return {
+		id: entry.id,
+		href: `/dispatch/${entry.id}`,
+		data: {
+			title: entry.data.title,
+			kicker: entry.data.kicker,
+			dek: entry.data.dek,
+			readingTime: entry.data.readingTime,
+			dateLabel: formatDispatchDate(entry.data.date),
+			number: dispatchNumber(entry.id),
+			cover: cover && { src: cover.src, alt: cover.alt },
+			pullQuote: i === 0 && typeof featuredPullQuote === 'string' ? featuredPullQuote : undefined,
+			provenance: { lane: entry.data.provenance.lane, summary: entry.data.provenance.summary },
+			author: {
+				name: entry.data.author.name,
+				role: entry.data.author.role,
+				handle: entry.data.author.handle,
+			},
+			crossfire: entry.data.crossfire,
 		},
-		crossfire: entry.data.crossfire,
-	},
-}))
+	}
+})
 
 // Crossfire feature article: the newest dispatch with a crossfire block.
 // Decouples from the cover-featured dispatch so a draft (no crossfire yet)
@@ -119,7 +123,8 @@ const crossfireArticle: StoryArticle | undefined = articles.find(
 		articles={articles}
 		crossfireArticle={crossfireArticle}
 		dispatchCount={entries.length}
-		initialDateLabel={heroDateLabel}
+		editionDateLabel={editionDateLabel}
+		typefaces={TYPEFACES}
 		mapboxToken={mapboxToken}
 		backgroundImage={districtImage}
 		depthImage={depthImage}

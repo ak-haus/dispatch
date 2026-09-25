@@ -11,24 +11,17 @@ import { getCollection } from 'astro:content'
 import StackLayout from '@/layouts/StackLayout.astro'
 import BackToDispatch from '@/components/BackToDispatch.astro'
 import { SitemapAtlas, type ArticleEntry } from '@/components/SitemapAtlas'
+import { formatDispatchDate, newestFirst } from '@/lib/dispatch'
 
 const entries = await getCollection('dispatch')
-entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-
-const formatDate = (d: Date) =>
-	new Intl.DateTimeFormat('en-US', {
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric',
-		timeZone: 'UTC',
-	}).format(d)
+entries.sort(newestFirst)
 
 const articles: ArticleEntry[] = entries.map((e) => ({
 	href: `/dispatch/${e.id}`,
 	title: e.data.title,
 	kicker: e.data.kicker,
 	dek: e.data.dek,
-	dateLabel: formatDate(e.data.date),
+	dateLabel: formatDispatchDate(e.data.date),
 	readingTime: e.data.readingTime,
 	lane: e.data.provenance.lane,
 }))

@@ -32,6 +32,7 @@ const ROUTES = [
 	'/dispatch/dispatch-01',
 	'/preview/figure',
 	'/preview/tokens',
+	'/preview/reading-room',
 	'/404',
 ]
 

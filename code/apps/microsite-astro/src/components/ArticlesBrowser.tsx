@@ -81,28 +81,19 @@ const MEDIA_ICONS = {
 	audio: Headphones,
 } as const
 
-/* ── Default media for articles without explicit hero ────────────────────── */
-/* Until the content collection schema gains a `hero.kind` discriminator,
- * synthesize a default heroMedia from the existing /cartography assets so
- * every card actually shows real media instead of a beige placeholder. */
-const DEFAULT_HERO_ROTATION: ArticleListing['hero'][] = [
-	{ kind: 'video', src: '/cartography/district.mp4', poster: '/cartography/district.webp', alt: 'Cartographic motion' },
-	{ kind: 'image', src: '/cartography/district.webp', alt: 'Editorial District' },
-	{ kind: 'image', src: '/banners/dispatch-02.webp', alt: 'Dispatch banner' },
-	/* F61(1) + F65 — there was a fourth entry here,
-	 * `{ kind: 'audio', src: '/cartography/district.mp4' }`: an MP4 presented
-	 * as audio. Zero audio files ship in dist/ (the same search finds 8
-	 * .webp), so the audio card downloaded a 3.86MB video to play audio it
-	 * did not have, beside a hardcoded duration and a synthesised waveform,
-	 * under page copy promising "the real cover media the dispatch was
-	 * published with". A kind with no asset behind it is not a default, it is
-	 * a claim — and this rotation may only name media that exists. */
-]
-
-function resolveHero(article: ArticleListing, index: number): NonNullable<ArticleListing['hero']> {
-	if (article.hero) return article.hero
-	return DEFAULT_HERO_ROTATION[index % DEFAULT_HERO_ROTATION.length]!
-}
+/* ── Covers: the dispatch's own, or none ─────────────────────────────────── */
+/* F61. Cards without a declared `hero` used to be handed one from a rotation
+ * by list position — a video of the district map on some, dispatch-02's
+ * banner on dispatch-04 and dispatch-01 — badged with a media kind and
+ * filterable by it, under copy promising "the real cover media the dispatch
+ * was published with". Every dispatch has a real cover the page never used:
+ * its banner plate, the image its own page and its share card show. The page
+ * now resolves each card's cover by that one rule (src/lib/share,
+ * `dispatchCover`) and passes it in as `hero`. A dispatch with neither gets
+ * no cover and no media claim — only the district plate as plain ground,
+ * which is the page's own substrate, not a cover and never a colored box.
+ * (The fourth rotation entry, an MP4 presented as audio, went at Build 32.) */
+const HOUSE_PLATE = '/cartography/district.webp'
 
 /* ── Main component ──────────────────────────────────────────────────────── */
 
@@ -112,10 +103,10 @@ export function ArticlesBrowser({ articles }: { articles: ArticleListing[] }) {
 	const [sort, setSort] = useState<SortOrder>('date-desc')
 
 	const filtered = useMemo(() => {
-		const enriched = articles.map((a, i) => ({ ...a, _hero: resolveHero(a, i) }))
-		const byLane = laneFilter === 'all' ? enriched : enriched.filter((a) => a.lane === laneFilter)
+		const byLane = laneFilter === 'all' ? articles : articles.filter((a) => a.lane === laneFilter)
+		// A card with no cover has no media kind, so no kind filter selects it.
 		const byMedia =
-			mediaFilter === 'all' ? byLane : byLane.filter((a) => a._hero.kind === mediaFilter)
+			mediaFilter === 'all' ? byLane : byLane.filter((a) => a.hero?.kind === mediaFilter)
 		const sorted = [...byMedia].sort((a, b) => {
 			if (sort === 'date-desc') return b.dateISO.localeCompare(a.dateISO)
 			if (sort === 'date-asc') return a.dateISO.localeCompare(b.dateISO)
@@ -126,9 +117,9 @@ export function ArticlesBrowser({ articles }: { articles: ArticleListing[] }) {
 		return sorted
 	}, [articles, laneFilter, mediaFilter, sort])
 
-	/* Every media kind present across the collection, in canonical order. */
+	/* Every media kind some card's own cover carries, in canonical order. */
 	const mediaOptions = useMemo(() => {
-		const present = new Set(articles.map((a, i) => resolveHero(a, i).kind))
+		const present = new Set(articles.flatMap((a) => (a.hero ? [a.hero.kind] : [])))
 		const ordered: Array<{ value: MediaFilter; label: string }> = [
 			{ value: 'all', label: 'All' },
 			{ value: 'image', label: 'Image' },
@@ -276,12 +267,7 @@ export function ArticlesBrowser({ articles }: { articles: ArticleListing[] }) {
 							>
 								<AnimatePresence mode="popLayout">
 									{filtered.map((article, i) => (
-										<ArticleCard
-											key={article.id}
-											article={article}
-											hero={resolveHero(article, i)}
-											index={i}
-										/>
+										<ArticleCard key={article.id} article={article} hero={article.hero} index={i} />
 									))}
 								</AnimatePresence>
 							</motion.ol>
@@ -370,10 +356,11 @@ function ArticleCard({
 	index,
 }: {
 	article: ArticleListing
-	hero: NonNullable<ArticleListing['hero']>
+	/** The dispatch's own cover, or `undefined` when it has none. */
+	hero: ArticleListing['hero']
 	index: number
 }) {
-	const MediaIcon = MEDIA_ICONS[hero.kind]
+	const MediaIcon = hero ? MEDIA_ICONS[hero.kind] : null
 	const laneColor = LANE_COLORS[article.lane]
 	const laneLabelColor = LANE_LABEL_COLORS[article.lane]
 
@@ -391,9 +378,12 @@ function ArticleCard({
 				href={article.href}
 				className="flex h-full flex-col overflow-hidden rounded-[3px] border border-body-strong/15 bg-window-warm/30 outline-none transition-all duration-300 hover:-translate-y-1 hover:border-body-strong/30 hover:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.30),0_8px_16px_-8px_rgba(0,0,0,0.12)] focus-visible:ring-2 focus-visible:ring-accent-prime focus-visible:ring-offset-2 focus-visible:ring-offset-sky-low"
 			>
-				{/* Cover media — real player */}
+				{/* Cover media — the dispatch's own, in a real player; or, with
+				    no cover, the district plate as ground and no media claim. */}
 				<div className="relative aspect-[16/10] overflow-hidden">
-					{hero.kind === 'video' ? (
+					{!hero ? (
+						<HoverImage src={HOUSE_PLATE} alt="" />
+					) : hero.kind === 'video' ? (
 						<HoverVideo src={hero.src} poster={hero.poster} alt={hero.alt} />
 					) : hero.kind === 'audio' ? (
 						<MiniWaveform src={hero.src} />
@@ -401,13 +391,15 @@ function ArticleCard({
 						<HoverImage src={hero.src} alt={hero.alt ?? ''} />
 					)}
 
-					{/* Media kind badge */}
-					<span
-						className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-[2px] border border-white/22 bg-black/45 px-2 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.26em] text-white/90 backdrop-blur-sm"
-					>
-						<MediaIcon className="size-3" strokeWidth={2.2} />
-						{hero.kind}
-					</span>
+					{/* Media kind badge — only for a cover that has a kind */}
+					{hero && MediaIcon && (
+						<span
+							className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-[2px] border border-white/22 bg-black/45 px-2 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.26em] text-white/90 backdrop-blur-sm"
+						>
+							<MediaIcon className="size-3" strokeWidth={2.2} />
+							{hero.kind}
+						</span>
+					)}
 
 					{/* Lane pigment notch — bottom-left corner */}
 					<span
@@ -483,9 +475,13 @@ function ArticleCard({
 function HoverImage({ src, alt }: { src: string; alt: string }) {
 	return (
 		<div className="absolute inset-0 overflow-hidden">
+			{/* Lazy: the grid sits below the hero band, and each card now
+			    carries its own full plate rather than one shared image (F61). */}
 			<img
 				src={src}
 				alt={alt}
+				loading="lazy"
+				decoding="async"
 				className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
 				draggable={false}
 			/>

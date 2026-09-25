@@ -6,6 +6,8 @@ import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { canonicalUrl } from './src/lib/share/share.ts'
+import { satteri } from '@astrojs/markdown-satteri'
+import { pullQuotePlugin } from './src/lib/pull-quote.ts'
 
 const SITE = 'https://dispatchmag.dev'
 
@@ -146,6 +148,11 @@ export default defineConfig({
 		},
 	},
 	markdown: {
+		// Astro 7's default processor, with one read-only plugin (F61): it exposes
+		// each dispatch's authored <PullQuote text> as
+		// remarkPluginFrontmatter.pullQuote, so the home quotes the featured
+		// dispatch instead of a literal. MDX inherits this processor.
+		processor: satteri({ mdastPlugins: [pullQuotePlugin] }),
 		shikiConfig: {
 			themes: {
 				light: 'github-light',
