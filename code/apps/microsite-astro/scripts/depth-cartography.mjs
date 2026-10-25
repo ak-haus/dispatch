@@ -50,7 +50,7 @@ const token = process.env.REPLICATE_TOKEN || process.env.REPLICATE_API_TOKEN
 if (!token) {
 	console.error(
 		'✗ REPLICATE_TOKEN not set.\n' +
-			'  Doppler is already configured (doppler.yaml present).\n' +
+			'  Scope Doppler once per machine: run `doppler setup` in this directory (the scope lives in ~/.doppler, not the repo).\n' +
 			'  Run via the wrapper: pnpm cartography:depth (uses `doppler run`)\n' +
 			'  Or inject manually: doppler run -- node scripts/depth-cartography.mjs',
 	)
