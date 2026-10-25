@@ -57,8 +57,21 @@ export function fontlessRuns(lhrs) {
 		.filter(({ faces }) => faces.length === 0 || faces.some((face) => face.status !== 200))
 }
 
+/**
+ * The LCP element's node. Lighthouse 13 reports it inside the LCP breakdown
+ * insight, as the list's node item; 12.x had a dedicated audit. Both are
+ * read, so a saved 12.x report still prints its element.
+ */
+export function lcpNode(lhr) {
+	const insightItems = lhr.audits?.['lcp-breakdown-insight']?.details?.items ?? []
+	return (
+		insightItems.find((item) => item.type === 'node') ??
+		lhr.audits?.['largest-contentful-paint-element']?.details?.items?.[0]?.items?.[0]?.node
+	)
+}
+
 function lcpElement(lhr) {
-	const node = lhr.audits?.['largest-contentful-paint-element']?.details?.items?.[0]?.items?.[0]?.node
+	const node = lcpNode(lhr)
 	if (!node) return '—'
 	const tag = node.snippet?.match(/^<([a-z0-9-]+)/i)?.[1] ?? '?'
 	// An image names itself by its source; text by its opening words.
