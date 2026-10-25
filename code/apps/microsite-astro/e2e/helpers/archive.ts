@@ -25,7 +25,7 @@
  *   - genuinely live regions (40 nodes) — wire timestamps, freshness lines,
  *     and infinite decorative pulses that by definition never come to rest.
  *
- * THE LAW, in three parts, all owned here:
+ * THE LAW, in four parts, all owned here:
  *   1. auto-archiving is OFF (playwright.config.ts `disableAutoSnapshot`);
  *      an archive exists only where a test asked for one, by name.
  *   2. an archive is taken only after the page is at REST — settleMotion
@@ -35,6 +35,19 @@
  *   3. regions that never rest are DECLARED in the markup, not chased:
  *      `data-live` excludes them from the probe here and from Chromatic's
  *      diff via `ignoreSelectors` in the config. One attribute, both uses.
+ *   4. a declared region's BOX is archived at rest, even though its content
+ *      is not. Chromatic ignores the pixels inside an ignored element's
+ *      bounding box, but it still reports a change when that box moves or
+ *      resizes (Chromatic docs, "Ignore elements": dimension changes of an
+ *      ignored element still trigger diffs). Two live regions are their own
+ *      moving parts: the cover's scroll pulse (Motion, translateY) and the
+ *      build-ticker marquee (GSAP, translate3d). Each capture froze them at a
+ *      different phase, so a commit that changed no code drew one to two
+ *      home-cover changes (F49, measured 2026-10-24 on the published archives
+ *      of main and the checkpoint PRs #71 and #82). LIVE_REGION_STILL_CSS
+ *      pins every declared region at its untransformed position for the
+ *      capture, the stylesheet-at-capture pattern Playwright documents for
+ *      repeatable screenshots (`stylePath`).
  */
 
 import { takeSnapshot } from '@chromatic-com/playwright'
@@ -45,6 +58,17 @@ import { settleMotion } from './axe'
  *  selector — the rest probe below and `ignoreSelectors` in
  *  playwright.config.ts — must name the same thing, so it is defined once. */
 export const LIVE_REGION_SELECTOR = '[data-live]'
+
+/** Law part 4. An author `!important` rule outranks the inline transform that
+ *  GSAP and Motion keep writing each frame, so the pin holds through the
+ *  capture without pausing either library. It is injected only by
+ *  archiveSnapshot(), so no assertion and no other lane ever sees it. */
+export const LIVE_REGION_STILL_CSS = `${LIVE_REGION_SELECTOR} {
+	transform: none !important;
+	translate: none !important;
+	rotate: none !important;
+	scale: none !important;
+}`
 
 /** Frames the probe will wait for rest (≈5s at 60fps) and how many
  *  consecutive identical samples count as settled. Five frames rather than
@@ -124,6 +148,7 @@ async function elementsStillMoving(page: Page): Promise<string[]> {
  */
 export async function archiveSnapshot(page: Page, name: string, testInfo: TestInfo): Promise<void> {
 	await settleForArchive(page)
+	await page.addStyleTag({ content: LIVE_REGION_STILL_CSS })
 	await takeSnapshot(page, name, testInfo)
 }
 

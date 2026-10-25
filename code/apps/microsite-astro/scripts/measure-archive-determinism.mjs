@@ -20,6 +20,14 @@
  * so they cost nothing; anything OUTSIDE one is a change AK would be asked to
  * review on a commit that changed nothing. That number must be zero.
  *
+ * "Inside costs nothing" holds only while each region's own box stays put:
+ * Chromatic still reports a change when an ignored element moves or resizes.
+ * The pulse and marquee regions used to be their own moving parts, so their
+ * differing inline transforms counted as inside here while Chromatic counted
+ * them (F49). archiveSnapshot() now pins every region's transform for the
+ * capture (law part 4 in e2e/helpers/archive.ts); the inline values still
+ * differ in the DOM, but they no longer render.
+ *
  * Measured on this repo, 2026-08-19:
  *   before — 39 snapshots archived, 21 differed, all outside data-live;
  *   after  —  6 snapshots archived,  3 differed, every differing node inside

@@ -28,17 +28,28 @@ export interface FixtureFeed {
 	entries: FixtureEntry[]
 }
 
-/** Entry timestamps are generated relative to now so relative-time rendering
- *  ("just now", "N min ago") stays deterministic at any wall-clock. */
+/** The stub's pinned clock for any page the archive lane captures (F49).
+ *  /wire prints each entry's day as a plain-text heading (WirePage.tsx,
+ *  `dayLabel`), outside every data-live region, so an archive stamped from
+ *  the wall clock read a new date on every day it ran and drew a Chromatic
+ *  change on commits that changed no code. Noon UTC keeps a 90-minute-old
+ *  entry on the same day. It is weeks in the past, so the cards print the
+ *  absolute form ("Sep 1, 2026"), which no later run can change. */
+export const ARCHIVE_EPOCH = Date.parse('2026-09-01T12:00:00Z')
+
+/** Entry timestamps are generated relative to `now` (the wall clock unless a
+ *  test pins it) so relative-time rendering ("just now", "N min ago") stays
+ *  deterministic at any wall-clock. A test that archives passes ARCHIVE_EPOCH. */
 export function makeEntry(
 	n: number,
 	minutesAgo: number,
 	platform = 'devto',
 	title = `E2E fixture publish ${n}`,
+	now = Date.now(),
 ): FixtureEntry {
 	return {
 		id: `e2e-fixture-${n}`,
-		ts: new Date(Date.now() - minutesAgo * 60_000).toISOString(),
+		ts: new Date(now - minutesAgo * 60_000).toISOString(),
 		platform,
 		kind: 'publish',
 		title,
