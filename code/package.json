@@ -36,7 +36,12 @@
       "ws": "^8.20.1",
       "fast-uri": "^3.1.6",
       "svgo": "^4.1.0",
-      "js-yaml@^4": "^4.3.2"
+      "js-yaml@^4": "^4.3.2",
+      "@chromatic-com/playwright>storybook": "^10.6.2",
+      "@lhci/cli>uuid": "^11.1.1",
+      "@lhci/cli>tmp": "^0.2.6",
+      "external-editor>tmp": "^0.2.6",
+      "get-uri>basic-ftp": "^6.2.1"
     }
   }
 }

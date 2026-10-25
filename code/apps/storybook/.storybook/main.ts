@@ -2,7 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import type { StorybookConfig } from "@storybook/react-vite";
 
 /**
- * Prime DISpatch Storybook 9 — main config.
+ * Prime DISpatch Storybook 10 — main config.
  *
  * Indexes @prime-dispatch/ui component library across workspace boundary. Story files co-locate
  * with components inside packages/ui/src/components/<layer>/<Name>/<Name>.stories.tsx per

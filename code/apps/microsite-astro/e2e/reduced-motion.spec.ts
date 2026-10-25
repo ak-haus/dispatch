@@ -211,10 +211,32 @@ test('F55(2) control — the deck DOES pin and flip without reduce', async ({ pa
  * only where one is declared — and no dispatch declares one yet. */
 const VIDEO_CARDS = '/preview/reading-room'
 
+/* Both pins count the component's calls to HTMLMediaElement.play() rather
+ * than asking whether the media decoded. Decoding depends on the host: the
+ * pinned image's Chromium on arm64 (any Apple-silicon Mac) reports no H.264
+ * support, so a decode-based control failed there while its reduce twin passed
+ * for the wrong reason. Whether hover calls play() is the gate under test. */
+type PlaySpy = { __playCalls?: number }
+
+async function spyOnPlay(page: Page): Promise<void> {
+	await page.addInitScript(() => {
+		const original = HTMLMediaElement.prototype.play
+		;(window as PlaySpy).__playCalls = 0
+		HTMLMediaElement.prototype.play = function (this: HTMLMediaElement) {
+			;(window as PlaySpy).__playCalls = ((window as PlaySpy).__playCalls ?? 0) + 1
+			return original.call(this)
+		}
+	})
+}
+
+const playCalls = (page: Page) => page.evaluate(() => (window as PlaySpy).__playCalls)
+
 test.describe('F55(4) — hover video under reduce', () => {
 	test('hovering a card does not start playback', async ({ page }) => {
+		await spyOnPlay(page)
 		await gotoReduced(page, VIDEO_CARDS)
 		await page.waitForTimeout(1500)
+		expect(await playCalls(page), 'the play() spy must be installed').toBe(0)
 		const videos = page.locator('video')
 		const n = await videos.count()
 		expect(n).toBeGreaterThan(0) // cannot pass vacuously
@@ -225,15 +247,18 @@ test.describe('F55(4) — hover video under reduce', () => {
 			await page.waitForTimeout(600)
 			expect(await v.evaluate((el: HTMLVideoElement) => el.paused)).toBe(true)
 		}
+		expect(await playCalls(page), 'hover must not call play() under reduce').toBe(0)
 	})
 })
 
 test('F55(4) control — hover DOES start playback without reduce', async ({ page }) => {
+	await spyOnPlay(page)
 	await page.goto(VIDEO_CARDS)
 	await page.waitForTimeout(1500)
+	expect(await playCalls(page), 'the play() spy must be installed').toBe(0)
 	const v = page.locator('video').first()
 	await v.scrollIntoViewIfNeeded()
 	await v.hover({ force: true })
 	await page.waitForTimeout(600)
-	expect(await v.evaluate((el: HTMLVideoElement) => el.paused)).toBe(false)
+	expect(await playCalls(page), 'hover must call play() when motion is allowed').toBeGreaterThan(0)
 })
