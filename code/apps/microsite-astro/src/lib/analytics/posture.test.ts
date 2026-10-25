@@ -43,6 +43,13 @@ describe('the no-consent-banner posture', () => {
 		expect(POSTHOG_POSTURE.disable_surveys).toBe(true)
 	})
 
+	it('never loads the product-tours extension', () => {
+		// Unset, a PostHog dashboard setting decides whether readers' browsers
+		// fetch and run the tours script. The site runs no tours, so the code
+		// decides instead.
+		expect(POSTHOG_POSTURE.disable_product_tours).toBe(true)
+	})
+
 	it('captures editorial events only — never autocapture', () => {
 		// Autocapture is an unbounded click stream: it answers no editorial
 		// question and would burn the 1M/mo free tier.
