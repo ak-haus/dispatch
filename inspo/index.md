@@ -7,7 +7,7 @@ authority: builder
 status: active
 load_bearing: false
 generated: true
-last_amended: 2026-05-18
+last_amended: 2026-10-25
 ---
 
 # INSPO index
@@ -19,7 +19,7 @@ last_amended: 2026-05-18
 - [Design md sites](Design md sites/index.md) — (Design md sites folder; no README yet)
 - [Editorial](Editorial/index.md) — (Editorial folder; no README yet)
 - [midjourney_session](midjourney_session/index.md) — (midjourney_session folder; no README yet)
-- [README](tldraw-inspo/README.md) *(active)* — (tldraw-inspo folder)
+- [tldraw's Vite template](https://github.com/tldraw/vite-template) — upstream, MIT; linked here rather than copied into this repo
 - [UI-UX](UI-UX/index.md) — (UI-UX folder; no README yet)
 - [DISpatch Claude Prompt Stack](dispatch-claude-prompt-stack.md) *(active)* — (dispatch-claude-prompt-stack.md)
 - [DISpatch — Typography & Color Tokens](dispatch-design-tokens.md) *(active)* — (dispatch-design-tokens.md)
