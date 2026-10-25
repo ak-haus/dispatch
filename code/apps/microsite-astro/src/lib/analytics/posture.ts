@@ -55,6 +55,11 @@ export const POSTHOG_UI_HOST = 'https://eu.posthog.com'
  *   per register §9 (incompatible with the no-banner posture, and it is
  *   app-friction tooling rather than editorial). Surveys are an on-page
  *   intrusion the design does not admit.
+ * - `disable_product_tours` — tours are the same on-page intrusion, and the
+ *   switch matters more than its absence would suggest: posthog-js fetches
+ *   the tours extension script whenever the project's remote config enables
+ *   tours, so leaving it unset hands that decision to a dashboard setting.
+ *   Off in code, the script is never requested.
  */
 export const POSTHOG_POSTURE = Object.freeze({
 	api_host: POSTHOG_API_HOST,
@@ -70,6 +75,7 @@ export const POSTHOG_POSTURE = Object.freeze({
 	capture_pageleave: false,
 	disable_session_recording: true,
 	disable_surveys: true,
+	disable_product_tours: true,
 } as const)
 
 /**
