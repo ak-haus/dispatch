@@ -1,6 +1,6 @@
 # Dispatch — provenance record
 
-> **Status: LIVE** at **https://dispatchmag.dev** (Vercel; manual-CLI deploys). This file is the repo's
+> **Status: LIVE** at **https://dispatchmag.dev** (Vercel; built from `main` by the Vercel GitHub App since 2026-08-20). This file is the repo's
 > provenance record. Operational history — incidents, infrastructure snapshots, power-state ledgers —
 > lives in the private ops archive, not in the product repo.
 

@@ -1,8 +1,8 @@
 # AGENTS.md — Dispatch (the agent's map; read this first)
 
-> The vendor-neutral instruction file for any AI agent in this repo (Claude reads it via `@AGENTS.md` in
+> The vendor-neutral instruction file for any AI agent in this repo (Claude reads it via `@../AGENTS.md` in
 > `.claude/CLAUDE.md`, which also carries the full **editorial discipline**). Terse + TRUE — a MAP, not a manual.
-> Dispatch is an **editorial Astro/Next scrollytelling microsite** that showcases Prime, **live at dispatchmag.dev**.
+> Dispatch is an **editorial Astro scrollytelling microsite** that showcases Prime, **live at dispatchmag.dev**.
 > The founding **master plan** is historical (purged with Prime V1, 2026-06-10 — in the private `ak-haus/prime-city`
 > history); current governance lives in THIS repo's canon (`representation/`, `specs/`, this file). The repo
 > remains a Lane-P tenant of Prime.
@@ -41,8 +41,8 @@ are still the way to force one.
   and his own gate sign-offs (Chromatic dispositions, D1).
 
 ## Commands (the real ones — pnpm monorepo; run from `code/` unless noted)
-- Dev (the LIVE Astro surface): `cd code/apps/microsite-astro && pnpm dev` (`:4321`) · Next dashboard: `cd code && pnpm dev:next`.
-- Build: `cd code && pnpm build` (or `build:astro` / `build:next`). Type-check: `cd code && pnpm typecheck`.
+- Dev (the LIVE Astro surface): `cd code/apps/microsite-astro && pnpm dev` (`:4321`).
+- Build: `cd code && pnpm build` (or `build:astro` / `build:storybook`). Type-check: `cd code && pnpm typecheck`.
 - Tokens (Style Dictionary): `cd code/packages/tokens && pnpm build`. Content collections: `pnpm astro sync`.
 - After CSS / `@theme inline` edits: `rm -rf .astro node_modules/.vite` then restart `pnpm dev` (Tailwind v4 caches inlined values).
 - E2E: `pnpm --filter microsite-astro test:e2e` runs **inside the pinned Playwright Linux container** on every host
