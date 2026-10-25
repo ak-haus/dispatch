@@ -1,8 +1,8 @@
 # CLAUDE.md — Dispatch (Claude's lens; the shared map is `AGENTS.md`)
 
-@AGENTS.md
+@../AGENTS.md
 
-> `@AGENTS.md` pulls in the vendor-neutral map (the boundary, commands, layout). Below is the **editorial
+> `@../AGENTS.md` pulls in the vendor-neutral map (the boundary, commands, layout). Below is the **editorial
 > discipline** — the non-inferable house rules for this JS-first scrollytelling microsite. Shared PAI doctrine lives
 > in `~/.claude/CLAUDE.md`. **Read `DESIGN.md` (repo root) before generating or editing any UI** — it is the
 > generated brand contract (ADR-0003 §Stage 7), drift-gated in CI. The visual canon behind it is

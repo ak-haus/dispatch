@@ -1,8 +1,8 @@
 # AGENTS.md — Dispatch (the agent's map; read this first)
 
-> The vendor-neutral instruction file for any AI agent in this repo (Claude reads it via `@AGENTS.md` in
+> The vendor-neutral instruction file for any AI agent in this repo (Claude reads it via `@../AGENTS.md` in
 > `.claude/CLAUDE.md`, which also carries the full **editorial discipline**). Terse + TRUE — a MAP, not a manual.
-> Dispatch is an **editorial Astro/Next scrollytelling microsite** that showcases Prime, **live at dispatchmag.dev**.
+> Dispatch is an **editorial Astro scrollytelling microsite** that showcases Prime, **live at dispatchmag.dev**.
 > The founding **master plan** is historical (purged with Prime V1, 2026-06-10 — in the private `ak-haus/prime-city`
 > history); current governance lives in THIS repo's canon (`representation/`, `specs/`, this file). The repo
 > remains a Lane-P tenant of Prime.
@@ -22,7 +22,7 @@ are still the way to force one.
   PRs get no secrets, so their font steps fail loudly. The source (`scripts/fetch-fonts.mjs`) is deliberately **not**
   `dispatchmag.dev`: sourcing fonts from production was circular the moment production started being built from git, and
   it shipped a fallback-font wordmark to prod on 2026-08-20 before anyone noticed. Never point it back at the site.
-- **NEVER:** commit secrets (Doppler `prime-city`); ship a **placeholder** (a colored rectangle / registration marks)
+- **NEVER:** commit secrets (they live in Doppler); ship a **placeholder** (a colored rectangle / registration marks)
   on launch-ready code — real assets live in `code/apps/microsite-astro/public/`; animate **layout** properties
   (`width`/`height`/`top`/`left`/`margin`/`padding`) — use `transform`+`opacity`; resurrect the dead V1 rails
   (superseded 2026-08-17 by the standalone Crossfire product; their records live in the private ops archive).
@@ -44,8 +44,8 @@ are still the way to force one.
   and his own gate sign-offs (Chromatic dispositions, D1).
 
 ## Commands (the real ones — pnpm monorepo; run from `code/` unless noted)
-- Dev (the LIVE Astro surface): `cd code/apps/microsite-astro && pnpm dev` (`:4321`) · Next dashboard: `cd code && pnpm dev:next`.
-- Build: `cd code && pnpm build` (or `build:astro` / `build:next`). Type-check: `cd code && pnpm typecheck`.
+- Dev (the LIVE Astro surface): `cd code/apps/microsite-astro && pnpm dev` (`:4321`).
+- Build: `cd code && pnpm build` (or `build:astro` / `build:storybook`). Type-check: `cd code && pnpm typecheck`.
 - Tokens (Style Dictionary): `cd code/packages/tokens && pnpm build`. Content collections: `pnpm astro sync`.
 - After CSS / `@theme inline` edits: `rm -rf .astro node_modules/.vite` then restart `pnpm dev` (Tailwind v4 caches inlined values).
 - E2E: `pnpm --filter microsite-astro test:e2e` runs **inside the pinned Playwright Linux container** on every host
@@ -80,11 +80,10 @@ are still the way to force one.
   it is worth: measured at the Build 27 close, every one of the 48 flags had a row while the header read
   `47 / 33 / 14` against an actual `48 / 31 / 17`. The rows do not drift — the tally does. The in-repo ledger with
   the board as its presentation layer remains the real repair, and stays a Phase B row.
-- **Checkpoint reports land by auto-merge** (F35, AK 2026-09-19). The Mon/Thu routine never pushes to `main`. It
-  opens a PR from `checkpoint/YYYY-MM-DD`, and `checkpoint-automerge.yml` enables GitHub auto-merge only when the
-  whole diff is one new `lifecycle/checkpoints/YYYY-MM-DD-checkpoint.md`. The fifteen contexts still gate the merge,
-  and merged head branches delete themselves. Name any human checkpoint record something else (for example
-  `-sweep-landing.md` or `-ledger.md`), so it can never collide with the routine's filename.
+- **Records live in the private ops repo** (`ak-haus/dispatch-ops`, `lifecycle/checkpoints/`; design A1, AK
+  2026-10-24). The Mon/Thu checkpoint routine audits this repo read-only and lands its one report there by
+  auto-merge (F35). A build session opens its close record as a PR there and names the flag IDs in its PR here
+  (F25). This repo carries no records; their history up to 2026-10-24 stays in its git history.
 
 ## Authoring a dispatch (ADR-0003 §Stage 8 — there is no CMS)
 **AK OWNS CONTENT.** An agent may *draft*; AK signs off. Creating or editing any `.mdx` is an ASK-FIRST action, and

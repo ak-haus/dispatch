@@ -14,10 +14,48 @@ on: [push, pull_request]
 # storybook build errors on the unresolvable import, and the vitest browser
 # rail dies at the setup-module fetch (the 2026-08-19 "Failed to fetch
 # dynamically imported module" rounds were exactly this, not upstream flake).
+#
+# The gate runs INSIDE the pinned Playwright container, the image e2e.yml
+# uses (F24), because the image ships Chromium and every system library it
+# needs. The runner used to fetch those libraries from Ubuntu's apt mirror on
+# every run (`playwright install-deps`). On 2026-10-22 that mirror crawled
+# through the font packages, the step hit its 10-minute timeout, and this
+# required context failed on a checkpoint PR (#82) that changed no code,
+# before a single story had run. That was the F15 CDN-stall class moved from
+# Playwright's CDN to apt. The fix Playwright documents is the container:
+# there is now no download left in this job to stall.
 jobs:
-  storybook:
-    name: storybook (stories + a11y gate)
+  playwright-image:
+    # Same derivation as e2e.yml: the image tag is a function of the
+    # exact-pinned @playwright/test (F24), never typed into this file.
+    name: derive the pinned Playwright image
     runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.derive.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: derive
+        # Two statements, not `echo "$(…)"`: a command substitution's failure
+        # inside an argument is discarded under bash -e, which would green
+        # this gate on the exact drift it exists to catch.
+        run: |
+          image="$(node code/apps/microsite-astro/scripts/playwright-container-image.mjs)"
+          [ -n "$image" ]
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
+  storybook:
+    # NOTE: this display name is a ruleset-REQUIRED check context (21012416).
+    name: storybook (stories + a11y gate)
+    # !cancelled(), as in e2e.yml: GitHub reports a skipped job as a success,
+    # so a skipped required check would pass. If the derive job fails, this
+    # runs with no container, and the parity step below reds it.
+    if: ${{ !cancelled() }}
+    needs: playwright-image
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.playwright-image.outputs.image }}
+      # Chromium wants more shared memory than a job container's 64MB default.
+      options: --ipc=host
     defaults:
       run:
         working-directory: code
@@ -43,37 +81,25 @@ jobs:
         env:
           BLOB_FONTS_READ_WRITE_TOKEN: ${{ secrets.BLOB_FONTS_READ_WRITE_TOKEN }}
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
-      # Playwright browsers are CACHED, not re-downloaded every run. The
-      # `playwright install` step hits Playwright's CDN, and that CDN stalls:
-      # three occurrences on record (23min on dispatch#16, 78min at the fonts
-      # build, 3h39m on the S4 e2e lane 2026-08-19) where the step hung with
-      # no output and no timeout, so the only remedy was a human noticing and
-      # cancelling. A cache hit removes the download entirely.
-      #
-      # Keyed on the RESOLVED Playwright version, not the lockfile hash: the
-      # browser build a release pins is what the cache holds, so an unrelated
-      # dependency bump must not evict it.
-      #
-      # `install-deps` still runs on a hit — the browser binaries live in
-      # ~/.cache/ms-playwright and are cached, but the OS-level libraries
-      # `--with-deps` installs come from apt and are not.
-      - name: resolve the pinned Playwright version
-        id: playwright-version
-        run: echo "version=$(pnpm --filter storybook exec node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: restore the Playwright browser cache
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-      - name: install chromium (cache miss only) for the vitest browser rail
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        timeout-minutes: 10
-        run: pnpm --filter storybook exec playwright install chromium --with-deps
-      - name: system libraries for the cached chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        timeout-minutes: 10
-        run: pnpm --filter storybook exec playwright install-deps chromium
+      # The image's Chromium belongs to ONE Playwright release, the e2e pin.
+      # The vitest browser rail launches it through the storybook app's own
+      # `playwright`, a caret range the lockfile resolves, so the two can drift
+      # apart on a lockfile bump while the image still matches the pin. Assert
+      # they agree, inside the required context, so drift reds this gate with a
+      # reason instead of a missing-executable error (or, with no container at
+      # all, a host with no browser).
+      - name: F24 parity — the rail's playwright is the image's release
+        run: |
+          pinned="$(node -p "require('./apps/microsite-astro/package.json').devDependencies['@playwright/test']")"
+          resolved="$(pnpm --filter storybook exec node -p "require('playwright/package.json').version")"
+          if [ "$pinned" != "$resolved" ]; then
+            echo "::error title=Playwright drift::storybook resolves playwright $resolved but the container image is pinned to $pinned (apps/microsite-astro @playwright/test). Align the two."
+            exit 1
+          fi
+          if [ ! -d /ms-playwright ]; then
+            echo "::error title=No Playwright image::this job is not running inside the pinned Playwright container (derive job failed?)"
+            exit 1
+          fi
       - name: story tests — every story renders + a11y green (addon-vitest)
         run: pnpm --fail-if-no-match --filter storybook test
       - name: isolation canary — a single story file must pass ALONE

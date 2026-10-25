@@ -7,7 +7,7 @@
  * which must be an exact pin: with a caret range the resolved version and the
  * image tag drift apart independently, and the container then makes local
  * signal *differently* wrong rather than right (the F24 precision, recorded
- * at lifecycle/checkpoints/2026-08-22-phase-b-promotion.md). So a range is a
+ * in the private ops repo at lifecycle/checkpoints/2026-08-22-phase-b-promotion.md). So a range is a
  * hard failure here, not a warning — this script is the drift gate.
  *
  * Consumers: scripts/run-e2e.mjs (the test:e2e dispatcher) and the

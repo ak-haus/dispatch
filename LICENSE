@@ -1,0 +1,19 @@
+Copyright (c) 2026 AK ALMoumen. All rights reserved.
+
+This repository is public so that it can be read. No licence is granted to copy,
+modify, distribute or create derivative works from its contents, beyond the
+viewing and forking that the GitHub Terms of Service allow for any public
+repository.
+
+Third-party material keeps its own terms and is not covered by this notice:
+
+- The open-licence fonts in code/apps/microsite-astro/public/fonts/ and
+  representation/visual-system/typography/subsets/ are under the SIL Open Font
+  License 1.1. Their licence texts are in
+  representation/visual-system/typography/licenses/.
+- Design inspiration in inspo/ belongs to its respective owners, under their
+  terms (for example inspo/tldraw-inspo/LICENSE.md).
+- Dependencies installed by the package manager are under their own licences.
+
+The commercial typefaces used on the live site are licensed separately and are
+not part of this repository.

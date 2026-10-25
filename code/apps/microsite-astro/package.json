@@ -23,8 +23,8 @@
     "commits:generate": "node scripts/generate-commits.mjs",
     "wire:snapshot": "node scripts/generate-wire-snapshot.mjs",
     "cartography:segment": "node scripts/segment-cartography.mjs",
-    "cartography:segment:sam": "doppler run --project prime-city --config dev -- node scripts/segment-sam.mjs",
-    "cartography:depth": "doppler run --project prime-city --config dev -- node scripts/depth-cartography.mjs"
+    "cartography:segment:sam": "doppler run -- node scripts/segment-sam.mjs",
+    "cartography:depth": "doppler run -- node scripts/depth-cartography.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.1",
@@ -55,7 +55,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "scrollama": "^3.2.0",
-    "sharp": "^0.35.4",
+    "sharp": "^0.35.5",
     "shiki": "^4.4.3",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
@@ -64,7 +64,7 @@
     "vega-embed": "^7.1.0",
     "vega-lite": "^6.4.3",
     "wavesurfer.js": "^7.12.11",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.118.0",

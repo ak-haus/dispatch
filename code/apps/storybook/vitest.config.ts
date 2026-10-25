@@ -6,8 +6,9 @@
  *
  * Version alignment verified at wiring time (the ADR's stated precondition):
  * Vitest 3.2.7 (≥3) + Playwright Chromium (repo standard since Build 1).
- * Runs headless Chromium via Vitest browser mode; CI installs the browser
- * with `pnpm exec playwright install chromium --with-deps`.
+ * Runs headless Chromium via Vitest browser mode; CI runs it inside the
+ * pinned Playwright container, which ships the browser and its system
+ * libraries (.github/workflows/storybook.yml).
  */
 import path from "node:path";
 import { defineConfig } from "vitest/config";

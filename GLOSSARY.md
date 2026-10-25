@@ -6,7 +6,7 @@
 ## Surfaces
 - **microsite-astro** — the **LIVE** editorial surface (Astro 7, Server Islands + Content Layer); shipped to
   dispatchmag.dev. `code/apps/microsite-astro`.
-- **microsite-next** — the former Next 15 dashboard scaffold, never deployed. **Removed 2026-09-19** by AK's ruling (B5, Build 23); record `lifecycle/checkpoints/2026-09-19-b5-dead-weight.md`.
+- **microsite-next** — the former Next 15 dashboard scaffold, never deployed. **Removed 2026-09-19** by AK's ruling (B5, Build 23); record `lifecycle/checkpoints/2026-09-19-b5-dead-weight.md` in the private ops repo.
 - **hybrid foundation** — the founding plan's Astro + Next co-foundation. **Superseded 2026-09-19** when microsite-next was removed (B5); Dispatch runs on Astro alone.
 - **cross-fire** — the former V1 in-repo voice-ingest backend. **Superseded 2026-08-17** by the standalone Crossfire
   product; records in the private ops archive. Do not resurrect.

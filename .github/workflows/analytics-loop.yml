@@ -16,9 +16,9 @@ on:
 # a weekly question, and the answer is AK's. `issues: write` is the only
 # permission it holds: it can propose, and it cannot change the design.
 #
-# COST: $0. Plain HogQL through the Query API; PostHog's AI-powered tools bill
-# as PostHog AI spend and are never called (ADR §Cost ceilings — anything over
-# $10/mo returns to AK as a decision).
+# COST: plain HogQL through the Query API only. PostHog's AI-powered tools bill
+# per use and are never called; anything that would bill returns to AK as a
+# decision (the cost ceilings live in the private ops repo).
 permissions:
   contents: read
   issues: write
