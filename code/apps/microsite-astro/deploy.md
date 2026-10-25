@@ -23,9 +23,11 @@ root; the microsite is one workspace member.
 ## Setup (current truth)
 
 0. Fonts: the two licensed Pangram Pangram webfonts are NOT in the repo
-   (per-style EULA — private asset rail since the B14 public cut). Before the
-   first local build: `pnpm fetch:fonts` (hydrates `public/fonts/` from
-   production; canonical copies live in the private ops archive).
+   (Web licences only; the EULA bars public storage). Before the first local
+   build: `doppler run -- pnpm fetch:fonts`, which hydrates `public/fonts/`
+   from the private Vercel Blob store `dispatch-fonts` with
+   `BLOB_FONTS_READ_WRITE_TOKEN`. Vercel builds read the same store with their
+   own OIDC token. The backup copy lives in the private ops archive.
 
 1. Vercel project: **dispatch** (project + team IDs live in the Vercel
    dashboard and the local `.vercel/` link, not this repo) — preserved from V1
@@ -34,7 +36,7 @@ root; the microsite is one workspace member.
    authoritative:
    - **Root Directory** → `code`
    - **Install Command** → `pnpm install --frozen-lockfile`
-   - **Build Command** → `pnpm --filter microsite-astro build`
+   - **Build Command** → `pnpm --filter microsite-astro fetch:fonts && pnpm --filter microsite-astro build`
    - **Output Directory** → `apps/microsite-astro/dist`
    - **Framework Preset** → Astro
    - **Node Version** → 22.x (the microsite requires `>=22.12.0`)

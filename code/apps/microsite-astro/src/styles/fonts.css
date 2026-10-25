@@ -10,7 +10,7 @@
  * must not enshrine a fallback stack.
  * ========================================================================== */
 
-/* Pangram Pangram Foundry — licensed 2026-05-12.
+/* Pangram Pangram Foundry — Web licences, one per style (order PPF-#118381, 2026-05-10).
    Product pages display Variable-axis weights (Extrabold = 900), but the
    actual OS/2 usWeightClass in the static file is 800. Use CSS-standard
    values so font-extrabold (Tailwind 800) and font-bold (700) resolve

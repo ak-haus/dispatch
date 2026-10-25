@@ -14,9 +14,12 @@ mode). So a merge to `main` **can deploy production by itself** — but only whe
 project's Ignored Build Step (`rootDirectory: code`) cancels any build whose diff is outside it, which is why a
 records-only commit shows `CANCELED` and that is the guard working, not a failure. Manual CLI deploys still work and
 are still the way to force one.
-- **Licensed fonts ride a Blob rail, not the site.** The PP wordmark/nav binaries are gitignored (B14 EULA cut), so a
+- **Licensed fonts ride a private Blob rail, not the site.** The PP wordmark/nav binaries are gitignored (B14 EULA cut), so a
   **git-sourced** build has none unless it hydrates them — `vercel.json`'s `buildCommand` runs `fetch:fonts` first for
-  exactly that reason. The source is a credential-free Vercel Blob URL (`scripts/fetch-fonts.mjs`), deliberately **not**
+  exactly that reason. The rail is a **private** Vercel Blob store (`dispatch-fonts`): AK holds Web licences only, and the
+  EULA bars a public storing channel (3.7 (ii)), so the files never go to a public store or URL. Reads carry a token:
+  `VERCEL_OIDC_TOKEN` on Vercel builds, the `BLOB_FONTS_READ_WRITE_TOKEN` secret in CI and Doppler; Dependabot and fork
+  PRs get no secrets, so their font steps fail loudly. The source (`scripts/fetch-fonts.mjs`) is deliberately **not**
   `dispatchmag.dev`: sourcing fonts from production was circular the moment production started being built from git, and
   it shipped a fallback-font wordmark to prod on 2026-08-20 before anyone noticed. Never point it back at the site.
 - **NEVER:** commit secrets (Doppler `prime-city`); ship a **placeholder** (a colored rectangle / registration marks)
