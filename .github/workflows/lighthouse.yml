@@ -2,12 +2,12 @@ name: lighthouse
 on: [push, pull_request]
 
 # Perf budget as a ratchet (Golden Board A4): LCP/CLS/TBT + byte weight per
-# surface, ceilings pinned ~15-25% over the 2026-08-18 baseline so a
-# regression from today's floor fails CI. The known defects (home LCP,
-# article CLS) live on the Golden Board as repair rows — fixing them
-# tightens lighthouserc.cjs. The build hydrates the licensed PP faces from
-# their public rail (no credentials), as the visual lanes have since S1; the
-# measurement serves the static dist locally, with no feed URL.
+# surface. The ceilings and the measurements behind them live in
+# lighthouserc.cjs (set at Build 25 on Lighthouse 12, re-measured at Build 37
+# on Lighthouse 13); a regression from that floor fails CI. The build hydrates
+# the licensed PP faces from their private Blob store (EULA 3.7, #86), whose
+# token reaches the hydrate step only; the measurement serves the static dist
+# locally, with no feed URL.
 jobs:
   lighthouse:
     name: lighthouse (budget ratchet)

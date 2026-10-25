@@ -5,10 +5,13 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import { figuresTable, fontlessRuns, median, ppFaceRequests } from './lighthouse-figures.mjs'
+import { figuresTable, fontlessRuns, lcpNode, median, ppFaceRequests } from './lighthouse-figures.mjs'
 
 type Request = { url: string; statusCode: number }
 
+const dek = { snippet: '<p class="dek">', nodeLabel: 'A dev-diary magazine' }
+
+/** A Lighthouse 13 report: the LCP element is the breakdown insight's node item. */
 function lhr(path: string, lcp: number, requests: Request[], score = 0.7) {
 	return {
 		requestedUrl: `http://localhost:4400${path}`,
@@ -20,8 +23,14 @@ function lhr(path: string, lcp: number, requests: Request[], score = 0.7) {
 			'total-blocking-time': { numericValue: 20 },
 			'total-byte-weight': { numericValue: 512 * 1024 },
 			'network-requests': { details: { items: requests } },
-			'largest-contentful-paint-element': {
-				details: { items: [{ items: [{ node: { snippet: '<p class="dek">', nodeLabel: 'A dev-diary magazine' } }] }] },
+			'lcp-breakdown-insight': {
+				details: {
+					type: 'list',
+					items: [
+						{ type: 'table', items: [{ subpart: 'timeToFirstByte', duration: 19 }] },
+						{ type: 'node', ...dek },
+					],
+				},
 			},
 		},
 	}
@@ -73,5 +82,30 @@ describe('the figures table', () => {
 	it('takes the median of an even count as the mean of the middle pair', () => {
 		expect(median([4, 1, 3, 2])).toBe(2.5)
 		expect(median([3, 1, 2])).toBe(2)
+	})
+})
+
+describe('the LCP element', () => {
+	it('reads Lighthouse 13 from the breakdown insight, past its subpart table', () => {
+		expect(lcpNode(lhr('/', 2000, served()))).toMatchObject(dek)
+	})
+
+	it('still reads a saved Lighthouse 12 report from its dedicated audit', () => {
+		const report = lhr('/', 2000, served())
+		const { 'lcp-breakdown-insight': _insight, ...audits12 } = report.audits
+		const v12 = {
+			...report,
+			audits: {
+				...audits12,
+				'largest-contentful-paint-element': { details: { items: [{ items: [{ node: dek }] }] } },
+			},
+		}
+		expect(lcpNode(v12)).toMatchObject(dek)
+	})
+
+	it('prints a dash, not a guess, when a report names no element', () => {
+		const { 'lcp-breakdown-insight': _insight, ...audits } = lhr('/', 2000, served()).audits
+		const table = figuresTable([{ ...lhr('/', 2000, served()), audits }])
+		expect(table.trimEnd().endsWith('| — |')).toBe(true)
 	})
 })
