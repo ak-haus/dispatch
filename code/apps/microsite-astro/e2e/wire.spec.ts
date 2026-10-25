@@ -10,7 +10,7 @@
 import { expect, test } from './helpers/fixtures'
 import { expectNoAxeViolations } from './helpers/axe'
 import { archiveSnapshot } from './helpers/archive'
-import { makeEntry, makeFeed, serveWireFeed } from './helpers/wire-fixture'
+import { ARCHIVE_EPOCH, makeEntry, makeFeed, serveWireFeed } from './helpers/wire-fixture'
 
 test('polls the stubbed rail on mount and goes live', async ({ page }) => {
 	const entry = makeEntry(1, 2)
@@ -72,14 +72,23 @@ test('pause freezes the displayed feed; resume snaps to current with a multi-ent
 })
 
 test('/wire holds the axe WCAG floor', async ({ page }, testInfo) => {
-	await serveWireFeed(page, makeFeed([makeEntry(1, 5), makeEntry(2, 90, 'bluesky')]))
+	// Stamped from the pinned epoch, not the wall clock: this page is archived,
+	// and its day heading prints the entries' date as plain text (F49).
+	await serveWireFeed(
+		page,
+		makeFeed([
+			makeEntry(1, 5, 'devto', undefined, ARCHIVE_EPOCH),
+			makeEntry(2, 90, 'bluesky', undefined, ARCHIVE_EPOCH),
+		]),
+	)
 	await page.goto('/wire')
 	await expect(page.getByText('updated just now')).toBeVisible()
 	await expectNoAxeViolations(page, testInfo)
 	// Chromatic archive lane. /wire is the surface with genuinely live regions
-	// — the entry timestamps and the freshness line move with the wall clock
-	// on every run. They carry data-live, so the lane ignores them and diffs
-	// the rail around them (the two behavioural tests above are NOT archived:
-	// both end on a deliberately mutated feed).
+	// — the freshness line moves with the wall clock on every run, and so do
+	// the entry timestamps wherever a feed is stamped from it. They carry
+	// data-live, so the lane ignores them and diffs the rail around them (the
+	// two behavioural tests above are NOT archived: both end on a deliberately
+	// mutated feed).
 	await archiveSnapshot(page, 'wire', testInfo)
 })
