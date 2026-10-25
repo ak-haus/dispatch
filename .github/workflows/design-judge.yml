@@ -38,6 +38,9 @@ jobs:
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail — the evidence must show shipped faces
+        # The store is private (EULA 3.7): its token reaches this step only.
+        env:
+          BLOB_FONTS_READ_WRITE_TOKEN: ${{ secrets.BLOB_FONTS_READ_WRITE_TOKEN }}
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       # Playwright browsers are CACHED, not re-downloaded every run. The
       # `playwright install` step hits Playwright's CDN, and that CDN stalls:

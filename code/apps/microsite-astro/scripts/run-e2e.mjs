@@ -92,23 +92,34 @@ if (extraArgs.includes('--update-snapshots')) {
 
 process.stderr.write(`test:e2e → ${image} (work volume: ${WORK_VOLUME})\n`)
 
-// Sync the tracked tree into the work volume. Tracked files only — gitignored
-// PP fonts are re-fetched inside (fetch:fonts), and .env.local must never
-// reach an e2e build. The volume is wiped first so deletions propagate.
+// The licensed PP fonts are hydrated HERE, on the host, then copied into the
+// volume with the tree. The font store is private and its token stays on the
+// host: the container never holds a credential (the e2e law in e2e.yml).
+// fetch-fonts skips files already present, so a host that has them needs no
+// token at all.
+if (run(process.execPath, [join(appDir, 'scripts', 'fetch-fonts.mjs')]) !== 0) {
+	fail('test:e2e: the licensed fonts are missing on this host and could not be fetched (see above).')
+}
+
+// Sync the tracked tree plus the two hydrated fonts into the work volume.
+// Nothing else untracked travels: .env.local must never reach an e2e build.
+// The volume is wiped first so deletions propagate.
 const sync = spawnSync(
 	'bash',
 	[
 		'-c',
 		// pipefail: a git or tar failure otherwise yields an empty archive that
 		// extracts cleanly — exit 0 over a just-wiped, now-empty work tree.
-		`set -o pipefail; git -C "$0" ls-files -z | tar -C "$0" -cf - --null -T - | ` +
+		`set -o pipefail; { git -C "$0" ls-files -z && ` +
+			`git -C "$0" ls-files -z --others --ignored --exclude-standard -- 'code/apps/microsite-astro/public/fonts/PP*.woff2'; } | ` +
+			`tar -C "$0" -cf - --null -T - | ` +
 			`docker run --rm -i -v ${WORK_VOLUME}:${WORK} ${image} ` +
 			`bash -c 'rm -rf ${WORK}/* ${WORK}/.[!.]* && tar -xf - -C ${WORK}'`,
 		repoRoot,
 	],
 	{ stdio: ['ignore', 'inherit', 'inherit'] },
 )
-if (sync.error || sync.status !== 0) fail('test:e2e: syncing the tracked tree into the work volume failed.')
+if (sync.error || sync.status !== 0) fail('test:e2e: syncing the tree and fonts into the work volume failed.')
 
 const hostReports = join(appDir, 'playwright-report')
 const hostResults = join(appDir, 'test-results')
@@ -116,6 +127,8 @@ mkdirSync(hostReports, { recursive: true })
 mkdirSync(hostResults, { recursive: true })
 
 const quoted = extraArgs.map((a) => `'${a.replaceAll("'", `'\\''`)}'`).join(' ')
+// fetch:fonts inside finds both fonts present and skips them; it stays as the
+// check that they arrived (with no token here, a missing file fails loudly).
 const inner =
 	'corepack enable pnpm >/dev/null 2>&1; ' +
 	'pnpm install --frozen-lockfile && ' +

@@ -1,59 +1,104 @@
-// Licensed webfonts live on a private asset rail, never in the public repo
-// (Pangram Pangram per-style EULA — B14 public cut, 2026-08-18). A build machine
-// hydrates public/fonts/ from that rail; skip-if-present keeps it idempotent.
+// Licensed webfonts: how a build machine gets them. The two Pangram Pangram
+// faces are gitignored and never committed (B14 public cut, 2026-08-18). Every
+// build hydrates public/fonts/ from a PRIVATE Vercel Blob store; files already
+// present are skipped, so a machine that has them needs no credential.
 //
-// THE RAIL IS VERCEL BLOB, and it is deliberately NOT the live site.
+// WHY PRIVATE. AK holds Web licences only (order PPF-#118381, 2026-05-10): the
+// right to embed the faces on the licensed domain, dispatchmag.dev. The EULA
+// bars "uploading the Font to a public internet file transfer or storing
+// channel" (3.7 (ii)) and giving third parties access to the files (3.1 (ii)).
+// A public blob URL is such a channel even though the site serves the same
+// bytes as webfonts, so the rail moved off its public store on 2026-10-24.
+// Never move the files to a public store or a public URL.
 //
-// It used to be `https://dispatchmag.dev`, which worked only for as long as
-// production was deployed by CLI from a laptop that had the binaries locally:
-// the Vercel CLI uploads local files, gitignored ones included. Installing the
-// Vercel GitHub App (F3-a, 2026-08-20) changed who builds production. The first
-// git-sourced production build had no PP binaries — nothing in the repo has
-// them — so it shipped without them, the site fell back to Vollkorn for the
-// wordmark, and every gate that hydrates fonts started failing on HTTP 404.
+// WHY BLOB, NOT THE SITE. Sourcing the fonts from dispatchmag.dev was circular
+// once git started building production (Vercel GitHub App, F3-a, 2026-08-20):
+// the first git-sourced build had no PP binaries and shipped the fallback
+// wordmark. A store that no deploy builds cannot be emptied by a deploy, so
+// never point this script at the site.
 //
-// That was circular by construction: CI took its fonts from production, and
-// production was now built by the same pipeline that had none. Blob breaks the
-// cycle — it is a rail neither side builds, so there is no path by which a
-// deploy can empty it.
+// CREDENTIALS. The store is `dispatch-fonts` (store_WfwQXnzCaczlnBf3), connected
+// to the dispatch Vercel project for production and preview. Reads send a
+// bearer token (Vercel docs, "Private storage"):
+//   - Vercel builds: VERCEL_OIDC_TOKEN, which Vercel issues to each build and
+//     rotates itself; nothing is stored.
+//   - elsewhere: BLOB_FONTS_READ_WRITE_TOKEN, the store's static token (a GitHub
+//     Actions secret, and Doppler for local runs: `doppler run -- pnpm
+//     fetch:fonts`). Dependabot and fork PRs receive no Actions secrets, so
+//     their font steps fail here, loudly.
+// The token goes only into the Authorization header of a request to the store.
+// It is never printed.
 //
-// Public URLs by design, and no credential anywhere. These faces are already
-// served publicly as ordinary webfonts (a browser must download them to render
-// the page), so a public blob URL is exactly the exposure the site already has
-// and changes nothing about the EULA position: the binaries stay out of git.
-// The upside is that CI, Vercel and a laptop all use the identical path with no
-// token to leak, rotate, or forget.
-//
-// Refresh the rail (only when a licensed binary is replaced) with the blob
-// token from the Vercel project env:
-//   curl -X PUT "https://blob.vercel-storage.com/fonts/<name>.woff2" \
-//     -H "Authorization: Bearer $BLOB_READ_WRITE_TOKEN" -H "x-api-version: 7" \
-//     -H "x-content-type: font/woff2" -H "x-add-random-suffix: 0" \
-//     --data-binary "@public/fonts/<name>.woff2"
-// `x-add-random-suffix: 0` is what keeps the URL below stable; without it every
-// upload mints a new one and this file goes stale.
+// REFRESH (only when a licensed binary is replaced): upload with @vercel/blob's
+// put() and the static token, keeping the pathname stable:
+//   put(`fonts/${name}`, bytes, { access: 'private', addRandomSuffix: false,
+//     allowOverwrite: true, contentType: 'font/woff2', token })
 import { mkdir, writeFile, access } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const FONTS = ['PPEditorialNew-Bold.woff2', 'PPPangramSans-Extrabold.woff2'];
-const ORIGIN = process.env.FONTS_ORIGIN ?? 'https://ovwa7w9grksbdzc3.public.blob.vercel-storage.com';
+const STORE = 'https://wfwqxnzcaczlnbf3.private.blob.vercel-storage.com';
+const WOFF2_SIGNATURE = 'wOF2';
 const outDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public', 'fonts');
 
+// The SDK's order (JS SDK reference, "Resolution order"): OIDC when present,
+// then the static token.
+function credential() {
+  for (const kind of ['VERCEL_OIDC_TOKEN', 'BLOB_FONTS_READ_WRITE_TOKEN']) {
+    const token = process.env[kind]?.trim();
+    if (token) return { kind, token };
+  }
+  return null;
+}
+
 await mkdir(outDir, { recursive: true });
+const missing = [];
 for (const name of FONTS) {
-  const dest = path.join(outDir, name);
-  const exists = await access(dest).then(() => true, () => false);
-  if (exists) {
-    console.log(`fonts: ${name} present — skipped`);
-    continue;
-  }
-  const res = await fetch(`${ORIGIN}/fonts/${name}`);
-  if (!res.ok) {
-    console.error(`fonts: FAILED ${name} — HTTP ${res.status} from ${ORIGIN}`);
+  const present = await access(path.join(outDir, name)).then(() => true, () => false);
+  if (present) console.log(`fonts: ${name} present, skipped`);
+  else missing.push(name);
+}
+
+if (missing.length > 0) {
+  const cred = credential();
+  if (!cred) {
+    console.error(
+      `fonts: FAILED, no credential for the private font store (missing: ${missing.join(', ')}).\n` +
+        '  Vercel builds get VERCEL_OIDC_TOKEN automatically. Anywhere else, set\n' +
+        '  BLOB_FONTS_READ_WRITE_TOKEN: a GitHub Actions secret in CI, or\n' +
+        '  `doppler run -- pnpm fetch:fonts` on a laptop. Dependabot and fork PRs get no secrets.',
+    );
     process.exitCode = 1;
-    continue;
+  } else {
+    for (const name of missing) {
+      try {
+        const res = await fetch(`${STORE}/fonts/${name}`, {
+          headers: { Authorization: `Bearer ${cred.token}` },
+        });
+        if (!res.ok) {
+          const why =
+            res.status === 401 || res.status === 403
+              ? `the store refused ${cred.kind} (expired, revoked, or not connected to this project)`
+              : res.status === 404
+                ? 'the file is not in the store'
+                : 'unexpected response';
+          console.error(`fonts: FAILED ${name}, HTTP ${res.status} from the private store: ${why}`);
+          process.exitCode = 1;
+          continue;
+        }
+        const bytes = Buffer.from(await res.arrayBuffer());
+        if (bytes.subarray(0, 4).toString('latin1') !== WOFF2_SIGNATURE) {
+          console.error(`fonts: FAILED ${name}, the response is not a WOFF2 file (${bytes.length} bytes)`);
+          process.exitCode = 1;
+          continue;
+        }
+        await writeFile(path.join(outDir, name), bytes);
+        console.log(`fonts: fetched ${name} (${bytes.length} bytes) with ${cred.kind}`);
+      } catch (error) {
+        console.error(`fonts: FAILED ${name}, request error: ${error?.cause?.code ?? error?.message ?? error}`);
+        process.exitCode = 1;
+      }
+    }
   }
-  await writeFile(dest, Buffer.from(await res.arrayBuffer()));
-  console.log(`fonts: fetched ${name} (${res.headers.get('content-length') ?? '?'} bytes)`);
 }

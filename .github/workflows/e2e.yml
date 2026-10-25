@@ -21,7 +21,8 @@ on:
 # credential exists in the test run.
 #
 # S1 amendments to the old "CI stays hermetic-fontless" posture:
-#   - fetch:fonts hydrates the PP rail before the build (fail-loud). A visual
+#   - fetch:fonts hydrates the PP rail before the build (fail-loud), from a
+#     private store whose token only the font steps receive. A visual
 #     gate asserts on rendered faces by definition — visual.spec.ts refuses
 #     to capture on fallback stacks, so fontless CI would fail anyway.
 #   - visual.spec.ts compares committed -linux baselines (generated in the
@@ -110,6 +111,9 @@ jobs:
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail — the visual floor asserts on shipped faces
+        # The store is private (EULA 3.7): its token reaches this step only.
+        env:
+          BLOB_FONTS_READ_WRITE_TOKEN: ${{ secrets.BLOB_FONTS_READ_WRITE_TOKEN }}
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       # No browser install: the container bakes the chromium matching the
       # @playwright/test pin at /ms-playwright, so there is nothing to
@@ -176,6 +180,8 @@ jobs:
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail
+        env:
+          BLOB_FONTS_READ_WRITE_TOKEN: ${{ secrets.BLOB_FONTS_READ_WRITE_TOKEN }}
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       - name: run the pixel floor ${{ inputs.repeats }}x — any disagreement fails
         working-directory: code/apps/microsite-astro
@@ -217,6 +223,8 @@ jobs:
           cache-dependency-path: code/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - name: hydrate the PP font rail
+        env:
+          BLOB_FONTS_READ_WRITE_TOKEN: ${{ secrets.BLOB_FONTS_READ_WRITE_TOKEN }}
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       - name: regenerate -linux baselines
         working-directory: code/apps/microsite-astro

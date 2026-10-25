@@ -77,6 +77,9 @@ jobs:
         # staticDirs copies public/fonts into the storybook-static artifact the
         # Chromatic story lane captures from — fontless CI would baseline
         # fallback stacks. fetch-fonts.mjs is fail-loud on a missing binary.
+        # The store is private (EULA 3.7): its token reaches this step only.
+        env:
+          BLOB_FONTS_READ_WRITE_TOKEN: ${{ secrets.BLOB_FONTS_READ_WRITE_TOKEN }}
         run: pnpm --fail-if-no-match --filter microsite-astro fetch:fonts
       # The image's Chromium belongs to ONE Playwright release, the e2e pin.
       # The vitest browser rail launches it through the storybook app's own
