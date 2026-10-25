@@ -48,8 +48,7 @@ restart dev — Tailwind v4 caches inlined values.
 │   ├── lib/              search index builder + pure query helpers
 │   ├── data/             commits.json — generated from git log at build
 │   └── pages/            Astro routes (incl. /dispatch/[id])
-├── deploy.md             Vercel deploy guide (current truth)
-└── doppler.yaml          Doppler scope: project prime-city, config dev
+└── deploy.md             Vercel deploy guide (current truth)
 ```
 
 ## Rules of the room

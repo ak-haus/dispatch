@@ -23,8 +23,8 @@
     "commits:generate": "node scripts/generate-commits.mjs",
     "wire:snapshot": "node scripts/generate-wire-snapshot.mjs",
     "cartography:segment": "node scripts/segment-cartography.mjs",
-    "cartography:segment:sam": "doppler run --project prime-city --config dev -- node scripts/segment-sam.mjs",
-    "cartography:depth": "doppler run --project prime-city --config dev -- node scripts/depth-cartography.mjs"
+    "cartography:segment:sam": "doppler run -- node scripts/segment-sam.mjs",
+    "cartography:depth": "doppler run -- node scripts/depth-cartography.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.1",

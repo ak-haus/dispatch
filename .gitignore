@@ -31,3 +31,6 @@ representation/visual-system/typography/subsets/wordmark/editorial-new-700.woff2
 # as the floor. The e2e `update-visual-baselines` workflow_dispatch is the
 # only sanctioned baseline factory.
 *-chromium-darwin.png
+
+# Doppler scope is per machine (`doppler setup`, stored in ~/.doppler), never in the public repo.
+doppler.yaml
