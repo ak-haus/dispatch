@@ -22,6 +22,18 @@
  * subtracted — the evidence that both now measure the same page. The
  * post-repair production figures are in the Build 25 record.
  *
+ * RE-MEASURED at Build 37 on Lighthouse 13.5.0, which replaced 12.6.1 to clear
+ * the dev tree's last advisories. 13 keeps every audit asserted below and the
+ * same performance weights; only the LCP element moved, into
+ * lcp-breakdown-insight. Medians, Lighthouse 13 vs 12:
+ *   local, same machine and build, 6 runs a page per version (Chrome 156):
+ *     /  perf 70 vs 70 · LCP 7745 vs 7781 — article  perf 73 vs 74 · LCP 6317
+ *     vs 6213 — /wire/  perf 92 vs 92 · LCP 3178 vs 3188; CLS, bytes identical
+ *   CI, Chrome 155, two jobs on #92 vs main's job at 6d85b31:
+ *     /  LCP 7643–7759 vs 7759 — article  LCP 6055–6178 vs 6067 — /wire/  LCP
+ *     2771–2863 vs 2748; perf 70 · 74 · 94–95 on both; CLS, bytes identical
+ * Every reading sits inside the runs' own spread, so the ceilings stand.
+ *
  * Two instrument limits, stated so nobody reads more into these numbers:
  *   - LCP here is a Lantern ESTIMATE whose graph holds every request that
  *     finished before the observed paint. Served from localhost that is
@@ -33,8 +45,9 @@
  *   - Reader truth is production Lighthouse, not this job (F40).
  *
  * Lab metrics: LCP/CLS/TBT (TBT is the lab proxy for INP; INP is field-only).
- * Hermetic: static dist served locally, no feed URL, no credentials; the PP
- * faces come from their public rail at build time, as the visual lanes' do.
+ * Hermetic: static dist served locally, no feed URL. The one credential is the
+ * font rail's token, scoped to the hydrate step: the PP faces sit in a private
+ * Blob store (EULA 3.7, #86), and the visual lanes hydrate the same way.
  */
 
 module.exports = {
