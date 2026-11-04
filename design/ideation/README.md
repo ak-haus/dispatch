@@ -44,7 +44,7 @@ bun scripts/ideate-visual.ts --slug my-run --need "F13 — …" --brief "…" --
 drop `--dry-run` and supply the key from the vault — never inline, never in a file:
 
 ```bash
-doppler run -p prime-city -c dev -- bun scripts/ideate-visual.ts --slug my-run --need "…" --brief "…"
+doppler run -p dispatch -c dev -- bun scripts/ideate-visual.ts --slug my-run --need "…" --brief "…"
 ```
 
 Nano Banana Pro costs about **$0.134** per 1K/2K image, and the standing ceiling from ADR-0003 is

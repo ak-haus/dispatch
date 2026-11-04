@@ -40,7 +40,7 @@ export default defineConfig<ChromaticConfig>({
 	webServer: {
 		command: 'pnpm preview',
 		port: PORT,
-		// NEVER reuse: a dev server on 4321 serves src with .env.local's REAL
+		// NEVER reuse: a dev server on 4321 under `doppler run` serves the REAL
 		// ledger URL — silently substituting it for the e2e-built preview would
 		// break the never-prod law. A port conflict must fail loudly instead.
 		reuseExistingServer: false,
