@@ -1,7 +1,8 @@
 /**
  * generate-wire-snapshot.mjs — build-time snapshot of the Live Wire feed.
  *
- * Fetches the Crossfire activity ledger (PUBLIC_WIRE_FEED_URL) and writes
+ * Fetches the Crossfire activity ledger (PUBLIC_WIRE_FEED_URL: Doppler `dispatch/dev`
+ * locally via `doppler run -- pnpm dev`; Vercel env vars in deploys) and writes
  * src/data/wire-snapshot.json, which both wire surfaces prerender — the
  * SEO/failure floor from ADR-0001 Addendum D2: real first-paint HTML, a
  * non-empty page with JS off, honest content when the feed is unreachable.

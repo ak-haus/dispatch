@@ -24,7 +24,7 @@
  * no build, typecheck, or lint gate compiles it (ADR-0003 §Stage 1: "excluded
  * from build/lint gates").
  *
- *   doppler run -p prime-city -c dev -- bun scripts/ideate-visual.ts \
+ *   doppler run -p dispatch -c dev -- bun scripts/ideate-visual.ts \
  *     --slug dispatch-01-banner \
  *     --brief "..." \
  *     --need "F13 — dispatch-01 ships the banner placeholder to production"
@@ -446,7 +446,7 @@ if (options.dryRun) {
 
 const apiKey = process.env.GEMINI_API_KEY
 if (!apiKey) {
-	fail('GEMINI_API_KEY is not set — run under `doppler run -p prime-city -c dev --` (never hardcode a key)')
+	fail('GEMINI_API_KEY is not set — run under `doppler run -p dispatch -c dev --` (never hardcode a key)')
 }
 
 const runDir = join(LANDING_ZONE, options.slug)
