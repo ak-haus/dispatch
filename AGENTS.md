@@ -107,7 +107,7 @@ a published URL to satisfy a field: omit the optional field instead.
   Fix the draft; if the contract genuinely lacks a field, file an OQ in `DESIGN.md` §Adjudicated questions (edit the
   emitter `code/packages/tokens/scripts/emit/layout-design-md.mjs`, never the generated file) and stop.
 
-## Layout (navigate by this; folders carry an `index.md` — `ls` a folder and read it)
+## Layout (navigate by this)
 - `code/` — the **pnpm monorepo**: `apps/microsite-astro` (Astro 7, **LIVE**) ·
   `apps/storybook` · `packages/tokens` (Style Dictionary) · `packages/ui` · `vercel.json` (deploy SoT).
 - **Brand canon** — `representation/visual-system/` (the **CD1–5** ratified Decision Docs: thesis · color · cartography ·
