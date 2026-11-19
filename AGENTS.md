@@ -81,10 +81,10 @@ are still the way to force one.
   `47 / 33 / 14` against an actual `48 / 31 / 17`. The rows do not drift — the tally does. The in-repo ledger with
   the board as its presentation layer remains the real repair, and stays a Phase B row.
 - **Records live in the private ops repo** (`ak-haus/dispatch-ops`, `lifecycle/checkpoints/`; design A1, AK
-  2026-10-24). The Mon/Thu checkpoint routine audits this repo read-only and lands its one report there by
-  pull request; the merge is manual since F35's auto-merge workflow was removed there on 2026-11-15. A build
-  session opens its close record as a PR there and names the flag IDs in its PR here (F25). This repo carries
-  no records; their history up to 2026-10-24 stays in its git history.
+  2026-10-24). The Mon/Thu checkpoint routine, which audited this repo read-only and landed one report there
+  per run, was retired on 2026-11-19 (AK); its last report is dated 2026-10-29. A build session opens its close
+  record as a PR there and names the flag IDs in its PR here (F25). This repo carries no records; their
+  history up to 2026-10-24 stays in its git history.
 
 ## Authoring a dispatch (ADR-0003 §Stage 8 — there is no CMS)
 **AK OWNS CONTENT.** An agent may *draft*; AK signs off. Creating or editing any `.mdx` is an ASK-FIRST action, and
